@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Food Globalization Strategy Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #f97316; /* Orange - Korean Spice */
+            --bg-color: #1f2937; /* Dark Gray */
+            --text-color: #f3f4f6;
+            --accent-color: #fcd34d; /* Gold/Yellow */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            overflow: hidden;
+        }
+        .slide {
+            height: 85vh;
+            width: 100%;
+            display: none;
+            padding: 4rem 8vw;
+            animation: fadeIn 0.8s ease-out;
+        }
+        .slide.active {
+            display: flex;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .control-btn {
+            background-color: var(--primary-color);
+            transition: all 0.2s;
+        }
+        .control-btn:hover {
+            background-color: #ea580c;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+        }
+        .card {
+            background-color: #374151;
+            border: 1px solid #4b5563;
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Presentation Container -->
+    <div id="presentation-container" class="flex flex-col h-full items-center justify-center">
+
+        <!-- Slides -->
+        <div id="slides-wrapper" class="w-full max-w-7xl mx-auto rounded-xl shadow-2xl bg-gray-800/80">
+
+            <!-- Slide 1: Title -->
+            <div class="slide active flex-col justify-center items-center text-center rounded-xl" id="slide-1">
+                <p class="text-xl text-accent-color mb-4">Cultural Content-Based K-Food Strategy Analysis</p>
+                <h1 class="text-6xl font-extrabold mb-8 leading-tight">
+                    K-Food Globalization: <span class="text-primary-color">Common and Differentiating Factors</span>
+                </h1>
+                <p class="text-3xl font-light text-gray-300">
+                    Based on the Netflix series 'Bon appétit, your majesty' (Chef of the Tyrant)
+                </p>
+                <!-- Placeholder for a K-Food Image (Updated) -->
+                <div class="mt-12 w-full max-w-md mx-auto rounded-lg overflow-hidden shadow-2xl">
+                    <img src="https://tse4.mm.bing.net/th/id/OIP.IG_z_77zIglr-BE2TYM3BwHaD2?cb=12&pid=Api" 
+                         alt="Image of Royal Korean Cuisine" 
+                         class="w-full h-auto rounded-lg">
+                </div>
+            </div>
+
+            <!-- Slide 2: The Show's Role -->
+            <div class="slide flex-col justify-center items-center text-center" id="slide-2">
+                <h2 class="text-4xl font-bold text-primary-color mb-10">The Role of 'Chef of the Tyrant' in K-Food Diffusion</h2>
+                <div class="grid md:grid-cols-3 gap-8 w-full max-w-5xl">
+                    <!-- Card 1: Unfamiliar Context -->
+                    <div class="card p-6 rounded-xl shadow-lg flex flex-col items-center">
+                        <svg class="w-16 h-16 text-red-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292V15l-2 2h4l-2 2v2M12 4a8 8 0 100 16 8 8 0 000-16z"></path></svg>
+                        <h3 class="text-2xl font-semibold mb-2">① Cooking in Extreme Environments</h3>
+                        <p class="text-gray-400 text-sm">Demonstrates K-Food's **'adaptability'** and **'vitality'** by preparing dishes using local ingredients in unfamiliar settings.</p>
+                    </div>
+                    <!-- Card 2: Emotional Connection -->
+                    <div class="card p-6 rounded-xl shadow-lg flex flex-col items-center">
+                        <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                        <h3 class="text-2xl font-semibold mb-2">② Conveying 'Jeong' (Affection) and Culture</h3>
+                        <p class="text-gray-400 text-sm">Transmits the **'emotional value'** of K-Culture by showing comfort and communication through food, beyond simple taste.</p>
+                    </div>
+                    <!-- Card 3: Accessibility -->
+                    <div class="card p-6 rounded-xl shadow-lg flex flex-col items-center">
+                        <svg class="w-16 h-16 text-green-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2h2m-4 2V5a2 2 0 012-2h10a2 2 0 012 2v4"></path></svg>
+                        <h3 class="text-2xl font-semibold mb-2">③ Building Global Consensus</h3>
+                        <p class="text-gray-400 text-sm">Boosts accessibility and creates demand by revealing **practical recipes** that anyone can follow.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Commonality - Authentic Pillars (Updated Images) -->
+            <div class="slide flex-col justify-center items-center text-center" id="slide-3">
+                <h2 class="text-4xl font-bold text-accent-color mb-12">K-Food Commonalities: The Foundation of All Success</h2>
+                <div class="flex space-x-16 w-full max-w-5xl">
+                    <div class="w-1/2 text-center p-6 border-b-4 border-primary-color rounded-xl bg-gray-700 shadow-xl">
+                        <h3 class="text-3xl font-extrabold mb-3 text-primary-color">1. Sincerity (Authenticity)</h3>
+                        <p class="text-lg text-gray-300">Authentic portrayal of Korean food culture that emphasizes time and effort (e.g., Kimchi aging, making fermented pastes).</p>
+                         <div class="mt-4 w-full max-w-xs mx-auto rounded-lg overflow-hidden shadow-xl">
+                            <!-- Updated Image: Specific Kimchi Jars (Onggi) -->
+                            <img src="https://tse4.mm.bing.net/th/id/OIP.g706CAVyhrpwaJRXSxLgTAHaEK?cb=12&pid=Api" 
+                                 alt="Kimchi jars and fermentation" 
+                                 class="w-full h-auto rounded-lg">
+                        </div>
+                    </div>
+                    <div class="w-1/2 text-center p-6 border-b-4 border-accent-color rounded-xl bg-gray-700 shadow-xl">
+                        <h3 class="text-3xl font-extrabold mb-3 text-accent-color">2. Hallyu Content Linkage (Synergy)</h3>
+                        <p class="text-lg text-gray-300">Powerful storytelling effect achieved by being consumed alongside K-Culture content (Dramas, Movies, Entertainment).</p>
+                         <div class="mt-4 w-full max-w-xs mx-auto rounded-lg overflow-hidden shadow-xl">
+                            <!-- Updated Image: Hallyu Content and Food Synergy -->
+                            <img src="https://tse2.mm.bing.net/th/id/OIP.qjKIGaUHr-wA2vYj8WxxqgHaE8?cb=12&pid=Api" 
+                                 alt="Hallyu content and food scene" 
+                                 class="w-full h-auto rounded-lg">
+                        </div>
+                    </div>
+                </div>
+                <p class="text-2xl mt-12 font-medium text-gray-300">
+                    All K-Foods stand on two pillars: **'Cultural Context'** and **'Sincerity'**.
+                </p>
+            </div>
+
+            <!-- Slide 4: Global Differentiation -->
+            <div class="slide flex-col justify-center items-center text-center" id="slide-4">
+                <h2 class="text-4xl font-bold text-accent-color mb-6">K-Food Differentiating Factors (Global Positioning)</h2>
+                <div class="grid grid-cols-3 gap-8 w-full max-w-6xl">
+                    
+                    <!-- Differentiator 1: Health -->
+                    <div class="card p-6 rounded-xl shadow-xl flex flex-col items-center">
+                        <svg class="w-16 h-16 text-green-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.382a4.99 4.99 0 00-6.157-1.464l-1.077 1.077m-1.789 1.789l-1.077 1.077a4.99 4.99 0 00-1.464 6.157M12 21V12"></path></svg>
+                        <h3 class="text-2xl font-semibold mb-2 text-green-300">① Fermentation-based Health (Health Focus)</h3>
+                        <p class="text-gray-400 text-sm">Highlights the **probiotic** value of fermented products like Kimchi and *Jang* (pastes). (Aligns with Western wellness trends).</p>
+                    </div>
+
+                    <!-- Differentiator 2: Versatility -->
+                    <div class="card p-6 rounded-xl shadow-xl flex flex-col items-center">
+                        <svg class="w-16 h-16 text-yellow-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        <h3 class="text-2xl font-semibold mb-2 text-yellow-300">② Flavor Versatility (Flavor Flexibility)</h3>
+                        <p class="text-gray-400 text-sm">Spiciness of *Gochujang* (chili paste) and umami of *Ganjang* (soy sauce) combine with foreign ingredients to create **new fusion menus**.</p>
+                    </div>
+
+                    <!-- Differentiator 3: Speed -->
+                    <div class="card p-6 rounded-xl shadow-xl flex flex-col items-center">
+                        <svg class="w-16 h-16 text-red-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <h3 class="text-2xl font-semibold mb-2 text-red-300">③ HMR Innovation (HMR Leadership)</h3>
+                        <p class="text-gray-400 text-sm">High technological capability in K-Food HMR (Ramen, instant rice, meal kits) maximizes **accessibility**.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Differentiator - The Drama Narrative -->
+            <div class="slide flex-col justify-center items-center text-center" id="slide-5">
+                <h2 class="text-4xl font-bold text-primary-color mb-6">Differentiated Narrative: 'Chef of the Tyrant's' Image Innovation</h2>
+                <div class="w-full max-w-5xl text-left space-y-6">
+                    <div class="card p-6 rounded-xl shadow-lg">
+                        <h3 class="text-3xl font-extrabold text-white mb-2">Old Image: Static 'Fine Dining'</h3>
+                        <p class="text-lg text-gray-400">Centered on traditional Royal Court cuisine or expensive restaurants, resulting in **low accessibility** and high barriers to entry.</p>
+                    </div>
+                    <div class="card p-6 rounded-xl shadow-lg border-l-4 border-accent-color">
+                        <h3 class="text-3xl font-extrabold text-accent-color mb-2">New Image: Dynamic 'Street Kitchen'</h3>
+                        <ul class="text-xl text-gray-200 space-y-2 list-disc pl-5">
+                            <li>**Mobility:** Proves K-Food can be made anywhere globally with just a pot and a knife.</li>
+                            <li>**Localization:** Presents **'Lived-in K-Food'** using local ingredients, distinct from mere fusion.</li>
+                            <li>**Approachability:** Shifts perception from complex expert cooking to a dish **'made with a friend'**.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6: Strategic Matrix -->
+            <div class="slide flex-col justify-center items-center text-center" id="slide-6">
+                <h2 class="text-4xl font-bold text-primary-color mb-12">The Three Pillars of K-Food Globalization Success (Strategic Pillars)</h2>
+                <div class="w-full max-w-6xl text-xl">
+                    <table class="w-full border-collapse rounded-xl overflow-hidden shadow-xl">
+                        <thead>
+                            <tr class="bg-gray-700 text-gray-200">
+                                <th class="p-4 text-left border-r border-gray-600 w-1/4">Success Factor</th>
+                                <th class="p-4 border-r border-gray-600 w-1/4">Diffusion Method</th>
+                                <th class="p-4 border-r border-gray-600 w-1/4">Impact Scope</th>
+                                <th class="p-4 w-1/4">Core Goal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-gray-800 border-b border-gray-700">
+                                <td class="p-4 text-left font-semibold border-r border-gray-700">① Media/Hallyu</td>
+                                <td class="p-4 text-yellow-400 border-r border-gray-700">Drama, Film, YouTube Exposure</td>
+                                <td class="p-4 text-green-400 font-bold border-r border-gray-700">Awareness & Demand Creation</td>
+                                <td class="p-4 text-white">Mass Market Entry</td>
+                            </tr>
+                            <tr class="bg-gray-900 border-b border-gray-700">
+                                <td class="p-4 text-left font-semibold border-r border-gray-700">② Authenticity/Health</td>
+                                <td class="p-4 text-yellow-400 border-r border-gray-700">Emphasize Health Benefits (Fermentation)</td>
+                                <td class="p-4 text-green-400 font-bold border-r border-gray-700">Securing Loyal Customer Base</td>
+                                <td class="p-4 text-white">Brand Loyalty</td>
+                            </tr>
+                            <tr class="bg-gray-800">
+                                <td class="p-4 text-left font-semibold border-r border-gray-700">③ HMR/Accessibility</td>
+                                <td class="p-4 text-yellow-400 border-r border-gray-700">Convenience Store, Online Sales</td>
+                                <td class="p-4 text-green-400 font-bold border-r border-gray-700">Minimize Purchase Barrier</td>
+                                <td class="p-4 text-white">Wide Penetration</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Slide 7: Conclusion & Live Demo (New Integrated Slide) -->
+            <div class="slide flex-col justify-center items-center text-center" id="slide-7">
+                <h2 class="text-4xl font-bold text-accent-color mb-8">Conclusion & Future Strategy: AI-Powered Localization Execution ✨</h2>
+                <div class="w-full max-w-4xl space-y-4 text-left">
+                    <p class="text-xl text-gray-300">The future success of K-Food relies not just on exporting **'Korean cuisine'** but on providing a **'Global K-Food Experience'** fused with local culture.</p>
+                    <ul class="text-lg text-gray-100 space-y-1 list-disc pl-5">
+                        <li>**Digital Storytelling:** Creating short, engaging digital content that carries the cultural background and 'Jeong' (affection) of each dish is key.</li>
+                    </ul>
+                </div>
+
+                <!-- Gemini API Integration: Live Demo -->
+                <div class="mt-8 w-full max-w-5xl bg-gray-700 p-6 rounded-xl shadow-xl flex flex-col space-y-4">
+                    <h3 class="text-2xl font-bold text-primary-color">✨ AI Content Strategist Demo (Trainer/Editor Execution)</h3>
+                    <p class="text-sm text-gray-400">Enter a dish and target audience to instantly generate a global marketing story.</p>
+                    
+                    <div class="flex space-x-4">
+                        <input type="text" id="food-input" class="flex-1 p-3 rounded-lg bg-gray-800 text-gray-100 border border-gray-600" placeholder="K-Food Name (e.g., Kimchi Jjigae)">
+                        <select id="audience-select" class="p-3 rounded-lg bg-gray-800 text-gray-100 border border-gray-600 flex-shrink-0">
+                            <option value="English-speaking Gen Z, emphasizing health benefits">English-speaking Gen Z (emphasizing health benefits)</option>
+                            <option value="Japanese Business Travelers, emphasizing comfort and 'Jeong'">Japanese Business Travelers (emphasizing emotional comfort and 'Jeong')</option>
+                            <option value="European Foodies, emphasizing complexity and fermentation">European Foodies (emphasizing complexity and fermentation)</option>
+                        </select>
+                        <button id="generate-story-btn" class="control-btn px-6 py-3 rounded-full font-semibold flex-shrink-0">
+                            Generate Story
+                        </button>
+                    </div>
+
+                    <div id="demo-loading-indicator" class="text-primary-color hidden mt-2 text-center">
+                        <svg class="animate-spin h-5 w-5 mr-3 inline text-primary-color" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        AI is generating target-specific marketing copy...
+                    </div>
+
+                    <div id="demo-output-area" class="w-full mt-2 p-4 rounded-lg bg-gray-900 text-left text-gray-200 min-h-[50px] whitespace-pre-wrap text-sm">
+                        {Gemini AI's target-specific storytelling copy will appear here. (e.g., Kimchi Jjigae is more than just soup; it's the warm, bubbling heart of Korean 'Jeong'—a communal feeling of comfort and belonging. Perfect after a long day of travel.)}
+                    </div>
+                </div>
+            
+                <!-- New Section: Study Pony Campus Concept -->
+                <div class="mt-10 w-full max-w-5xl bg-gray-900 p-6 rounded-xl shadow-2xl border-l-4 border-accent-color">
+                    
+                    <!-- Placeholder for the Virtual School Concept (New Insertion) -->
+                    <div class="mb-4 w-full rounded-lg overflow-hidden">
+                        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMWFhUXGSIZGBcYGRseGxsbGB4fIBkfIBgdHyggGh8lIBogIjIhJSkrLi4uGh8zODMtNyguLisBCgoKDg0OGxAQGy8mICYvLTAvLS0tLS8tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIAL0BCwMBEQACEQEDEQH/xAAbAAADAAMBAQAAAAAAAAAAAAADBAUAAgYBB//EAEsQAAIBAgQEAwQFCAcFCAMAAAECEQMhAAQSMQUiQVETYXEGMoGRI0JSobEUFWJzwdHT8DM0cpSz4fEkgpKTohZDU1RjhLLSB2R0/8QAGgEAAgMBAQAAAAAAAAAAAAAAAwQAAQIFBv/EADsRAAIBAgQCBgkEAgIBBQAAAAECAAMRBBIhMUFREyJhcYGRBRQyUqGxweHwIzNC0XLxFWJDU6KywtL/2gAMAwEAAhEDEQA/APqOHpzpmJJMxJJmJJMxJJmJJPcSSZiSTMVJPCcXJEKnGKYMX+aj7iwI+MYGaqA2JjVPA4iouZUNo3l8wriVM9/Lr+BBnYggixxsG+oizKVJVhYiFxczMxJJmJJMxJInV4lTUkFha24G2+5E3tbqCNwcYLqNCYenhqtUXRSR2Cc3nuP1Vq1ClQmmDaVUgQASDpGqPOe/lOTU1AX87o3RwF6bPVutr9tre8LXHO/LwnT8Pzfi0w+llmxVgQQRYi4HXrgs53dGcSSZiSTMSSZiSTMSSZiSTMSSZiSQmWpamjp19MYdrCbRcxlZQo2AHwwtrHABNtWKtLmasS0kzViWkmasS0l5mrEtKvOfzmWbxqNHxGQMruxpmCSmgKNUbcx9cHap1S3d9YmaZ6RUvuCdOy0MeEAWOZzF9vpf8sC6YngPKGOHUfyPnMHCVNhmcx/zf8sTpm90eUroF94+c2/Mo/8AMZn/AJv+WK6Y8h5S/Vh7x85qeED/AMzmP+b3sOncj54vpjyHlJ6uo/kfOYvCFNxmcwR5Vf8ALENYjgPKUKCnZj5zw8KW/wDtNe2/0ot62tidM3ujyk6BfePnM/NazH5VXnt4wn5RidK3ujyk6FffPnJnGy2WPLUqODSd4qMGg0ykQYt7xBxtal1JtymDTy1AtyQQd+y0NmtVSg2kSzJZTs1vdnz2+ODiCYaTlHMhirfWPMUDCTHLUU8yHuAQwk2NiEgBTJDreemZ2xiK+Eq5Su6/2I5lMy1JbHeAdC2ibadRa13u1y0iAEK4MaiogybTnUsHWxWIf1k2YDX6eHbKa8aIhWTmAWblZLagOUglZKMYNgCtzJjfSiwPOKep1MzICDlFyQdJsvHFJspK3gzexYSQRAEqbzYEHvGi4BIPCYXD1GpLVAuGNhzvEs1xJ3KkalBgLGoD62pg1tX1YBHTa5GAmtcjLOinovIlRqpBIXSx2PbHaPHFjnW8fVNpA1GW02EbWOo28zs1d7cIkuDqXpg/z2tt4yJWHPzEDUHYfWjXVdvrCCQpi43wB2U1AW2t9J2MNSrpgWSl7QY7d80oZZS5caT4Y1M0FVkMfDmBv7sgCJ1QIxYcK/V2kq4es+Fy1f3SbDtHbbewlrL8WCiDTfqwn3mkk2kAEX3tAvG+DJVBNpya3o+rRQvcEDexvabHjvXRYGCZbSD5nRb4T6DFesLD/wDE19rrfgL6mbfnsTBpkGQIm4JMDVAIABsSCYPfG+kFyOUTOGqimtS2jGw7+2EpcXVkLRER3axiWgCbbkdovecTpBkz8JitRalVNJtxbaFynEA+kFdJYWvINpInvF/MCcKYX0jRxFRqa3uOel+6aq4d6ahm2Mdw/ASRmM8xqtSUleakuobgVHhiJ2MDfzwMnXwm2HUB5kCVfzekkflWYtM/SWEbidMSJ288B6RvdEJ0SbZj5zxcjTMRm63MJH0wuJjt3MYnSN7o8pBTpn+Z855TylI3Gbr+f0sRab2tYYsu3ujykCUzs585uMikx+V5j/m2Fp3iBa+Kzt7o8pfRrtnPnPFydMxGcr3uPpheN+nniZ290eUgpof5nzgzRpX/ANsrwIv4tr7X04vM3ujymbU/fPnC08gjGFzdcmJgVrwdjtii7D+I8poU0OznzgMyhpeE9PMVnmtTQh31KVqEA2jswIPpjStmuCBsZh1yWZWJ1A3vvKX5Z5HGujmuli9d5zdA/wDp1fxp4w4tTPePrJe9Ze5vpG8zkFd1dvq+QvExftfbAUqFRaGeirsCYnSytFmNMOrPT0kiAYgELK7dTJF5PS2NdKZnoBNOGZylXaqlNqgZDB1U2QFXJDFCwGtWZGhgTcDpE5zzXR9s9zRyyOBVrUwVAAVmUNAnTM3Iv13gfEi5yNBF3agjWqOB2EiAo1skFIOYpGSTOtBE7QNrC1+57mdMKxPsmYWphALZx5ieVs1lWL/7XT5o3dTER0mDtYbCSIviwtT3TIauHN/1Br2iG4fkqDsKlKqj6SJ0aSLbdSQfj1OMu7gWYWm6VOk7Z0YG3KIe23T9RV/GnjNP9s94+sJU/eXuP0heb8n5AS2iwESbbAmwPaesYbEXacu+ZUsXJQuv1vECMADOl1c6gOhVokefNhe9UAqReddaXo92WtTq5LWuOM8pMVCmOQ+65MBnDKSqk7ggWOzEPE2mjRYU7ceUIPSNGpjs97LlKhjxP5tMpmmrhV0gjw5UBVYlDULSAxBchwYnUReIE41VLOoax0MWwS0cPVqUmqL1ltcbX13m2XcDlB1Eg0wFhm1NqLEohYqAXuLwIne+WDMWYi2nGHStQw1GlTVw5V9beN9Oy89ddHO6NT9wsXXQPo1YWJPOYPQSAFF8ZDF8qrrbkb/KbJo0jXqlx1wbCxB+M3rUhS5JmlEGLylNVqdOqqdA6wnniVAWcW4y/R9cU8KzN/472PeNprlaTeItOoR4uso4GnUHesxMKZPuNrBiy32GCOt6l7aW+kVo4kJgDTzWfNw31N/lK/tLwZaKB1ZypBR2dyVWSjKSLKi/RlZAF3E2uKILKVAlYWstDErVqEkagkm9r8ZKbMIrBgoF3cgASxaZbSpJaJlniIXpsZ13I025zZNDC0aoDhi+wHzMXcKdV1PJoB1LGpqjPp1TElVDROwB7YzkboiLa3hvWqJ9IrUzDLlAvwvaGUHmKNIqO+k2grXepb0ldYP/AKg7Yuuux47SvQ9UNnR/ZBzg8tTOs9k0pNTBplZcA1QwOphoASASCqgQLgg+cycsSDlI22iIZapNT3tTAcY4bTptTpUwR4jEtP2RcgN7wPXfpe8HAqWSlUCoPav8B/rSZrC66naO46MVnPH+tt+sy/8AiHATue4zb+wv+Q+cotxfK6n1LUBOoEwp3ImDv0/HucAzmHNNLnth6XFMpyxVZdPkwm5IkARuemJnaQU00m1CtlFE037XBiCsxuP0jbbEzsZqnQThCipQZmMyzAgmVm4AJBiRt07nqcS7bTRw63JJhEFCFGsrpMjmib6thaJg7dBiFmvMGigsLxavSygVtTmCOaB2/srPn59cX0j8oM0KZFrwH53yisGUuSF02UbbfWAvtfyGKLMZsU1BuIOpxJKqoKasAuYoe9F5cAbdguN0tWPcYOsAFFveX5yjhkQEHT/rVD9XV/GlgVb2D4fWbp/ur3N9Jp7W5+rTVRQr0aLwzTVGqSoELEyEk8zbgR3wkI/ItHj1QfT06AqF0rMFT6ulwZLFgCDMkCWY7DGyoEIy2EjUPaIpUenVqsqg6GIkOStSoZGn+jSGCkA20qBba8t4FnC7zouEZU5lRmKNRHDhA3iBg+qj0MHeQGnrb1wdaoVQpvOfUwzVKhqIRY23vw++sDmeBmhpcVUUoCguWPPr6QLguTO1hgdb0nRpg5z4cfKYT0TWJBQgWvz43/uN5PhlarSBFRCpGkGGB5QFMyDMlZt33xKWMpVVzoDaEbA106jEad8qcJyRovUNSopasQQJ+wDMWE+92xVasrWWFw9E0mYsdT9JO9tun6ir+NPF0/2z3j6zb/vL3H6S3w7IKaSXPujt29Mb6UzRorJGey4bNCkwBVE8RjcEgA21LzCCUNu+MmuxcKOWvmLfWC6EX635+aTCAUZkLMo/7tytSm9wNK1hJDEkCHk/ojcGDkGxmTTBFx/fxk/hlctUqZfwkeC58MKqhdDadI1BQ8xIJjrfsRmsLwCauU3PL83mCoFRqgQAsLKIEjVpopIkAcy94Lsb2x5vH5sbj1wlyEGpt3XP2nXw2XD4U17dY7edgJrmHZA1OvSLSLeBTqMrj7P1tDg9WIHusCIMHHoY0K6VcI2UfyBPD63EEfSGekyYgXPCw/LTTIcPDUkqu0s6q5KkBWMhuUENbVuDYwbD3QPGekKuGqvlpqAvvGxPcI2mbFUEWo5N7HQC3jp848OIOS7uwQoSupQg5FRX1EurESGkiYEddyXEekXVqSUUzdILgE21itLDgh2qNbKbcIVs64IBrNLEgD6PmhSxj6O/KCf9QMK/8piirkUh1PaNzbwhzhKV1BqHrbbf1BU6xp621CmBclEpry6VYFuRizc14ibQBhh/SVV2pJRQEut9TtBLhUQO1RrBTbQDaaMS6AAqaRGokKknVBWIXSVYGZ0yNO51cs/5d6dGrnS1RCLi+msnqKu6BWujX1sLyTlsjqFZWc8hamrCxIUsstuCSEAJQIbt1ghvEYoUXokL7Z1127vOVSqVqtGpRL2VRYWABIHMy9SaopJ1KYs0AKwRY1BGJ0olpvzfpWELU/SbV6zIFFgSLX63fbT5yzhBSQNfUi+2ndeP5msuYyYzBUBhz05ncNyi8EhoA6TI8sdCowpXY8Ln4QI/VQdv9zTLVdSK0RqAMeow0j50DcxeLEWNpCP9bb9Zl/8AEOMHc9xmm9hf8h85LrJNRx+kfxwqTYXhzKmUWEUQDihVWDLRmnWUcpgE7ef3Y0KgmlaYaw1kXlV5jpMAtBAmIJi8C9x3wS8MPZm7oTHx6YG9TKbSBM0VdAytDSLj44z0vZL6HtkuvldImcRamY2kanlF45wf3f8A3GX/AMQ4YpbnuPyitb2R/kvznS4YEBB0/wCtUP1dX8aWA1vYPh9Zun+6vc30nNf/AJRyAHh1UB1vKNBNwonb5z3gYVWPQHBM+mVj8sZEpgEK6uWkKQAhAHKxALRewOxGNgEzTGKe0vs6IqVDTVZqs3jMYcO5g0gJAYWkbi/2jOIJh1DLrLXspxWlfKUVqAKhqICxYTABGpTqgsQY8ztYYJ0dhcwTnTqyvW4frLShBaIb6TfUNUySIid8I4jBYd1YhRmN9e2bo4isrDMTbTn4w3D1/JyWrMqhha8kxvYY5mAw74Zi1UgX7Y7icQjAAQeQoJmatWq9OUkBCSRsINpv0N7X9cP0wtUliNOEQUBzciLe2YgAf+hV/GnjoU/2z3j6zD/vL3H6Tp+Gf0Sf2R+GKjE5mhmlNXMOz6PEMI5R2QBSQTqQjSCqJuwuJwrTxNHpmUsM17WvbYdvaTBlGte2h42P07AI/lqEmndXDuG1KweadEFlIcjUR4mmzM0TY4dvMAbfm0g8aq/kvEfFgkEa4HXUpWP+LW2Cgg0teERq/pYoNz/1B8NOuiFJ50gEkdUYPRePssFRpH6QG2PN4mqcLjkxjDqOBfsuLEeE7NBenwrUL9ZT52NwfGP5jMlg5qN4aQZ0MeVYuxaBzdhsLbk2bqemOlrJSwgzXOtwdvzjBDBZabPiDlttY/nlEhxrLmGFVUFxoaARIAUMhUuNH6JA8yAMJ1vRWMzVVNIOWJs5Ow5CFp+kcKQjdJlA/jz74hn+KUWo5lVcFnDBBB59VFEBW3MAwIJ2GknaMdGj6OxAr4V2WwRbN2HWJ1cdQNKuobc6du03zPFqJqZdg8qpcuYPJrpFF125TqaI6QTtfFJ6NxAp4pcur3y9st/SGHL0Dm237NJTGZp1KbuHHh3BeYHIihiCRFipuRB9Mc16eIw+Jw6Kt3VNvOPipRr0arZuqTvA0uIItMBAzUFCo1YAlE0iKYLAc8xBKyFkTE2M/ozEVqdd6tld7WW/IwS4ylTNNUuUXc9/5rB0+IZceJoqhmYsxCnWSzajpXSIJkmFkte9sEOHx9epRNVAoQjj8T5TIr4WmtTI1y1/9CYmdy6L4ZqkALp8KoT4gjuhXxS0WgEr2GB43B4vEOR0S3vpUBA04Xl4fEYekoHSG1vYI1vHqtKoaQOY1gVGlZYlkUtKBwWgEKQDA6m879eoquppttpqPn5xdVa2fjyPL/UrZejoRVmdIAk+WHFFhaLSA39bb9Zl/wDEOMHc9xm39hf8h85KrZhEqtqYLqYgSYkzthR/Zh2F5vV4gqBWZtMnT4ZszHuPIT8/XARMATMrnPpKi6w7Uxr5YlhGw67kfzvesvLNhm2zdNTl6gpVG+u19MAMywJE2jv6YYJMKFHjB8P4s9an4imG1aDR+uh6Mw3AMYDUOt4amulptRz6qKyhlqFLOymVm8+nX5HGDebtNsznabUPEDDRuWBkbidu3XGk0aYqezGeDnl/9xl/8Q4cpbnuPyiNb2R/kvznT4YEBBU/61Q/V1fxpYDW9g+H1m6f7q9zfSb+0PDmrNQAsAzySAQCaZjlkEzhdN44zEWtOfzfs5+UKKDGol3qSaWxdHSPe6C4+GDBQvWvFlrMzWt27feG4t7PJVzL1Kj1mGoE0Z+iJXZtGqY5bz3xABaWarA2/PnK/snwJMnSZNZqNraargaomAJ7AAYC51jCbawZ4bVzOvxmZUDnwwRBi/1QRba5k27bp9Gz3z7cNpjKWveKZjg6IxHM4kgAA8tpAsw3n7sGTA0iLmLv1TzlngVk0AQAJAvIlnmZJ3ifjgrU1pgBYag5YfnbJPtr0/UVfxp4JT/bPePrKf8AeXuP0nScNf6JP7I/DFWhrxDiFDL6jqpcxuWTlYz+kpBOLOGWsvWAI7dYB6y02437JHq5CmG10qlZGI84vE+4yMSYFySbDtihgSqZKZyjs1/+QPwgziFLZvz4ESNx/K1m0GHf6gILueawMEFhYt1NyMEw1GrSuKrhgewD5aGLYpxVsUU3HeZ0Z4XTqLTMPSdaagFGKuo5ZUx7wEnlaRjTAZcpAI7Y0ignMND2byZ7RcEppQLVK2ZqG4RRF3gkQiU4JEE6iLQTiqASif01UX7JnEUjVXrsxt2/aQlybh01UK5BQ6tNKqJOqQyrDAkrygPo91idMrDfSGx63x/PhEhRXMLpw5f7+NprS4dUqUmK5dwyuSTIICioIVGZOdjsNLRpAlpOnFdNYg5pr1fMpASx/NtIJcrVYaqSVWRxyHWQbKdw1BrsysBp0rYC0gnYxZGhP55zHqAYZgNO+x8rTVHFQUxQpuCJ1tozJ13fcoWbbS0ea35SMDYda72vw2v+bwgUhQEBAG+jWlKnls69M6i5hiFD1GEgkHlp1qWuLkc1RdjBAjA3SkSLj88Db4Q1NsQFNj+eIv8AGCpV2pPrSnmERQEIUVFIqwkjS1RtUwyyYWSLt72JlTsv9PzxkzuNetbx38z/AFANVrhoqiuWdoKjxQDpLHSztAaTCSsKFYknYY0VQa6fn5xg1NQ8/C/59IMh18VStRS6aYVah+k0KCS4s4DWBXWTymIEGKabWKkEeE0VqrmzAjz+f+53SV2MIiFn0gkG2mftHofLC9WtkOUC5jaUiwvsJEAcZttahT4mXsDI/pD1xmm5e5ItoZKyZVUf9h84knA8vmalRqzsppEskEXuZmdxyjb54EYwoNzKGc9nUrP4uYLCtTjw6crDfZBveW8x8cDXQSguk9oezNGlUeujN47cppysKLFiBv7q9+vbF20l2NofgnshlaKOtFnqH3g5YTJBAUaYEW7TffGiZrjGctkwgc0iWqVXarUURIYgK15kXAEdzjLC43mw1uEXzvCaLl2U6hWRRXYQOWNAJgwDpZjP6JvbEyi+8ma3CC4TwahQZ8ujt4RRpd4OotAZe2xG3+t5Re95m52tE+D0wq6V90ZjLhfQVCB92GKW57j8onX2H+S/OdPhiAg0/rVD9XV/GlgVb2D4fWEp/ur3N9JZqqpHMARveI+/CgJG0dIB3iFQGeWhSImJle4A6bx0xeY85nIvITKxE8lKiw76lHQnt5fzeLzNzkyLyE2NdwEFOkhkXAdRBiYHfr9x62o67zQAGgh6td5GlVItJ1i14I26C/3YqSLtnJZ4WkwABDeIt+UkyItcAehnFyWEdoMCJEDuAQYPaRipLCcz7bdP1Fb8aeDU/wBs94+sXqfvL3H6SnkGPhpc+6MHAFphibwPEzzL/ZGCUxp4mL1/a8BFdMevpgndAw1HY+qf4i4FV4RjD8e6P+IqkAsBO0kD6y4BUdQQCY1TQm5Ak/2hzukqJtBJtIM2UEC4vscU02sWqcTzVTQKapoaTUciSqBdwAwFyQv1oO+xxVzaXYXiWWzGZZzNBBQbSFcgh9YPMCCdSACfqxEHcnFG50EvTeXMkQHokvfSAFIFrGYMA9B88UQQQJXCFy/D1oT4KMBcgSIB8vWfl8MZrHpCGK6jY8ZukgDEltDw4T3M6/EJFItexkXjb8B8sEzGYyyVmcnULmpyaRUJAkyebrba3nYT5YBUApKaoGveZm7M2QnSUc3kNaFqrhEAkhgsDzM+7/xHGXepU42hVpqus1pcKFHnWG/SgW+PvR56jHaMDpE4ddNRLqLn75NGaXU4ZSR4gfeDIWBPpOxmCoMWxXThnJFyDtpN5MtNSdIkK+vOO3epl/8A5nDdBrgm3AxTEkWWx/kPnOhqezyX0QJB1FgSSWM9xA8vPAzrGBptDZvIa6mvWsgJY7jSSQd7SZ6dMS0u8E2UUuaoq04Zmg+bAqBqm5/zxUq52heEolOfpaZDaYggbSO58sS1pCbweUyyo+vxaZkMLH7TTvPQiMS0lzBJkVpqyGrTBZFUzbqYkarzcDznF2l3MJ+aJEalI1M2x+sFHfyP3YnC0lzvEczwgZdaekzrr0JHQFXvHkZ26YPROp7j8oriBZR/kvzj+GYvaDT+tUP1dX8aWBVfYPh9Zun+6vc30lDiFQqN0Cnl5gbsbAW6b4QYv/EX8Y+Io1YG48Ej3r6pi7D7gD8PTGc1b3R5yaTakhMBPBDAWgNvHadpYfA4tWq31GnfJpNKdVZt4BBJAs3Qx2idwfOMFlTMvJA1fk5Y7aQwFyTvF/eX4ziSTRVW4Q5cMRAENfZbmftGI7RiSR3IOenhabmEDC0wvlsACLXnEkkT226fqK3408Gp+we8fWLVP3l7j9JlPM6UpgvcqDoDAMFgmT1E6bTM+WNGpaEFMSk1MPHkIuSDy2uIt1xpahA0mXoKxuZ5+RwLKD/vHp8L410rQZwyQOYDKvImqSDIJOxDC25mOmAYms6rcC8LhqCFrXtJjZ+pqcwpkaea2mJ2EGQJ6/PHDqYp2JzjX5TsphUUAKdPnA+MOtNwCFhVIA1LBmQ0jYG46HY4pcWwFgTaQ4YE3sJ4uaWwhlG1S0COYQdLSQSA3URjlZsWLkOfM/WENFddBMqcQALeG5MXC3YSfeMhWJMWNwPMYewWPr00JqNrfjAvhka2nlGKnEJPuqDBgkEt5jp8ow83pSow6oHzmVwFMbmKZgn6yxzBCCoUBm2sAOl9tsLtXrk6m3whhSogaCPN4i0np08tRq1FgAuAqkEj3tjOk9L3FoMnoYeo7HKR4xGqijUHwjGVALGioJQFtMGJ5SQA3Qg9d7zixULEJwBOv0gcoBvB5Pi+XC08utSmsqHCGVhVYfW2QzsDB6+eGgsxnntDiVGo9IBkdqD+G0PpAZgBygxrXSYsGkWxCkvMJ5mq1JYRlDPrK0xqg2PLzTaZn1OA0Shp5GF9SB3TNQsH6p3kulRK5pwyhT4mXsGLf94epwzQAAIAtoYHEXIBJ/kPnOur5isGIApx0LNBiD0nvH34VZnB0X4xrSA8epqYlKIMcvMCSQDvfYHt3xpWY7iSelahEGlROxW/UC/XoeuMZ6nu/GSwgMuKgs1PLiIgA3FiXsTaDHwJwRWY7i0qNUxUhZp0pBWQDt3i/QhY+HbGpJ4yaohKRMi5jpJmFJuDcb74kk3yxrAlStJVEe722NtVtrenwxJItxhmNOhrADflFGdO3vrt+Hwwahue4xfE+yv+S/Oe4ai8jcJzTVaqsjkkiuEYgWH0MWjYT1GEKtRzQdk1Nxb4901S1rLfk3/1lkUs3pALoTF7CCZB202FiPj0jHL6XHX0Qef3nSsnOFFOtI5aUTcR0v5eYHw88Z6X0h7g8/vJZOcDlKGaUDWabEEk2UTbl2UbH+T00auOvog+H/6ksnOZUoZokwacQBsJkTJnSd5nrEn1MFXG8UHmP7ksnOa0stmtR1NT06wQAFsl5Hui+w62nFtVxturTHmN/OVZOcJSy+Y3YpPNMBeafduVtHx2G9yctVx9+qg8/vNWTnD5ajWBuV2uYEkyJ2G3vf8AF5YNh3xRe1ZQB2f7mWC8DIXtgGCjUQT4FW4tP9F06Y6lP2D3j6xR/wB5e4/SHy1VGpLrYo8CCwYBoHkNxO/oQbYpqd9oYGNZY0VbU1Sm8XWxBW87jp2ECI9InRnlLzCaZ/jVLmZQGJ67AdPewZKZmSYL2b4ia2tTcIRB6nVrn4WtgeJTKBNU95pmsw9Va4WkilFHhNUMy2oiCB7olbFT16EYVKBrZtYUOV20ih0JTV650v7pFPUy6+wWGcm3foemFGwlImwBHj/cOuLqDeNPwpo1ISxDKYhQYBUwCWjb0wrWwOZCEPDaGGLvoRBZlqyugNI8wK3ZIElQCYYk3I+Enpjm0/Q1YizEcJDXQCbV8pUp0zVLiCwbQil5aRAWSvvHedp3GOvhsC1NAhbaCeuN7QFN2Ziao1E2ZZ0jl6EI3N2hiR2tho0Be7azYIK9Q7dnOWuJBKdJlVQigA2ACiWA2EXP7MbyDIRE3qZetJ9PiNFaY065Dag2gxq2+NrR+AxBTyUsig3324wNyTmMLlq1EvqXwVUxNugAlRaIJg7iCAYtilxKEWbQ8jChCfZmz5qiIvSJUABhHvA+9pIEta0SAZuOuauKAFk1Pw8ZRAXVpNrvTWsrDS3LykGdLjUDEgxIaPQnGQVpkZNdNbc+cGtUN7RgPykVM2zCf6TL799Zw/QbMD3GCxFrLb3h850meol3lssH06grFwJESOXzNr7ROMRiDOQBN8sAJN/E2BW5gby3LHxxlmyqTJF8w9YXXLhir8t22Iufe7x8Z9cc1fSd96beR/qE6Ptmr5bmVlyonUZnUIDC5BDRcD8LYn/JH/0m8j/UnR9sNQUSCcuRzE+6ZjpfUYPntb0mj6SYbUm8j/UnR9sZy4JCnwQNgVlgBYqTBAkAACI6nDWGxRrFgUK258Zlltxnvhtt+TJciSHFpsxFpEADbcn44amYDis+FQBTRFeiNMzADiL9bYNR3PcYvifZX/JfnFcnnRoWTJjf0+OLp1uqLxW84vJcZNIQUYkMSpR/DZdUBx7pWDpFosRhWlXyXB2kXKbXJFuIj9D2jqPOlcyY/wD2V/hYKcVTG4ELZffbz+0N+eq32Mz/AHlf4OK9bp8h5S8o99vOZ+eq32Mz/eV/g4nrdPkPKTKvvt5zwccrb6Mz/eV/g4nrdPkPKWUUfzbzmr8eqjdcz/eR/BxPW6fITJCj+becJQ4zWdgipmSSYH+0j+Di1xKMbACQBSbB285tR4vWcSqZkj/+lf4OC06i1BdQDGKuEakcrswPfF8zWr11hab840+JUq64QkFgqhFAJ0gEmbY3ZiLWtBqiqc1yT2xnidVky9EFjZ3WSCLQsDmn/XBKRBaEsbawOWzq6IaoqsGuWSeWLbCBfC+LpVi90vbvh6TIF60M9cMqc9MkiQTSJBvAIEbSD2+66DCqlySRz1+8KXpjcyjwjN06VSpJ06isW0rKggjaxlvT0wZHqVKevh2y1ou13UafnCUajNV8UAqQY0XBUkL3E/WAM4XqVmp2uJnJcmTuLCtSWmqIahJILFiIkEXME/W8getpxKeIU6yihE8/Kcwwmqpomm2orTezgqwW9tjDaZg2HliLUUtYHcSERrNJVq+A/uRd0Ym9xAmD1+44DSqkBhfu+Msi9tInwzMxUrJSpBXJDsGMqYa7EAxJDbi5gT5masygMZMmk0y/DHpvrKwCDPMCBBtAPuyO3bGkxCttvCrYJylTi3EaTL4ZccxExzWkSbWt236Rex6Qe1yLTPqz1BoNIMVw2VWiazFvdLqVDNG7WGkDY7QfduJmM6rqTAZTtaI0yEFXw/d8QhPjAHyxycUmbEDNsRc9wv8AQRnDEKhtzhWyIC1VdELkjwnYudQ2YlVi4gsBN9QWZBx1giC1gPIRU6nUnzkfO0zSAWppLaQ0LsSQJ02mL4TrgZ7r+GKV0FMAiS0z7pVLaC6vpEayGDIdSMrwdJBHYi5GDYasKQMpW6dDmuba35dsov7RVBumZ/vK/wALDAxlI8B5TBCj+bec9X2hqnZMz/eV/hYv1qnyHlJ1ffbz+0z/ALQVfsZn+8j+Fi/WqfIeUnV99vP7T38/VfsZn+8j+DietU+Q8oTov+7ef2nh9oKv2Mz/AHkfwsT1lOQmWQKL528/tN145VIkJmf7yv8ACxRxdMbgeUoBTqHbzmfnut9jM/3lf4WJ63S5CTKvvt5wlLijsRqSrykMviV9Shh7p0imskG4vviHFLbqgTDhR/InvM3V2/Q+SftGFcx7IGcroxiJ+tHlHuF11SdU3+Q/bgdRSdoWnil/kJ3fCcyfydClwdW0meaOl/l54fwa/pi86SOCgKxrMVqikaSwvza52Ji2wnfvhnSMoosb3nmZqO1GsGJg03NwJErgGWyEk/aUxubCR62Wy4vUqkwI3sAPQY4uZmgjTpD2jBZPinD6bCp4gAQ3Y64ETMmIEQd+x7Yfo4PEiot1lgURqN/GQOBcSpg1JqBQrimdzzyIG3nHrMTGHsNgKuHOpuCI/jfSNLEqAoIIPwlwcWy3XMJAMEnXvAIuFsSLxY32w4qtYaEzmMb7GeZ7NZZ2oIzqxBaosgxMBRZhMyexgxOFqoZusNhvCU9LCe1uAJ4cFVOpSrQo6g7WmYmDvMHHKpV3Z7Zie+EWnl1vKNFaFLTTXeyCNwDb3txvPfCykvUF+f1mi6KQOMWzns+whqfMN9DNpMdQHix8yLd8dwGdNMYctmHiP6k1qzKYqh0cvqOlFgACmKSqGjUg0kcrTa+95a+k2qhvZ1Hf33lfhnEWcspqIwVdU6SrWndXKhegsCJOAPhaTcIGpTy7XHfrNqufLoddGqFLRIUGdLDrIAExvbe9jgIwSg3UyujJ0zCb1uLpq8NpUkbPpE6rACGaTPQA4yMAAb5pno2I0itPOIhcIERk1rF3tSuxJBUoswBMknB/VkOrayxTtblp2b+cTfiOpl1NUqDUJUJpTSTDcsa6hAJjlBmL4MqBdAIx0OUE5bdp3+0Zp8LqVyGan4PVibsztGo6RsLbMQZLY1e0GK4pgga8uQmcTyFOlsWELqbqTLEdwOg6YWq1mV9NrfnbFHPTsb6HsgFr0/DIAYLq03W87g9iLY5z02at0pOsNTARMohaVUsiuuph3MLBB6lja+GRVRWscwHYft9YvVUjUEeI+/0kLictUg80ACxmxjr5T92B1Kinb4xGuRWqZQQABfv/ADhF1dQFAkdAFE7efTACGOpgLvVzVL99rD4f1DZPJvUZvCUs0XBjYR1Prt542qM/VmQajgINhfTv3j2T4JXIg0jG8hhuRtZu2Cth6nAS1otaxEabgdYCBTb5g/icUtCpfVYVKRHCQs4XDssxpMETeZgjzvbGwltxDLbaJ5vNlp3A2jB0QKJy2Z67lV2nmWzTL7pt26Yj01bcQIZqbWBltsyFAL2np1+WOfk1sI2aoUXaLVOKD6qk+tsbFIwDYsfxED+c3+yvyP78Eydpg/Wm5CODKDAs8Z6ETZcmCIi87k2iNojfzxOkk6AGVeGcXeigpqiECbmZuZweniii2tGaT5FygRpvaSqf+7pfI/vxv108vjCdOeUSz3tEdLqy0xrUqYBkSCLCbb4gxRa+nxgnxSpvOO4rxR2L058NGUgNtpYyFYkfVll5vqtvAZWx0/R2GpZVqDVhv/X5v5wKVg40imYzAqHWW1XWosvdVehAWZmlDvImJLSJJx1ApUWA7PG/xhGa80qfXeQBqUq7Mh0lSg941Bq1eAAVbSZm5iGlMHKube2vx7O2DzEaEfnf4Rii5p7EltQqOmggFGXw1AK+IQQaU7EkMBIvNFRtw238eznCK2n53QvsrQTx6Cs4Ap0rkyDr1ap0sA2keHTgkAXA6YDjs/QvkW5J+Hh3mSlURSCxsNvGdvn+IFxC2Xv1P7hjyVM5DeNNXvttDcL4cZV2sAQQOpjb0GJTP6i94kp0T7RlnOcUpURSFVwpqMESerH8B5+Yx2THbzOL0yabBNGoxGtS67xJpggt2+PXYwSE21EiZnLUBRRqmpWfTqp0nZlNSJjTcG4gcvbF5rbwoxDL1iQbc4kcmEICOwAbXo8LSJ5CQ0uhZfo1MQN8TPfYS/WmfXoyb8vHn4whL8uqsRpmGFJCb7tIqHnAMBgLAm0mcTMeRk6Uj/xNG8jkaVSo6NUrsQqu2tSiuB7pnSrPp7lj03iRAwO0wuJubKLEdn9y/RylOmLKF7n956/HEuZTsW1Y3i2Qz7vWq0zTVUT3WDybEjmWOSQNQubedsVMgwHFsmznUrEMBHkeZsc/GEhx3QLq17qbSTTrMnvSSDdWnb9nrhU3tBiu6rqdbx56dOskrykd+nr5eeM3M21qy34zlq1DSzsRKxuD9q2/xme2CbxEKVctbaIPUjlVSG2BG9vXc+WNBTe5l0V6SrmKA73G3+pc9kc1pqVmS8UWYDYFiywL9zb44ZwvtXPKGQVOk/UPC2+1pVHtF4WQXMMi0XdgulVkDqOWZugmCbT83c+lzGcutozxf2hanWyyITFfQVspF3TVJN7oSB5keostbSUFkriuRostVix1anO0wdZ6xbHLquRWPfMikX0BOvKQM/wkBuXVp6ahB/Eg/dgqYjTWct6LUmOhsfA/WLU8kY6eQM40MQJnEpdzYTpcvksvmECBfCqhYBHWB/1fG+FC7Akw4oUK6hbWaRsxw8oxVhcY2HvEXw2Q2MH+S4vPM9AI22botZoP9pf3jGOjeN9PSPGDznFI5Ug+f874LSw99WmXxHBNZmS486BlIswhj16/6YKaFgcp3mUxTLowlzh1OhUWWqb7fVj49ThFgVNjH6QpVF1P0nr+y1M3SofiA33iMX0xmD6NpnUH6yNxPhiqfC1aouSJEGCN9wYJBjcMR3x3/RNB2HStoOA59vd9ZzMUwwzZEOvyinGeDsuXV9LaAQRBOrfVq1FgVMgEOWF994Lxx9Jq3Qrwvrw7u2GwuHrAGrU4/nhJNHKVXCvpqNoZgG5QdLqsDWhA1DSeZAQQ0EgzF1cRRp3BIG3n8fjGe+ZmuD1HDDwYJpBAAoIBAcAAIXIWXU6VmNHkCRp6QoXFn4k/l7cvjLtc7T2uHWuUbWhasGhmC6aUiR4c6iQAwkAqS2vVYEHSorKGUgi3Dn3/AIeEjLrlYQ/B+PujK1UKV0NUZQCNAQAy0sSbtpMBeZSsGZC2MwFOvrsdNef546SqIWnoBoJ3PsxxSrmadNqieGWY+dlvHS+4PYgjpjiV8LTpYoU0N9p1KLF6ZYy9xLhNOoELhW8Ngy6k1Q3Qi47fzGHrSs8ncS4QP6SrUZ2pKXBiDKjUY5ojaBFu+KIlrUYXA4znnfwgW9wh7JJM2SopbuRBG3Xe2MO1xNNRLIQo14fOW+I8zlkpmCAbhQTIN+Yg9RgaVBTXK82mNCrbK3w+pEWUMTJpzeTIS4O+zT/Py106bC8168uwVvh/cm+02YTMVxlTUFKm6Q8mGK0xqAWbGG33lQ0TGM0QRe8VUksWPH8+s3yedrGk1TKIXq1DGmu0jw6ZCSOeIGkxMEyxv1LeFvOh4G6+LU5NBlYhSAZEm+zXt8L4vNL6Mi5jzUakkDxbyATUBW0wYF7/ALR543AwPEqrPTZHAUMVgjyZT177etvPCuKqZUI3JmgmYa7ScOHIFMNMiCpIIPkR1E9McykSHBmVpqpuDJfFMqlJETTCsAukCwN7W2F47CBgjEmoSJGVgc6bjXy/3J/EBGlQOsQOsKRik1MrD36Vu4x7h2bFOX0Alk0m4UiYO+k7RtGCUamRucWQ5Wm+azlHM0lotQDpIqLprGwiAdQpzEW88NCuG6uWHFRtwDNq9WlUeg7ZYTRgU/pjaIiR4fNsDf8AfjPram2koV9bc5oap8RgUq3ckwJXnJO5AsO+F6gDsWji0SuzGGoV+bToq+8RqYWEDeex6YwacKosNTeFoZGq9MFKY0kWlh+BxroCdbiLPVZ10A1gcjw8+KBKFlM6VqIWkeWq2NthKgXMduetvlEadNQ9ri44X1huN5OoC1Y04UAfWUn5etsYXDttcQtWkWOaSFWfqx5HAbxO0R4gtN9JpUykKA4kkFupEkwMOFxOfVVWsUFucm1Mu3bfBxUW283Q6rXPxmU6DwTpMDcxOLDAi8JiVs1+P2EqZau2lRqCwNtE9+s26dOmEai9YkTVOppY/KU3IgFZv188Ep0Eq1Eppx3hWqFULxXwySPPc/z88eoxVUUMOxTgLD5CcejSNSqM3jKtDOVZAVix7G/8+uPFz0K1Kl7CB4txqkcwMswYVQoJYAFRKzpmZ2IM+eCCi2TPwh6wBAJnmXqwysehHyGMHaLKbMDNs5nPGfno1FpwYYwQ6yR8O8HoynrgxpGmAxPlGK4BsZz+d4MDZDAJBYNqYHSwYW1CYIEAyvSMeh9F4g10Oc6j5GcqvWakRbUH5zs/ZN+VaZ+p7veCD169b+Ywpj8OExa1F2b5iOejcQz0ijbj5ToxJCz2vYRY/H8cajsXztMBG1kXUggnckRF99sUZa7icxVydQDlEyzEoYZTqclSQbCx6RgQYRtqZ3G8Zy+Z+iR2AEjZdveIEYBVUvUAXlEyDmtBHPAIpAIgcxMkX262J/yxeGw46YrVccwOMrFhqKqQLxrhVEGnUdaampOu41TqLEgEjz7YYQ3vDVUy2EM7VHp1GKmiYVFkKCOYCQw6R0mL4u+nKYtra8GtWAFXnIET0/efu+OEnxKr7OpjZJIsdBDUqAUFnPmewwm1eoT7RgGy2kPiFdKpIZmVIsFJDGDf0Pn09cHoEseuxtFM2duwRTJ6JQAwmrTq13S8LzNJY6oUbmcDIJc2Gu9pSU7uc2nGUuJzrRQQ2gDUXN46mQLnY/HAwbm5jaKlRwrcNe8xTOozlQgUrM6gdoBFzHntecaUgamN5QDtGKDksCw0lSDCkN194WE7bH5YLROU34QdRQ3fCZfg9WnHg02VRdIIkA3733+843UpVXYkCc6orB7rBngFZommRH6UfgcDFCqP4/KA6JiYw3DPCA8WqF7AnePNjfGGpuurCMoCpBZ/ifrN1fLr9YufIk/hbAjeaNRBrmJ8ZnGuL/k2URoIDu1PsVkuR32AO2H8py242hBqNJyHD809UqyEK0gAqCdMGJ2uet46bYcwqUaeHNJzcnXflt+cZzqlN/WFK7D6zuOJ1KhyR8QqWMSVBAN7cp2NtpwudCbcj8p0G9kznscyc+BNKwAEd773tbywQtBdHpYQ1KikS6wOhuBbEZydoehTogfqCbJlqRBAbqTYmNzG/bbEztGalPCvsYLL5MM4WYB3JtAFyfkMTMYitEMwEer55KoCUGU0lFipkE2AHwn546foqmVrFmGw+c3jj1RTG0S4jXSjDMyr63+744f9JZnpBV5xTC0WL3UTVfaogaUWf7KR+J/Zjkf8dUtdiB3mdDp8uhI8PtD+Oj5c1mpg1zV06iOcJAtqAsL+75zEnGylNaWQsO+bzBqWbftiYzbEQabx5R1+OFmCWt0g+P8AUWuOF/KV+HZ+lGh5WVhtQNyDIMiYgHrH3YJWW6KUtcco4rqVs0HUy0NIIZTMMII79NjbDfop2WswbiPrOfi6Og4iDqmol6JipEL2lpifKRjo48ZkB5Ef1BYQFamnGdRw8l1Jd2EGCdRG033t6SYxyaZdmYZtu6dmBy9OnWeQ76l6k3HpNx8PjGIEFQmznSFIamBcbz0gBKjCW0Kx1ErBKiYlTJJ8wcHyWGpvKFUjbSLVkkQyMAB0htr2iMI+sKWDagy2S5uDIlGkXGkJUQmDDhQT5kKxAJAnym98GqOiVekOp/uCq0elTKxljLpI0qo5ftyTfrsAZ7xfAqmLYbC0OAoULfaM5Phqlxrv5bD7sDo1GqVArHSUzADQRrLZjLkstMTpsSJieg7k4bFCiTYD5zDF7XJk7j9JxSTXoDF45CxBGkmIPWRgWIw6Kt1EBVuVkb8lZmgpDTGkgAiwPu/VEEXwmysm8AUa9pTq0KdJF1jUdatuRdSDIIuI8v2xi6DhXBMYAWmusjJQ8esKUkL71Vtopr7x8tWw7ThlaavUuu0bwlMKTiOWijm3238oYZtGNXPOg8KmPBy1MizGOW3YCSfU/Zwe4N2O3CdQ0SAuGX2jqx5fn5vBtQqLTo0AzHNVzrMk/Rodhp2GxJtYBh0GBmitgLamUVpVGeoRamot3nv/ADhOvzK0xpRiWZVBHvAECLyOX6vW2HRoLTh8dJmc4utKmHe4JiUuLjeZgA7j4YsG8hFpF9qswXSiwpFtRbQpiY0qZbVASwPU2jqYwviELAAGDdM1hOVy9DUzHLVIzDjSUaNFMr7kdpHQgwQbdxZRlW/CHfChQCpuo4j6zpG4oqKHqA+H4ZZqyFwpqIFLgL+lqYi99LfFm6nUzN4HinE6VbL00WsZzEeErdSCDBMEr0G4uR3xl0BBtvNqwB1nvCq48AUKjhTSYF1ZSSZbXZp5lO0gHGOogu5majqLxR4kxt0xyzvpOeZim/fFyCXD7MuQeZYPQicODBtzhuhvA0PZ4ksqsog35GAnbeIO2IcEx4yugk/2l4StGmnjMTTeoqMEnUVJlh3uoIte+CUsIyuDeEpUSGvJvHfDWqv5KPC1JFTQhRWiChEixAJki4kAmRjoUGCAsx0mMTUVdxc/D7xbh/BKNR28diQUIFzZzENq6lRJgz1wBsatVrD/AHKwtQsTeVOC8CVF06tYBOlyCJWeW3pjg43F3qGx0hhhldibSkaNOm3RgB7vn3/ZGFumLUsmt73jtLDDbhAZjjtNbBV+AB+/bGFw7NvH0wQPCKU+KbEUWMSQT+kZO8zf5dMHNFz/AC5fDaZalhk0ZhGslm1qVFHhaWM3jsCfTHR9FK9OuLtpYzm46jhuiLU2BPZHzSICtsRpM+YI/fjvYqplos3LWczD0/1VlTgNZ216gQBpA87NJnr8McnBkMWIN48c2YgiDzuYo0SykHUwuQQIDTBJmw8wD0nphmwG81cwuao6MvXbVJNNj1AgIxFiSevfsLRjbDQzJMjZPjq1TpAFzBIbabdscIrYwSYgMbWmmWqhWRgNRYEdABzdhN7fecMVjdsohs1mC857W4mATzgaCFggmNWw89vQYjZmUKTtDdE3OernGSsviMSkHVFoBVgOUC5mPniqNkqAmKOWp1AGMHlFy6tp8RtDNPhrTYSbyAJMSJkAbTEYZU0xu0ZOKVtt/wA7JT4lnaOYYUATrQ62WIIGmPj76yOmoTuMXiqgNK45wRTMLGAqZ6nTHI2tgNPvFo0mIJmBBmwwg7O1s0jVFTQbyRXzJdpYHVE390rJAiNtjImbeYwV6arTUjcxepqAxjeQqDw3Uoh1WJIuRGxIIkeRxBiTTULYTpYGkWphgxFjC1adBjRVqbKlMkqqvIBkH3WEEE9+/wAzLiqbbjQRv9dCxDXLb8/Ob/k6669YVWFaosKWUMVB+zoMAwABNxHnc7VEUkk2J5zC1WZEp5bqp1A0ue28o12oNRSkcxTUoBB1jdVjaQe9sHV1tuIjUDFybcYlXylPwwtPPLTYNJYMCCI20lvvnFh02BEyVbciL8czQFOktOsKzKrK7agxMhZJAJiSJwKs66TVE0ibVDa+x/uQqfD6Dkmn9EdHiViSfpGQGQpMgAkgwBcatpnGBrbsEM1OthjdTpz4GaV85Vy6Cof6EEuOoLKQCCCOojY9G2jFKGIBk6ajUsai2PNf6gX41TLEsqszoayyt1BvK7wYkRvbGSl7k8ZRpYY6iofKGpcQLpRZacKeUxv9ZtTDtaJnqu8jGayhgf8ArF660MnVJJ7rWjmEYjPVYi4MHvMb4u9pU7DiLUidDsytp1CCQIuNxbqcdwR2BRlgL9G5kAaiSTPS4sN+/n1xcuJe1+XqGnlwijWtdWAA5RpViPhjL1EpqS+1rQbhiRl5iSuLITUC3gIIlIgS15JFzAHunYQRBnm4ir0Q7TJWve30jHB8q4YFIAg77EWkbT16H9+BYLELmItrxmqaZVvab5vNmI6/WPn1+/HKqreqxPM/OdShRJAM5zMZlqraEmPx9fLDVOmF1M6WQUUztNjSWlAPvmYJUnbeAP588N0aRqagXA3nnsVi69Y2Oi8oemrWJ32O8HtCnbvO94Ixqo1MAouuuhiDADSVeDZdjVRo5QSCf91sGwSt0ma2koC5lnPUPoGkbJsfLHTrtek3cYVboQy7iQ6NSpSgjWqn6pLaT6Hdfvxw1FSiLgWvHvX1qi1ZdeY/qVhmkeIqsD05yD9+L9Zq84HMh2MV4plKzBQmYqaSfpNR1AoQRHTckAntODUatR82Y6ASZO2e0uFMGVtYIBB69MJ3g1oEEG8PnsiXZSpCwIxQMI6MWDA7QScNbZqkzf3V6fC++N5zaGU1Mpu3wg+IZemqOxdTUCnTra2qOWQsWnFLdmF4JlVm11MmPnEBQsgNampGpVAUMSpMKSY9z3hJ+BOOilC2YA6GMUcOzi6jSDzPEnaToKmSGIJA+rAiLG4nv8LYNIMgQGU2GZ9FOvzi8KNfhQiyGuovOkE2IC3k2m48ycarUhmLGL1sOytrBZDMk1KqEDkIvFySCLn0AF523wCs10WZxOQ00Kne9xylnI7H1/YMKVOHd9TOl6O/Z8YMVYuzgkCRsLkXG+3YzPfaSdqI2XY2munPHhAuKTroZhpMWckDY+YLTBb3rH0GGyt6qnsi4qWpsO2Fo1HNQIUhQoKvqkmdQIIgQRpnc2Iwk9LLTzX3jaVsz25Shm20o69Spm23lhVPbBmmuwJ7DIzPudr/AHSR+Nvvwa+s4TIp2mtSgCSDuN4/djaVCBcQlHF1cPop05Hb87pZ9l6blnp62C6DBWxUsyyRMwbY6GGq5zYw9TFJXGiWbjKHDuPUzVOXPiFg7LqaCSQ3kLDffYAYIMQpfJaBvNV4vmfy1qAy+qiCPpACIBAuWPKYM23t3GC3Oa1oO7ZrW0nOtufXHHqe2e+AbczYUmIsDfAywm1oVG2Eo8T9sKKNpKVAw30rTP4npju0b1VzKI+MO1ot/wBs6IMAVVJ7rR67nfr+zBzRYb2iZrrwue4T3i/GBmEC09YPUnTBEH7J7x8scvE5GIPETBxOYZF5wmVpGo5nuZvNtRO/qT+OEMcczZiY1qzR3PZwUApET7oHkY7en34DgFsxMZZSwtOd4pmZt1bmb43jB1pKXLkcZ2MKhCgypwLhYVNTDma/oOn78dijgqRS7r85xfSWPqNVyIdB84XK5FjUqlwAAdKQIlRzAybn3o7SMEOAoEWAIHeYicVUFjf4RlshhdvRVPdWI/PCaGMY6MoMcyqrTUQRa59YgnDFFKdGnlzfGZIZmuFt4RmtmNQi38jBOqeMhzW1E1zHDlqKNZgdPXbvgddFqDKZFp3k+r7OgKW8UwOyT9wMnCHqJ974feW1JeFxFc3wzw6DVVqMRYRo0k84XqZ88aGGyA9aWqZQdd4nlOIVARckDoSIjt3HqdsDekhTqi55wtO5Bsdu2V0rLWTlZlYdjBB8+4wkylDYyXziw0MiZnWCVcmR3JOJEnzA2MWzCqQyyLiL23GCaBurMq1iDKOWzClYrOGJJJL05E+TUyGWetjfDlOuDpxnUoYxV4EHs+955STLyIp5fybxmI/4AdXwIGGDpreOnEIBmz/+0A+cHxVtWlA9gYYBAE0hgdKg3G0kze2FKlcbCc6vilY2A8TvF1pdQu+8DfCd4gQY5RpxI6b+thim1tO3QISnkUwmXlSSQD0+Fov8MO0sWKfC+g+EDUol9jaBzuUpVCrOnOkGlDH3iQGPwF4PbDPrVNwbC0GKDjQm8PTWCNKEaZmRYzOw+IGEKl3pgRukAH1nleYJIMC/r6+WF1pkawlerZerIbKWblkg2PQAkd57fcMGVbicpUZ9YQI6KGbQFCSWZjssSbDzn/TF5ASQJo4a+5nQ+zGvW1lI0GCCCCdQ/dhrCE5svKQYfozcmWcjkNDVKnhqHeCTaSet+gJExh4KAbiaIUbRjJq+7LG1jE23++T8cXIbcJwp644lX2z3xFtzH+O5lMvSLEjUbLPfvft+7Hdp4HDp/EeMZp1atVtWsJwdFxUJaZ746lHIfZtpLx2IyJlHGa5Xg7ZrNrSmAYk9dH1iB1i+Ofiz+oYPB26IWneVeEUsvUK0hpVhOjUW0kbm5lQ07d1bHFxvAzdVADeV8lS0r5m5xx6jXMZpJZZOzleSW6D9mCIvCdGmulpz2WQ1aoH2mv6dcdbD08zBY9XfoaJbkJ2psPID8Md3aeL3MNRy9RlDALBAIlj19FOAdOvKH9XI4wHjqHanrQukakVpYTEGCB9ofMdxixUzaCV0WUXJk7McKJYv4jDblDGOXyIi+Oe+EdFLG2kfTFI7BReFyXDTTYHxGaBEM09ZnbfBaeEdWDG0HUxSMpEd4z/R079do33v/PfDB3MPgN/CZnDWWnRp0FklRLACBEdTa5O53wnijW0WkPGaodCWZ6vl3ySalY0a4qaiAU94dfEEwf2DywrQNY036S/j8ZfpAUgoNO23DwmvBcktbxNavClY0lb6pmx7R5dcXhaQe5ufCcmkMxlXLcMpowKrX+awZj49f+k+WGWwiNqSYcJY3vPc7lVqCTTqAhZ1NpAsJIMSfL1BwN8EuXqnWaIVj1pGz3DHY3pqwFhABgeU3645qnLtA1abudRPKfD6p+qR5kgYu8wtF+UcocHAvUb4Db5nEvDLQ4sYkKPOR4oCNUlNEA6KajlNQAuJe5PUARYmHqNFSqsRzhFVf4zbO8RDgNLKacEQ8aibGQLQRNjO9oInAqKGzaXldJeepURaZy4qO/OQKpYMYZ5jU8mwOkEyYAxs0wcRa2n2l9ICbTTK5GqzLFUFBShjA5qilRqAGwPNNoBiMYrU1Rb8bma638TNajMrDWLqZj+d8BViNoL1mordaCytJA4YK0klrsYuL9Lj7sEzHiIwuIuwBXftmuTp01YBVIlSt2JtMm0Yzn0mqFfpDa0r5XhHiAlIBBAjbzm33W74NQpllzS6psbCJcQoGk5RipGnRMEABhBkzvB2k/swZVWmxHGVqw1ib5az+ExoMyk8pYAMdAXlkKSI6AAljJOCsy+0JkgjSBXjQaQzVEj6wdpm1om+EelqDiZXSIdCLRilmmmDUc+Ydr/Amx7jFGrU3DGLVUKG4NxNcCveLzlvbrPmrWEHkUQv7/jvj0lcEWjyU8iiTuA5Z2fUPdFmM9+g7kb22xmhUyPm7DF8WB0Ws+k+ynDA76tTKFUqChgyNJIJ7QRb9wwopNRi5gsGmhaM5vL6KpUM1SDB1ElhYEBm7HVb0O+EsXQJNwdONztG8tzC57idOmER2CvVEIpm5ESJi2/WMchaLMSRqBuY6lrgSNxSpCR3thiit2nToLdpp7MUZqz9kfjb9uO1gl6xPKL+l3tRC8zOybh7d1+f+WH+lE88KLQ+TdQq0i6l1QBgGvYQT3wmBGywLTlOI58FmCkkmzMVAsCDIg2kpfabWsAF69UBbD8tBuwykReozohqkNoQFiYkwoJJi0wAT8MLKHewmaNBwQ50npaqjA+LqpsJWNxBvYk2Ig3AvO+DMz0gpzGYrUgmxjFPi1ZuQMrbAqVQ2JtP78WuIrHYec1T6W1wIPJe0lV0lTAkiCq/VMdLRbpi6mKdDYgSmdlNjNc7xeo66KlRYYi0KJIIIv6jAWxLuCLTBqMRaUuAq4p1tEBjpiZ25psLzEx5xgmBOreENTpkLfnBpQzpJYZliy3CaKe3QcwA6RIN++OpnS3s/Eysr39r4CVqfjFapqMI0coAhY0no3MCD16yPQBPHlC8pPztarT5lhl8xcfKLeeODKqM66jaLnibFJDIraiIjpAIPXvuYFsGFNSl76wfSkrcRbN0qpYhpaLk/VsJPkLdMabDupsINw5OsnhXAMGVLSJBsQZOlum4kdjtfBFr5VGn3m1q2AFoOnYHU1Id9ZZSeoMXnecDetUBsAeenbOrR6EoCwF4IVGeGUgADUbOCBbfUOWxBFrgjpjas4YlgbxfFGkAGRRfs38pQoV2RgwMR0AAF4mR1mOp+WBVXznTaJtiNLDeEPFPGOY8WkadOimtaguSAJYaY5vh92J0VgpB1MJYOATNaOYestOsGLeIvJMAkAGQE8gDZRHXzxqqXLHNwgitQG4iz5IpzaiWYloB90AwtjcHlM2+yMEqKFVbTVzTykf7hKWaqiQ2hiCQYm8djtB9MDdQhyxhsUA1iI1TzYKsQp1KJ0/u7jAiIwtQMt1nP5t6OY06ppwbFRMzuCPhvfbbBlcrfNFKhWpbNpEqjMkeMoeTClGWLC5OkGTBBg3teLjBrK3lBEsvtaiO5KjJJSoHVBLEb6h0jeDBvtgLIBCKivcAyqDgESkz2b4Stdy1RiqhgBESztJgb9FPzGPV4h7dWdWuQBaV+N8IFKoHU8htpMcrHUbAWiF2i3xwjVqkUigE5WKQnrx32WzASoTBJKsCABaCkXYgHrt5fBRKyIvWMLglupA3lKlD16jxEsAJiRyqOk45WOq5n6p00jqKQ5vPjnFeJ1K9VqrsZnlE+4JsB2jy9cdqlSWmmUCVedPk881WhTLmWEgnvBIB9YAwi9MJUNp28CSyXM6b2Sp2dvMDHTwS2Qmc30y/6iLOxqK5k3BBIABsQeptv+Hni4lBtw5TpktylSLixWNul4g99RxEAQWEh1N5ytIUVLOADUJg2M7xa3yxzyt3IjFMU1F+Mn5Z311EpsWFViV1iVTUtwA+qAIPqWwYuintmA9zkvrN+J5GtSp6qISpVkahU0qoRRcgEgGAALmYmL4wo6U9bhCPTCgE6n84TavmBUcGmk1RMuNIhTEA8psSinfbtONEqqgGZJJOk0rDS2hyRUZGdTHISIkFhcka1sB1EHARRzNmO0F6uMxLb8uEUpDVRWlXNOrUDA6qZWJUhxcDmgRJEdRfBaiimpK+UlQgU7Tp8lmFHKtTcwCOUm3UfGOxwbC1KWUU/wAMTLte4MPns+tKmHepWuYGkjcR1a3X7j2wesQotG8NTasd4VqOpf6WuUKybqLMD00/t64FkNvaPw/qZZTeSqnFFoVWou1lIAkjUAQD5SN/ljl1qOR7CD6YU2ysYpxl6coKRALSWPQAbW6Ekj0EmLYwi33h6dGm/W4RektQMCrC43tqKtK2vyz8Tfp0MMwuy3lV6ITVIyzVSsadWkk8wBMkDq0/ZHzxtOldbcOf+4sA5FrT0GqdJ8MHSAP6MfUAHaem1vhjDV2Dd3dL6972+EyvSYuyMoqI8KZUkESpNy0tderYK2KVHJY2EKCS9oTIZWm1NVOpBThJVSxYEsbwCZ0rGozfecWirXHdBhQ+/CUaHApKgVgdPNpK3hiDdSZE7XGDDDWy67TeXbsnme9lFq1qdV6n9GzGmoBAAYzpMG4AtaNu1saNE9ax3mwTeBz1KkWelBDqQBHUsAbE/wBr1thF81OpZjeQsrGx3k7iOTqa2c+7zEm4lpGnbpPQ2g40LVSWYzLKASbfaLV0dfDdVJkkTYDlEsCSew+YxlKWYXvKoXSzX33nRcLyVF6AcU6EyZNSmDG9un1o9b98O0FDpdgDDPYnSUGytACEo0SNjCLHmPkcGFNRwmdolxHJ00oVhTo0k5fqIovbt64zURcpNpQOTac0BjjRKR+EZlUqZdrwjAvbYmodRHfkC/IDHr2Q5XJ/LQ+LqfrqJ0XHM6lRkNMyUlXkEfZgQRzAlWn0xyK214KuSBmB2gMuIRjJEqwtfceYPYXwgLNUIPK/lNYNityOM6LJLZjcyxubGxgWgdAMczFaVSOU6Km+pnP5r2Eo13qVVJpgMZUGxIALHY6Z8vXHawhqGkCx1O0wxAMk5ikqnSq6QoA09RAuD5jC4za5t56DCgCmLTpfZpYo+rH9mOxhBanPP+lmviPCG4jk6emdKiPIYFjqWZMwaxHxiVKqF0YXBnPrQpVNR5DpBg+YZbAgiGBG97BhEE4QoF7Nc8OMtTa8Zy+UD6gSqgLqJMxAjt12wKkrO1gYNMxNgZSTgB8PUKtIJE6pOkDebjB/VXvmJhMjA5rybmMmILLWWoAwRtIJ6E++RcHT0PTFHMiGxH+5s1WynW83y2bamCFAg7yPLyOFlfnJQxJpgiBq5l3gHkC3EATJjrvAsInDD4gAWWaqYgbrA06RHugGxYzM8okwQDeOptymTgag1SbmAF6hN562XTVrEGp7vmqi8jtJa5HYbY0thRPfNhCKWa2k6dqVGrSpiqJYAH3W6+YU/LHTANRFJ4gTVCqUGhsYc/k4KgEhVWI01JgERuJI+I7XxrIZrpAdbyXxLLa6lRwDDNaxGwHQ4QxWGrZs6i45cZX6L6E2PORkoOJZ5BttaQNrecnqbNGE2YDSEqB6aAJtKPD6paoVcHUD5EG1iCLR19cdOiAoyyr33jGaZfIH12k2M+mCmXN6eeqatCJq5iB+O+2OVXQtWIEzepwGkHmMyUVqLU9H9kgxJmwNvvwNlZG60pqpXcS5wGpTIYpbYHoesThvA/ylhlbUQHFPoq1OtPKW0vJHLKwCLSANzvthp7KwbwhV1BEotXDCVqA33Dr+MRgoIO0wROT45/Wav9of/BccrF/uRSr7U9pZ7UUFQ2UzMTI7H9+AKbA9sIlbg0aztCUC0yNDODIGrSSCCQdgI6Eb4NRq2BB5Q2UW0lPI5IjL+FI1apG+wYHth/Bn9O/fJTXJvHKVGBeNRabdgAOvkuGDNGB4xT05ap/ZwOr7B7phtpxuOLEpz2QXmWbCQT6C5+4HHtaptTP5vKq9bE+PylBKjl/dGhuYmbhjNo+J+ePPVzqVg3dSh11vLSU5WO4jr/PlebTjmGoVJtGqRyrL+WWFudzPz33+fxOEa1TO5adFBpB8Pp60fmaGYxDECGA6Awbk7+nTHbQsiKvICCbecRn6h1tNyTqJt9bmmRbrgVVsrGehwjA0VtH8jmqvhqFqaBewUGb9zf8A1xYxVVRlBnmvSdziWhVzi6oeoHZYLrPNB66enlgZLuwL3IiiLsTFaGRVbUE0Jq1RqsZF7mTH7sbrVlzGx4WjAQu3VnU8CysTqi6EH4/2hB/n0wzhcMV/UN+7sM2GVeoPOM8UpMUemQ2YVo5WamqiCJuIaeuxFsMsLi0s2Iiueyi08uigAMWErqkA6G29Np8hheuq06JAEro83VEjVaDEQCB5jf78c01wQARtBnBVOEHSyzCZLHtOk/C0RjOcGZGFqjh8pjU3O2+xMm4I8vK2CUqy0zeGpUXVrsIehkJM9cSklSscqDx4CaydGlqjae7K9aqKSliCQoAtHeOpHlj0aqKaAchEtXbvkzxFqSzaQWYKARMARMMRvcnywAtmaPImSkSNZcK2jDc50XOSWIH43+fXCtTB0XFiPHjDLiaim94pWyZEwOkTeY9Jg2tO8YWrUa1NLJ1u3j5f1DLVpv7Wkm1MuQIgQJ28zfHNNYkBDpaaaiwtxHZHaNYU6o1D3SDM99pO88wJ+OGEXK12h3qC1hF+I5w1XLkAcoED0k/ecArtmaIVmBtG/Z/MU2o5gzqUBC39m5NjvYG2GsGCLy8OwN7Stx1R4NMM2mHQGGXqdJAnc3MThmqoYWMbQ2N4vwOiF8Uq4K69AIZY+ikbQQN7x1BxKSZQRLqNmMV4vkHavVZYI1Drf3F7452LP6pir0mY3Entkag+ofhf8MLXgjSccJ4tGopkK4PkCMSQK42vLGS4mVRQ9OuzAm6qDY9OYj8MP4fEoiZTDo5A6wMeocSlgfCr2n3hTG/+/g3rlKFBvwinGuNqyVKQSoGIiTogdejnGXxVMqQIKo4FxxnO450VnMGnqWCSPQwfnj270xUXKYCpUK1Sw7Zcpiwx5ar7ZgjLNPYY5jbzpLtLybYSO86Q2mvCvc/3m/8Akcdqh+2IKt7ZnznMe8fXC7bmejo/tr3CVciPo1+P44IGCgG3OeWx7WxTH82lDLUwxNgBMwNpMST1JgAX7YsuaxWmNBKpZShcjbhK1DKgeeOvQ9H0qWp1Pb/UA+KdxYaDsjLKCIIkeeHYCa+An2V+QxVhLvMFBRcKB6AYuVMNEHpjDIrbgeUsMRsZocqvYYH6rQP8B5TfTVB/IwOa4fqWEbQSZ1AA/cf8sQYWgNkHlLFapxYw2VolVhm1EfWgCfgNsGWDbeZnMsKi6SSB5dfXEYXFpatlN4rR4Oi31MfjH4D+YwPoVhfWG4SgiwABsLYLAme4kqZiSQVWgp6YDVw9OsLOLzaVHp+yZNzOUUX3/G218cfHYXoQGDE98doVFr9VlidWhFwcc9XvM1sKEFwZtleIVac6Hid7A7bbg98M06rU/Ziq1CsY/PmY/wDE/wClP/rgvrjzfTNPPz3mP/E/6U/+uK9bqdknTNBjidWSS0kmTIHYDoPLAKjFzmMnTPDDjL9VU/P9+MWmhiGm358P2B8/8sVaX6yeUz8+H7A+f+WJaT1nsmlTjDnYAfj9+JaUcQx2k9jJk741aAJvPMSVP//Z" 
+                             alt="Study Pony Virtual Campus illustration" 
+                             class="w-full h-auto rounded-lg mx-auto">
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold text-accent-color mb-3">Vision: 'Study Pony Campus' for K-Food</h3>
+                    <p class="text-lg text-gray-300 mb-2">Inspired by the drama 'Unicorn ni Notte', this proposal envisions a **Free Virtual K-Food School** to empower global users to adapt and evolve Korean culinary traditions using local ingredients.</p>
+                    <h4 class="text-xl font-semibold text-primary-color mt-4">Business Model: B2B Localization Data Solution</h4>
+                    <p class="text-md text-gray-400">The platform's primary value is not advertising, but generating unique **localization data**. This data (e.g., user search patterns, foreign ingredient substitutions, flavor trend evolution) can be sold as a strategic resource to Korean food manufacturers for product development (HMRs, sauces) and market entry planning.</p>
+                </div>
+                <!-- END New Section -->
+
+            </div>
+
+            <!-- Slide 8: B2B Data Value - Monetizing Localization Insights (New Slide) -->
+            <div class="slide flex-col justify-center items-center text-center" id="slide-8">
+                <h2 class="text-4xl font-bold text-primary-color mb-10">B2B Data Value: Monetizing Localization Insights</h2>
+                <p class="text-xl text-gray-300 mb-8 max-w-3xl">The core revenue model of 'Study Pony Campus' focuses on monetizing the unique behavioral data generated by global users adapting K-Food recipes.</p>
+                
+                <div class="grid grid-cols-2 gap-8 w-full max-w-5xl text-left">
+                    <div class="card p-6 rounded-xl shadow-xl">
+                        <h3 class="text-2xl font-semibold mb-3 text-accent-color">Data Points Collected (AI Trainer Focus)</h3>
+                        <ul class="text-lg text-gray-300 space-y-2 list-disc pl-5">
+                            <li>**Ingredient Substitution Rate:** Which local ingredients globally replace common Korean ones (e.g., substituting Napa cabbage for local greens).</li>
+                            <li>**Flavor Profile Evolution:** Regional spice reduction/addition trends (e.g., sweetness vs. salt preference).</li>
+                            <li>**Content Engagement:** Which K-Food cultural stories or drama clips drive the highest conversion to cooking attempts.</li>
+                        </ul>
+                    </div>
+                    <div class="card p-6 rounded-xl shadow-xl">
+                        <h3 class="text-2xl font-semibold mb-3 text-primary-color">Target Clients & Value Proposition (CSM Focus)</h3>
+                        <ul class="text-lg text-gray-300 space-y-2 list-disc pl-5">
+                            <li>**HMR Manufacturers:** Gain intelligence on flavor adjustment needs for mass market HMRs in specific regions.</li>
+                            <li>**Sauce/Paste Exporters:** Receive real-time data on the optimal spice level and packaging size for local distribution.</li>
+                            <li>**Cultural Agencies:** Access quantified evidence of K-Culture content impact on food consumption.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Placeholder for Data Visualization Image -->
+                <div class="mt-10 w-full max-w-md mx-auto rounded-lg overflow-hidden shadow-2xl">
+                    <img src="https://tse1.mm.bing.net/th/id/OIP.sXa_V0tBOrjv9V8fa3TnwwHaFj?cb=12&pid=Api" 
+                         alt="Image of Data Dashboard" 
+                         class="w-full h-auto rounded-lg">
+                </div>
+            </div>
+
+            <!-- Slide 9: Non-Coder's Advantage (Final Conclusion) -->
+            <div class="slide flex-col justify-center items-center text-center" id="slide-9">
+                <h2 class="text-4xl font-bold text-accent-color mb-8">The Non-Coder's Competitive Advantage: The AI Strategist</h2>
+                <div class="grid grid-cols-3 gap-8 w-full max-w-6xl">
+                    <!-- Pillar 1: Cultural Fluency -->
+                    <div class="card p-6 rounded-xl shadow-xl border-t-4 border-red-400">
+                        <h3 class="text-2xl font-semibold mb-3 text-white">① Cultural Fluency (K-Food/Content)</h3>
+                        <p class="text-gray-400">Deep understanding of the cultural nuance and 'Jeong' that drives consumer adoption—a task AI cannot perform alone.</p>
+                    </div>
+                    <!-- Pillar 2: Multilingual Bridge -->
+                    <div class="card p-6 rounded-xl shadow-xl border-t-4 border-yellow-400">
+                        <h3 class="text-2xl font-semibold mb-3 text-white">② Multilingual Bridge (EN/JP)</h3>
+                        <p class="text-gray-400">Ability to interpret client feedback (JP) and refine AI prompts (EN) to ensure global accuracy and tone of voice.</p>
+                    </div>
+                    <!-- Pillar 3: Tool Mastery -->
+                    <div class="card p-6 rounded-xl shadow-xl border-t-4 border-blue-400">
+                        <h3 class="text-2xl font-semibold mb-3 text-white">③ Strategic AI Tool Mastery</h3>
+                        <p class="text-gray-400">Proficiency in selecting and integrating the best LLM (Gemini, Copilot, ChatGPT) for specific tasks, maximizing efficiency.</p>
+                    </div>
+                </div>
+
+                <h1 class="text-5xl font-extrabold text-primary-color mt-16 leading-tight">
+                    <span class="text-white">Success is not measured by code,</span> <br> but by <span class="text-accent-color">Strategic AI Utilization.</span>
+                </h1>
+                
+                <!-- Placeholder for a Global Map Image -->
+                <div class="mt-10 w-full max-w-md mx-auto rounded-lg overflow-hidden shadow-2xl">
+                    <img src="https://placehold.co/550x150/3B82F6/FFFFFF?text=Global+Cultural+Connections+Map" 
+                         alt="Image of Global Connections" 
+                         class="w-full h-auto rounded-lg">
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Navigation Controls -->
+        <div class="mt-6 flex space-x-4">
+            <button id="prev-btn" class="control-btn px-6 py-2 rounded-full font-semibold opacity-50" disabled>
+                &larr; Prev
+            </button>
+            <span id="slide-indicator" class="text-lg font-semibold flex items-center">
+                1 / 9
+            </span>
+            <button id="next-btn" class="control-btn px-6 py-2 rounded-full font-semibold">
+                Next &rarr;
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // Slide Navigation Elements
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slideIndicator = document.getElementById('slide-indicator');
+        let currentSlide = 0;
+        const totalSlides = slides.length; // 9 (Updated to 9)
+
+        // Gemini API Demo Elements
+        const foodInput = document.getElementById('food-input');
+        const audienceSelect = document.getElementById('audience-select');
+        const generateStoryBtn = document.getElementById('generate-story-btn');
+        const demoLoadingIndicator = document.getElementById('demo-loading-indicator');
+        const demoOutputArea = document.getElementById('demo-output-area');
+        
+        // --- Gemini API Call Setup ---
+        const apiKey = ""; 
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+        /**
+         * Calls the Gemini API using Exponential Backoff for retries.
+         */
+        async function callGeminiAPI(userQuery, systemPrompt, useGrounding = true, retryCount = 0) {
+            const maxRetries = 3;
+            const delay = Math.pow(2, retryCount) * 1000; 
+
+            try {
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    tools: useGrounding ? [{ "google_search": {} }] : [],
+                };
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.status === 429 && retryCount < maxRetries) {
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return callGeminiAPI(userQuery, systemPrompt, useGrounding, retryCount + 1);
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`API call failed with status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (!text) {
+                     console.error("Gemini response lacked text:", result);
+                     throw new Error("Gemini returned an empty response.");
+                }
+
+                return text;
+
+            } catch (error) {
+                console.error("Error during Gemini API call:", error);
+                return `[Error Occurred]: Failed to generate AI response. (Error: ${error.message})`;
+            }
+        }
+
+        // Main function to handle AI request
+        async function handleAIRequest(food, audience) {
+            if (!food || !audience) {
+                demoOutputArea.innerHTML = "<span class='text-yellow-400'>Please enter a food name and select a target audience.</span>";
+                return;
+            }
+            
+            // Start Loading State
+            demoLoadingIndicator.classList.remove('hidden');
+            demoOutputArea.textContent = "";
+
+            const userQuery = `Write an attractive cultural storytelling marketing copy for ${food}, targeting ${audience}. The copy should be fluent English, around 50 words, and emphasize cultural appeal (Jeong, fermentation, health).`;
+            const systemPrompt = "You are a K-Culture marketing expert and content strategist. Your task is to transform the provided K-Food's cultural background and appeal into fluent, persuasive English marketing copy, tailored to the specific target audience's sensibility. The response must be strictly in English.";
+
+            const resultText = await callGeminiAPI(userQuery, systemPrompt, true);
+            
+            // Display Result and End Loading State
+            demoOutputArea.textContent = resultText;
+            demoLoadingIndicator.classList.add('hidden');
+        }
+
+        // Connect button event listener
+        generateStoryBtn.addEventListener('click', () => {
+            const food = foodInput.value.trim() || 'Kimchi Jjigae'; // Default value for robustness
+            const audience = audienceSelect.value;
+            handleAIRequest(food, audience);
+        });
+
+
+        // --- Slide Navigation Logic ---
+
+        function updateSlideVisibility() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                }
+            });
+
+            // Update buttons and indicator
+            prevBtn.disabled = currentSlide === 0;
+            prevBtn.classList.toggle('opacity-50', currentSlide === 0);
+            
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+            nextBtn.classList.toggle('opacity-50', currentSlide === totalSlides - 1);
+
+            slideIndicator.textContent = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideVisibility();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlideVisibility();
+            }
+        });
+
+        // Initialize the first slide
+        updateSlideVisibility();
+    </script>
+</body>
+</html>

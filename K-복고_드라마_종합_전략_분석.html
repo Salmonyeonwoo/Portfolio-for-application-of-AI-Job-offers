@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-드라마 복고 전략 종합 분석</title>
+    <!-- Tailwind CSS CDN 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 폰트 설정 및 기본 스타일 */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Dark background */
+            color: #e6edf3; /* Light text */
+            margin: 0;
+            overflow: hidden; 
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4vw;
+            transition: opacity 0.5s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translateX(100%);
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+            position: relative; 
+        }
+
+        .slide-content {
+            background-color: #161b22;
+            padding: 3rem 4rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            max-width: 1200px;
+            width: 100%;
+            min-height: 50vh;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #f7f7a7; /* Light yellow */
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ff99c8; /* Soft pink for retro feel */
+            margin-top: 1.5rem;
+            border-bottom: 2px solid #30363d;
+            padding-bottom: 0.5rem;
+        }
+
+        .table-custom {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            text-align: left;
+        }
+
+        .table-custom th, .table-custom td {
+            padding: 1rem;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .table-custom th {
+            background-color: #21262d;
+            font-weight: 600;
+            color: #f7f7a7; 
+        }
+        
+        .table-custom tbody tr:nth-child(even) {
+            background-color: #1f242a;
+        }
+
+        .nav-button {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(48, 54, 61, 0.8);
+            color: #e6edf3;
+            border: none;
+            padding: 1rem;
+            cursor: pointer;
+            z-index: 100;
+            font-size: 1.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #30363d;
+        }
+        
+        #prev-slide { left: 1rem; }
+        #next-slide { right: 1rem; }
+        
+        @media (max-width: 768px) {
+            .slide-content {
+                padding: 1.5rem 2rem;
+                min-height: 80vh;
+            }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            .nav-button { padding: 0.5rem; font-size: 1.2rem; }
+            .table-custom th, .table-custom td { padding: 0.75rem; font-size: 0.875rem; }
+        }
+
+        /* GEMINI FEATURE SPECIFIC STYLES */
+        .gemini-output-box {
+            min-height: 120px;
+            border: 1px solid #ff99c8;
+            background-color: #1f242a;
+        }
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #ff99c8;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="presentation-container" class="flex flex-col items-center justify-center">
+
+        <!-- Slide 1: Introduction -->
+        <div class="slide" id="slide-1">
+            <div class="slide-content text-center">
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-[#f7f7a7]">K-드라마 복고 전략 종합 분석</h1>
+                <h2 class="text-3xl sm:text-4xl text-[#ff99c8] mt-4">시대를 초월하는 성공 방정식과 제작 비결</h2>
+                <div class="mt-12 space-y-4 text-left text-lg">
+                    <p class="text-xl text-gray-300">**분석 대상:** '응답하라 시리즈', '스물 다섯 스물 하나', '태풍상사', **'폭싹 속았수다'** 등</p>
+                    <p class="text-xl font-bold text-pink-400">**핵심 요약:** 치밀한 **시대 고증**과 **보편적 감성**의 결합이 시청자의 니즈(향수, 위로, 공감)를 충족시킵니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: General Success Factors & Production Secrets -->
+        <div class="slide" id="slide-2">
+            <div class="slide-content">
+                <h2 class="text-3xl">복고 드라마의 인기 비결과 제작 과정</h2>
+                <div class="mt-6 space-y-6">
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-green-400 mb-2">1. 시대를 관통하는 보편적 감성</h3>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-lg">
+                            <li>**성장통, 가족애, 첫사랑:** 배경은 과거지만, 서사는 전 세대가 공감하는 핵심 가치에 집중.</li>
+                            <li>**시대적 메시지:** IMF(1997), **1950년대 전쟁 직후** 등 시대의 아픔을 희망과 투지로 극복하는 메시지 전달.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-green-400 mb-2">2. 치밀한 고증과 소품 확보 (제작 비결)</h3>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-lg">
+                            <li>**고증:** 당시 뉴스, 유행, 언어 등을 철저히 조사하여 리얼리티 극대화. 특히 '폭싹 속았수다'는 **제주어 고증**에 심혈을 기울임.</li>
+                            <li>**소품/세트:** 1G 소형폰, 옛날 가전 등 희귀 소품은 **전문 소품 대여 업체**에서 공수하며, 대규모 **오픈 세트장**을 활용하여 시대를 재현.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 3: Twenty-Five Twenty-One Specific Gojung -->
+        <div class="slide" id="slide-3">
+            <div class="slide-content">
+                <h2 class="text-3xl">'스물 다섯 스물 하나'의 심층 고증 전략 (1)</h2>
+                <div class="mt-6 space-y-6">
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-yellow-300 mb-2">1. 만화/미디어 고증 (90년대 팬 문화)</h3>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-lg">
+                            <li>**'풀하우스' 웹툰:** 나희도가 즐겨보던 '풀하우스'는 90년대 후반 **필수 순정 만화**로 통했던 당시 청소년 문화를 정확히 반영.</li>
+                            <li>**1G 폰 유행:** 1G 애니콜 소형 폴더폰 커플 세트 등 당시 휴대폰 유행까지 디테일하게 재현.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-yellow-300 mb-2">2. 펜싱 (비인기 종목) 고증의 의의</h3>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-lg">
+                            <li>**현실 반영:** 90년대 펜싱은 **대중적 무관심**과 열악한 환경이었던 현실을 반영.</li>
+                            <li>**선순환 효과:** 드라마의 흥행이 펜싱의 매력을 대중에 알리고, **실제 종목의 인지도를 상승**시키는 긍정적인 영향을 미침.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: NEW - Go Yoo-rim's Naturalization Analysis -->
+        <div class="slide" id="slide-4">
+            <div class="slide-content">
+                <h2 class="text-3xl">'스물 다섯 스물 하나'의 심층 고증 전략 (2)</h2>
+                <h2 class="text-2xl text-[#f7f7a7] mt-4 mb-6">IMF와 고유림의 국적 변경: 시대의 가장 아픈 단면</h2>
+                <div class="mt-6 space-y-6">
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-red-400 mb-2">1. 현실 고증: 선수 귀화의 절박함</h3>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-lg">
+                            <li>**시대 배경:** IMF 이후 기업 팀 해체로 **아마추어 스포츠 지원 축소**가 심각한 상황.</li>
+                            <li>**선택 이유:** 국적 변경은 '영달'이 아닌 **선수 생활 지속 및 가족 생계를 위한 최후의 생존 수단**이었음. (특히 비인기 종목)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-red-400 mb-2">2. 당시 국민 여론 분석</h3>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-lg">
+                            <li>**초기 여론:** 국가대표의 배신, '먹튀' 등 **부정적 이미지와 비난**이 압도적이었음.</li>
+                            <li>**심화된 갈등:** 개인의 절박함 vs. 국가에 대한 충성심이 충돌하며 **IMF가 낳은 사회적 비극**을 극명하게 보여줌.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Triple Retro Comparison (Summary Table) -->
+        <div class="slide" id="slide-5">
+            <div class="slide-content">
+                <h2 class="text-3xl">복고 3부작 비교: 응답하라 1997 vs 스물 다섯 스물 하나 vs 태풍상사</h2>
+                <table class="table-custom mt-6 border-collapse border border-[#30363d] rounded-lg overflow-hidden">
+                    <thead>
+                        <tr class="bg-[#21262d]">
+                            <th class="w-1/4 border-r border-[#30363d]">구분</th>
+                            <th class="w-1/3 border-r border-[#30363d]">응답하라 1997</th>
+                            <th class="w-1/3 border-r border-[#30363d]">스물 다섯 스물 하나</th>
+                            <th>태풍상사</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="font-semibold text-pink-300">주요 연령대</td>
+                            <td>**10대** (고등학생)</td>
+                            <td>**10대 후반~20대 초반**</td>
+                            <td>**20대 후반** (청년 사업가)</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold text-pink-300">IMF의 역할</td>
+                            <td>**개인사적 배경** (간접적 영향)</td>
+                            <td>**꿈을 꺾는 장벽** (좌절과 재기)</td>
+                            <td>**극의 핵심 주제** (기업 생존 고군분투)</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold text-pink-300">서사/장르 초점</td>
+                            <td>**일상, 팬덤, 첫사랑 추리**</td>
+                            <td>**청춘 멜로, 꿈과 우정**</td>
+                            <td>**비즈니스, 기업 생존 드라마**</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 6: NEW - Focused Comparison: 2521 vs. Typhoon Family -->
+        <div class="slide" id="slide-6">
+            <div class="slide-content">
+                <h2 class="text-3xl">심층 비교: '스물 다섯 스물 하나' vs. '태풍상사'</h2>
+                <h3 class="text-2xl text-[#f7f7a7] mt-4 mb-6">공통점 (채널/시대) & IMF 반영 차이점</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <!-- Commonalities -->
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h4 class="text-xl font-bold text-pink-400 mb-2 border-b border-pink-400/30 pb-1">공통점: 콘텐츠 전략의 쌍두마차</h4>
+                        <ul class="list-disc list-inside ml-4 space-y-2 text-lg">
+                            <li>**채널 전략:** 두 작품 모두 tvN을 통해 기획/방영되는 **CJ ENM의 텐트폴 콘텐츠**임.</li>
+                            <li>**글로벌 유통:** 넷플릭스 등 OTT에 공급되어 **글로벌 시장의 자본**을 확보하고 인지도를 높임.</li>
+                            <li>**시대적 배경:** 두 작품 모두 **1997년 IMF 외환위기**를 배경으로 삼아 **"시대의 고통"**을 공유함.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Differences (IMF Focus) -->
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h4 class="text-xl font-bold text-pink-400 mb-2 border-b border-pink-400/30 pb-1">IMF 반영 차이점: 서사의 중심</h4>
+                        <table class="table-custom w-full">
+                            <thead>
+                                <tr class="bg-[#30363d]">
+                                    <th class="p-2">분류</th>
+                                    <th class="p-2">스물 다섯 스물 하나</th>
+                                    <th class="p-2">태풍상사</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="font-semibold text-yellow-300">IMF의 역할</td>
+                                    <td>**개인의 꿈을 좌절시키는** 시대적 폭풍</td>
+                                    <td>**기업/가족의 생존을 결정하는** 경제 전쟁</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-semibold text-yellow-300">서사적 범위</td>
+                                    <td>**개인** (펜싱부 해체, 국적 귀화 등)</td>
+                                    <td>**사회/기업** (무역회사 운영, 재기)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Link to Overall Market Strategy (OTT) (Shifted from 6) -->
+        <div class="slide" id="slide-7">
+            <div class="slide-content text-center">
+                <h2 class="text-3xl">복고 드라마의 전략적 의의 (OTT 연관성)</h2>
+                
+                <div class="mt-8 space-y-6 text-left">
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-pink-400 mb-2">1. 콘텐츠 경쟁력 강화</h3>
+                        <p class="ml-4 text-lg">복고 드라마는 **높은 화제성**과 **탄탄한 국내 IP**를 제공하며, **CJ ENM/스튜디오드래곤**의 OTT 경쟁력(티빙, 넷플릭스 공급)을 뒷받침하는 핵심 콘텐츠로 기능합니다.</p>
+                    </div>
+
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-pink-400 mb-2">2. 글로벌 매력</h3>
+                        <p class="ml-4 text-lg">한국의 고유한 문화와 역사가 담긴 복고물은 글로벌 OTT를 통해 유통되며, 해외 시청자들에게 **K-문화의 다양성**을 알리는 중요한 콘텐츠가 됩니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 8: You Have Done Well (폭싹 속았수다) Analysis (Shifted from 7) -->
+        <div class="slide" id="slide-8">
+            <div class="slide-content">
+                <h2 class="text-3xl">'폭싹 속았수다'의 시대적 배경과 흥행 포인트</h2>
+                <p class="text-lg text-red-400 font-semibold mb-6">**🚨 시대 정정:** 본 작품의 배경은 1990년대가 아닌, **1950년대 한국전쟁 직후의 제주도**입니다. (복고 장르의 확장)</p>
+                
+                <div class="mt-6 space-y-6">
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-yellow-300 mb-2">1. 1950년대 제주 배경의 의미</h3>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-lg">
+                            <li>**역사적 깊이:** 가장 힘들었던 시대 중 하나인 전쟁 직후, 청춘들의 삶을 통해 **시대적 아픔과 희망**을 동시에 전달.</li>
+                            <li>**지역 고증:** 제주도 특유의 **아름다운 풍경**과 **'제주어(제주 방언)'**를 섬세하게 고증하여 독특한 분위기를 창출.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-yellow-300 mb-2">2. 레트로 장르의 확장 전략</h3>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-lg">
+                            <li>**세대 아우르기:** 90년대생에게는 **할머니 세대의 이야기**로, 기성세대에게는 **향수와 위로**를 제공하며 세대를 아우르는 공감대 형성.</li>
+                            <li>**순수성:** 어려운 환경 속에서도 꺾이지 않는 주인공들의 **순수하고 강인한 정신**에 초점을 맞춤.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 9: Gemini LLM Feature (Shifted from 8) -->
+        <div class="slide" id="slide-9">
+            <div class="slide-content">
+                <h2 class="text-3xl">✨ Gemini AI: 레트로 감성 문구 생성</h2>
+                <p class="text-gray-400 mb-6">분석한 시대를 기반으로, 그 시절 감성이 담긴 카피 문구를 생성해 보세요. (Google Search Grounding 활용)</p>
+                
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
+                    <div class="w-full sm:w-1/3">
+                        <label for="input-year" class="block text-sm font-medium text-gray-300 mb-1">시대 선택 (년도)</label>
+                        <select id="input-year" class="w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-pink-500 focus:border-pink-500">
+                            <option value="1955">1955년 (폭싹 속았수다 배경)</option>
+                            <option value="1997">1997년 (IMF, H.O.T.)</option>
+                            <option value="1998">1998년 (IMF 여파, 청춘의 좌절)</option>
+                            <option value="2002">2002년 (월드컵, 20세기 끝)</option>
+                        </select>
+                    </div>
+                    <div class="w-full sm:w-1/3">
+                        <label for="input-theme" class="block text-sm font-medium text-gray-300 mb-1">테마 입력</label>
+                        <input type="text" id="input-theme" placeholder="예: 첫사랑, 삐삐, 무역회사 사장" value="첫사랑" class="w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-pink-500 focus:border-pink-500">
+                    </div>
+                    <div class="w-full sm:w-1/3 flex items-end">
+                        <button onclick="generateVibe()" class="w-full p-3 bg-[#ff99c8] hover:bg-[#ff7aa6] text-[#0d1117] font-bold rounded-lg transition duration-200">
+                            ✨ 복고 감성 문구 생성
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Output Area -->
+                <div id="output-area" class="gemini-output-box p-4 rounded-lg overflow-y-auto">
+                    <p class="text-gray-400">여기에 Gemini AI가 생성한 레트로 문구가 표시됩니다.</p>
+                </div>
+
+                <!-- Sources Area -->
+                <div id="sources-area" class="mt-4 text-sm text-gray-500">
+                    <!-- Grounding sources will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <button id="prev-slide" class="nav-button opacity-50" disabled>&lt;</button>
+    <button id="next-slide" class="nav-button">&gt;</button>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentSlideIndex = 0;
+        const apiKey = ""; // API Key for Gemini
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        // Utility function for Exponential Backoff
+        async function fetchWithBackoff(url, options, maxRetries = 5) {
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.status !== 429) { // 429 is Too Many Requests
+                        return response;
+                    }
+                    // Handle rate limiting (429)
+                    const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                } catch (error) {
+                    // Log the error but continue retrying for network issues
+                    console.error("Fetch attempt failed:", error);
+                    const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+            throw new Error("API call failed after maximum retries.");
+        }
+
+        // Gemini API function
+        async function generateVibe() {
+            const year = document.getElementById('input-year').value;
+            const theme = document.getElementById('input-theme').value;
+            const outputArea = document.getElementById('output-area');
+            const sourcesArea = document.getElementById('sources-area');
+            
+            outputArea.innerHTML = '<div class="flex items-center justify-center h-full"><div class="loading-spinner"></div><span class="ml-4 text-pink-400">AI가 그 시절 감성을 찾고 있습니다... 잠시만 기다려주세요.</span></div>';
+            sourcesArea.innerHTML = '';
+
+            const systemPrompt = "당신은 한국의 레트로 감성을 전문적으로 재현하는 카피라이터입니다. 선택된 연도와 테마에 맞는, 당시 유행하던 말투와 감성을 사용하여 톡톡 튀는 문구(2문장 이내)를 생성해 주세요. 당시 유행어나 표현을 적극적으로 사용해야 합니다. 결과는 텍스트만 출력해야 합니다.";
+            const userQuery = `${year}년, 주제: ${theme}. 이 두 가지를 반영한 레트로 감성 문구를 만들어 줘. 특히 ${year}년에 유행했던 말투와 표현을 반드시 포함해줘.`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                tools: [{ "google_search": {} }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+            };
+
+            try {
+                const response = await fetchWithBackoff(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    const text = candidate.content.parts[0].text;
+                    let sources = [];
+                    const groundingMetadata = candidate.groundingMetadata;
+
+                    if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                        sources = groundingMetadata.groundingAttributions
+                            .map(attribution => ({
+                                uri: attribution.web?.uri,
+                                title: attribution.web?.title,
+                            }))
+                            .filter(source => source.uri && source.title);
+                    }
+
+                    // Display text
+                    outputArea.innerHTML = `<p class="text-xl font-medium text-white">${text}</p>`;
+
+                    // Display sources
+                    if (sources.length > 0) {
+                        const sourcesHtml = sources.map((s, i) => 
+                            `<a href="${s.uri}" target="_blank" class="text-blue-400 hover:text-blue-300 underline block">${i + 1}. ${s.title}</a>`
+                        ).join('');
+                        sourcesArea.innerHTML = `**참고 자료 (고증):**<br>${sourcesHtml}`;
+                    } else {
+                        sourcesArea.innerHTML = '';
+                    }
+
+                } else {
+                    outputArea.innerHTML = '<p class="text-red-400">응답 생성에 실패했습니다. 다시 시도해 주세요.</p>';
+                }
+
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                outputArea.innerHTML = `<p class="text-red-400">API 호출 중 치명적인 오류가 발생했습니다: ${error.message}</p>`;
+            }
+        }
+
+
+        // Presentation logic
+        function updateSlideVisibility() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                slide.style.position = 'absolute';
+                slide.style.transform = 'translateX(100%)';
+                slide.style.opacity = '0';
+                slide.style.visibility = 'hidden';
+
+                if (index === currentSlideIndex) {
+                    slide.classList.add('active');
+                    slide.style.position = 'relative'; 
+                    slide.style.transform = 'translateX(0)';
+                    slide.style.opacity = '1';
+                    slide.style.visibility = 'visible';
+                }
+            });
+            
+            // Update button states
+            document.getElementById('prev-slide').disabled = currentSlideIndex === 0;
+            document.getElementById('prev-slide').style.opacity = currentSlideIndex === 0 ? 0.5 : 1;
+            
+            document.getElementById('next-slide').disabled = currentSlideIndex === slides.length - 1;
+            document.getElementById('next-slide').style.opacity = currentSlideIndex === slides.length - 1 ? 0.5 : 1;
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < slides.length - 1) {
+                currentSlideIndex++;
+                updateSlideVisibility();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                updateSlideVisibility();
+            }
+        }
+
+        document.getElementById('next-slide').addEventListener('click', nextSlide);
+        document.getElementById('prev-slide').addEventListener('click', prevSlide);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Initialize the presentation
+        window.onload = () => {
+             // Ensure all slides are loaded before setting the initial state
+             updateSlideVisibility(); 
+        };
+    </script>
+</body>
+</html>

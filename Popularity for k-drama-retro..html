@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>K-드라마 복고 전략 종합 분석</title>
-    <!-- Tailwind CSS CDN 로드 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* 폰트 설정 및 기본 스타일 */
@@ -184,6 +183,8 @@
             </div>
         </div>
         
+        <!-- ... (기존 슬라이드 3부터 8까지의 내용은 동일하게 유지) ... -->
+
         <!-- Slide 3: Twenty-Five Twenty-One Specific Gojung -->
         <div class="slide" id="slide-3">
             <div class="slide-content">
@@ -360,7 +361,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Slide 9: Gemini LLM Feature (Shifted from 8) -->
         <div class="slide" id="slide-9">
             <div class="slide-content">
@@ -405,14 +406,9 @@
     <button id="prev-slide" class="nav-button opacity-50" disabled>&lt;</button>
     <button id="next-slide" class="nav-button">&gt;</button>
 
-    <!-- 
-      ===============================================================
-      ✅ 중요: 이 HTML 파일에서 모든 JavaScript 로직을 제거하고
-      외부 스크립트 파일들을 연결하여 역할을 분리합니다.
-      ===============================================================
-    -->
+    <!-- 💡 수정: 모든 JavaScript 코드를 외부 파일로 분리하고, 여기서는 해당 파일들을 불러옵니다. -->
     <script src="config.js"></script>
-    <script src="main.js"></script> 
+    <script src="k-drama-retro.js"></script>
 </body>
 </html>
 

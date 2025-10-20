@@ -46,6 +46,27 @@ And I'll share my following presentation files on the left menu bar side. Please
 10. AI's_Global_Impact_&_Job_Displacement_Presentation-1.pdf
 11. 250921_박연우_정책제안서.pdf
 
+To ensure you can view the contents of the HTML file correctly, please follow these steps:
+
+a. After downloading the file, open it with Notepad.
+
+b. Once the file is open in Notepad, use "Save As" or press Ctrl + S to save it, making sure the file name ends with .html or .HTML.
+
+c. If it doesn't run after saving, try using the "Rename" option. If spaces in the file name are not being recognized, please replace them with an underscore (_).
+
+d. After that, please check if the file icon has changed to your default internet browser's icon. If it has, you can open it directly.
+
+🚀 Setup Instructions
+Since this project uses the Gemini API, you need to set up an API key to run it.
+
+Rename the config.example.js file to config.js.
+
+Open the config.js file and enter your Gemini API key as the value for the apiKey variable.
+
+Open the Voice_of_AI_features.html file in your browser to run the project.
+
+Note: The config.js file is managed by .gitignore, so it will not be uploaded to GitHub.
+
 <!-- ===================== 📫 CONTACT ===================== -->
 <h3 align="center">📫 Contact</h3>
 

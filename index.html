@@ -8,61 +8,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-        }
-        .category-title {
-            display: flex;
-            align-items: center;
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 0.75rem;
-        }
-        .category-title i {
-            margin-right: 0.75rem;
-            color: #3b82f6;
-        }
-        .project-card {
-            background-color: white;
-            border-radius: 0.75rem;
-            border: 1px solid #e5e7eb;
-            padding: 1.5rem;
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .project-card h4 {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: #1f2937;
-        }
-        .project-card p {
-            font-size: 0.875rem;
-            color: #4b5563;
-            margin-top: 0.5rem;
-            flex-grow: 1;
-        }
-        .project-card .tags {
-            margin-top: 1rem;
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-        .project-card .tag {
-            font-size: 0.75rem;
-            font-weight: 500;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            background-color: #e0e7ff;
-            color: #3730a3;
-        }
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .category-title { display: flex; align-items: center; font-size: 1.75rem; font-weight: 700; margin-bottom: 1.5rem; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.75rem; }
+        .category-title i { margin-right: 0.75rem; color: #3b82f6; }
+        .project-card { background-color: white; border-radius: 0.75rem; border: 1px solid #e5e7eb; padding: 1.5rem; transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; display: flex; flex-direction: column; justify-content: space-between; }
+        .project-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .project-card h4 { font-size: 1.125rem; font-weight: 600; color: #1f2937; }
+        .project-card p { font-size: 0.875rem; color: #4b5563; margin-top: 0.5rem; flex-grow: 1; }
+        .project-card .tags { margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .project-card .tag { font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.75rem; border-radius: 9999px; background-color: #e0e7ff; color: #3730a3; }
         .project-card .tag.pdf { background-color: #fee2e2; color: #991b1b; }
         .project-card .tag.xlsx { background-color: #dcfce7; color: #166534; }
         .project-card .tag.ipynb { background-color: #fef3c7; color: #92400e; }
@@ -72,29 +26,21 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        
         <header class="mb-16">
             <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
                 <div class="flex flex-col md:flex-row items-center gap-8">
-                    <!-- Profile Image -->
                     <div class="flex-shrink-0">
-                        <!-- 💡 수정: GitHub 링크 대신, 저장소에 있는 이미지 파일을 직접 연결합니다. -->
-                        <img src="image_30281c.jpg" class="w-40 h-40 rounded-full object-cover border-4 border-blue-200 shadow-md" alt="Yeonwoo Park Profile Photo">
+                        <img src="https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/e4f5fff81a8cc8f77e5f48b25fc5c83a1aaccbf5/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202025-10-20%20202241.png?raw=true" class="w-40 h-40 rounded-full object-cover border-4 border-blue-200 shadow-md" alt="Yeonwoo Park Profile Photo">
                     </div>
-                    <!-- Introduction Text -->
                     <div class="text-center md:text-left">
                         <h1 class="text-4xl font-bold text-gray-800">박연우 (Yeonwoo Park)</h1>
                         <h2 class="text-2xl font-medium text-blue-600 mt-1">AI Application & QA Specialist</h2>
-                        <p class="mt-4 max-w-2xl text-gray-600">
-                            언어 번역/회계 등 비전공 도메인 전문성과 AI 툴 활용 능력을 결합하여, 기술과 현업 사이의 복잡한 커뮤니케이션 장벽을 해결하는 데 강점이 있습니다. AI 기술의 품질 보증(QA), 서비스 기획을 통해 실질적인 가치를 창출하는 것을 목표로 합니다.
-                        </p>
-                        <div class="mt-6 flex justify-center md:justify-start gap-4">
-                            <a href="Updated%20english%20resume%20via%20Gemini%202025%20(Last)%20.pdf" target="_blank" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-700 transition duration-300 inline-flex items-center">
-                                <i class="fas fa-file-pdf mr-2"></i> 이력서 (CV) 보기
-                            </a>
-                            <a href="mailto:yeonwoopark40@gmail.com" class="bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-full hover:bg-gray-300 transition duration-300 inline-flex items-center">
-                                <i class="fas fa-envelope mr-2"></i> Contact Me
-                            </a>
+                        <p class="mt-4 max-w-2xl text-gray-600">언어 번역/회계 등 비전공 도메인 전문성과 AI 툴 활용 능력을 결합하여, 기술과 현업 사이의 복잡한 커뮤니케이션 장벽을 해결하는 데 강점이 있습니다. AI 기술의 품질 보증(QA), 서비스 기획을 통해 실질적인 가치를 창출하는 것을 목표로 합니다.</p>
+                        <div class="mt-6 flex flex-wrap justify-center md:justify-start gap-4">
+                            <a href="Updated%20english%20resume%20via%20Gemini%202025%20(Last)%20.pdf" target="_blank" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-700 transition duration-300 inline-flex items-center"><i class="fas fa-file-pdf mr-2"></i> 이력서 (CV) 보기</a>
+                            <a href="mailto:yeonwoopark40@gmail.com" class="bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-full hover:bg-gray-300 transition duration-300 inline-flex items-center"><i class="fas fa-envelope mr-2"></i> Contact Me</a>
+                            <a href="https://www.linkedin.com/in/yeonwoo-park-ai" target="_blank" class="bg-blue-500 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-600 transition duration-300 inline-flex items-center"><i class="fab fa-linkedin mr-2"></i> LinkedIn</a>
+                            <a href="https://github.com/Salmonyeonwoo" target="_blank" class="bg-gray-900 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-800 transition duration-300 inline-flex items-center"><i class="fab fa-github mr-2"></i> GitHub</a>
                         </div>
                     </div>
                 </div>
@@ -102,134 +48,37 @@
         </header>
 
         <main class="space-y-16">
-            
             <section>
                 <h2 class="category-title"><i class="fas fa-desktop"></i>Interactive Web Presentations (HTML)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Korean -->
                     <a href="Voice_of_AI_features(Final_update).html" target="_blank" class="project-card">
-                        <div>
-                            <h4>AI 언어 모델 발전 과정 분석</h4>
-                            <p>Seq2Seq부터 ChatGPT까지, AI 언어 모델의 핵심 발전사를 정리한 인터랙티브 웹 프레젠테이션입니다.</p>
-                        </div>
+                        <div><h4>AI 언어 모델 발전 과정 분석</h4><p>Seq2Seq부터 ChatGPT까지, AI 언어 모델의 핵심 발전사를 정리한 인터랙티브 웹 프레젠테이션입니다.</p></div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag">KR</span></div>
                     </a>
-                    <!-- 💡 수정: 'K-복고...' 파일 링크를 영문 파일명으로 수정했습니다. -->
-                    <a href="Popularity%20for%20K-drama-retro.html" target="_blank" class="project-card">
-                        <div>
-                            <h4>K-드라마 복고 전략 종합 분석</h4>
-                            <p>성공적인 K-드라마들의 복고 전략을 분석하고, Gemini AI를 활용한 감성 문구 생성 기능을 구현했습니다.</p>
-                        </div>
+                    <a href="K-Drama_Retro_Culture_Analysis_with_images.html" target="_blank" class="project-card">
+                        <div><h4>K-드라마 복고 전략 종합 분석</h4><p>성공적인 K-드라마들의 복고 전략을 분석하고, Gemini AI를 활용한 감성 문구 생성 기능을 구현했습니다.</p></div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag">KR</span><span class="tag">API</span></div>
                     </a>
                     <a href="중국 AI 강국 전략.html" target="_blank" class="project-card">
-                        <div>
-                            <h4>중국 AI 기술 독립 및 경쟁 전략</h4>
-                            <p>글로벌 서비스 차단 환경이 어떻게 중국의 독자적인 AI 생태계 구축 기회가 되었는지 분석합니다.</p>
-                        </div>
+                        <div><h4>중국 AI 기술 독립 및 경쟁 전략</h4><p>글로벌 서비스 차단 환경이 어떻게 중국의 독자적인 AI 생태계 구축 기회가 되었는지 분석합니다.</p></div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag">KR</span></div>
                     </a>
-                    <!-- English -->
                     <a href="AI%20advanced%20skill%20and%20globalized%20strategy%20at%20China.html" target="_blank" class="project-card">
-                        <div>
-                            <h4>China's AI Globalization Strategy</h4>
-                            <p>Analysis of how China's unique environment fostered its independent AI ecosystem and global competitiveness.</p>
-                        </div>
+                        <div><h4>China's AI Globalization Strategy</h4><p>Analysis of how China's unique environment fostered its independent AI ecosystem and global competitiveness.</p></div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag en">EN</span></div>
                     </a>
-                    <a href="K-Food_Globalization_Strategy_Analysis_with_images-2.html" target="_blank" class="project-card">
-                        <div>
-                            <h4>K-Food Globalization Strategy</h4>
-                            <p>A visual guide on the strategic analysis of K-Food's global expansion and success factors.</p>
-                        </div>
+                    <a href="K-Food_Globalization_Strategy_Analysis_with_images.html" target="_blank" class="project-card">
+                        <div><h4>K-Food Globalization Strategy</h4><p>A visual guide on the strategic analysis of K-Food's global expansion and success factors.</p></div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag en">EN</span></div>
                     </a>
                     <a href="AI_&_Customer_Support_Presentation.html" target="_blank" class="project-card">
-                        <div>
-                            <h4>AI & Customer Support Synergy</h4>
-                            <p>Presentation on the symbiotic growth relationship between AI and the future of customer support.</p>
-                        </div>
+                        <div><h4>AI & Customer Support Synergy</h4><p>Presentation on the symbiotic growth relationship between AI and the future of customer support.</p></div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag en">EN</span></div>
                     </a>
                 </div>
             </section>
-
-            <!-- Section 2: Project Documents & Proposals -->
-            <section>
-                <h2 class="category-title"><i class="fas fa-file-pdf"></i>Project Documents & Proposals (PDF)</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <a href="250921_박연우_정책제안서.pdf" target="_blank" class="project-card">
-                        <div><h4>AI 아이디어 페스티벌 정책 제안서</h4><p>국내 AI 기술 경쟁력 강화를 위한 정책 제안서 원본입니다.</p></div>
-                        <div class="tags"><span class="tag pdf">PDF</span><span class="tag">KR</span></div>
-                    </a>
-                    <a href="250921%20박연우%20정책제안서%20(English%20translation).pdf" target="_blank" class="project-card">
-                        <div><h4>AI Idea Festival Policy Proposal</h4><p>An English translation of the policy proposal for strengthening AI competitiveness.</p></div>
-                        <div class="tags"><span class="tag pdf">PDF</span><span class="tag en">EN</span></div>
-                    </a>
-                    <a href="프로젝트%20코드%20요약%20및%20기여도%20(NVIDIA%20Morpheus).pdf" target="_blank" class="project-card">
-                        <div><h4>NVIDIA Morpheus 프로젝트 기여도</h4><p>사이버 보안 AI 프레임워크인 NVIDIA Morpheus 프로젝트의 코드 요약 및 기여도 분석.</p></div>
-                        <div class="tags"><span class="tag pdf">PDF</span><span class="tag">KR</span></div>
-                    </a>
-                    <a href="Project%20Code%20Summary%20and%20Contribution%20(NVIDIA%20Morpheus).pdf" target="_blank" class="project-card">
-                        <div><h4>NVIDIA Morpheus Contribution</h4><p>Code summary and contribution analysis for the NVIDIA Morpheus cybersecurity AI framework.</p></div>
-                        <div class="tags"><span class="tag pdf">PDF</span><span class="tag en">EN</span></div>
-                    </a>
-                </div>
-            </section>
-
-            <!-- Section 3: Roadmaps & Data -->
-            <section>
-                <h2 class="category-title"><i class="fas fa-file-excel"></i>Roadmaps & Data (Excel)</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                     <a href="비전공자%20AI%20전문가%203개년%20성장%20로드맵%20(도메인%20지식%20기반).xlsx" target="_blank" class="project-card">
-                        <div><h4>비전공자 AI 전문가 3개년 성장 로드맵</h4><p>도메인 지식을 기반으로 한 비전공자의 AI 전문가 성장 전략 로드맵입니다.</p></div>
-                        <div class="tags"><span class="tag xlsx">XLSX</span><span class="tag">KR</span></div>
-                    </a>
-                    <a href="AI%20포트폴리오%20핵심%20프로젝트%20요약%20(PREP%20구조).xlsx" target="_blank" class="project-card">
-                        <div><h4>핵심 프로젝트 요약 (PREP)</h4><p>PREP 구조를 활용하여 포트폴리오의 핵심 프로젝트들을 요약한 문서입니다.</p></div>
-                        <div class="tags"><span class="tag xlsx">XLSX</span><span class="tag">KR</span></div>
-                    </a>
-                    <a href="3-Year%20AI%20Specialist%20Growth%20Roadmap%20(Domain-Driven).xlsx" target="_blank" class="project-card">
-                        <div><h4>3-Year AI Specialist Growth Roadmap</h4><p>A domain-driven 3-year growth roadmap for non-major AI specialists.</p></div>
-                        <div class="tags"><span class="tag xlsx">XLSX</span><span class="tag en">EN</span></div>
-                    </a>
-                    <a href="Core%20Project%20Summary%20(PREP%20Framework).xlsx" target="_blank" class="project-card">
-                        <div><h4>Core Project Summary (PREP)</h4><p>A summary of core portfolio projects using the PREP framework.</p></div>
-                        <div class="tags"><span class="tag xlsx">XLSX</span><span class="tag en">EN</span></div>
-                    </a>
-                </div>
-            </section>
-
-            <!-- Section 4: Code Notebooks & Video -->
-            <section>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                    <div>
-                        <h2 class="category-title"><i class="fas fa-code"></i>Code Notebooks (Jupyter)</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <a href="68-router.ipynb" target="_blank" class="project-card">
-                                <div><h4>Jupyter Notebook: Router</h4><p>데이터 라우팅 관련 로직을 구현한 Jupyter Notebook 코드입니다.</p></div>
-                                <div class="tags"><span class="tag ipynb">IPYNB</span></div>
-                            </a>
-                            <a href="70-capstone-exercise.ipynb" target="_blank" class="project-card">
-                                <div><h4>Jupyter Notebook: Capstone</h4><p>캡스톤 프로젝트를 위해 작성된 최종 실습용 Jupyter Notebook입니다.</p></div>
-                                <div class="tags"><span class="tag ipynb">IPYNB</span></div>
-                            </a>
-                        </div>
-                    </div>
-                    <div>
-                        <h2 class="category-title"><i class="fas fa-video"></i>Video Announcement</h2>
-                        <div class="grid grid-cols-1 gap-6">
-                             <a href="Final%20movie%20for%20announcements%20of%20portfolios.mp4" target="_blank" class="project-card">
-                                <div><h4>포트폴리오 발표 영상</h4><p>Google Vid 기능을 활용하여 제작한 포트폴리오 종합 발표 영상입니다.</p></div>
-                                <div class="tags"><span class="tag video">MP4</span></div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
         </main>
-        
+
         <footer class="text-center mt-20 text-gray-500">
             <p>&copy; 2025 박연우. All Rights Reserved.</p>
             <p class="mt-1">GitHub Repository: <a href="https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers" target="_blank" class="text-blue-500 hover:underline">바로가기</a></p>
@@ -237,4 +86,3 @@
     </div>
 </body>
 </html>
-

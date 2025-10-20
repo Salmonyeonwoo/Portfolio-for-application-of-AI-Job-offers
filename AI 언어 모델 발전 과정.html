@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 언어 모델 발전 과정</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .slide {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .nav-button {
+            position: fixed;
+            bottom: 2rem;
+            background-color: #007aff;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        #prevBtn {
+            left: 2rem;
+        }
+        #nextBtn {
+            right: 2rem;
+        }
+        .progress-bar-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-color: #e5e7eb;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #007aff;
+            width: 0;
+            transition: width 0.3s ease-out;
+        }
+        .architecture-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem 0;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .arch-box {
+            border: 2px solid #cbd5e1;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+            font-weight: 600;
+            text-align: center;
+        }
+        .arch-arrow {
+            font-size: 2rem;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
+
+    <div id="presentation" class="w-full max-w-5xl h-[80vh] max-h-[600px] relative">
+        <!-- Slides will be inserted here by the script -->
+        <!-- Slide 1: Title -->
+        <div class="slide active flex-col items-center justify-center text-center" data-slide="1">
+            <div class="card items-center">
+                <h1 class="text-5xl font-bold mb-4 text-gray-800">AI 언어 모델 발전 과정</h1>
+                <p class="text-xl text-gray-500">From Seq2Seq to ChatGPT</p>
+                <div class="mt-8 p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-800 rounded-r-lg">
+                    <p>칠판의 내용을 기반으로 재구성한 프레젠테이션입니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Seq2Seq -->
+        <div class="slide flex-col items-center justify-center" data-slide="2">
+            <div class="card">
+                <h2 class="text-3xl font-bold mb-6 text-indigo-700">1. Sequence-to-Sequence (Seq2Seq)</h2>
+                <p class="text-lg mb-4">기계 번역을 위해 등장한 초기 모델 구조입니다. 문장 전체를 하나의 벡터로 압축하고 다시 문장으로 풀어냅니다.</p>
+                <div class="architecture-diagram">
+                    <div class="arch-box bg-green-50 border-green-300 text-green-800">입력 문장<br>(Source)</div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box">Encoder</div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box bg-gray-100 border-gray-400">Context<br>Vector</div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box">Decoder</div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box bg-blue-50 border-blue-300 text-blue-800">출력 문장<br>(Target)</div>
+                </div>
+                <div class="mt-4 text-base space-y-2">
+                    <p><strong class="font-semibold text-red-600">한계점:</strong></p>
+                    <ul class="list-disc list-inside text-gray-700 space-y-1">
+                        <li>긴 문장에서 정보 손실(Information Bottleneck)이 발생할 수 있습니다.</li>
+                        <li>Hallucination (환각): 사실과 다르거나 관련 없는 내용을 생성할 수 있습니다.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: BERT -->
+        <div class="slide flex-col items-center justify-center" data-slide="3">
+            <div class="card">
+                <h2 class="text-3xl font-bold mb-6 text-indigo-700">2. 인코더(Encoder) 기반 모델: BERT</h2>
+                <p class="text-lg mb-4">문장의 '의미'와 '문맥'을 이해하는 데 중점을 둔 모델입니다. (by Google)</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 text-center">
+                    <div class="p-6 bg-gray-50 rounded-lg">
+                        <h3 class="text-xl font-bold mb-2">사전 학습 (Pre-training)</h3>
+                        <p class="text-gray-600">방대한 텍스트 데이터로 언어 자체의 패턴과 구조를 미리 학습합니다.</p>
+                    </div>
+                    <div class="p-6 bg-gray-50 rounded-lg">
+                        <h3 class="text-xl font-bold mb-2">양방향성 (Bidirectional)</h3>
+                        <p class="text-gray-600">단어의 의미를 파악하기 위해 문장의 앞뒤 문맥을 모두 동시에 고려합니다.</p>
+                    </div>
+                </div>
+                 <div class="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 rounded-r-lg">
+                    <p class="font-semibold">활용 방식: 미세 조정 (Fine-Tuning)</p>
+                    <p class="mt-1">사전 학습된 모델을 특정 과제(예: 감성 분석)에 맞게 소량의 데이터로 추가 학습하여 사용합니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: GPT Series -->
+        <div class="slide flex-col items-center justify-center" data-slide="4">
+            <div class="card">
+                <h2 class="text-3xl font-bold mb-6 text-indigo-700">3. 디코더(Decoder) 기반 모델: GPT 시리즈</h2>
+                <p class="text-lg mb-4">다음 단어를 예측하며 '문장을 생성'하는 데 특화된 모델입니다. (by OpenAI)</p>
+                <div class="mt-6 space-y-4">
+                    <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                        <span class="text-xl font-bold text-blue-600 mr-4">GPT-1</span>
+                        <p class="text-gray-700">지도 학습 방식을 활용한 초기 모델</p>
+                    </div>
+                    <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                        <span class="text-xl font-bold text-blue-600 mr-4">GPT-2</span>
+                        <p class="text-gray-700">모델과 데이터 크기를 키워 사전 학습의 성능을 극대화</p>
+                    </div>
+                    <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                        <span class="text-xl font-bold text-blue-600 mr-4">GPT-3</span>
+                        <p class="text-gray-700">1,750억 개 파라미터로 모델의 생성 능력을 비약적으로 향상</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: GPT Core Tech -->
+        <div class="slide flex-col items-center justify-center" data-slide="5">
+            <div class="card">
+                 <h2 class="text-3xl font-bold mb-6 text-indigo-700">ChatGPT의 핵심 기술: 정렬(Alignment)</h2>
+                <p class="text-lg mb-6">모델이 단순히 글을 잘 쓰는 것을 넘어, 인간의 '의도'와 '가치'에 맞게 행동하도록 만드는 과정입니다.</p>
+                
+                <div class="bg-teal-50 border border-teal-200 p-6 rounded-lg">
+                    <h3 class="text-xl font-bold text-teal-800 mb-2">RLHF (인간 피드백을 통한 강화학습)</h3>
+                    <p class="text-teal-700">
+                        1. 사람이 직접 좋은 답변과 나쁜 답변을 평가하여 '보상 모델'을 만듭니다.
+                    </p>
+                    <p class="text-teal-700 mt-2">
+                        2. 언어 모델이 더 좋은 평가(보상)를 받는 방향으로 답변을 생성하도록 강화학습을 통해 스스로를 개선합니다.
+                    </p>
+                </div>
+
+                <div class="mt-6 p-4 bg-orange-50 border-l-4 border-orange-500 text-orange-800 rounded-r-lg">
+                    <p class="font-semibold">SFT (Supervised Fine-Tuning)</p>
+                    <p class="mt-1">사람이 작성한 고품질의 질문과 답변 데이터를 통해 모델이 지시를 잘 따르도록 훈련시킵니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Summary -->
+        <div class="slide flex-col items-center justify-center" data-slide="6">
+            <div class="card">
+                <h2 class="text-3xl font-bold mb-6 text-indigo-700">요약 및 비교</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr>
+                                <th class="border-b-2 border-gray-300 p-3 text-lg font-bold">모델</th>
+                                <th class="border-b-2 border-gray-300 p-3 text-lg font-bold">주요 목적</th>
+                                <th class="border-b-2 border-gray-300 p-3 text-lg font-bold">구조</th>
+                                <th class="border-b-2 border-gray-300 p-3 text-lg font-bold">특징</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="hover:bg-gray-50">
+                                <td class="border-b border-gray-200 p-3 font-semibold">Seq2Seq</td>
+                                <td class="border-b border-gray-200 p-3">번역, 요약</td>
+                                <td class="border-b border-gray-200 p-3">Encoder-Decoder</td>
+                                <td class="border-b border-gray-200 p-3">정보 압축 및 변환</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="border-b border-gray-200 p-3 font-semibold">BERT</td>
+                                <td class="border-b border-gray-200 p-3">문맥 이해, 분류</td>
+                                <td class="border-b border-gray-200 p-3">Encoder (Transformer)</td>
+                                <td class="border-b border-gray-200 p-3">양방향성, 사전학습</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="border-b border-gray-200 p-3 font-semibold">GPT</td>
+                                <td class="border-b border-gray-200 p-3">문장 생성, 대화</td>
+                                <td class="border-b border-gray-200 p-3">Decoder (Transformer)</td>
+                                <td class="border-b border-gray-200 p-3">단방향성, RLHF</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: End -->
+        <div class="slide flex-col items-center justify-center text-center" data-slide="7">
+            <div class="card items-center">
+                <h1 class="text-5xl font-bold text-gray-800">감사합니다</h1>
+                <p class="text-xl text-gray-500 mt-4">Q&A</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <button id="prevBtn" class="nav-button">이전</button>
+    <button id="nextBtn" class="nav-button">다음</button>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <!-- 
+      ===============================================================
+      ✅ 중요: 이 파일은 API를 사용하지 않으므로 config.js가 필요 없습니다.
+      대신, 프레젠테이션 로직을 별도 파일로 분리하여 연결합니다.
+      ===============================================================
+    -->
+    <script src="ai_model_history.js"></script>
+</body>
+</html>

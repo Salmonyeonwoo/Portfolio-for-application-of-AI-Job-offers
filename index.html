@@ -19,6 +19,7 @@
         .project-card .tag { font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.75rem; border-radius: 9999px; background-color: #e0e7ff; color: #3730a3; }
         .project-card .tag.pdf { background-color: #fee2e2; color: #991b1b; }
         .project-card .tag.ipynb { background-color: #fef3c7; color: #92400e; }
+        .project-card .tag.pptx { background-color: #ffe4e6; color: #be185d; }
         .project-card .tag.video { background-color: #e0f2fe; color: #075985; }
         .project-card .tag.en { background-color: #f3e8ff; color: #581c87; }
         .project-card .tag.jp { background-color: #fff7ed; color: #c2410c; }
@@ -37,8 +38,7 @@
                         <h2 class="text-2xl font-medium text-blue-600 mt-1">AI Application & QA Specialist</h2>
                         <p class="mt-4 max-w-2xl text-gray-600">언어 번역/회계 등 비전공 도메인 전문성과 AI 툴 활용 능력을 결합하여, 기술과 현업 사이의 복잡한 커뮤니케이션 장벽을 해결하는 데 강점이 있습니다. AI 기술의 품질 보증(QA), 서비스 기획을 통해 실질적인 가치를 창출하는 것을 목표로 합니다.</p>
                         <div class="mt-6 flex flex-wrap justify-center md:justify-start gap-4">
-                            <!-- [업데이트]: 'Cover letter.pdf' 파일로 링크 수정 -->
-                            <a href="Cover letter.pdf" target="_blank" class="bg-red-600 text-white font-bold py-2 px-6 rounded-full hover:bg-red-700 transition duration-300 inline-flex items-center"><i class="fas fa-file-alt mr-2"></i> View Cover Letter (자소서) </a>
+                            <a href="cover-letter.pdf" target="_blank" class="bg-red-600 text-white font-bold py-2 px-6 rounded-full hover:bg-red-700 transition duration-300 inline-flex items-center"><i class="fas fa-file-alt mr-2"></i> View Cover Letter (자소서) </a>
                             <a href="mailto:yeonwoopark40@gmail.com" class="bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-full hover:bg-gray-300 transition duration-300 inline-flex items-center"><i class="fas fa-envelope mr-2"></i> Contact Me</a>
                             <a href="https://www.linkedin.com/in/yeonwoo-park-b54bba356/" target="_blank" class="bg-blue-500 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-600 transition duration-300 inline-flex items-center"><i class="fab fa-linkedin mr-2"></i> LinkedIn</a>
                             <a href="https://github.com/Salmonyeonwoo" target="_blank" class="bg-gray-900 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-800 transition duration-300 inline-flex items-center"><i class="fab fa-github mr-2"></i> GitHub</a>
@@ -49,36 +49,85 @@
         </header>
 
         <main class="space-y-16">
-            <!-- [유지]: AI/머신러닝 프로젝트 (Jupyter Notebook) 섹션 -->
             <section>
-                <h2 class="category-title"><i class="fas fa-flask"></i>AI/머신러닝 프로젝트 (Jupyter Notebook)</h2>
+                <h2 class="category-title"><i class="fas fa-flask"></i>AI/머신러닝 프로젝트 (주요 요약)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <a href="crewai-stock-analysis-fixed.ipynb" target="_blank" class="project-card">
-                        <div><h4>종합 투자 리서치팀 (CrewAI + Serper API)</h4><p>CrewAI 프레임워크와 Serper API를 활용하여 5명의 에이전트로 구성된 자동화된 주식 분석 리서치팀을 구축한 프로젝트입니다.</p></div>
-                        <div class="tags"><span class="tag ipynb">IPYNB</span><span class="tag">KR</span><span class="tag">API</span></div>
+                    <a href="morpheus-unified-project-pt.html" target="_blank" class="project-card bg-green-100">
+                        <div><h4>AI/머신러닝 프로젝트 요약본 (GPU 기반 파이프라인)</h4><p>NVIDIA Morpheus를 사용한 ControlMessage, Tensors, Inference 기반의 GPU 가속 보안 분석 파이프라인 통합 요약본입니다.</p></div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag">KR</span><span class="tag">GPU</span></div>
+                    </a>
+                    
+                    <a href="crewai-project-pt.html" target="_blank" class="project-card bg-fef3c7">
+                        <div><h4>종합 투자 리서치팀 (CrewAI) - 상세 소개</h4><p>CrewAI 프레임워크를 활용한 5명 전문가 에이전트 투자 리서치팀 구축 프로젝트의 상세 개요입니다.</p></div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag">KR</span><span class="tag">API</span></div>
+                    </a>
+                </div>
+            </section>
+            
+            <section>
+                <h2 class="category-title"><i class="fas fa-code"></i>프로젝트 코딩 원본 파일 (Jupyter Notebooks)</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/31-control-message.ipynb" target="_blank" class="project-card">
+                        <div><h4>Control Message 기본 (Morpheus)</h4><p>데이터 파이프라인 내에서 메타데이터와 작업을 전달하는 ControlMessage의 기본 활용 실습입니다.</p></div>
+                        <div class="tags"><span class="tag ipynb">Colab</span><span class="tag">GPU</span></div>
+                    </a>
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/32-serialize-cycle.ipynb" target="_blank" class="project-card">
+                        <div><h4>Serialization/Deserialization</h4><p>원시 데이터가 Morpheus 메시지로 변환되고 재조립되는 데이터 생명주기 실습입니다.</p></div>
+                        <div class="tags"><span class="tag ipynb">Colab</span><span class="tag">GPU</span></div>
+                    </a>
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/33-control-message-pipeline.ipynb" target="_blank" class="project-card">
+                        <div><h4>Control Message Pipeline</h4><p>Control Message를 활용하여 전체 데이터 파이프라인을 설계하고 실행하는 실습입니다.</p></div>
+                        <div class="tags"><span class="tag ipynb">Colab</span><span class="tag">GPU</span></div>
+                    </a>
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/35-exercise-failed-logins.ipynb" target="_blank" class="project-card">
+                        <div><h4>로그 분석 (Failed Logins)</h4><p>인증 로그 데이터를 처리하여 로그인 실패 건수를 GPU 기반으로 분석하는 실습입니다.</p></div>
+                        <div class="tags"><span class="tag ipynb">Colab</span><span class="tag">GPU</span></div>
+                    </a>
+
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/41-tensors.ipynb" target="_blank" class="project-card">
+                        <div><h4>데이터 텐서 변환 (Tensors)</h4><p>GPU 메모리에서 데이터프레임을 ML 모델 입력 형태인 Tensor로 변환하는 실습입니다.</p></div>
+                        <div class="tags"><span class="tag ipynb">Colab</span><span class="tag">ML</span></div>
+                    </a>
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/42-inference.ipynb" target="_blank" class="project-card">
+                        <div><h4>머신러닝 추론 통합 (Inference)</h4><p>Morpheus 파이프라인에 ONNX 모델을 로드하여 고속 추론을 실행하는 실습입니다.</p></div>
+                        <div class="tags"><span class="tag ipynb">Colab</span><span class="tag">ML</span></div>
+                    </a>
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/64-broadcast.ipynb" target="_blank" class="project-card">
+                        <div><h4>파이프라인 데이터 분기 (Broadcast)</h4><p>하나의 데이터 스트림을 여러 분석 경로로 복제하여 병렬 처리하는 Broadcast 기능 실습입니다.</p></div>
+                        <div class="tags"><span class="tag ipynb">Colab</span><span class="tag">GPU</span></div>
+                    </a>
+                    <a href="https://colab.research.google.com/github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/62-defining-ports.ipynb" target="_blank" class="project-card">
+                        <div><h4>Multi-Port 그래프 설계</h4><p>한 스테이지에서 여러 개의 출력 포트를 정의하여 데이터 흐름을 정교하게 제어하는 실습입니다.</p></div>
+                        <div class="tags"><span class="tag ipynb">Colab</span><span class="tag">GPU</span></div>
+                    </a>
+                    
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/crewai-stock-analysis.ipynb" target="_blank" class="project-card">
+                        <div><h4>CrewAI 주식 분석팀 (원본)</h4><p>CrewAI 프레임워크를 사용한 다중 에이전트 기반 주식 분석 프로젝트 원본 코드입니다.</p></div>
+                        <div class="tags"><span class="tag ipynb">Colab</span><span class="tag">API</span></div>
+                    </a>
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/26-exercise-analyze-packets.ipynb" target="_blank" class="project-card">
+                        <div><h4>PCAP 네트워크 분석 (Morpheus)</h4><p>네트워크 패킷 데이터를 GPU로 로드하여 트래픽을 필터링 및 분석하는 실습입니다.</p></div>
+                        <div class="tags"><span class="tag ipynb">Colab</span><span class="tag">GPU</span></div>
                     </a>
                 </div>
             </section>
 
-            <!-- [업데이트]: Interactive Web Presentations (HTML) 섹션 -->
             <section>
                 <h2 class="category-title"><i class="fas fa-desktop"></i>Interactive Web Presentations (HTML)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- [새로 추가된 이력서 HTML 프레젠테이션] -->
-                    <a href="이력서 소개 (한국어) 웹 프레젠테이션.html" target="_blank" class="project-card bg-blue-50">
-                        <div><h4>경력 소개 (한국어 - 웹 PT)</h4><p>박연우님의 경력과 역량을 슬라이드 형식으로 정리한 웹 프레젠테이션입니다. (PPTX 변환)</p></div>
+                    <a href="resume-kr-pt.html" target="_blank" class="project-card bg-blue-50">
+                        <div><h4>경력 소개 (한국어 - 웹 PT)</h4><p>박연우님의 경력과 역량을 슬라이드 형식으로 정리한 웹 프레젠테이션입니다.</p></div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag">KR</span></div>
                     </a>
-                    <a href="職務経歴書 (日本語) ウェブプレゼンテーション.html" target="_blank" class="project-card bg-pink-50">
-                        <div><h4>職務経歴書 (日本語 - ウェブ PT)</h4><p>박연우님의 경력과 스킬을 상세히 소개하는 일본어 웹 프레젠테이션입니다. (PPTX 변환)</p></div>
+                    <a href="resume-jp-pt.html" target="_blank" class="project-card bg-pink-50">
+                        <div><h4>職務経歴書 (日本語 - ウェブ PT)</h4><p>박연우님의 경력과 스킬을 상세히 소개하는 일본어 웹 프레젠테이션입니다.</p></div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag jp">JP</span></div>
                     </a>
-                    <a href="Resume Overview (English) Web Presentation.html" target="_blank" class="project-card bg-green-50">
-                        <div><h4>Resume Overview (English - Web PT)</h4><p>박연우님의 경력 개요 및 주요 성과를 영어로 정리한 웹 프레젠테이션입니다. (PPTX 변환)</p></div>
+                    <a href="resume-en-pt.html" target="_blank" class="project-card bg-green-50">
+                        <div><h4>Resume Overview (English - Web PT)</h4><p>박연우님의 경력 개요 및 주요 성과를 영어로 정리한 웹 프레젠테이션입니다.</p></div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag en">EN</span></div>
                     </a>
                     
-                    <!-- [기존 HTML 파일 유지] -->
                     <a href="Voice_of_AI_features(Final_update).html" target="_blank" class="project-card">
                         <div><h4>AI 언어 모델 발전 과정 분석</h4><p>Seq2Seq부터 ChatGPT까지, AI 언어 모델의 핵심 발전사를 정리한 인터랙티브 웹 프레젠테이션입니다.</p></div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag">KR</span></div>
@@ -114,7 +163,4 @@
     </div>
 </body>
 </html>
-
-
-
-
+```eof

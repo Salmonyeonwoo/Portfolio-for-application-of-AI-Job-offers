@@ -19,10 +19,9 @@
         .project-card .tag { font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.75rem; border-radius: 9999px; background-color: #e0e7ff; color: #3730a3; }
         .project-card .tag.pdf { background-color: #fee2e2; color: #991b1b; }
         .project-card .tag.ipynb { background-color: #fef3c7; color: #92400e; }
-        .project-card .tag.pptx { background-color: #ffe4e6; color: #be185d; } /* Color for PPTX */
         .project-card .tag.video { background-color: #e0f2fe; color: #075985; }
         .project-card .tag.en { background-color: #f3e8ff; color: #581c87; }
-        .project-card .tag.jp { background-color: #fff7ed; color: #c2410c; } /* Color for JP */
+        .project-card .tag.jp { background-color: #fff7ed; color: #c2410c; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -38,8 +37,8 @@
                         <h2 class="text-2xl font-medium text-blue-600 mt-1">AI Application & QA Specialist</h2>
                         <p class="mt-4 max-w-2xl text-gray-600">언어 번역/회계 등 비전공 도메인 전문성과 AI 툴 활용 능력을 결합하여, 기술과 현업 사이의 복잡한 커뮤니케이션 장벽을 해결하는 데 강점이 있습니다. AI 기술의 품질 보증(QA), 서비스 기획을 통해 실질적인 가치를 창출하는 것을 목표로 합니다.</p>
                         <div class="mt-6 flex flex-wrap justify-center md:justify-start gap-4">
-                            <!-- [수정]: 이력서 버튼을 자소서 버튼으로 변경하고, 링크는 임시로 Cover Letter 파일명을 사용합니다. -->
-                            <a href="Cover_Letter_Draft.pdf" target="_blank" class="bg-red-600 text-white font-bold py-2 px-6 rounded-full hover:bg-red-700 transition duration-300 inline-flex items-center"><i class="fas fa-file-alt mr-2"></i> View Cover Letter (자소서) </a>
+                            <!-- [업데이트]: 'Cover letter.pdf' 파일로 링크 수정 -->
+                            <a href="Cover letter.pdf" target="_blank" class="bg-red-600 text-white font-bold py-2 px-6 rounded-full hover:bg-red-700 transition duration-300 inline-flex items-center"><i class="fas fa-file-alt mr-2"></i> View Cover Letter (자소서) </a>
                             <a href="mailto:yeonwoopark40@gmail.com" class="bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-full hover:bg-gray-300 transition duration-300 inline-flex items-center"><i class="fas fa-envelope mr-2"></i> Contact Me</a>
                             <a href="https://www.linkedin.com/in/yeonwoo-park-b54bba356/" target="_blank" class="bg-blue-500 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-600 transition duration-300 inline-flex items-center"><i class="fab fa-linkedin mr-2"></i> LinkedIn</a>
                             <a href="https://github.com/Salmonyeonwoo" target="_blank" class="bg-gray-900 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-800 transition duration-300 inline-flex items-center"><i class="fab fa-github mr-2"></i> GitHub</a>
@@ -50,7 +49,7 @@
         </header>
 
         <main class="space-y-16">
-            <!-- [추가]: AI/머신러닝 프로젝트 (Jupyter Notebook) 섹션 -->
+            <!-- [유지]: AI/머신러닝 프로젝트 (Jupyter Notebook) 섹션 -->
             <section>
                 <h2 class="category-title"><i class="fas fa-flask"></i>AI/머신러닝 프로젝트 (Jupyter Notebook)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -61,28 +60,25 @@
                 </div>
             </section>
 
-            <!-- [수정]: 이력서/경력 소개 파일 (PPTX) 섹션에 영문 파일 추가 -->
-            <section>
-                <h2 class="category-title"><i class="fas fa-file-powerpoint"></i>이력서/경력 소개 파일 (PPTX)</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <a href="박연우 이력서 소개 (한국어).pptx" target="_blank" class="project-card">
-                        <div><h4>경력 소개 (한국어)</h4><p>박연우님의 경력과 역량을 한눈에 볼 수 있도록 정리한 한국어 프레젠테이션 파일입니다.</p></div>
-                        <div class="tags"><span class="tag pptx">PPTX</span><span class="tag">KR</span></div>
-                    </a>
-                    <a href="パク・ヨンウの職務経歴書 (日本語).pptx" target="_blank" class="project-card">
-                        <div><h4>職務経歴書 (日本語)</h4><p>박연우님의 경력과 스킬을 상세히 소개하는 일본어 프레젠테이션 파일입니다.</p></div>
-                        <div class="tags"><span class="tag pptx">PPTX</span><span class="tag jp">JP</span></div>
-                    </a>
-                    <a href="Park Yeonwoo Resume Overview (English).pptx" target="_blank" class="project-card">
-                        <div><h4>Resume Overview (English)</h4><p>박연우님의 경력 개요 및 주요 성과를 영어로 정리한 프레젠테이션 파일입니다.</p></div>
-                        <div class="tags"><span class="tag pptx">PPTX</span><span class="tag en">EN</span></div>
-                    </a>
-                </div>
-            </section>
-            
+            <!-- [업데이트]: Interactive Web Presentations (HTML) 섹션 -->
             <section>
                 <h2 class="category-title"><i class="fas fa-desktop"></i>Interactive Web Presentations (HTML)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- [새로 추가된 이력서 HTML 프레젠테이션] -->
+                    <a href="Resume_KR.html" target="_blank" class="project-card bg-blue-50">
+                        <div><h4>경력 소개 (한국어 - 웹 PT)</h4><p>박연우님의 경력과 역량을 슬라이드 형식으로 정리한 웹 프레젠테이션입니다. (PPTX 변환)</p></div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag">KR</span></div>
+                    </a>
+                    <a href="Resume_JP.html" target="_blank" class="project-card bg-pink-50">
+                        <div><h4>職務経歴書 (日本語 - ウェブ PT)</h4><p>박연우님의 경력과 스킬을 상세히 소개하는 일본어 웹 프레젠테이션입니다. (PPTX 변환)</p></div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag jp">JP</span></div>
+                    </a>
+                    <a href="Resume_EN.html" target="_blank" class="project-card bg-green-50">
+                        <div><h4>Resume Overview (English - Web PT)</h4><p>박연우님의 경력 개요 및 주요 성과를 영어로 정리한 웹 프레젠테이션입니다. (PPTX 변환)</p></div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag en">EN</span></div>
+                    </a>
+                    
+                    <!-- [기존 HTML 파일 유지] -->
                     <a href="Voice_of_AI_features(Final_update).html" target="_blank" class="project-card">
                         <div><h4>AI 언어 모델 발전 과정 분석</h4><p>Seq2Seq부터 ChatGPT까지, AI 언어 모델의 핵심 발전사를 정리한 인터랙티브 웹 프레젠테이션입니다.</p></div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag">KR</span></div>

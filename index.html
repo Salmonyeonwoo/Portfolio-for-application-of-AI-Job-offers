@@ -20,11 +20,11 @@
             min-height: 100vh;
         }
         @keyframes gradientShift {
-            0% {background-position: 0% 50%;}
-            50% {background-position: 100% 50%;}
-            100% {background-position: 0% 50%;}
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-
+        
         /* 콘텐츠 카드 스타일 */
         .card-container {
             padding: 1rem;
@@ -94,6 +94,10 @@
         .tag.kr { background: rgba(179, 217, 255, 0.5); color: #003366; }
         .tag.en { background: rgba(217, 179, 255, 0.5); color: #330066; }
         .tag.jp { background: rgba(255, 217, 179, 0.5); color: #663300; }
+        /* 파주 프로젝트 태그 추가 */
+        .tag.html { background: rgba(255, 204, 153, 0.5); color: #993d00; } /* 주황 계열 */
+        .tag.ai { background: rgba(153, 204, 255, 0.5); color: #003366; } /* 파랑 계열 */
+
     </style>
 </head>
 <body class="p-4 sm:p-8">
@@ -128,7 +132,7 @@
                         <div><h4>AI/머신러닝 프로젝트 요약본 (GPU 기반 파이프라인)</h4><p>NVIDIA Morpheus를 사용한 ControlMessage, Tensors, Inference 기반의 고급 비선형 파이프라인 통합 요약본입니다.</p></div>
                         <div class="tags"><span class="tag gpu">GPU</span><span class="tag">HTML</span><span class="tag ml">ML</span><span class="tag kr">KR</span></div>
                     </a>
-                                     
+                           
                 </div>
             </section>
             
@@ -148,7 +152,7 @@
                         <div><h4>[Morpheus] Control Message Pipeline</h4><p>Control Message를 이용한 전체 데이터 파이프라인 설계 및 실행 실습입니다.</p></div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
                     </a>
-                    <a href="https://colab.research.google.com/github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/35-exercise-failed-logins.ipynb" target="_blank" class="project-card">
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/35-exercise-failed-logins.ipynb" target="_blank" class="project-card">
                         <div><h4>[Morpheus] 로그 분석 (Failed Logins)</h4><p>GPU 기반으로 사용자 인증 로그를 처리하고 로그인 실패 건수를 집계 분석합니다.</p></div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
                     </a>
@@ -162,7 +166,7 @@
                         <div><h4>[Morpheus] 머신러닝 추론 통합 (Inference)</h4><p>Morpheus 파이프라인에 ONNX 모델을 로드하여 고속 추론을 실행하는 실습입니다.</p></div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag ml">ML</span></div>
                     </a>
-                    <a href="https://colab.research.google.com/github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/64-broadcast.ipynb" target="_blank" class="project-card">
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/64-broadcast.ipynb" target="_blank" class="project-card">
                         <div><h4>[Morpheus] 데이터 분기 (Broadcast)</h4><p>하나의 데이터 스트림을 여러 분석 경로로 복제하여 병렬 처리하는 Broadcast 기능 실습입니다.</p></div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
                     </a>
@@ -172,11 +176,11 @@
                     </a>
                     
                     <!-- CrewAI 및 NLP/PCAP (2개) - 테두리 색상 적용 -->
-                    <a href="https://colab.research.google.com/github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/crewai-stock-analysis.ipynb" target="_blank" class="project-card">
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/crewai-stock-analysis.ipynb" target="_blank" class="project-card">
                         <div><h4>CrewAI 주식 분석팀 (원본 코드)</h4><p>CrewAI 프레임워크를 사용한 다중 에이전트 기반 주식 분석 프로젝트 원본 코드를 Colab에서 실행합니다.</p></div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag api">API</span></div>
                     </a>
-                    <a href="https://colab.research.google.com/github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/26-exercise-analyze-packets.ipynb" target="_blank" class="project-card">
+                    <a href="https://colab.research.google.com/drive/1t6YTWKMKrebtQe0PUA6A0wjg-QgY1sWR" target="_blank" class="project-card">
                         <div><h4>[Morpheus] PCAP 네트워크 분석</h4><p>네트워크 패킷 데이터를 GPU로 로드하여 트래픽을 필터링 및 분석하는 실습입니다.</p></div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
                     </a>
@@ -187,6 +191,14 @@
             <section>
                 <h2 class="category-title section-title"><i class="fas fa-desktop"></i>Interactive Web Presentations (HTML)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- *** NEW Paju Project Card Added Here *** -->
+                    <a href="./AI_Solutions_for_smart_city_at_Paju.html" target="_blank" class="project-card">
+                        <div><h4>파주 스마트시티 AI 아이디어 제안</h4><p>파주시 문제 해결을 위한 AI 기반 도로 안전, 환경, 복지 서비스 아이디어 제안 발표 자료입니다. (Dacon 공모전)</p></div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag kr">KR</span></div>
+                    </a>
+                    <!-- *** End of New Card *** -->
+
                     <!-- 이력서 PT (파일명 수정 완료) - 테두리 색상 적용 -->
                     <a href="이력서 소개 (한국어) 웹 프레젠테이션.html" target="_blank" class="project-card">
                         <div><h4>경력 소개 (한국어 - 웹 PT)</h4><p>박연우님의 경력과 역량을 슬라이드 형식으로 정리한 웹 프레젠테이션입니다.</p></div>
@@ -239,5 +251,4 @@
     </div>
 </body>
 </html>
-
 

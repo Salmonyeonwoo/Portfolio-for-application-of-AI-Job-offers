@@ -37,8 +37,15 @@
             color: #1f2937;
         }
         .section-title { 
+            font-size: 1.75rem; /* 통일성을 위해 폰트 크기 조정 */
+            font-weight: 700;
             color: #ffffff; 
             border-bottom: 2px solid rgba(255, 255, 255, 0.5); 
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem; /* 섹션 간격 추가 */
+            display: inline-flex; /* 아이콘과 텍스트 정렬 */
+            align-items: center;
+            gap: 0.75rem; /* 아이콘과 텍스트 사이 간격 */
         }
         
         /* [FINAL 수정] 프로젝트 카드 디자인: 대비 색상 테두리 적용 */
@@ -47,7 +54,7 @@
             background-color: rgba(0, 0, 0, 0.4); 
             border-radius: 1rem; 
             border: 1px solid transparent; /* 초기에는 투명한 테두리 */
-            padding: 3rem; 
+            padding: 2rem; /* 패딩 조정 */
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
@@ -57,6 +64,7 @@
             /* 테두리 색상 순환을 위한 기본 설정 */
             border-left-width: 6px; /* 강조를 위해 왼쪽 테두리 두께 설정 */
             border-left-color: #6a00f4; /* 기본 보라색 */
+            min-height: 180px; /* 카드 최소 높이 설정 */
         }
         .project-card:hover { 
             transform: translateY(-8px); 
@@ -71,8 +79,8 @@
 
         /* 폰트 크기 확대 및 강조 */
         .project-card h4 { 
-            font-size: 1.75rem; 
-            font-weight: 800; 
+            font-size: 1.5rem; /* 크기 약간 조정 */
+            font-weight: 700; /* Noto Sans KR 700 */
             color: #ffffff; 
             margin-bottom: 0.5rem;
         }
@@ -125,7 +133,7 @@
 
         <main class="space-y-16">
             <section>
-                <h2 class="category-title section-title"><i class="fas fa-flask"></i>AI/머신러닝 프로젝트 (주요 요약)</h2>
+                <h2 class="section-title"><i class="fas fa-flask"></i>AI/머신러닝 프로젝트 (주요 요약)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- 1. Morpheus 통합 프로젝트 (메인) - 테두리 색상 적용 -->
                     <a href="GPU 기반 데이터 분석 파이프라인 PT.html" target="_blank" class="project-card">
@@ -137,7 +145,7 @@
             </section>
             
             <section>
-                <h2 class="category-title section-title"><i class="fas fa-code"></i>프로젝트 코딩 원본 파일 (Jupyter Notebooks)</h2>
+                <h2 class="section-title"><i class="fas fa-code"></i>프로젝트 코딩 원본 파일 (Jupyter Notebooks)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Morpheus - Control Message & Data Handling (4개) - 테두리 색상 적용 -->
                     <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/31-control-message.ipynb" target="_blank" class="project-card">
@@ -148,7 +156,7 @@
                         <div><h4>[Morpheus] Serialization/Deserialization</h4><p>원시 데이터가 Morpheus 메시지로 변환되는 데이터 생명주기 실습입니다.</p></div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
                     </a>
-                    <a href="https://colab.research.google.com/github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/33-control-message-pipeline.ipynb" target="_blank" class="project-card">
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/33-control-message-pipeline.ipynb" target="_blank" class="project-card">
                         <div><h4>[Morpheus] Control Message Pipeline</h4><p>Control Message를 이용한 전체 데이터 파이프라인 설계 및 실행 실습입니다.</p></div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
                     </a>
@@ -170,7 +178,7 @@
                         <div><h4>[Morpheus] 데이터 분기 (Broadcast)</h4><p>하나의 데이터 스트림을 여러 분석 경로로 복제하여 병렬 처리하는 Broadcast 기능 실습입니다.</p></div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
                     </a>
-                    <a href="https://colab.research.google.com/github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/62-defining-ports.ipynb" target="_blank" class="project-card">
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/62-defining-ports.ipynb" target="_blank" class="project-card">
                         <div><h4>[Morpheus] Multi-Port 그래프 설계</h4><p>한 스테이지에서 여러 개의 출력 포트를 정의하여 데이터 흐름을 정교하게 제어하는 실습입니다.</p></div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
                     </a>
@@ -189,7 +197,7 @@
             </section>
             <!-- 기존 HTML 파일들은 파일명 수정 및 통합 -->
             <section>
-                <h2 class="category-title section-title"><i class="fas fa-desktop"></i>Interactive Web Presentations (HTML)</h2>
+                <h2 class="section-title"><i class="fas fa-desktop"></i>Interactive Web Presentations (HTML)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
                     <!-- *** NEW Paju Project Card Added Here *** -->
@@ -242,13 +250,39 @@
                     </a>
                 </div>
             </section>
+
+            <!-- *** NEW Storytelling Book Section *** -->
+            <section>
+                <h2 class="section-title"><i class="fas fa-book-open"></i>자기 소개 스토리텔링 북</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Korean Storybook -->
+                    <a href="https://gemini.google.com/share/5406e7797d40" target="_blank" class="project-card">
+                        <div><h4>자기 소개 스토리텔링 (한국어)</h4><p>저의 성장 과정과 경험을 담은 한국어 스토리텔링 북입니다.</p></div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag kr">KR</span></div>
+                    </a>
+                    
+                    <!-- English Storybook -->
+                    <a href="https://gemini.google.com/share/b02ddda4708d" target="_blank" class="project-card">
+                        <div><h4>Self-Introduction Storytelling (English)</h4><p>An English storytelling book about my journey and experiences.</p></div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag en">EN</span></div>
+                    </a>
+
+                    <!-- Japanese Storybook -->
+                    <a href="https://gemini.google.com/share/e4eb22fbf133" target="_blank" class="project-card">
+                        <div><h4>自己紹介ストーリーテリング (日本語)</h4><p>私の成長過程と経験を盛り込んだ日本語のストーリーテリングブックです。</p></div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag jp">JP</span></div>
+                    </a>
+                </div>
+            </section>
+            <!-- *** End of New Section *** -->
+
         </main>
 
-        <footer class="text-center mt-20 text-white p-4 bg-gray-900 bg-opacity-30">
+        <footer class="text-center mt-20 text-white p-4 bg-gray-900 bg-opacity-30 rounded-lg">
             <p>&copy; 2025 박연우. All Rights Reserved.</p>
             <p class="mt-1">GitHub Repository: <a href="https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers" target="_blank" class="text-blue-300 hover:text-blue-100 underline">바로가기</a></p>
         </footer>
     </div>
 </body>
 </html>
-

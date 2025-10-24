@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Food 세계화 전략 분석</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Inter 폰트 적용 (UI용) */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            overflow: hidden; /* 스크롤바 숨김 */
+        }
+        /* 이미지 페이드인 */
+        #slide-image {
+            transition: opacity 0.3s ease-in-out;
+        }
+        /* 이미지 로딩 실패 시 에러 메시지 스타일 */
+        #error-message {
+            display: none; /* 평소엔 숨김 */
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white w-screen h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- 슬라이드 컨테이너 -->
+    <main class="w-full max-w-6xl bg-gray-800 rounded-lg shadow-2xl relative overflow-hidden">
+        <!-- 16:9 비율 유지 (파워포인트 기본 비율) -->
+        <div class="aspect-w-16 aspect-h-9">
+            <!-- 슬라이드 이미지가 표시될 곳 -->
+            <img id="slide-image" src="" alt="프레젠테이션 슬라이드" class="w-full h-full object-contain">
+            
+            <!-- 이미지 로딩 실패 시 안내 메시지 -->
+            <div id="error-message" class="absolute inset-0 w-full h-full flex flex-col items-center justify-center text-center p-8">
+                <h2 class="text-3xl font-bold text-red-400 mb-4">이미지 로딩 실패</h2>
+                <p class="text-xl text-gray-300 mb-2">
+                    <code id="error-path" class="bg-gray-700 text-yellow-300 px-2 py-1 rounded">slides/slide1.png</code>
+                </p>
+                <p class="text-lg text-gray-400 max-w-2xl">
+                    이 HTML 파일과 같은 폴더에 <code class="bg-gray-700 px-1 rounded">slides</code> 라는 폴더를 만들고, 그 안에 파워포인트에서 내보낸 이미지 파일들을 <code class="bg-gray-700 px-1 rounded">slide1.png</code>, <code class="bg-gray-700 px-1 rounded">slide2.png</code> ... 이름으로 저장했는지 확인해 주세요.
+                </p>
+            </div>
+        </div>
+
+        <!-- 진행률 표시줄 -->
+        <div class="w-full bg-gray-700 h-2">
+            <div id="progress-bar" class="bg-cyan-500 h-2 transition-all duration-300" style="width: 0%;"></div>
+        </div>
+    </main>
+
+    <!-- 네비게이션 및 카운터 -->
+    <footer class="w-full max-w-6xl mt-4 flex items-center justify-between px-2">
+        <!-- 이전/다음 버튼 -->
+        <div class="flex gap-3">
+            <button id="prev" class="bg-gray-700 hover:bg-cyan-600 text-white font-bold py-2 px-5 rounded-lg transition-colors duration-200">
+                이전 (←)
+            </button>
+            <button id="next" class="bg-cyan-500 hover:bg-cyan-400 text-gray-900 font-bold py-2 px-5 rounded-lg transition-colors duration-200">
+                다음 (→)
+            </button>
+        </div>
+        
+        <!-- 슬라이드 카운터 -->
+        <div id="counter" class="text-lg font-semibold text-gray-300">
+            Slide 1 / 14
+        </div>
+    </footer>
+
+    <script>
+        // --- 설정 ---
+        // 고객님의 PPTX 파일 슬라이드 수와 동일하게 설정
+        const TOTAL_SLIDES = 14; 
+        const IMAGE_FOLDER = 'slides'; // 이미지가 저장될 폴더 이름
+        const IMAGE_PREFIX = 'slide';  // 이미지 파일 접두사 (slide1, slide2...)
+        const IMAGE_EXTENSION = 'png'; // 이미지 확장자 (png 또는 jpg 등)
+        // -------------
+
+        // DOM 요소 가져오기
+        const slideImage = document.getElementById('slide-image');
+        const counter = document.getElementById('counter');
+        const progressBar = document.getElementById('progress-bar');
+        const prevButton = document.getElementById('prev');
+        const nextButton = document.getElementById('next');
+        const errorMessage = document.getElementById('error-message');
+        const errorPath = document.getElementById('error-path');
+
+        let currentSlideIndex = 0; // 0부터 시작 (0 = 첫 번째 슬라이드)
+
+        // 슬라이드 보여주기 함수
+        function showSlide(index) {
+            // 인덱스 계산 (0 ~ TOTAL_SLIDES - 1)
+            currentSlideIndex = (index + TOTAL_SLIDES) % TOTAL_SLIDES;
+
+            // 새 이미지 경로 생성
+            const imagePath = `${IMAGE_FOLDER}/${IMAGE_PREFIX}${currentSlideIndex + 1}.${IMAGE_EXTENSION}`;
+            
+            // 이미지 부드럽게 교체
+            slideImage.style.opacity = 0;
+
+            setTimeout(() => {
+                slideImage.src = imagePath;
+                slideImage.style.opacity = 1;
+
+                // 에러 메시지 숨기기
+                errorMessage.style.display = 'none';
+                slideImage.style.display = 'block';
+            }, 300); // 0.3초 딜레이
+
+            // 카운터 업데이트
+            counter.textContent = `Slide ${currentSlideIndex + 1} / ${TOTAL_SLIDES}`;
+            
+            // 진행률 표시줄 업데이트
+            progressBar.style.width = `${((currentSlideIndex + 1) / TOTAL_SLIDES) * 100}%`;
+        }
+
+        // 이미지 로딩 실패 시
+        slideImage.onerror = function() {
+            slideImage.style.display = 'none'; // 깨진 이미지 숨기기
+            errorPath.textContent = slideImage.src.split('/').slice(-2).join('/'); // 예: slides/slide1.png
+            errorMessage.style.display = 'flex'; // 에러 메시지 보여주기
+        }
+
+        // 다음/이전 슬라이드 함수
+        function nextSlide() {
+            showSlide(currentSlideIndex + 1);
+        }
+
+        function prevSlide() {
+            showSlide(currentSlideIndex - 1);
+        }
+
+        // 이벤트 리스너 연결
+        nextButton.addEventListener('click', nextSlide);
+        prevButton.addEventListener('click', prevSlide);
+
+        // 키보드 네비게이션
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { // 오른쪽 화살표 또는 스페이스
+                e.preventDefault(); // 스페이스바의 기본 스크롤 동작 방지
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') { // 왼쪽 화살표
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+
+        // 초기 슬라이드 보여주기
+        showSlide(0);
+    </script>
+
+</body>
+</html>
+

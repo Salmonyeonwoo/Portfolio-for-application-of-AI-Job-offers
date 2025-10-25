@@ -1,0 +1,564 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>갤럭시 XR: 비전과 전망 (v12)</title>
+    <!-- Tailwind CSS 스크립트 제거 -->
+    <style>
+        /* Noto Sans KR 폰트 로드 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8fafc; /* 밝은 배경색 */
+            margin: 0;
+            padding: 0;
+        }
+
+        .slide-container {
+            max-width: 1000px;
+            height: 600px;
+            margin: 2rem auto;
+            overflow: hidden;
+            border-radius: 1.25rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            position: relative;
+            background: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            /* v8 수정: 패딩 상단 조정 및 정렬 변경 */
+            padding: 2.5rem 4.5rem 3rem 4.5rem;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+            visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            /* v8 수정: 콘텐츠가 위에서부터 표시되도록 변경 */
+            justify-content: flex-start; 
+            box-sizing: border-box; /* 패딩 계산을 위해 추가 */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+        
+        /* 1. 제목 스타일 (v8 수정: 하단 마진 축소) */
+        .slide-title {
+            font-size: 2.25rem; /* text-4xl */
+            line-height: 2.5rem;
+            font-weight: 800; /* font-extrabold */
+            margin-bottom: 2rem; /* v7: 2.5rem -> v8: 2rem */
+            color: #1d4ed8; /* text-blue-700 */
+            text-align: center; /* text-center */
+            margin-left: auto; /* mx-auto */
+            margin-right: auto; /* mx-auto */
+            width: 100%; /* 너비를 차지하도록 */
+            flex-shrink: 0; /* 제목이 줄어들지 않도록 */
+        }
+        
+        /* 2. 네비게이션 버튼 스타일 (v7과 동일) */
+        .nav-button {
+            position: absolute;
+            bottom: 2rem; /* bottom-8 */
+            width: 3rem; /* w-12 */
+            height: 3rem; /* h-12 */
+            background-color: #1d4ed8; /* bg-blue-700 */
+            color: #ffffff; /* text-white */
+            border-radius: 9999px; /* rounded-full */
+            font-weight: 600; /* font-semibold */
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); /* shadow-lg */
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 300ms;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 30;
+            border: none; /* 버튼 기본 테두리 제거 */
+            cursor: pointer; /* 마우스 커서 변경 */
+        }
+
+        .nav-button:hover {
+            transform: scale(1.05); /* hover:scale-105 */
+            background-color: #1e40af; /* hover:bg-blue-800 */
+        }
+
+        .nav-button:focus {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 4px #93c5fd; /* focus:ring-4 focus:ring-blue-300 */
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.5; /* disabled:opacity-50 */
+            cursor: default;
+        }
+
+        .nav-prev {
+            left: 2rem; /* left-8 */
+        }
+
+        .nav-next {
+            right: 2rem; /* right-8 */
+        }
+
+        .slide-index {
+            position: absolute;
+            bottom: 2.75rem; /* bottom-11 */
+            left: 50%;
+            transform: translateX(-50%); /* left-1/2 -translate-x-1/2 */
+            font-size: 1rem; /* text-base */
+            line-height: 1.5rem;
+            font-weight: 500; /* font-medium */
+            color: #4b5563; /* text-gray-600 */
+            z-index: 30;
+        }
+
+        /* 슬라이드 1: 타이틀 (v8 수정: justify-content 변경) */
+        .slide.title-slide {
+            background-image: linear-gradient(to bottom right, #1d4ed8, #3730a3);
+            color: #ffffff;
+            align-items: center;
+            text-align: center;
+            justify-content: center; /* 타이틀 슬라이드는 계속 중앙 정렬 유지 */
+            padding-top: 3rem;
+        }
+        .title-slide h1 {
+            font-size: 3.75rem; /* text-6xl */
+            line-height: 1;
+            font-weight: 800; /* font-extrabold */
+            margin-bottom: 1.25rem; /* mb-5 */
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            50% { opacity: .5; }
+        }
+        .title-slide p {
+            font-size: 1.5rem; /* text-2xl */
+            line-height: 2rem;
+            opacity: 0.9;
+        }
+        .slide.title-slide img {
+            max-width: 60%;
+            height: auto;
+            margin-top: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        /* 슬라이드 2, 4, 6, 7, 8: 텍스트 + 이미지 (v7과 동일) */
+        .slide-with-image {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            align-items: center;
+        }
+        .slide-with-image .text-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .slide-with-image .text-content ul {
+             list-style-type: disc;
+             list-style-position: inside;
+             /* v8 수정: 폰트 크기 조정 */
+             font-size: 1rem; /* text-base (v7: 1.125rem) */
+             line-height: 1.6; /* 줄 간격 */
+             color: #374151; /* text-gray-700 */
+        }
+        .slide-with-image .text-content ul li {
+             margin-bottom: 0.5rem; /* v7: 0.75rem */
+        }
+        .slide-with-image .text-content p {
+             font-size: 1rem; /* text-base (v7: 1.125rem) */
+             line-height: 1.6;
+             color: #374151;
+        }
+        .slide-with-image .text-content p.font-medium { font-weight: 500; }
+        .slide-with-image .text-content p.mb-4 { margin-bottom: 1rem; }
+        .slide-with-image .text-content p.mt-6 { margin-top: 1.5rem; }
+        .slide-with-image .text-content p.text-red-600 { color: #dc2626; }
+        .slide-with-image .text-content p.font-semibold { font-weight: 600; }
+        .slide-with-image .text-content li.mt-4 { margin-top: 1rem; }
+        .slide-with-image .text-content ul ul { margin-left: 1rem; }
+        
+        .slide-with-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            object-fit: cover;
+            max-height: 380px; /* v7: 400px -> v8: 380px */
+        }
+
+        /* 슬라이드 3: 중앙 정렬 콘텐츠 (v8 수정) */
+        .slide-3-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* v8: 상단 정렬 */
+            flex-grow: 1; /* 남은 공간 채우기 */
+            overflow-y: auto; /* 혹시 넘칠 경우 스크롤 (하지만 넘치지 않도록 조정) */
+        }
+        .slide-3-content img {
+            max-width: 100%;
+            /* v8 수정: 최대 높이 지정 */
+            max-height: 280px; /* (v7: max-width: 70%) */
+            height: auto;
+            margin-bottom: 1rem; /* v7: 1.5rem */
+        }
+        /* v8 수정: 텍스트 크기 조정 */
+        .slide-3-content p.text-3xl { font-size: 1.75rem; line-height: 2.1rem; } /* v7: 1.875rem */
+        .slide-3-content p.font-bold { font-weight: 700; }
+        .slide-3-content p.text-blue-700 { color: #1d4ed8; }
+        .slide-3-content p.mb-4 { margin-bottom: 1rem; }
+        .slide-3-content p.mt-2 { margin-top: 0.5rem; }
+        .slide-3-content p.text-xl { font-size: 1.125rem; line-height: 1.6rem; } /* v7: 1.25rem */
+        .slide-3-content p.text-lg { font-size: 1rem; line-height: 1.5rem; } /* v7: 1.125rem */
+        .slide-3-content p.text-gray-700 { color: #374151; }
+        .slide-3-content p.text-gray-500 { color: #6b7280; }
+        
+        /* 슬라이드 5: 2단 그리드 텍스트 (v8 수정) */
+        .slide-5-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem; /* v7: 3rem */
+            align-items: start;
+        }
+         .slide-5-grid h3 {
+             font-size: 1.25rem; /* v7: 1.5rem */
+             line-height: 1.75rem;
+             font-weight: 700; /* font-bold */
+             margin-bottom: 0.75rem; /* mb-3 */
+         }
+         .slide-5-grid h3.text-blue-700 { color: #1d4ed8; }
+         .slide-5-grid h3.text-green-700 { color: #059669; }
+         .slide-5-grid ul {
+             list-style-type: disc;
+             list-style-position: inside;
+             font-size: 1rem; /* v7: 1.125rem */
+             line-height: 1.6;
+             color: #374151; /* text-gray-700 */
+         }
+         .slide-5-grid ul li { margin-bottom: 0.5rem; } /* v7: 0.75rem */
+         .slide-5-grid ul ul { margin-left: 1rem; }
+         .slide-5-grid li.mt-4 { margin-top: 1rem; }
+         
+         /* v10 수정: 5페이지 레이아웃 변경으로 해당 CSS 룰 제거 */
+         /*
+         .slide-5-grid + img { 
+             margin-top: 1rem; 
+             border-radius: 0.75rem;
+             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); 
+             width: 100%;
+             max-height: 10rem; 
+             object-fit: cover;
+         }
+         */
+
+        /* 슬라이드 9, 10 (텍스트 위주) (v8 수정: 폰트 크기 조정) */
+        .slide-text-only ul {
+            list-style-type: disc;
+            list-style-position: inside;
+            font-size: 1rem; /* v7: 1.125rem */
+            line-height: 1.6;
+            color: #374151; /* text-gray-700 */
+        }
+        .slide-text-only ul li {
+            margin-bottom: 0.75rem; /* v7: 1rem */
+        }
+        .slide-text-only ul li span.font-bold { font-weight: 700; }
+        .slide-text-only ul li span.text-red-600 { color: #dc2626; }
+        .slide-text-only ul li span.text-blue-600 { color: #2563eb; }
+        .slide-text-only ul li a { color: #2563eb; }
+        .slide-text-only ul li a:hover { text-decoration: underline; }
+        .slide-text-only ul li.mt-4 { margin-top: 1rem; }
+
+        /* 슬라이드 11: 감사합니다 (v8 수정: justify-content 변경) */
+        .slide-thanks {
+             align-items: center;
+             text-align: center;
+             justify-content: center; /* v8: 중앙 정렬 유지 */
+             background-image: linear-gradient(to bottom right, #1f2937, #111827);
+             color: #ffffff;
+             padding-top: 3rem;
+        }
+        .slide-thanks h1 {
+             font-size: 4.5rem; /* text-7xl */
+             line-height: 1;
+             font-weight: 800; /* font-extrabold */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+        <!-- 슬라이드 1: 타이틀 및 메인 이미지 --><div class="slide active title-slide" data-index="1">
+            <h1>갤럭시 XR: 비전과 전망</h1>
+            <p>제공된 영상 및 업계 전망을 기반으로 한 분석</p>
+            <img src="https://images.samsung.com/kdp/static/mkt/moohan/feature/images/galaxy-xr-kv.jpg?imbypass=true" alt="갤럭시 XR 콘셉트 이미지">
+        </div>
+
+        <!-- 슬라이드 2: 영상의 의미 (v12 복원) -->
+        <div class="slide slide-with-image" data-index="2">
+            <div class="text-content">
+                <h2 class="slide-title">제공된 영상의 의미: '제품'이 아닌 '비전'</h2>
+                <p class="font-medium mb-4">제공된 두 영상은 '갤럭시 XR'의 구체적인 스펙이나 가격을 공개하는 영상이 아닙니다.</p>
+                <ul>
+                    <li><strong>2023년 티저 (언팩):</strong>
+                        <ul>
+                            <li>XR 기기 등장을 '암시'하는 짧은 티저.</li>
+                            <li>기대감 조성에 중점.</li>
+                        </ul>
+                    </li>
+                    <li class="mt-4"><strong>2024년 비전 영상 ('Spatial AI'):</strong>
+                        <ul>
+                            <li>삼성의 미래 XR/AI '활용 사례' 콘셉트.</li>
+                            <li>실시간 통역, AR 네비게이션, 가상 스크린 등.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p class="mt-6 font-semibold text-red-600">결론: 제품 정보 부재, 미래 비전 제시.</p>
+            </div>
+            <img src="https://xpert.digital/wp-content/uploads/2025/10/galaxy-xr-png.png" alt="Spatial AI 비전 이미지" style="max-width: 100%;">
+        </div>
+
+        <!-- 슬라이드 3: 현재 출시 현황 (v12 복원) -->
+        <div class="slide" data-index="3">
+            <div class="slide-3-content">
+                <h2 class="slide-title">현재 출시 및 판매 현황</h2>
+                <img src="https://d2phebdq64jyfk.cloudfront.net/media/article/88dce3dce137474bbee1a12037448892.jpg" alt="No product released">
+                <p class="text-3xl font-bold text-blue-700 mb-4">
+                    '갤럭시 XR'은 공식적으로 출시되지 않았습니다!
+                </p>
+                <p class="mt-2 text-xl text-gray-700">
+                    따라서 전 세계 어느 국가에서도 공식적으로 도입되거나 판매되고 있지 않습니다.
+                </p>
+                <p class="mt-2 text-lg text-gray-500">
+                    모든 정보는 업계의 '예상'과 '루머'에 기반합니다.
+                </p>
+            </div>
+        </div>
+
+        <!-- 슬라이드 4: 예상 성능 (v12 복원) -->
+        <div class="slide slide-with-image" data-index="4">
+            <div class="text-content">
+                <h2 class="slide-title">예상 성능 (업계 전망)</h2>
+                <p class="font-medium mb-4">삼성, 구글, 퀄컴 3사의 협력을 기반으로 한 고성능 기기 예상.</p>
+                <ul>
+                    <li><strong>칩셋:</strong> 퀄컴의 최신 XR 전용 칩셋 (스냅드래곤 XR2+ Gen 2 등)</li>
+                    <li><strong>디스플레이:</strong> 삼성 디스플레이의 고해상도 마이크로 OLED/OLEDoS</li>
+                    <li><strong>OS:</strong> 구글과 협력한 새로운 '안드로이드 XR' 플랫폼</li>
+                    <li><strong>카메라/센서:</strong> 고화질 풀컬러 패스스루, 다수의 MR 지원 센서</li>
+                    <li><strong>AI:</strong> 삼성 '갤럭시 AI' 연동 (실시간 통역, AI 비서)</li>
+                </ul>
+            </div>
+            <img src="https://www.thepanelstation.com/blog/wp-content/uploads/2025/10/Artboard-1-3.webp" alt="XR 기술 비전">
+        </div>
+
+        <!-- 슬라이드 5: VR vs XR (v12 수정: 텍스트 잘림 해결, 이미지 확대) -->
+        <div class="slide slide-with-image" data-index="5">
+            <div class="text-content">
+                <h2 class="slide-title">VR vs XR: 공통점 및 차이점</h2>
+                <!-- v12 수정: 텍스트 잘림 현상 해결 (폰트/줄간격/여백 축소) -->
+                <ul style="font-size: 0.95rem; line-height: 1.5;">
+                    <li>
+                        <strong>공통점 (VR & XR):</strong>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.4rem; list-style-type: disc;">
+                            <li>머리에 착용하는 디스플레이(HMD) 형태.</li>
+                            <li>사용자의 움직임을 추적하는 모션 트래킹 기능.</li>
+                            <li>가상 콘텐츠를 통해 몰입형 경험을 제공.</li>
+                        </ul>
+                    </li>
+                    <li style="margin-top: 1rem;"> <!-- 항목 간 간격 (1.5rem -> 1rem) -->
+                        <strong>차이점 (VR vs '갤럭시 XR' (MR)):</strong>
+                         <ul style="margin-left: 1.5rem; margin-top: 0.4rem; list-style-type: disc;">
+                            <li><strong>VR (Virtual Reality):</strong>
+                                <ul style="margin-left: 1.5rem; margin-top: 0.25rem; list-style-type: circle;">
+                                    <li>시야를 완전히 차단하고 100% 가상 공간만 보여줌.</li>
+                                </ul>
+                            </li>
+                            <li style="margin-top: 0.5rem;"> <!-- (0.75rem -> 0.5rem) -->
+                                <strong>XR/MR (Mixed Reality):</strong>
+                                <ul style="margin-left: 1.5rem; margin-top: 0.25rem; list-style-type: circle;">
+                                    <li>'갤럭시 XR'이 지향하는 방향.</li>
+                                    <li>현실 공간에 가상 정보를 '겹쳐서' 보여줌.</li>
+                                    <li>카메라를 통해 현실(Passthrough)을 보며 상호작용.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- v12 수정: 이미지 크기 확대 (max-height 450px -> 470px) -->
+            <img src="https://img.global.news.samsung.com/global/wp-content/uploads/2025/10/22100225/Samsung-Mobile-Galaxy-XR-Multimodal-AI-Android-XR-Opening-New-Worlds_dl3.jpg" alt="Samsung XR Vision" style="max-height: 470px; object-fit: contain;">
+        </div>
+
+        <!-- 슬라이드 6: 예상 장점 --><div class="slide slide-with-image" data-index="6">
+            <div class="text-content">
+                <h2 class="slide-title">예상 장점</h2>
+                <ul>
+                    <li><strong>강력한 생태계:</strong>
+                        <br>갤럭시 스마트폰, 워치 등 삼성 기기와의 뛰어난 연동성.</li>
+                    <li><strong>안드로이드 OS:</strong>
+                        <br>구글 안드로이드 기반으로, 기존 앱 개발자들의 접근성 용이.</li>
+                    <li><strong>고성능 하드웨어:</strong>
+                        <br>삼성의 디스플레이 기술과 퀄컴의 칩셋 결합.</li>
+                    <li><strong>AI 통합:</strong>
+                        <br>'Spatial AI' 비전처럼 기기 자체에 강력한 AI 기능 내장 가능성.</li>
+                </ul>
+            </div>
+            <img src="https://image.zdnet.co.kr/2021/11/17/4cbbcc3fb6bde6bfcb499f7b550b356a.jpg" alt="Galaxy Ecosystem">
+        </div>
+
+        <!-- 슬라이드 7: 예상 단점 --><div class="slide slide-with-image" data-index="7">
+            <div class="text-content">
+                <h2 class="slide-title">예상 단점 (공통 과제)</h2>
+                <ul>
+                    <li><strong>높은 가격:</strong>
+                        <br>초기 출시 가격이 매우 비쌀 수 있음 (애플 비전 프로 참고).</li>
+                    <li><strong>배터리 수명:</strong>
+                        <br>고성능 연산으로 인한 짧은 배터리 사용 시간.</li>
+                    <li><strong>콘텐츠 부족:</strong>
+                        <br>출시 초기, 기기를 활용할 킬러 콘텐츠나 앱이 부족할 수 있음.</li>
+                    <li><strong>착용감/무게:</strong>
+                        <br>장시간 착용 시 불편함이나 무게 문제가 발생할 수 있음.</li>
+                </ul>
+            </div>
+            <img src="https://i.ytimg.com/vi/vC4khmuM8FI/maxresdefault.jpg" alt="XR user fatigue" style="object-fit: contain; max-height: 350px;">
+        </div>
+
+        <!-- 슬라이드 8: 예상 가격 --><div class="slide slide-with-image" data-index="8">
+            <div class="text-content">
+                <h2 class="slide-title">예상 가격 (루머)</h2>
+                <p class="text-xl font-medium mb-4">공식 가격은 발표되지 않았습니다. 현재 업계의 추측은 다양합니다.</p>
+                <ul>
+                    <li><strong>프리미엄 시장 타겟:</strong> '애플 비전 프로'($3,499)와 경쟁 예상.</li>
+                    <li><strong>업계 추측 1:</strong> $1,500 ~ $2,500 사이가 유력.</li>
+                    <li><strong>업계 추측 2:</strong> 시장 확대를 위해 $1,000 초반 가능성도 제시.</li>
+                </ul>
+                <p class="mt-6 text-2xl font-bold text-red-600">결론: '매우 비싼' 프리미엄 기기일 확률이 높습니다.</p>
+            </div>
+            <div>
+                <img src="https://static.scientificamerican.com/sciam/cache/file/1BFA6F21-D20F-4971-A89651EC2A466E84_source.jpg" alt="Apple Vision Pro in use">
+                <p style="font-size: 0.875rem; color: #6b7280; text-align: center; margin-top: 0.5rem;">경쟁 모델 '애플 비전 프로' (참고용)</p>
+            </div>
+        </div>
+
+        <!-- 슬라이드 9: 미래 도입 및 성장 방향 --><div class="slide slide-text-only" data-index="9">
+            <h2 class="slide-title">미래 도입 및 성장 방향</h2>
+            <ul>
+                <li><strong>초기 출시 국가:</strong> 대한민국, 미국 등 주요 시장이 1차 출시국이 될 것입니다.</li>
+                <li><strong>생태계 확장:</strong> 구글(OS)과 삼성(기기) 협력으로 '안드로이드 XR' 생태계 구축 및 개발자 유치.</li>
+                <li><strong>B2B 시장 공략:</strong> 2024년 비전 영상처럼 원격 협업, 산업 디자인, 교육 등 B2B 시장 적극 공략.</li>
+                <li><strong>경쟁 구도:</strong> 애플(비전 프로) vs 삼성/구글 vs 메타(퀘스트)의 본격적인 XR 시장 3파전 예상.</li>
+                <li><strong>대중화 과제:</strong> 가격 인하, 킬러 콘텐츠 확보, 기기 경량화 및 착용감 개선이 장기적인 성장 과제.</li>
+            </ul>
+        </div>
+        
+        <!-- 슬라이드 10: 결론 요약 --><div class="slide slide-text-only" data-index="10">
+            <h2 class="slide-title">결론 요약</h2>
+            <ul>
+                <li><strong>현재 상태:</strong> '갤럭시 XR'은 아직 <span class="font-bold text-red-600">미출시 제품</span>이며, 모든 정보는 비전과 루머에 기반합니다.</li>
+                <li><strong>제품 방향:</strong> 단순 VR이 아닌, 현실과 가상을 융합하는 <span class="font-bold text-blue-600">고성능 MR/XR 기기</span>를 목표로 합니다.</li>
+                <li><strong>핵심 전략:</strong> 삼성(하드웨어) + 구글(OS) + 퀄컴(칩셋)의 <span class="font-bold text-blue-600">강력한 동맹</span>을 기반으로 합니다.</li>
+                <li><strong>성공 관건:</strong> '애플' 및 '메타'와의 경쟁 속에서 <span class="font-bold text-blue-600">가격 경쟁력, 킬러 콘텐츠, 갤럭시 생태계 연동</span>이 핵심입니다.</li>
+                <li><strong>미래 전망:</strong> 스마트폰을 잇는 차세대 컴퓨팅 플랫폼으로서의 가능성을 타진하는 중요한 첫걸음이 될 것입니다.</li>
+                <li class="mt-4"><strong>참고 비전 영상:</strong>
+                    <a href="https://youtube.com/watch?v=wVLBNVlxOb8&si=Escn2r-N8KxChKDM" target="_blank">
+                        삼성 'Spatial AI' 비전 영상 보기
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- 슬라이드 11: 감사합니다 --><div class="slide slide-thanks" data-index="11">
+            <h1>감사합니다</h1>
+        </div>
+
+        <!-- 네비게이션 버튼 (v7과 동일) -->
+        <button id="prevBtn" class="nav-button nav-prev" disabled title="이전 슬라이드">
+            <svg xmlns="http://www.w3.org/2000/svg" style="width: 1.5rem; height: 1.5rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
+        <div id="slideIndex" class="slide-index">1 / 11</div>
+        <button id="nextBtn" class="nav-button nav-next" title="다음 슬라이드">
+            <svg xmlns="http://www.w3.org/2000/svg" style="width: 1.5rem; height: 1.5rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
+
+    </div> <!-- .slide-container 끝 -->
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Slide script (v12) loaded and running."); // 버전 12 로드 확인
+
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideIndexDisplay = document.getElementById('slideIndex');
+            let currentSlide = 0;
+            const totalSlides = slides.length; // 11
+
+            if (!slides.length || !prevBtn || !nextBtn || !slideIndexDisplay) {
+                console.error("Script Error: Cannot find essential elements.");
+                return;
+            }
+
+            function showSlide(index) {
+                console.log(`Showing slide: ${index + 1}`); // 슬라이드 변경 시 로그
+                slides.forEach((slide, i) => {
+                    if (i === index) {
+                        slide.classList.add('active');
+                    } else {
+                        slide.classList.remove('active');
+                    }
+                });
+                currentSlide = index;
+                
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === totalSlides - 1;
+
+                slideIndexDisplay.textContent = `${currentSlide + 1} / ${totalSlides}`;
+            }
+
+            nextBtn.addEventListener('click', () => {
+                console.log("Next button clicked");
+                if (currentSlide < totalSlides - 1) {
+                    showSlide(currentSlide + 1);
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                console.log("Previous button clicked");
+                if (currentSlide > 0) {
+                    showSlide(currentSlide - 1); 
+                }
+            });
+
+            // 초기 슬라이드 표시
+            showSlide(0);
+        });
+    </script>
+
+</body>
+</html>
+
+
+
+
+

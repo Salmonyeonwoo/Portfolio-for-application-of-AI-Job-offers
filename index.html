@@ -122,7 +122,15 @@
                         <p class="mt-4 max-w-2xl text-gray-600">언어 번역/회계 등 비전공 도메인 전문성과 AI 툴 활용 능력을 결합하여, 기술과 현업 사이의 복잡한 커뮤니케이션 장벽을 해결하는 데 강점이 있습니다. AI 기술의 품질 보증(QA), 서비스 기획을 통해 실질적인 가치를 창출하는 것을 목표로 합니다.</p>
                         <div class="mt-6 flex flex-wrap justify-center md:justify-start gap-4">
                             <a href="cover-letter.pdf" target="_blank" class="bg-red-600 text-white font-bold py-2 px-6 rounded-full hover:bg-red-700 transition duration-300 inline-flex items-center"><i class="fas fa-file-alt mr-2"></i> View Cover Letter (자소서) </a>
-                            <a href="mailto:yeonwoopark40@gmail.com" class="bg-gray-800 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-700 transition duration-300 inline-flex items-center"><i class="fas fa-envelope mr-2"></i> Contact Me</a>
+                            
+                            <!-- *** MODIFIED: Contact Me Button *** - Changed <a> tag to <button>
+                                 - Added id="contactButton"
+                                 - Changed icon to fa-address-book
+                            -->
+                            <button id="contactButton" class="bg-gray-800 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-700 transition duration-300 inline-flex items-center">
+                                <i class="fas fa-address-book mr-2"></i> Contact Me
+                            </button>
+                            
                             <a href="https://www.linkedin.com/in/yeonwoo-park-b54bba356/" target="_blank" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-700 transition duration-300 inline-flex items-center"><i class="fab fa-linkedin mr-2"></i> LinkedIn</a>
                             <a href="https://github.com/Salmonyeonwoo" target="_blank" class="bg-gray-900 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-800 transition duration-300 inline-flex items-center"><i class="fab fa-github mr-2"></i> GitHub</a>
                         </div>
@@ -133,10 +141,12 @@
 
         <main class="space-y-16">
 
+            <!-- *** NEW Resume & Storytelling Section (Moved to Top) *** -->
             <section>
                 <h2 class="section-title"><i class="fas fa-user-circle"></i>My resume and storytelling details for myself</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
+                    <!-- Resume PTs Moved Here -->
                     <a href="이력서 소개 (한국어) 웹 프레젠테이션.html" target="_blank" class="project-card">
                         <div><h4>경력 소개 (한국어 - 웹 PT)</h4><p>박연우님의 경력과 역량을 슬라이드 형식으로 정리한 웹 프레젠테이션입니다.</p></div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag kr">KR</span></div>
@@ -150,6 +160,7 @@
                         <div class="tags"><span class="tag">HTML</span><span class="tag en">EN</span></div>
                     </a>
 
+                    <!-- Storybooks Moved Here -->
                     <a href="https://gemini.google.com/share/5406e7797d40" target="_blank" class="project-card">
                         <div><h4>자기 소개 스토리텔링 (한국어)</h4><p>저의 성장 과정과 경험을 담은 한국어 스토리텔링 북입니다.</p></div>
                         <div class="tags"><span class="tag html">HTML</span><span class="tag kr">KR</span></div>
@@ -162,15 +173,19 @@
                         <div><h4>自己紹介ストーリーテリング (日本語)</h4><p>私の成長過程と経験を盛り込んだ日本語のストーリーテリングブックです。</p></div>
                         <div class="tags"><span class="tag html">HTML</span><span class="tag jp">JP</span></div>
                     </a>
+                    <!-- *** NEWLY ADDED CARD *** -->
                     <a href="https://notebooklm.google.com/notebook/e10a4d4c-a31a-4c63-9c00-6031d66e2032" target="_blank" class="project-card">
                         <div><h4>LLM 활용 Video/Audio Overview</h4><p>LLM을 활용하여 제작한 자기소개 영상/음성 개요입니다.</p></div>
                         <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag kr">KR</span></div>
                     </a>
                 </div>
             </section>
+            <!-- *** End of New Section *** -->
+
             <section>
                 <h2 class="section-title"><i class="fas fa-flask"></i>AI/머신러닝 프로젝트 (주요 요약)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- 1. Morpheus 통합 프로젝트 (메인) - 테두리 색상 적용 -->
                     <a href="GPU 기반 데이터 분석 파이프라인 PT.html" target="_blank" class="project-card">
                         <div><h4>AI/머신러닝 프로젝트 요약본 (GPU 기반 파이프라인)</h4><p>NVIDIA Morpheus를 사용한 ControlMessage, Tensors, Inference 기반의 고급 비선형 파이프라인 통합 요약본입니다.</p></div>
                         <div class="tags"><span class="tag gpu">GPU</span><span class="tag">HTML</span><span class="tag ml">ML</span><span class="tag kr">KR</span></div>
@@ -182,6 +197,7 @@
             <section>
                 <h2 class="section-title"><i class="fas fa-code"></i>프로젝트 코딩 원본 파일 (Jupyter Notebooks)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Morpheus - Control Message & Data Handling (4개) - 테두리 색상 적용 -->
                     <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/31-control-message.ipynb" target="_blank" class="project-card">
                         <div><h4>[Morpheus] Control Message 기본 활용</h4><p>파이프라인 내 데이터 및 작업 흐름 제어를 위한 핵심 ControlMessage 기본 활용 실습입니다.</p></div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
@@ -199,6 +215,7 @@
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
                     </a>
 
+                    <!-- Morpheus - Advanced & ML (4개) - 테두리 색상 적용 -->
                     <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/41-tensors.ipynb" target="_blank" class="project-card">
                         <div><h4>[Morpheus] 데이터 텐서 변환 (Tensors)</h4><p>ML 모델 입력에 필수적인 GPU 메모리 내 Tensor 구조로 데이터 변환 실습입니다.</p></div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag ml">ML</span></div>
@@ -216,6 +233,7 @@
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
                     </a>
                     
+                    <!-- CrewAI 및 NLP/PCAP (2개) - 테두리 색상 적용 -->
                     <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/crewai-stock-analysis.ipynb" target="_blank" class="project-card">
                         <div><h4>CrewAI 주식 분석팀 (원본 코드)</h4><p>CrewAI 프레임워크를 사용한 다중 에이전트 기반 주식 분석 프로젝트 원본 코드를 Colab에서 실행합니다.</p></div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag api">API</span></div>
@@ -227,19 +245,28 @@
 
                 </div>
             </section>
+            <!-- 기존 HTML 파일들은 파일명 수정 및 통합 -->
             <section>
                 <h2 class="section-title"><i class="fas fa-desktop"></i>Interactive Web Presentations (HTML)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
+                    <!-- *** NEW Paju Project Card Added Here *** -->
                     <a href="./AI_Solutions_for_smart_city_at_Paju.html" target="_blank" class="project-card">
                         <div><h4>파주 스마트시티 AI 아이디어 제안</h4><p>파주시 문제 해결을 위한 AI 기반 도로 안전, 환경, 복지 서비스 아이디어 제안 발표 자료입니다. (Dacon 공모전)</p></div>
                         <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag kr">KR</span></div>
                     </a>
+                    <!-- *** End of New Card *** -->
+
+                    <!-- 이력서 PT (파일명 수정 완료) - 테두리 색상 적용 -->
+                    <!-- These 3 resume cards were MOVED to the new section above -->
+                    
+                    <!-- Voice of AI (파일명 및 오류 수정 완료) - 테두리 색상 적용 -->
                     <a href="Voice_of_AI_features.html" target="_blank" class="project-card">
                         <div><h4>AI 언어 모델 발전 과정 분석</h4><p>Seq2Seq부터 ChatGPT까지, AI 언어 모델의 핵심 발전사를 정리한 인터랙티브 웹 프레젠테이션입니다. (API 오류 해결)</p></div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag kr">KR</span></div>
                     </a>
                     
+                    <!-- 기타 기존 HTML 파일 - 테두리 색상 적용 -->
                     <a href="Popularity for k-drama-retro.html" target="_blank" class="project-card">
                         <div><h4>Strategy for K-Retro dramas</h4><p>성공적인 K-드라마들의 복고 전략을 분석하고, Gemini AI를 활용한 감성 문구 생성 기능을 구현했습니다.</p></div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag kr">KR</span><span class="tag api">API</span></div>
@@ -263,12 +290,76 @@
                 </div>
             </section>
 
-            </main>
+            <!-- *** NEW Storytelling Book Section *** -->
+            <!-- This section is now EMPTY as its contents were moved to the top -->
+            <!-- *** End of New Section *** -->
+
+        </main>
 
         <footer class="text-center mt-20 text-white p-4 bg-gray-900 bg-opacity-30 rounded-lg">
             <p>&copy; 2025 박연우. All Rights Reserved.</p>
             <p class="mt-1">GitHub Repository: <a href="https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers" target="_blank" class="text-blue-300 hover:text-blue-100 underline">바로가기</a></p>
         </footer>
     </div>
+
+    <!-- *** NEW: Contact Modal *** -->
+    <div id="contactModal" class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex justify-center items-center z-50 hidden">
+        <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full m-4 text-gray-800 relative">
+            <!-- Close Button -->
+            <button id="closeModalButton" class="absolute top-4 right-5 text-gray-500 hover:text-gray-800 text-3xl font-bold">
+                &times;
+            </button>
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">연락처 정보 (Contact Info)</h3>
+            <div class="space-y-5">
+                <!-- Messenger Info -->
+                <div>
+                    <h4 class="font-bold text-lg text-blue-600 flex items-center">
+                        <i class="fab fa-whatsapp mr-2 text-green-500"></i>
+                        <i class="fab fa-line mr-2 text-green-400"></i>
+                        메신저 (Kakao / LINE / WhatsApp)
+                    </h4>
+                    <p class="text-gray-700 text-lg mt-2 ml-1">+6010-968-1392</p>
+                    <p class="text-gray-700 text-lg mt-1 ml-1">+8210-2153-1208</p>
+                </div>
+                <!-- Email Info -->
+                <div class="border-t border-gray-200 pt-5">
+                    <h4 class="font-bold text-lg text-red-600 flex items-center">
+                        <i class="fas fa-envelope mr-2"></i>
+                        이메일 (Email)
+                    </h4>
+                    <p class="text-gray-700 text-lg mt-2 ml-1">yeonwoopark40@gmail.com</p>
+                    <p class="text-gray-700 text-lg mt-1 ml-1">yunwoopk@gmail.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- *** NEW: Modal JavaScript *** -->
+    <script>
+        const contactButton = document.getElementById('contactButton');
+        const contactModal = document.getElementById('contactModal');
+        const closeModalButton = document.getElementById('closeModalButton');
+
+        function showModal() {
+            contactModal.classList.remove('hidden');
+        }
+
+        function hideModal() {
+            contactModal.classList.add('hidden');
+        }
+
+        // Show modal on button click
+        contactButton.addEventListener('click', showModal);
+        
+        // Hide modal on close button click
+        closeModalButton.addEventListener('click', hideModal);
+
+        // Hide modal if background (overlay) is clicked
+        contactModal.addEventListener('click', (event) => {
+            if (event.target === contactModal) {
+                hideModal();
+            }
+        });
+    </script>
 </body>
 </html>

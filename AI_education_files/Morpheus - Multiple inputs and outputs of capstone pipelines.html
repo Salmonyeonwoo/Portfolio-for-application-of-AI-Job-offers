@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morpheus 캡스톤 다중 입력/출력 파이프라인 요약</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+        .header { border-bottom: 3px solid #14b8a6; padding-bottom: 1rem; margin-bottom: 2rem; }
+        h1 { font-size: 2.25rem; font-weight: 700; color: #0f766e; }
+        h2 { font-size: 1.5rem; font-weight: 700; color: #14b8a6; margin-top: 1.5rem; border-left: 4px solid #14b8a6; padding-left: 0.75rem; }
+        .tag-group { margin-top: 1rem; }
+        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
+        .tag-morpheus { background-color: #ccfbf1; color: #0d9488; }
+        .tag-network { background-color: #fee2e2; color: #991b1b; }
+        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
+        .list-item { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>[Morpheus] 캡스톤 다중 입력/출력 (MIMO) 파이프라인 요약</h1>
+            <p class="text-gray-600 mt-2">GPU 텔레메트리 및 네트워크 PCAP 로그를 통합 처리하는 비선형 데이터 파이프라인 설계</p>
+            <div class="tag-group">
+                <span class="tag tag-morpheus">Morpheus</span>
+                <span class="tag tag-network">Network</span>
+            </div>
+        </div>
+
+        <h2>프로젝트 개요</h2>
+        <p>NVIDIA 교육 과정의 **캡스톤 프로젝트**로, 두 개의 독립적인 소스(GPU 텔레메트리 로그, 네트워크 PCAP 로그)에서 들어오는 데이터를 `RouterStage`를 통해 유형별로 분기시키고, 각 브랜치에서 해당 데이터에 특화된 분석(Triton 추론 포함)을 수행하여 암호화폐 채굴 활동을 탐지하는 **비선형(Non-Linear) 파이프라인**을 완성했습니다.</p>
+
+        <h2>⚙️ 주요 기술 및 역할</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>기술:</strong> Morpheus `Pipeline` (Graph API), `RouterStage`, `FileSourceStage` (멀티 소스), `TritonInferenceStage`.</li>
+            <li class="list-item"><strong>비선형 구조 구축:</strong> `LinearPipeline` 대신 일반 `Pipeline` 객체를 사용하여 복잡한 그래프 구조를 직접 정의하고, 여러 입력과 출력(MIMO)을 처리하는 로직을 구성했습니다.</li>
+            <li class="list-item"><strong>동적 라우팅 제어:</strong> 메시지에 라우팅 키(예: 'route_a', 'route_b')를 메타데이터로 태깅하는 커스텀 스테이지를 사용하여, `RouterStage`가 메시지를 GPU 브랜치와 PCAP 브랜치로 분기하도록 했습니다.</li>
+            <li class="list-item"><strong>다중 추론 통합:</strong> 각 브랜치(NVSMI/PCAP)에 서로 다른 ML 모델을 `Triton Inference Server`를 통해 연결하여 고성능의 다중 탐지 시스템을 구축했습니다.</li>
+        </ul>
+
+        <h2>🛠️ 주요 구현 내용</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>멀티 소스 정의:</strong> 두 개의 `FileSourceStage`를 정의하고, 각각의 출력을 라우터 이전의 메타데이터 태깅 스테이지로 연결했습니다.</li>
+            <li class="list-item"><strong>RouterStage 연결:</strong> `pipeline.add_edge(source, router)` 구문을 사용하여 라우터에 두 개의 입력 소스를 연결했습니다.</li>
+            <li class="list-item"><strong>분기 및 통합:</strong> 라우터의 출력 포트를 사용하여 두 개의 독립적인 처리 브랜치를 정의한 후, 최종적으로 `MonitorStage`에서 두 브랜치의 결과를 다시 하나로 모아 통합 모니터링을 수행했습니다.</li>
+        </ul>
+
+        <h2>📌 주요 코드 로직 (RouterStage 연결부 추상화)</h2>
+        <div class="code-block">
+            <pre># 1. Pipeline 객체 생성 (비선형 그래프 정의)
+pipeline = Pipeline(config)
+branch_keys = ["route_a", "route_b"]
+
+# 2. 메타데이터 태거(입력 브랜치) 정의 및 라우터에 연결
+# nvsmi_tagger = pipeline.add_stage(RouteMetadataTaggerStage(config, branch_key="route_a"))
+# pcap_tagger = pipeline.add_stage(RouteMetadataTaggerStage(config, branch_key="route_b"))
+
+# 3. RouterStage 정의 (key_fn은 메시지 메타데이터 'route'를 읽도록 설정)
+# router = pipeline.add_stage(RouterStage(config, keys=branch_keys, key_fn=router_key_fn))
+
+# 4. 입력 브랜치 연결 (Router에 2개 입력)
+# pipeline.add_edge(nvsmi_tagger, router)
+# pipeline.add_edge(pcap_tagger, router)
+
+# 5. 출력 브랜치 연결 (Router에서 2개 출력)
+# pipeline.add_edge(router.output_ports[0], nvsmi_preprocess)
+# pipeline.add_edge(router.output_ports[1], pcap_preprocess)</pre>
+        </div>
+    </div>
+</body>
+</html>
+
+

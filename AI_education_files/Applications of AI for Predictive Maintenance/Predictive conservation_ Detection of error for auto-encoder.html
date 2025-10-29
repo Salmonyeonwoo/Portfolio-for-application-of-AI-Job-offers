@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>예측 유지보수: 오토인코더 기반 이상 탐지 요약</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+        .header { border-bottom: 3px solid #3b82f6; padding-bottom: 1rem; margin-bottom: 2rem; }
+        h1 { font-size: 2.25rem; font-weight: 700; color: #1d4ed8; }
+        h2 { font-size: 1.5rem; font-weight: 700; color: #3b82f6; margin-top: 1.5rem; border-left: 4px solid #3b82f6; padding-left: 0.75rem; }
+        .tag-group { margin-top: 1rem; }
+        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
+        .tag-ml { background-color: #fecaca; color: #991b1b; }
+        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
+        .list-item { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>3. 예측 유지보수: 오토인코더 기반 이상 탐지 요약</h1>
+            <p class="text-gray-600 mt-2">재구성 오류 기반의 오토인코더(AE) 딥러닝 이상 탐지 기법 구현</p>
+            <div class="tag-group">
+                <span class="tag tag-ml">ML</span>
+            </div>
+        </div>
+
+        <h2>프로젝트 개요</h2>
+        <p>시계열 데이터에서 **이상 패턴(Anomalies)**을 탐지하기 위해 **오토인코더(Autoencoder, AE)** 딥러닝 모델을 사용했습니다. 모델이 정상 데이터만을 학습하도록 훈련시킨 후, 정상 패턴에서 벗어나는 데이터를 이상으로 분류하는 기법을 구현했습니다.</p>
+
+        <h2>⚙️ 주요 기술 및 역할</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>기술:</strong> Autoencoder(인코더/디코더), 이상 탐지(Anomaly Detection), 재구성 오류(Reconstruction Error).</li>
+            <li class="list-item"><strong>이상 탐지 방법론:</strong> 오토인코더가 **정상 데이터만을 학습**하도록 훈련 데이터셋을 구성하고, 복원된 데이터와 원본 데이터 간의 **재구성 오류(Reconstruction Error)** 임계치를 설정하여 이상 여부를 판단하는 논리를 구현했습니다.</li>
+            <li class="list-item"><strong>GPU 훈련 최적화:</strong> GPU를 사용하여 대용량 데이터 기반의 오토인코더 모델을 효율적으로 훈련했습니다.</li>
+        </ul>
+
+        <h2>🛠️ 주요 구현 내용</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>훈련 데이터 구성:</strong> 훈련 데이터셋에서 **정상(Non-defective) 샘플**만을 필터링하여 오토인코더 입력으로 사용했습니다.</li>
+            <li class="list-item"><strong>모델 구조:</strong> 입력층, 인코더, 잠재 공간(Latent Space), 디코더, 출력층으로 구성된 네트워크를 설계했습니다.</li>
+            <li class="list-item"><strong>이상 탐지:</strong> 훈련된 모델에 테스트 데이터를 입력했을 때 발생하는 **재구성 오류(MSE)**가 설정된 임계치를 초과할 경우, 해당 데이터를 '이상(Anomaly)'으로 분류했습니다.</li>
+        </ul>
+
+        <h2>📌 주요 코드 로직 (오토인코더 훈련 데이터 준비 추상화)</h2>
+        <div class="code-block">
+            <pre># 'failure' 라벨이 0인 정상 샘플만 추출하여 훈련 데이터셋 구성
+x_train_normal = x_train[df_train['failure'] == 0]
+
+# 오토인코더는 입력(X)을 출력(X)으로 복원하도록 학습 (입력 == 목표)
+history = autoencoder.fit(
+    x_train_normal, 
+    x_train_normal, 
+    epochs=EPOCHS,
+    batch_size=BATCH_SIZE,
+    validation_data=(x_test, x_test) 
+)</pre>
+        </div>
+    </div>
+</body>
+</html>
+
+

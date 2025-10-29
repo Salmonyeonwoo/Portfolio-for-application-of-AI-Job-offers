@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIVA/TTS Speech AI 서버 배포 가이드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+        .header { border-bottom: 3px solid #6d28d9; padding-bottom: 1rem; margin-bottom: 2rem; }
+        h1 { font-size: 2.25rem; font-weight: 700; color: #4c1d95; }
+        h2 { font-size: 1.5rem; font-weight: 700; color: #6d28d9; margin-top: 1.5rem; border-left: 4px solid #6d28d9; padding-left: 0.75rem; }
+        .tag-group { margin-top: 1rem; }
+        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
+        .tag-ai { background-color: #ede9fe; color: #5b21b6; }
+        .tag-gpu { background-color: #dbeafe; color: #1e40af; }
+        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
+        .list-item { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>[RIVA/TTS] Speech AI 서버 배포 가이드</h1>
+            <p class="text-gray-600 mt-2">NVIDIA Riva Speech AI 서비스를 Docker 기반으로 배포하고 활용하는 기술 가이드라인</p>
+            <div class="tag-group">
+                <span class="tag tag-ai">AI</span>
+                <span class="tag tag-gpu">GPU</span>
+            </div>
+        </div>
+
+        <h2>프로젝트 개요</h2>
+        <p>고성능의 실시간 대화형 AI(ASR 및 TTS) 기능을 제공하는 **NVIDIA Riva Speech AI 서버**를 **Docker 컨테이너 환경**에 배포하고 운영하는 방법을 습득했습니다. 이는 프로덕션 환경에서 대규모 음성 서비스를 안정적으로 제공하기 위한 필수 역량입니다.</p>
+
+        <h2>⚙️ 주요 기술 및 역할</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>기술:</strong> NVIDIA Riva, Docker, NGC 컨테이너, gRPC API.</li>
+            <li class="list-item"><strong>배포 환경 구성:</strong> Docker와 NGC 카탈로그를 활용하여 Riva의 ASR(음성 인식) 및 TTS(음성 합성) 모델이 포함된 컨테이너 이미지를 다운로드하고 실행 환경을 구성했습니다.</li>
+            <li class="list-item"><strong>서비스 활용:</strong> Riva 서버의 gRPC 엔드포인트에 접속하여 실시간으로 음성-텍스트 변환 및 텍스트-음성 변환 서비스를 호출하는 클라이언트 로직을 구현했습니다.</li>
+        </ul>
+
+        <h2>🛠️ 주요 구현 내용</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>Riva Quick Start:</strong> Riva 환경 설정을 위한 `riva_init.sh` 스크립트를 실행하여 모델 다운로드 및 서버 설정을 완료했습니다.</li>
+            <li class="list-item"><strong>Docker Compose:</strong> 여러 Riva 컴포넌트를 동시에 관리하기 위한 Docker Compose 구성을 이해하고 활용했습니다.</li>
+            <li class="list-item"><strong>gRPC 클라이언트:</strong> Python 클라이언트를 작성하여 Riva 서버에 ASR 및 TTS 요청을 비동기적으로 전송하고 결과를 수신하는 로직을 구현했습니다.</li>
+        </ul>
+
+        <h2>📌 서버 시작 명령어 (추상화)</h2>
+        <div class="code-block">
+            <pre># Riva 서버 환경 설정 및 모델 다운로드
+bash riva_init.sh
+
+# Riva 서버 시작 명령어
+docker-compose up -d riva-server</pre>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIVA/TTS 대화형 AI 파이프라인 요약</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+        .header { border-bottom: 3px solid #6d28d9; padding-bottom: 1rem; margin-bottom: 2rem; }
+        h1 { font-size: 2.25rem; font-weight: 700; color: #4c1d95; }
+        h2 { font-size: 1.5rem; font-weight: 700; color: #6d28d9; margin-top: 1.5rem; border-left: 4px solid #6d28d9; padding-left: 0.75rem; }
+        .tag-group { margin-top: 1rem; }
+        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
+        .tag-ai { background-color: #ede9fe; color: #5b21b6; }
+        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
+        .list-item { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>[RIVA/TTS] 대화형 AI 파이프라인 요약</h1>
+            <p class="text-gray-600 mt-2">ASR 및 TTS 통합 End-to-End 대화형 AI 파이프라인 구축</p>
+            <div class="tag-group">
+                <span class="tag tag-ai">AI</span>
+            </div>
+        </div>
+
+        <h2>프로젝트 개요</h2>
+        <p>Riva를 이용하여 음성-텍스트 변환(ASR) 및 텍스트-음성 변환(TTS) 기능을 통합한 **End-to-End 대화형 AI 파이프라인**을 구현했습니다. 이 파이프라인은 사용자와 AI 시스템 간의 자연스러운 음성 기반 상호 작용을 가능하게 합니다.</p>
+
+        <h2>⚙️ 주요 기술 및 역할</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>기술:</strong> NVIDIA Riva ASR/TTS, 대화 관리(Dialogue Management) 로직.</li>
+            <li class="list-item"><strong>ASR 구현:</strong> 마이크를 통해 들어오는 음성을 실시간으로 인식하여 텍스트로 변환하는 모듈을 통합했습니다.</li>
+            <li class="list-item"><strong>TTS 구현:</strong> 텍스트로 생성된 대화 응답을 고품질의 자연스러운 음성으로 출력하는 모듈을 통합했습니다.</li>
+            <li class="list-item"><strong>Low-Latency 최적화:</strong> 실시간 대화에 필수적인 낮은 지연 시간(Low Latency)을 달성하도록 Riva 모델 설정을 최적화했습니다.</li>
+        </ul>
+
+        <h2>🛠️ 주요 구현 내용</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>상태 관리:</strong> 대화의 흐름과 맥락을 유지하기 위한 세션 및 상태 관리 로직을 파이프라인 중간에 구현했습니다.</li>
+            <li class="list-item"><strong>파이프라인 구성:</strong> ASR, NLP 처리, TTS 모듈이 순차적으로 연결되어 메시지를 주고받는 파이프라인 구조를 설계하고 테스트했습니다.</li>
+        </ul>
+
+        <h2>📌 대화 파이프라인 주요 단계</h2>
+        <div class="code-block">
+            <pre>1. User Input (Voice)
+2. ASR (Speech-to-Text) Conversion
+3. NLU (Intent & Entity Recognition)
+4. Dialogue Management / Response Generation (NLP)
+5. TTS (Text-to-Speech) Conversion
+6. System Output (Voice)</pre>
+        </div>
+    </div>
+</body>
+</html>

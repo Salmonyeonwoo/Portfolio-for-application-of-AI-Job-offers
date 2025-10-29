@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morpheus ControlMessage 파이프라인 통합 요약</title>
+    <title>Morpheus - Control Message 파이프라인 통합 및 활용 요약</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -22,44 +22,44 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>[Morpheus] ControlMessage 파이프라인 통합 요약</h1>
-            <p class="text-gray-600 mt-2">메시지에 메타데이터와 태스크 정보를 주입하여 파이프라인 흐름을 동적으로 제어</p>
+            <h1>[Morpheus] ControlMessage 파이프라인 통합 및 활용 요약</h1>
+            <p class="text-gray-600 mt-2">메시지에 메타데이터와 태스크 정보를 주입하는 커스텀 스테이지를 통한 동적 흐름 제어</p>
             <div class="tag-group">
                 <span class="tag tag-morpheus">Morpheus</span>
             </div>
         </div>
 
         <h2>프로젝트 개요</h2>
-        <p>**ControlMessage** 객체를 활용하여 파이프라인 내 데이터 흐름을 제어하는 방법을 실습했습니다. 메시지에 **메타데이터(metadata)**와 **태스크(tasks)** 정보를 주입하는 커스텀 스테이지를 개발하여, 메시지별로 맞춤형 처리를 지시하고 다운스트림 스테이지가 해당 정보를 기반으로 동작하게 했습니다.</p>
+        <p>Morpheus의 핵심 제어 객체인 **`ControlMessage`**를 활용하여 파이프라인 내 데이터 흐름을 동적으로 제어하는 방법을 실습했습니다. 메시지에 **메타데이터(metadata)**와 후속 스테이지가 처리해야 할 **태스크(tasks)** 정보를 주입하는 커스텀 스테이지를 개발하여, 메시지별로 맞춤형 처리를 지시하는 로직을 구현했습니다.</p>
 
         <h2>⚙️ 주요 기술 및 역할</h2>
         <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>기술:</strong> Morpheus `ControlMessage`, `SinglePortStage` 커스텀 개발, `DeserializeStage`.</li>
-            <li class="list-item"><strong>ControlMessage 변환:</strong> `FileSourceStage`에서 출력되는 `MessageMeta`를 `DeserializeStage`를 통해 `ControlMessage`로 변환하여 메타데이터/태스크를 추가할 수 있는 상태로 만들었습니다.</li>
-            <li class="list-item"><strong>커스텀 스테이지:</strong> `ControlMessage`를 입력/출력으로 받으며, 메시지에 외부에서 주입된 설정 값을 추가하는 `AddMetadataAndTaskStage`를 개발했습니다.</li>
+            <li class="list-item"><strong>기술:</strong> Morpheus `ControlMessage`, `DeserializeStage`, `AddMetadataAndTaskStage` (커스텀).</li>
+            <li class="list-item"><strong>메시지 타입 변환:</strong> `FileSourceStage`에서 출력되는 `MessageMeta`를 `DeserializeStage`를 통해 **`ControlMessage`**로 변환하여 메타데이터 및 태스크를 추가할 수 있는 상태로 만들었습니다.</li>
+            <li class="list-item"><strong>커스텀 스테이지 개발:</strong> `ControlMessage`를 입력/출력으로 받으며, 초기화 시 전달받은 설정 값(`metadata`, `tasks`)을 메시지에 주입하는 `AddMetadataAndTaskStage`를 개발했습니다.</li>
+            <li class="list-item"><strong>동적 정보 주입:</strong> 메시지에 `priority: high` 메타데이터를 추가하거나, 다운스트림 필터링 스테이지가 사용할 `filter` 태스크와 상세 조건(예: `IP` 주소 필터링)을 첨부했습니다.</li>
         </ul>
 
-        <h2>🛠️ 주요 구현 내용</h2>
+        <h2>🛠️ 주요 구현 내용 (AddMetadataAndTaskStage)</h2>
         <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>메타데이터 추가:</strong> 메시지에 `priority: high`, `source: api`와 같은 일반적인 키-값 쌍의 메타데이터를 추가했습니다.</li>
-            <li class="list-item"><strong>태스크 정의:</strong> 다운스트림 필터링 스테이지가 사용할 수 있도록 `filter`라는 이름의 태스크와 상세 조건(예: `IP: 192.168.1.100`)을 메시지에 첨부했습니다.</li>
-            <li class="list-item"><strong>타입 명시:</strong> 커스텀 스테이지가 `ControlMessage`만 받도록 `accepted_types`를 명시적으로 정의하여 타입 안정성을 확보했습니다.</li>
+            <li class="list-item"><strong>ControlMessage 전용:</strong> 커스텀 스테이지의 `accepted_types`에 `ControlMessage`를 명시하여, 파이프라인이 정확한 메시지 타입만 처리하도록 유도했습니다.</li>
+            <li class="list-item"><strong>메타데이터 설정:</strong> `message.set_metadata(key, value)` 함수를 사용하여 메시지에 메타데이터를 효율적으로 추가했습니다.</li>
+            <li class="list-item"><strong>태스크 정의:</strong> `message.add_task(task_name, task_details)` 함수를 사용하여 하위 스테이지가 수행해야 할 동적 명령을 메시지에 포함시켰습니다.</li>
         </ul>
 
         <h2>📌 주요 코드 로직 (ControlMessage 데이터 추가 추상화)</h2>
         <div class="code-block">
-            <pre>from morpheus.pipeline import SinglePortStage
-from morpheus.messages import ControlMessage
+            <pre>from morpheus.messages import ControlMessage
+from morpheus.pipeline import SinglePortStage
 
 class AddMetadataAndTaskStage(SinglePortStage):
-    # ... __init__ 메서드에서 metadata와 tasks 초기화 ...
+    # ... __init__ 에서 metadata와 tasks를 인스턴스 변수로 저장 ...
 
     def accepted_types(self) -> tuple:
         return (ControlMessage, )
 
     def on_data(self, message: ControlMessage) -> ControlMessage:
-        
-        # 헬퍼 함수를 사용하여 ControlMessage에 메타데이터와 태스크를 추가
+        # ControlMessage의 set_metadata/add_task 헬퍼 함수 활용
         if self._metadata:
             for key, value in self._metadata.items():
                 message.set_metadata(key, value)
@@ -73,5 +73,3 @@ class AddMetadataAndTaskStage(SinglePortStage):
     </div>
 </body>
 </html>
-
-

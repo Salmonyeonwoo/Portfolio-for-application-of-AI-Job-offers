@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM 선호도 예측 분류 모델 요약</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+        .header { border-bottom: 3px solid #00ac6b; padding-bottom: 1rem; margin-bottom: 2rem; }
+        h1 { font-size: 2.25rem; font-weight: 700; color: #008055; }
+        h2 { font-size: 1.5rem; font-weight: 700; color: #00ac6b; margin-top: 1.5rem; border-left: 4px solid #00ac6b; padding-left: 0.75rem; }
+        .tag-group { margin-top: 1rem; }
+        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
+        .tag-ai { background-color: #d1fae5; color: #065f46; }
+        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
+        .list-item { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>4. LLM 선호도 예측 분류 모델 요약</h1>
+            <p class="text-gray-600 mt-2">LLM 응답에 대한 사용자 선호도를 예측하는 다중 분류(Multi-Class Classification) 모델 개발</p>
+            <div class="tag-group">
+                <span class="tag tag-ai">AI</span>
+            </div>
+        </div>
+
+        <h2>프로젝트 개요</h2>
+        <p>사용자의 응답 데이터를 기반으로 두 가지 LLM 모델(Model A vs Model B) 중 어떤 응답을 선호할지 예측하는 **다중 분류(Multi-Class Classification) 모델**을 개발했습니다. 이는 LLM의 품질 관리(QA) 및 모델 개선 방향 설정에 중요한 피드백 메커니즘을 제공합니다.</p>
+
+        <h2>⚙️ 사용 기술 및 역할</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>기술:</strong> Python, Pandas, Scikit-learn (MinMaxScaler, MultinomialNB, SVC, RandomForest), TF-IDF.</li>
+            <li class="list-item"><strong>고급 특징 엔지니어링:</strong> 텍스트 응답에 **TF-IDF 벡터화**를 적용하여 텍스트 특징을 추출하고, 수치형 특징(토큰 수, 구두점 수)과 결합하여 예측력을 높였습니다.</li>
+            <li class="list-item"><strong>스케일링 문제 해결:</strong> Multinomial Naive Bayes(MNB) 모델 적용 시, 입력 특징이 음수여서 발생하는 학습 실패 문제를 **MinMaxScaler**를 통해 해결했습니다.</li>
+        </ul>
+
+        <h2>🛠️ 주요 구현 내용</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>특징 공간 확장:</strong> 텍스트 내용과 응답 길이/구조를 모두 고려하는 통합 특징 행렬을 생성했습니다.</li>
+            <li class="list-item"><strong>모델 비교:</strong> MNB, SVC, RandomForestClassifier를 적용하고 Log Loss 지표로 성능을 비교 분석했습니다. (MNB에서 Log Loss 0.0119 달성)</li>
+        </ul>
+
+        <h2>📌 주요 코드 로직 (TF-IDF 및 스케일링 추상화)</h2>
+        <div class="code-block">
+            <pre>from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.naive_bayes import MultinomialNB
+
+# 1. 텍스트 특징 추출 및 결합
+tfidf_vectorizer = TfidfVectorizer(max_features=1000)
+tfidf_features = tfidf_vectorizer.fit_transform(texts)
+# ... 수치형 특징과 결합하여 최종 특징 X 생성 ...
+
+# 2. MNB를 위한 데이터 스케일링 (음수값 방지)
+scaler = MinMaxScaler()
+X_scaled = scaler.fit_transform(X) 
+
+# 3. 모델 학습 및 예측
+model = MultinomialNB()
+model.fit(X_scaled, y)</pre>
+        </div>
+    </div>
+</body>
+</html>
+
+

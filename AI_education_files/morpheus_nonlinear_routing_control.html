@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morpheus 비선형 파이프라인 및 라우팅 제어 요약</title>
+    <title>Morpheus - 비선형 파이프라인 및 라우팅 제어 요약</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -23,27 +23,27 @@
     <div class="container">
         <div class="header">
             <h1>[Morpheus] 비선형 파이프라인 및 라우팅 제어 요약</h1>
-            <p class="text-gray-600 mt-2">RouterStage를 활용한 데이터 메시지의 동적 분기 및 비선형 파이프라인 구축</p>
+            <p class="text-gray-600 mt-2">RouterStage와 key_fn을 활용하여 데이터 메시지를 동적으로 분기하는 로직 실습</p>
             <div class="tag-group">
                 <span class="tag tag-morpheus">Morpheus</span>
             </div>
         </div>
 
         <h2>프로젝트 개요</h2>
-        <p>Morpheus의 `Pipeline` 클래스와 `RouterStage`를 사용하여 데이터 메시지를 내용 기반으로 동적으로 분기하는 **비선형 데이터 파이프라인**을 구현했습니다. 이를 통해 정상 로그와 비정상 로그를 각기 다른 분석 브랜치로 분리하여 효율적인 처리가 가능함을 입증했습니다.</p>
+        <p>Morpheus의 `RouterStage`를 활용하여 메시지의 페이로드(cuDF 데이터)를 검사하고, 그 결과에 따라 메시지를 서로 다른 다운스트림 브랜치로 분기하는 **동적 제어 로직**을 구현했습니다. 이는 '성공 로그인' 메시지는 데이터 저장 브랜치로, '실패 로그인' 메시지는 보안 분석 브랜치로 보내는 등 **비선형 파이프라인** 구축에 필수적인 기술입니다.</p>
 
         <h2>⚙️ 주요 기술 및 역할</h2>
         <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>기술:</strong> Morpheus `Pipeline` (vs. `LinearPipeline`), `RouterStage`, `key_fn` (라우팅 키 함수).</li>
-            <li class="list-item"><strong>비선형 구조:</strong> `Pipeline` 객체를 사용하여 메시지 흐름이 여러 방향으로 분기했다가 다시 결합되는 복잡한 그래프 구조를 정의했습니다.</li>
-            <li class="list-item"><strong>동적 라우팅:</strong> `RouterStage`에 사용자 정의 함수(`router_key_fn`)를 제공하여, 메시지의 페이로드(cuDF)를 검사하고 그 결과(예: 'success_route', 'failure_route')에 따라 메시지를 분기하는 논리를 구현했습니다.</li>
+            <li class="list-item"><strong>기술:</strong> Morpheus `Pipeline` (Graph API), `RouterStage`, `key_fn` (라우팅 함수), MRC Builder.</li>
+            <li class="list-item"><strong>비선형 구조 구축:</strong> `LinearPipeline` 대신 일반 `Pipeline` 객체를 사용하여 메시지 흐름이 분기했다가 다시 결합되는 복잡한 그래프 구조를 정의했습니다.</li>
+            <li class="list-item"><strong>조건부 라우팅:</strong> `RouterStage`에 사용자 정의 함수(`router_key_fn`)를 제공하여, 메시지의 페이로드(예: 'status' 컬럼)를 기반으로 라우팅 키를 반환하고 데이터 스트림을 분기했습니다.</li>
         </ul>
 
-        <h2>🛠️ 주요 구현 내용</h2>
+        <h2>🛠️ 주요 구현 내용 (RouterStage)</h2>
         <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>라우팅 키 함수 개발:</strong> 메시지 데이터 내 'status' 컬럼 값을 확인하여 라우팅 키를 반환하는 함수를 작성했습니다.</li>
-            <li class="list-item"><strong>라우터 연결:</strong> `RouterStage`의 여러 출력 포트(output_ports)를 각각 성공 처리 싱크(`success_sink`)와 실패 처리 싱크(`failure_sink`)에 연결하여 데이터 흐름을 명확히 분리했습니다.</li>
-            <li class="list-item"><strong>메시지 추적:</strong> 라우팅 성공 여부를 확인하기 위해, 라우팅된 메시지에 **어떤 브랜치를 통과했는지** 나타내는 메타데이터를 추가하는 로직을 구현했습니다.</li>
+            <li class="list-item"><strong>라우팅 키 함수 개발:</strong> 메시지 데이터 내 'status' 컬럼 값을 확인하여 "success\_route" 또는 "failure\_route"와 같은 라우팅 키를 반환하는 함수를 작성했습니다.</li>
+            <li class="list-item"><strong>라우터 연결:</strong> `RouterStage`의 출력 포트(`router.output_ports[0]`, `[1]`)를 사용하여 성공 처리 싱크와 실패 처리 싱크에 각각 연결하여 분기 로직을 완성했습니다.</li>
+            <li class="list-item"><strong>메시지 태깅:</strong> 라우팅된 메시지에 **어떤 브랜치를 통과했는지** 확인하는 메타데이터(`processing_branch`)를 추가하여 파이프라인의 성공적인 동적 라우팅을 검증했습니다.</li>
         </ul>
 
         <h2>📌 주요 코드 로직 (라우팅 함수 및 연결 추상화)</h2>
@@ -51,10 +51,10 @@
             <pre>from morpheus.stages.general.router_stage import RouterStage
 from morpheus.messages import ControlMessage
 
-# 1. 라우팅 키 함수 정의 (메시지의 페이로드 상태를 기반으로 키 반환)
+# 1. 라우팅 키 함수 정의: 메시지 페이로드 상태를 기반으로 키 반환
 def router_key_fn(message: ControlMessage) -> str:
     df = message.payload().get_data()
-    # 'status' 컬럼의 첫 번째 값이 'success'인지 확인
+    # 'status' 컬럼의 첫 번째 값을 기준으로 라우팅 키 결정
     if df['status'].iloc[0] == 'success':
         return "success_route"
     else:
@@ -64,11 +64,10 @@ def router_key_fn(message: ControlMessage) -> str:
 # router = pipeline.add_stage(RouterStage(config, 
 #                                         keys=["success_route", "failure_route"], 
 #                                         key_fn=router_key_fn))
+# 3. 라우터 출력 포트 연결 (비선형 분기)
 # pipeline.add_edge(router.output_ports[0], success_sink)
 # pipeline.add_edge(router.output_ports[1], failure_sink)</pre>
         </div>
     </div>
 </body>
 </html>
-
-

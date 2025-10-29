@@ -95,8 +95,10 @@
         .tag.jp { background: rgba(255, 217, 179, 0.5); color: #663300; }
         .tag.html { background: rgba(255, 204, 153, 0.5); color: #993d00; }
         .tag.ai { background: rgba(153, 204, 255, 0.5); color: #003366; }
+        /* DOCX Tag 수정: 이제 다운로드가 아니라 '미리보기'입니다. */
+        .tag.doc { background: rgba(153, 255, 153, 0.5); color: #004d00; } 
 
-        /* *** NEW: Audio Player Styles *** */
+        /* Audio Player Styles */
         #audio-container {
             position: fixed;
             bottom: 1.5rem;
@@ -147,7 +149,8 @@
             <div class="header-card p-8 rounded-2xl shadow-xl border border-gray-200">
                 <div class="flex flex-col md:flex-row items-center gap-8">
                     <div class="flex-shrink-0">
-                        <img src="https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/e4f5fff81a8cc8f77e5f48b25fc5c83a1aaccbf5/%EC%8A%A4%ED%81%AC%EB%A6%BN%EC%83%B7%202025-10-20%20202241.png?raw=true" class="w-40 h-40 rounded-full object-cover border-4 border-blue-400 shadow-lg" alt="Yeonwoo Park Profile Photo">
+                        <!-- Profile Image Link -->
+                        <img src="https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/e4f5fff81a8cc8f77e5f48b25fc5c83a1aaccbf5/%EC%8A%A4%ED%81%AC%EB%A6%BD%EC%83%B7%202025-10-20%20202241.png?raw=true" class="w-40 h-40 rounded-full object-cover border-4 border-blue-400 shadow-lg" alt="Yeonwoo Park Profile Photo">
                     </div>
                     <div class="text-center md:text-left">
                         <h1 class="text-4xl font-bold text-gray-800">박연우 (Yeonwoo Park)</h1>
@@ -188,7 +191,7 @@
                     </a>
                     <a href="職務経歴書 (日本語) ウェブプレゼンテーション.html" target="_blank" class="project-card">
                         <div><h4>職務経歴書 (日本語 - ウェブ PT)</h4>
-                            <p>AI챗봇 QA, 계정 보안 분석 등 데이터 기반의 성과를 중심으로 일본 시장에 특화된 경력 기술서입니다.</p>
+                            <p>AIチャットボックス QA, アカウントのセキュリティの分析等のデータベースの成果に基いた日本市場によって特化された職務経歴書です。</p>
                         </div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag jp">JP</span></div>
                     </a>
@@ -220,7 +223,168 @@
                 </div>
             </section>
             <!-- *** End of Section *** -->
+            
+            <!-- *** AI Education Files Section (UPDATED: DOCX to Viewer) *** -->
+            <section>
+                <h2 class="section-title"><i class="fas fa-file-word"></i>AI 교육 프로젝트 요약 파일 (DOCX - 다운로드 없이 미리보기)</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
+                    <!-- Subfolder A: Applications of AI for Predictive Maintenance -->
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/80f2c087ea18ce960feeb219af579114568524a4/AI_education_files/Applications%20of%20AI%20for%20Predictive%20Maintenance/Predictive%20conservation_%20GPU%20LSTM.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>[예측 유지보수] GPU LSTM 시계열 요약</h4>
+                            <p>GPU 가속 환경에서 LSTM 모델을 활용한 시계열 데이터 분석 및 예측 유지보수 방법론 요약 문서입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag gpu">GPU</span><span class="tag ml">ML</span></div>
+                    </a>
+                    
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/bd64a629bd8208749dab5a64930fed4709f016f2/AI_education_files/Applications%20of%20AI%20for%20Predictive%20Maintenance/Predictive%20conservation_%20Summary%20for%20GPU%20XGBoost.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>[예측 유지보수] GPU XGBoost 요약</h4>
+                            <p>GPU 기반 XGBoost 모델을 사용한 예측 유지보수 적용 사례 및 핵심 내용 요약 문서입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag gpu">GPU</span><span class="tag ml">ML</span></div>
+                    </a>
+
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/raw/main/AI_education_files/Applications%20of%20AI%20for%20Predictive%20Maintenance/%EC%98%88%EC%B8%A1%20%EC%9C%A0%EC%A7%80%EB%B3%B4%EC%88%98_%EC%98%A4%ED%86%A0%EC%9D%B8%EC%BD%94%EB%8D%94%20%EA%B8%B0%EB%B0%98%20%EC%9D%B4%EC%83%81%20%ED%83%90%EC%A7%80%20%EC%9A%94%EC%95%BD.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>[예측 유지보수] 오토인코더 기반 이상 탐지 요약</h4>
+                            <p>Autoencoder 딥러닝 모델을 활용하여 비정상적인 설비 상태를 탐지하는 기술 요약 문서입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag ml">ML</span></div>
+                    </a>
+
+                    <!-- Subfolder B: Riva and TTS (Conversational AI) -->
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/raw/main/AI_education_files/Riva%20and%20TTS%20(Conversational%20AI)/NVIDIA%20Riva%20Speech%20AI%20%EC%84%9C%EB%B2%84%20%EB%B0%B0%ED%8F%AC%20%EB%B0%8F%20%ED%99%9C%EC%9A%A9%20%EA%B0%80%EC%9D%B4%EB%93%9C%20(Docker%20%EA%B8%B0%EB%B0%98).docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>[RIVA/TTS] Speech AI 서버 배포 가이드</h4>
+                            <p>NVIDIA Riva Speech AI 서비스를 Docker 기반으로 배포하고 활용하는 기술 가이드라인 요약 문서입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag ai">AI</span><span class="tag gpu">GPU</span></div>
+                    </a>
+                    
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/raw/main/AI_education_files/Riva%20and%20TTS%20(Conversational%20AI)/Riva%20-%20%EC%A7%88%EC%9D%91%EC%9D%91%EB%8B%B5%20(QA)%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EA%B5%AC%ED%98%84%20%EC%9A%94%EC%95%BD.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>[RIVA/TTS] 질의응답 (QA) 시스템 구현</h4>
+                            <p>Riva를 활용하여 실시간 음성 질의응답(Q&A) 시스템을 구축하는 과정 및 핵심 기술 요약 문서입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag ai">AI</span></div>
+                    </a>
+                    
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/raw/main/AI_education_files/Riva%20and%20TTS%20(Conversational%20AI)/Riva%20-%20%EC%B5%9C%EC%A2%85%20%EB%8C%80%ED%99%94%ED%98%95%20AI%20%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8%20%EC%9A%94%EC%95%BD.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>[RIVA/TTS] 대화형 AI 파이프라인</h4>
+                            <p>Riva를 이용한 음성-텍스트 변환(ASR) 및 텍스트-음성 변환(TTS)을 포함하는 End-to-End 대화형 AI 파이프라인 구축 요약 문서입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag ai">AI</span></div>
+                    </a>
+                    
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/raw/main/AI_education_files/Riva%20and%20TTS%20(Conversational%20AI)/Riva%20%EB%B0%8F%20%EB%94%B1%EB%A8%B9%20%EB%85%BC%EB%AC%B8%20%EA%B2%80%EC%83%89%20%EB%B0%8F%20%EC%9A%94%EC%95%BD.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>[RIVA/TTS] 논문 검색 및 요약</h4>
+                            <p>Riva와 TTS 기술을 활용하여 텍스트 기반 논문 검색 결과를 음성으로 요약하여 제공하는 시스템 구축 요약 문서입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag ai">AI</span></div>
+                    </a>
+                    
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/f697b1de33486953bad6f9ed8c8567d12697fbb9/AI_education_files/Summary%20for%20CrewAI%20docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>CrewAI - 주식 분석팀 요약 (DOCX)</h4>
+                            <p>다중 AI 에이전트(분석가, 전략가, 리포터)가 협력하여 주식 시장을 분석하는 CrewAI 프레임워크 활용 프로젝트 요약입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag api">API</span></div>
+                    </a>
+                    
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/c7498284322b12f464c3ddd1979f681e65fd6193/AI_education_files/LLM%20-%20Summary%20for%20split%20preference.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>LLM - 선호도 예측 부문 답변 개발 요약</h4>
+                            <p>LLM을 사용하여 사용자의 선호도를 예측하고, 이에 기반한 맞춤형 답변을 생성하는 개발 프로젝트 요약입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag ai">AI</span></div>
+                    </a>
+
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/1e52ed7adfb19926fb4ec751e96ee19ab58d1584/AI_education_files/Morpheus%20-%20Activity%20via%20broadcast%20nodes.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>Morpheus - Broadcast 노드 활용 요약</h4>
+                            <p>Broadcast 노드 기능을 통해서 데이터 분석 및 결과를 예측하고, 이에 기반한 맞춤형 답변을 생성하는 개발 프로젝트 요약입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag ai">AI</span></div>
+
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/5f153accf217b7523cd9b23ad7688279e359835f/AI_education_files/Morpheus%20-%20Summary%20for%20function%20of%20control%20message.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>Morpheus - 메세지 필터링 기능 요약</h4>
+                            <p>온라인에서 자동으로 검열될 만한 메세지 단어들을 필터링하고 업데이트하는 기능입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag ai">AI</span></div>
+                    </a>
+
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/5160209b4fff2e76f0d63994ef789d2dd530ace2/AI_education_files/Morpheus%20-%20Summary%20for%20split%20datas%20and%20clones.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>Morpheus - 데이터 분할 및 복제</h4>
+                            <p>업로드된 데이터들을 알맞게 분할을 하고 그에 따라 복제를 같이 하는 기능입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag ai">AI</span></div>
+                    </a>
+
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/4d11028c09fce630abdc66e08fa41c1a25b06b64/AI_education_files/Morpheus%20-%20Summary%20for%20complexity%20of%20clones%20and%20conditional%20summary.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>Morpheus - 데이터 복합 필터링 및 조건부 분석</h4>
+                            <p>복합적 데이터들을 분석 및 필터링하는 기능입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag ai">AI</span></div>
+                    </a>
+
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/7f2cbe6becd598b1fcc6b30ed7a8128af628680e/AI_education_files/Morpheus%20-%20Adjustment%20of%20non-linear%20pipeline%20and%20routers.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>Morpheus - 비선형 파이프라인 및 라우터 제어</h4>
+                            <p>비선형 파이프라인으로 라우터 기능이 어떻게 작동을 하는지 보여 주는 기능입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag ai">AI</span></div>
+                    </a>
+
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/8c9aa7aa3c980130f7db70bb1907bc7ddd16ff59/AI_education_files/Morpheus%20-%20Multiple%20inputs%20and%20outputs%20of%20capstone%20pipelines.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>Morpheus - Capstone 기능으로 입출력</h4>
+                            <p>Capstone 기능을 통해서 어떻게 여러번 입출력이 가능한지 보여 줍니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag ai">AI</span></div>
+                    </a>
+
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/8fa153a09839b24534b89f23083d3c36e39a789c/AI_education_files/Morpheus%20-%20Summary%20for%20functions%20to%20revert%20the%20datas%20of%20custom%20stages.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>메세지를 커스터마이징하고 변환하는 방법</h4>
+                            <p>필터링된 메세지들을 어떻게 수정하고 변환하는지를 보여줍니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag ai">AI</span></div>
+                    </a>
+
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/13f0dc540f031bcafab89f3c5976fa94eb561b3e/AI_education_files/Morpheus%20-%20Evaluation%20for%20high%20level%20pipelines.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>고급형 파이프라인을 평가하는 기능</h4>
+                            <p>데이터 분석의 결과에 따라, 파이프라인의 레벨이 어떻게 상향되는지 그리고 그의 평가가 어떻게 이루어지는지 보여 줍니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag ai">AI</span></div>
+                    </a>
+
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/f65d64dd6d0454303aa9ba70c1c3f64128c7f753/AI_education_files/Morpheus%20-%20Function%20to%20utilize%20the%20internal%20filtering%20and%20handle%20missing%20values.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>내장 필터링 활용 및 결측치 처리</h4>
+                            <p>내부에서 이루어진 필터링 기능을 활용하고 그에 따라서 처리가 안 된 결측치들까지 모두 핸들링합니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag ai">AI</span></div>
+                    </a>
+
+                    <a href="https://docs.google.com/gview?url=https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/93459c1f19d469055cd0b337e66c25ced0f00c62/AI_education_files/Morpheus%20-%20Fundamental%20function%20to%20handle%20custom%20stage%20and%20update%20messages.docx" target="_blank" class="project-card">
+                        <div>
+                            <h4>메세지를 커스터마이징 및 업데이트하기</h4>
+                            <p>메세지들이 어떻게 커스터마이징 및 업데이트되는지 보여 주는 기능입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag doc">미리보기 (DOCX)</span><span class="tag ai">AI</span></div>
+                    </a>                
+                </div>
+            </section>
+            <!-- *** End of AI Education Files Section *** -->
+            
             <section>
                 <h2 class="section-title"><i class="fas fa-flask"></i>AI/머신러닝 프로젝트 (주요 요약)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -238,57 +402,59 @@
                 <h2 class="section-title"><i class="fas fa-code"></i>프로젝트 코딩 원본 파일 (Jupyter Notebooks)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
-                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/AI_education_files/31-control-message.ipynb" target="_blank" class="project-card">
+                    <!-- Jupyter Notebook Links - Retained from original -->
+
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/31-control-message.ipynb" target="_blank" class="project-card">
                         <div><h4>[Morpheus] Control Message 기본 활용</h4>
                             <p>Morpheus 파이프라인의 핵심인 ControlMessage를 활용하여 데이터 흐름을 동적으로 제어하는 기술을 시연합니다.</p>
                         </div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
                     </a>
-                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/AI_education_files/32-serialize-cycle.ipynb" target="_blank" class="project-card">
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/32-serialize-cycle.ipynb" target="_blank" class="project-card">
                         <div><h4>[Morpheus] Serialization/Deserialization</h4>
                             <p>원시 로그 데이터를 AI 분석에 적합한 Morpheus 메시지 형식으로 변환(직렬화/역직렬화)하는 과정을 실습합니다.</p>
                         </div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
                     </a>
-                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/AI_education_files/33-control-message-pipeline.ipynb" target="_blank" class="project-card">
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/33-control-message-pipeline.ipynb" target="_blank" class="project-card">
                         <div><h4>[Morpheus] Control Message Pipeline</h4>
                             <p>ControlMessage를 파이프라인에 통합하여, 특정 조건에 따라 데이터 처리 경로를 동적으로 변경하는 고급 파이프라인 설계입니다.</p>
                         </div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
                     </a>
-                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/AI_education_files/35-exercise-failed-logins.ipynb" target="_blank" class="project-card">
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/35-exercise-failed-logins.ipynb" target="_blank" class="project-card">
                         <div><h4>[Morpheus] 로그 분석 (Failed Logins)</h4>
                             <p>대규모 사용자 인증 로그를 GPU 가속으로 실시간 처리하여, 로그인 실패 패턴을 집계하고 분석하는 실전 예제입니다.</p>
                         </div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
                     </a>
 
-                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/AI_education_files/41-tensors.ipynb" target="_blank" class="project-card">
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/41-tensors.ipynb" target="_blank" class="project-card">
                         <div><h4>[Morpheus] 데이터 텐서 변환 (Tensors)</h4>
                             <p>AI 모델 추론을 위해 원시 데이터를 GPU 메모리에 최적화된 텐서(Tensors) 구조로 변환하는 핵심 전처리 과정입니다.</p>
                         </div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag ml">ML</span></div>
                     </a>
-                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/AI_education_files/42-inference.ipynb" target="_blank" class="project-card">
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/42-inference.ipynb" target="_blank" class="project-card">
                         <div><h4>[Morpheus] 머신러닝 추론 통합 (Inference)</h4>
                             <p>데이터 전처리부터 ONNX 모델 로드, 고속 추론까지 이어지는 End-to-End AI 파이프라인을 Morpheus로 통합 구현한 실습입니다.</p>
                         </div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag ml">ML</span></div>
                     </a>
-                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/AI_education_files/64-broadcast.ipynb" target="_blank" class="project-card">
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/64-broadcast.ipynb" target="_blank" class="project-card">
                         <div><h4>[Morpheus] 데이터 분기 (Broadcast)</h4>
                             <p>단일 데이터 스트림을 복제하여 '로그 집계'와 '이상 탐지' 등 여러 분석 경로로 동시에 병렬 처리하는 Broadcast 기능입니다.</p>
                         </div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
                     </a>
-                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/AI_education_files/62-defining-ports.ipynb" target="_blank" class="project-card">
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/62-defining-ports.ipynb" target="_blank" class="project-card">
                         <div><h4>[Morpheus] Multi-Port 그래프 설계</h4>
                             <p>데이터의 특성에 따라(예: 정상/비정상) 여러 출력 포트로 분기시켜, 정교한 비선형 데이터 흐름을 제어하는 실습입니다.</p>
                         </div>
                         <div class="tags"><span class="tag ipynb">Colab</span><span class="tag gpu">GPU</span></div>
                     </a>
                     
-                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/AI_education_files/crewai-stock-analysis.ipynb" target="_blank" class="project-card">
+                    <a href="https://colab.research.google.com/github/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers/blob/main/crewai-stock-analysis.ipynb" target="_blank" class="project-card">
                         <div><h4>CrewAI 주식 분석팀 (원본 코드)</h4>
                             <p>다중 AI 에이전트(분석가, 전략가, 리포터)가 협력하여 주식 시장을 분석하고 리포트를 생성하는 CrewAI 프레임워크 활용 프로젝트입니다.</p>
                         </div>
@@ -395,7 +561,7 @@
         </div>
     </div>
 
-    <!-- *** NEW: Audio Player HTML *** -->
+    <!-- Audio Player HTML -->
     <audio id="audioPlayer" class="hidden"></audio>
     <div id="audio-container">
         <button id="playBtn"><i class="fas fa-play"></i></button>
@@ -428,7 +594,7 @@
             }
         });
 
-        // *** NEW: Audio Player Logic ***
+        // Audio Player Logic
         document.addEventListener('DOMContentLoaded', () => {
             const audioPlayer = document.getElementById('audioPlayer');
             const playBtn = document.getElementById('playBtn');
@@ -523,7 +689,3 @@
     </script>
 </body>
 </html>
-
-
-
-

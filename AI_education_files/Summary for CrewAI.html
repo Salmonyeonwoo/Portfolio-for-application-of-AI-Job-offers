@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrewAI 주식 분석팀 요약</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+        .header { border-bottom: 3px solid #f97316; padding-bottom: 1rem; margin-bottom: 2rem; }
+        h1 { font-size: 2.25rem; font-weight: 700; color: #ea580c; }
+        h2 { font-size: 1.5rem; font-weight: 700; color: #f97316; margin-top: 1.5rem; border-left: 4px solid #f97316; padding-left: 0.75rem; }
+        .tag-group { margin-top: 1rem; }
+        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
+        .tag-api { background-color: #ffedd5; color: #9a3412; }
+        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
+        .list-item { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CrewAI - 주식 분석팀 요약</h1>
+            <p class="text-gray-600 mt-2">다중 LLM 에이전트(Multi-Agent)가 협력하여 주식 분석 리포트를 생성하는 CrewAI 프로젝트</p>
+            <div class="tag-group">
+                <span class="tag tag-api">API</span>
+            </div>
+        </div>
+
+        <h2>프로젝트 개요</h2>
+        <p>LangChain 기반의 **CrewAI 프레임워크**를 활용하여, 각기 다른 역할을 맡은 **다중 AI 에이전트(Multi-Agent)**들이 협업하여 주식 시장 분석 및 투자 전략 리포트를 생성하는 시스템을 구현했습니다. 이는 복잡한 실무 태스크를 LLM 기반으로 자동화하는 능력을 입증합니다.</p>
+
+        <h2>⚙️ 주요 기술 및 역할</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>기술:</strong> CrewAI, LLM (OpenAI/Gemini API), LangChain.</li>
+            <li class="list-item"><strong>에이전트 역할 정의:</strong> '시장 분석가(Market Analyst)', '투자 전략가(Strategy Planner)', '최종 리포터(Reporter)' 등 전문화된 역할을 가진 에이전트들을 정의했습니다.</li>
+            <li class="list-item"><strong>협업 태스크 설계:</strong> 에이전트 간의 정보 교환 및 순차적 작업을 정의하는 **태스크(Task)**와 **프로세스(Process)**를 설계하여, 최종적으로 통합된 리포트를 생성하도록 했습니다.</li>
+        </ul>
+
+        <h2>🛠️ 주요 구현 내용</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>Tool 연동:</strong> 에이전트가 실시간 정보를 얻을 수 있도록 Google Search 등의 외부 **도구(Tool)**를 LLM에 연결했습니다.</li>
+            <li class="list-item"><strong>순차적 프로세스:</strong> 시장 분석가의 결과를 전략가가 받아 전략을 수립하는 **순차적 프로세스**를 CrewAI에서 설정했습니다.</li>
+        </ul>
+
+        <h2>📌 CrewAI 에이전트 구조</h2>
+        <div class="code-block">
+            <pre># Agent Definition Example
+Agent(
+    role='Market Analyst',
+    goal='Identify key trends and risks in the stock market.',
+    backstory='Expert in financial data analysis.',
+    tools=[SearchTool]
+)
+
+# Crew Definition Example
+Crew(
+    agents=[analyst, strategist, reporter],
+    tasks=[task1, task2, task3],
+    process=Process.sequential
+)</pre>
+        </div>
+    </div>
+</body>
+</html>
+
+

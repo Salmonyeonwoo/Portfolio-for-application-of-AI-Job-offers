@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morpheus 고급 파이프라인 및 대규모 모델 평가 요약</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+        .header { border-bottom: 3px solid #14b8a6; padding-bottom: 1rem; margin-bottom: 2rem; }
+        h1 { font-size: 2.25rem; font-weight: 700; color: #0f766e; }
+        h2 { font-size: 1.5rem; font-weight: 700; color: #14b8a6; margin-top: 1.5rem; border-left: 4px solid #14b8a6; padding-left: 0.75rem; }
+        .tag-group { margin-top: 1rem; }
+        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
+        .tag-morpheus { background-color: #ccfbf1; color: #0d9488; }
+        .tag-llm { background-color: #fbcfe8; color: #9d174d; }
+        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
+        .list-item { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>[Morpheus] 고급 파이프라인 및 LLM 평가 솔루션 요약</h1>
+            <p class="text-gray-600 mt-2">비선형 흐름, 커스텀 스테이지 내 그래프 구축 및 DeepSpeed LLM 평가 통합</p>
+            <div class="tag-group">
+                <span class="tag tag-morpheus">Morpheus</span>
+                <span class="tag tag-llm">LLM</span>
+            </div>
+        </div>
+
+        <h2>프로젝트 개요</h2>
+        <p>Morpheus의 고급 기능들을 통합적으로 활용하여 **비선형 데이터 흐름**, **조건부 라우팅** 등을 구현하고, 나아가 **DeepSpeed** 프레임워크를 이용한 **대규모 언어 모델(LLM) 평가 솔루션**까지 구현했습니다. 이는 복잡한 엔터프라이즈급 AI 파이프라인 설계 및 운영 능력을 입증합니다.</p>
+
+        <h2>⚙️ 주요 기술 및 역할</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>기술:</strong> Morpheus `Pipeline` (비선형), `RouterStage`, MRC Builder, DeepSpeed (LLM Assessment 추론).</li>
+            <li class="list-item"><strong>비선형 및 라우팅:</strong> `Pipeline` 클래스와 `RouterStage`의 `key_fn`을 사용하여 메시지 페이로드 조건에 따른 **동적 분기**를 구현했습니다.</li>
+            <li class="list-item"><strong>커스텀 스테이지 그래프:</strong> 단일 커스텀 스테이지 내부에 MRC 노드들을 병렬 또는 직렬로 연결하여 복잡한 로직을 모듈화하는 방법을 습득했습니다.</li>
+            <li class="list-item"><strong>대규모 모델 통합:</strong> `minGPT`, `Vision Transformers`와 같은 대규모 모델을 **DeepSpeed**로 최적화하고, `Assessment` 추론을 위한 복잡한 딥러닝 트레이닝 파이프라인을 구축했습니다.</li>
+        </ul>
+
+        <h2>🛠️ 주요 구현 내용 (LLM Assessment 통합)</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>DeepSpeed 최적화:</strong> LLM 훈련 시 메모리 효율성을 극대화하는 **활성화 체크포인팅** 및 **ZeRo 리던던시 옵티마이저** 기술을 적용했습니다.</li>
+            <li class="list-item"><strong>다단계 PCAP 분석:</strong> 복잡한 PCAP 데이터 분석을 여러 커스텀 스테이지로 분리하여 선형 파이프라인으로 구성하는 다단계 전처리 능력을 시연했습니다.</li>
+            <li class="list-item"><strong>라우팅 유연성:</strong> 메시지에 태그된 'route' 메타데이터를 기반으로 'nvsmi\_route'와 'pcap\_route'를 분기하는 라우팅 함수를 구현했습니다.</li>
+        </ul>
+
+        <h2>📌 주요 코드 로직 (비선형 라우팅 추상화)</h2>
+        <div class="code-block">
+            <pre>from morpheus.stages.general.router_stage import RouterStage
+from morpheus.messages import MessageMeta
+
+# 라우팅 키 함수: 메시지 메타데이터 상태를 기반으로 분기 결정
+def router_key_fn(message: MessageMeta) -> str:
+    # 캡스톤 프로젝트에서 NVSMI와 PCAP을 분기하는 데 사용된 로직과 유사
+    route_key = message.get_metadata('route')
+    if route_key == 'nvsmi_data':
+        return "nvsmi_route"
+    else:
+        return "pcap_route" # 기본값 또는 다른 경로로 처리
+
+# 비선형 파이프라인 구축 및 연결
+# pipeline = Pipeline(config)
+# router = pipeline.add_stage(RouterStage(config, keys=["nvsmi_route", "pcap_route"], key_fn=router_key_fn))
+# pipeline.add_edge(router.output_ports[0], nvsmi_preprocessing_stage)</pre>
+        </div>
+    </div>
+</body>
+</html>
+
+

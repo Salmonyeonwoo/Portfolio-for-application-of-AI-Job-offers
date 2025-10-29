@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morpheus - PCAP 엔드투엔드 분석 파이프라인 요약</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+        .header { border-bottom: 3px solid #14b8a6; padding-bottom: 1rem; margin-bottom: 2rem; }
+        h1 { font-size: 2.25rem; font-weight: 700; color: #0f766e; }
+        h2 { font-size: 1.5rem; font-weight: 700; color: #14b8a6; margin-top: 1.5rem; border-left: 4px solid #14b8a6; padding-left: 0.75rem; }
+        .tag-group { margin-top: 1rem; }
+        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
+        .tag-morpheus { background-color: #ccfbf1; color: #0d9488; }
+        .tag-network { background-color: #fee2e2; color: #991b1b; }
+        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
+        .list-item { margin-bottom: 0.5rem; }
+        .table-container { overflow-x: auto; }
+        .pipeline-table th, .pipeline-table td { padding: 0.75rem; border: 1px solid #e5e7eb; }
+        .pipeline-table th { background-color: #eef2ff; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>[Morpheus] PCAP 엔드투엔드 분석 파이프라인 요약</h1>
+            <p class="text-gray-600 mt-2">네트워크 패킷(PCAP) 데이터를 활용한 암호화폐 채굴 탐지 E2E 파이프라인 구축</p>
+            <div class="tag-group">
+                <span class="tag tag-morpheus">Morpheus</span>
+                <span class="tag tag-network">Network</span>
+            </div>
+        </div>
+
+        <h2>프로젝트 개요</h2>
+        <p>클라우드 게임 서비스 환경에서 **암호화폐 채굴(Cryptomining)**을 탐지하기 위해 구축된 Morpheus 데이터 파이프라인 프로젝트입니다. 네트워크 패킷(PCAP) 데이터를 실시간으로 처리하고, **GPU 가속화된 XGBoost 모델 추론**을 이용하여 비정상 행위를 분류하는 **End-to-End** 솔루션을 구현했습니다.</p>
+
+        <h2>⚙️ 주요 기술 및 역할</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>기술:</strong> NVIDIA Morpheus (Linear Pipeline), RAPIDS cuDF, Triton Inference Server, Custom Stage (Python/C++).</li>
+            <li class="list-item"><strong>실시간 고성능 처리:</strong> Morpheus를 활용하여 초당 수십만 개의 네트워크 패킷을 처리하는 고성능 스트리밍 파이프라인을 구축했습니다.</li>
+            <li class="list-item"><strong>커스텀 전처리:</strong> XGBoost 모델의 요구사항에 맞춰 IP/Port 변환, TCP/IP 플래그 분석 등 복잡한 **특징 엔지니어링** 로직을 커스텀 스테이지로 구현했습니다.</li>
+            <li class="list-item"><strong>ML 모델 배포:</strong> **Triton Inference Server**를 통해 모델 추론 단계를 파이프라인에 통합하여 GPU 추론을 효율적으로 수행했습니다.</li>
+        </ul>
+
+        <h2>🛠️ 파이프라인 구성 (Linear Pipeline)</h2>
+        <div class="table-container mt-4">
+            <table class="pipeline-table w-full text-left text-sm">
+                <thead>
+                    <tr>
+                        <th class="w-1/4">단계 (Stage)</th>
+                        <th class="w-1/2">역할</th>
+                        <th class="w-1/4">주요 메시지 유형</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>FileSourceStage</td>
+                        <td>JSON Lines 형식의 원본 PCAP 데이터 파일 스트리밍 로드</td>
+                        <td>MessageMeta</td>
+                    </tr>
+                    <tr>
+                        <td>DeserializeStage</td>
+                        <td>데이터를 파이프라인 배치 크기에 맞춰 분할 및 ControlMessage로 변환</td>
+                        <td>ControlMessage</td>
+                    </tr>
+                    <tr>
+                        <td>Custom Preprocessing</td>
+                        <td>네트워크 필드 변환, 통계적 특징 추출 등 모델 입력에 맞는 복잡한 특징 엔지니어링 수행</td>
+                        <td>ControlMessage</td>
+                    </tr>
+                    <tr>
+                        <td>TritonInferenceStage</td>
+                        <td>`abp-pcap-xgb` 모델을 Triton 서버에 질의하여 GPU 가속 추론 실행</td>
+                        <td>ControlMessage</td>
+                    </tr>
+                    <tr>
+                        <td>AddClassificationsStage</td>
+                        <td>추론 결과(probs)를 기반으로 최종 이진 분류 라벨(정상/비정상) 추가</td>
+                        <td>ControlMessage</td>
+                    </tr>
+                    <tr>
+                        <td>SerializeStage</td>
+                        <td>분석된 결과를 최종 출력 형식(MessageMeta)으로 재조합 (불필요 컬럼 제거)</td>
+                        <td>MessageMeta</td>
+                    </tr>
+                    <tr>
+                        <td>WriteToFileStage</td>
+                        <td>최종 탐지 결과를 디스크에 JSON Lines 파일로 저장</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>📌 주요 코드 로직 (Triton 추론 통합 추상화)</h2>
+        <div class="code-block">
+            <pre># Morpheus 파이프라인 설정 및 초기화
+pipeline = LinearPipeline(config)
+# ... 데이터 소스, 역직렬화, 커스텀 전처리 단계 연결 ...
+
+# Triton을 통한 GPU 추론 단계
+pipeline.add_stage(
+    TritonInferenceStage(
+        config,
+        model_name='abp-pcap-xgb', 
+        server_url='triton:8001',
+        use_shared_memory=True
+    ))
+
+# 분류 라벨 추가 및 결과 저장
+# pipeline.add_stage(AddClassificationsStage(config, ...))
+# pipeline.add_stage(WriteToFileStage(config, ...))</pre>
+        </div>
+    </div>
+</body>
+</html>

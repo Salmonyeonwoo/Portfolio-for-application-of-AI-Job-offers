@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morpheus - 복합 필터링 및 조건부 분석 요약</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+        .header { border-bottom: 3px solid #14b8a6; padding-bottom: 1rem; margin-bottom: 2rem; }
+        h1 { font-size: 2.25rem; font-weight: 700; color: #0f766e; }
+        h2 { font-size: 1.5rem; font-weight: 700; color: #14b8a6; margin-top: 1.5rem; border-left: 4px solid #14b8a6; padding-left: 0.75rem; }
+        .tag-group { margin-top: 1rem; }
+        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
+        .tag-morpheus { background-color: #ccfbf1; color: #0d9488; }
+        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
+        .list-item { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>[Morpheus] 복합 필터링 및 조건부 분석 요약</h1>
+            <p class="text-gray-600 mt-2">FilterStage와 커스텀 분석 로직을 활용한 다중 조건 메시지 선별 및 보안 지표 계산</p>
+            <div class="tag-group">
+                <span class="tag tag-morpheus">Morpheus</span>
+            </div>
+        </div>
+
+        <h2>프로젝트 개요</h2>
+        <p>Morpheus 파이프라인에서 **복합적인 조건(Multiple Conditions)**으로 메시지를 필터링하고, 특정 조건에 부합하는 메시지에 대해 **실시간 보안 분석 로직**을 적용하는 방법을 실습했습니다. 이는 단일 데이터 스트림에서 다양한 분석 브랜치를 구축하는 기본 토대입니다.</p>
+
+        <h2>⚙️ 주요 기술 및 역할</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>기술:</strong> Morpheus `FilterStage`, `SinglePortStage` 커스텀 스테이지, cuDF 데이터 처리.</li>
+            <li class="list-item"><strong>병렬 복합 필터링:</strong> DeserializeStage의 출력을 여러 개의 독립적인 `FilterStage`에 동시에 연결하여, 패킷 크기, 특정 IP 접근 등 **서로 다른 조건**에 맞는 메시지를 효율적으로 병렬 분리했습니다.</li>
+            <li class="list-item"><strong>조건부 분석 구현:</strong> 들어온 메시지의 페이로드(cuDF)를 분석하여 **실패 로그인 횟수**와 같은 보안 지표를 계산하고, 그 결과를 다운스트림으로 전달하는 **커스텀 분석 스테이지**를 구현했습니다.</li>
+            <li class="list-item"><strong>다단계 전처리:</strong> 복잡한 전처리 과정을 재사용 가능한 여러 커스텀 스테이지로 분리하고 순차적으로 연결하여 모듈성을 높였습니다.</li>
+        </ul>
+
+        <h2>🛠️ 주요 구현 내용 (실패 로그인 분석 로직)</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>데이터 집계:</strong> 커스텀 스테이지 내에서 cuDF의 `groupby()` 및 `merge()` 연산을 사용하여 'failure' 상태의 레코드만 필터링하고 사용자별 실패 횟수를 집계했습니다.</li>
+            <li class="list-item"><strong>메타데이터 태깅:</strong> 계산된 'high\_risk\_users' 목록을 `ControlMessage.set_metadata()`를 통해 메시지에 첨부하여 다운스트림 스테이지가 후속 조치를 취할 수 있도록 했습니다.</li>
+            <li class="list-item"><strong>파이프라인 정확성 검증:</strong> 각 필터 및 분석 단계의 출력을 `InMemorySinkStage`로 받아, 계산된 지표 값(`failed_count`)이 정확한지 검증했습니다.</li>
+        </ul>
+
+        <h2>📌 주요 코드 로직 (실패 로그인 분석 추상화)</h2>
+        <div class="code-block">
+            <pre># ControlMessage를 받아 보안 분석을 수행하는 커스텀 스테이지 (SinglePortStage 상속)
+class FailedLoginAnalysisStage(SinglePortStage):
+    def on_data(self, message: ControlMessage) -> ControlMessage:
+        with message.payload().mutable_dataframe() as df:
+            # 'failure' 상태 레코드 필터링 및 사용자별 실패 횟수 집계
+            failed_logins = df[df['status'] == 'failure']
+            
+            if not failed_logins.empty:
+                # 실패 횟수 계산 및 원본 DataFrame에 병합
+                # (cuDF 연산을 통한 GPU 가속 처리)
+                df = df.merge(
+                    failed_logins.groupby('user').size().reset_index(name='failed_count'), 
+                    on='user', 
+                    how='left'
+                ).fillna({'failed_count': 0})
+                
+                # 고위험군 사용자 목록을 메시지 메타데이터로 태깅
+                # message.set_metadata("high_risk_users", ...)
+                
+        return message</pre>
+        </div>
+    </div>
+</body>
+</html>
+
+

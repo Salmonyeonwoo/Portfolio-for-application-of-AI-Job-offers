@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morpheus 내장 필터 활용 및 결측치 처리 요약</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+        .header { border-bottom: 3px solid #14b8a6; padding-bottom: 1rem; margin-bottom: 2rem; }
+        h1 { font-size: 2.25rem; font-weight: 700; color: #0f766e; }
+        h2 { font-size: 1.5rem; font-weight: 700; color: #14b8a6; margin-top: 1.5rem; border-left: 4px solid #14b8a6; padding-left: 0.75rem; }
+        .tag-group { margin-top: 1rem; }
+        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
+        .tag-morpheus { background-color: #ccfbf1; color: #0d9488; }
+        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
+        .list-item { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>[Morpheus] 내장 필터 활용 및 결측치 처리 요약</h1>
+            <p class="text-gray-600 mt-2">Morpheus FilterStage와 결측치(Null) 처리 기능을 사용한 실시간 데이터 품질 관리</p>
+            <div class="tag-group">
+                <span class="tag tag-morpheus">Morpheus</span>
+            </div>
+        </div>
+
+        <h2>프로젝트 개요</h2>
+        <p>Morpheus가 기본으로 제공하는 **내장 스테이지(Prebuilt Stages)** 중 `FilterStage`와 `DropNullColumnsStage` 등을 활용하여 데이터 전처리 작업을 수행했습니다. 특히, 결측치(Nulls)를 처리하고 특정 조건에 맞는 메시지만을 선별적으로 후속 단계에 전달하는 방법을 실습했습니다.</p>
+
+        <h2>⚙️ 주요 기술 및 역할</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>기술:</strong> Morpheus FilterStage, DropNullColumnsStage, `filter_fn` (사용자 정의 필터 함수).</li>
+            <li class="list-item"><strong>조건부 필터링:</strong> `FilterStage`에 사용자 정의 함수(`filter_fn`)를 전달하여 데이터프레임(페이로드)의 내용을 검사하고, 메시지를 파이프라인에서 통과시키거나 드롭하는 조건부 로직을 구현했습니다.</li>
+            <li class="list-item"><strong>결측치 처리:</strong> 데이터셋 내에서 Null 값이 특정 임계치 이상으로 많은 컬럼을 자동으로 제거하는 로직을 파이프라인에 통합하여 데이터 품질을 관리했습니다.</li>
+        </ul>
+
+        <h2>🛠️ 주요 구현 내용</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>유효 에러 메시지 필터링:</strong> 로그 데이터에서 'error_message' 컬럼에 Null이 아닌 유효한 값이 존재하는 행(메시지)만 파이프라인에 통과시키는 필터링 로직을 적용했습니다.</li>
+            <li class="list-item"><strong>파이프라인 통합:</strong> `FilterStage`를 역직렬화 스테이지(`DeserializeStage`)와 싱크 스테이지(`InMemorySinkStage`) 사이에 배치하여, 데이터 흐름 중간에서 실시간으로 데이터 클렌징 작업을 수행하도록 했습니다.</li>
+        </ul>
+
+        <h2>📌 주요 코드 로직 (조건부 필터링 함수 추상화)</h2>
+        <div class="code-block">
+            <pre>from morpheus.stages.preprocess.filter_stage import FilterStage
+from morpheus.messages import MessageMeta
+
+# 필터링 로직 정의: 'error_message'가 존재하는 행만 남김
+def filter_errors(message: MessageMeta) -> bool:
+    # MessageMeta의 페이로드(DataFrame)에 접근
+    df = message.get_data()
+    
+    # 'error_message' 컬럼에 Null이 아닌 값이 하나라도 있는지 확인
+    return not df['error_message'].isnull().all()
+
+# 파이프라인에 FilterStage 추가
+# pipeline.add_stage(FilterStage(config, filter_fn=filter_errors))</pre>
+        </div>
+    </div>
+</body>
+</html>
+
+

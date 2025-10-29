@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>예측 유지보수: GPU XGBoost 요약</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+        .header { border-bottom: 3px solid #3b82f6; padding-bottom: 1rem; margin-bottom: 2rem; }
+        h1 { font-size: 2.25rem; font-weight: 700; color: #1d4ed8; }
+        h2 { font-size: 1.5rem; font-weight: 700; color: #3b82f6; margin-top: 1.5rem; border-left: 4px solid #3b82f6; padding-left: 0.75rem; }
+        .tag-group { margin-top: 1rem; }
+        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
+        .tag-gpu { background-color: #dbeafe; color: #1e40af; }
+        .tag-ml { background-color: #fecaca; color: #991b1b; }
+        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
+        .list-item { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>1. 예측 유지보수: GPU XGBoost 요약</h1>
+            <p class="text-gray-600 mt-2">NVIDIA RAPIDS cuML을 활용한 GPU 가속 XGBoost 시계열 분류 프로젝트</p>
+            <div class="tag-group">
+                <span class="tag tag-gpu">GPU</span>
+                <span class="tag tag-ml">ML</span>
+            </div>
+        </div>
+
+        <h2>프로젝트 개요</h2>
+        <p>하드 드라이브 SMART 데이터를 사용하여 고장/정상 상태를 분류하는 예측 유지보수(Predictive Maintenance) 모델을 구축했습니다. 특히, **NVIDIA RAPIDS** 라이브러리를 활용하여 **XGBoost 모델의 학습 및 테스트 과정**을 GPU로 가속하여 성능을 최적화했습니다.</p>
+
+        <h2>⚙️ 주요 기술 및 역할</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>기술:</strong> NVIDIA RAPIDS (cuDF, cuML), XGBoost Classifier, 시계열 데이터 전처리.</li>
+            <li class="list-item"><strong>클래스 불균형 해소:</strong> 고장 데이터가 극히 일부인 **클래스 불균형(Imbalanced Classes)** 문제를 해결하기 위해 데이터 오버샘플링 또는 가중치 부여 기법을 적용했습니다.</li>
+            <li class="list-item"><strong>GPU 가속:</strong> cuDF 데이터 구조를 사용하여 XGBoost 모델을 훈련함으로써, 대규모 데이터셋에서도 CPU 대비 월등히 빠른 속도로 모델을 훈련하고 평가했습니다.</li>
+            <li class="list-item"><strong>데이터 준비 및 정제:</strong> 불필요한 컬럼 제거, 누락된 값(NaN/Null) 처리 등 데이터 큐레이션 과정을 수행했습니다.</li>
+        </ul>
+
+        <h2>🛠️ 주요 구현 내용</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>cuDF 로드:</strong> Pandas 대신 cuDF를 사용하여 데이터를 GPU 메모리에 직접 로드하고, 모든 전처리 작업을 GPU 상에서 처리했습니다.</li>
+            <li class="list-item"><strong>특징 공학(Feature Engineering):</strong> 고장 예측을 위해 필요한 핵심 SMART 지표만을 선별하고 정규화(Normalization)했습니다.</li>
+            <li class="list-item"><strong>모델 훈련:</strong> cuML 라이브러리의 GPU 기반 XGBoost 모델을 사용하여 분류 모델을 훈련하고 성능 지표를 검증했습니다.</li>
+        </ul>
+
+        <h2>📌 주요 코드 로직 (GPU 기반 데이터 처리 및 모델 훈련 추상화)</h2>
+        <div class="code-block">
+            <pre>import cudf
+import cuml.ensemble as cuml_xgb
+
+# 1. 데이터 로드 및 전처리 (GPU 가속)
+df_cudf = cudf.read_csv('...')
+
+# 2. cuML XGBoost 모델 훈련
+model = cuml_xgb.XGBoostClassifier(tree_method='gpu_hist')
+model.fit(X_train_cudf, y_train_cudf)
+
+# 3. 예측
+y_pred = model.predict(X_test_cudf)</pre>
+        </div>
+    </div>
+</body>
+</html>
+
+

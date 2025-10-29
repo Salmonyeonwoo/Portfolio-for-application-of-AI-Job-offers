@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>예측 유지보수: GPU LSTM 시계열 예측 요약</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+        .header { border-bottom: 3px solid #3b82f6; padding-bottom: 1rem; margin-bottom: 2rem; }
+        h1 { font-size: 2.25rem; font-weight: 700; color: #1d4ed8; }
+        h2 { font-size: 1.5rem; font-weight: 700; color: #3b82f6; margin-top: 1.5rem; border-left: 4px solid #3b82f6; padding-left: 0.75rem; }
+        .tag-group { margin-top: 1rem; }
+        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
+        .tag-gpu { background-color: #dbeafe; color: #1e40af; }
+        .tag-ml { background-color: #fecaca; color: #991b1b; }
+        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
+        .list-item { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>2. 예측 유지보수: GPU LSTM 시계열 예측 요약</h1>
+            <p class="text-gray-600 mt-2">Keras/TensorFlow LSTM을 활용한 시계열 데이터의 장기적 추세 분석 프로젝트</p>
+            <div class="tag-group">
+                <span class="tag tag-gpu">GPU</span>
+                <span class="tag tag-ml">ML</span>
+            </div>
+        </div>
+
+        <h2>프로젝트 개요</h2>
+        <p>XGBoost와 달리, **시계열 데이터의 시간적 흐름(Time Sequence)**을 분석하여 미래의 하드 드라이브 고장 가능성을 예측하는 LSTM(Long Short-Term Memory) 순환 신경망(RNN) 모델을 구축했습니다. 이는 장기간의 경향성을 파악하는 예측 유지보수 분야의 핵심 딥러닝 기법입니다.</p>
+
+        <h2>⚙️ 주요 기술 및 역할</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>기술:</strong> Keras, TensorFlow, LSTM 레이어, 시퀀스 데이터 리쉐이핑(Reshaping).</li>
+            <li class="list-item"><strong>시퀀스 데이터 변환:</strong> 시간 단위 데이터(df_train)를 LSTM 모델이 요구하는 **3차원 시퀀스 데이터** 형태로 변환하는 전처리 로직(예: (samples, timesteps, features))을 구현했습니다.</li>
+            <li class="list-item"><strong>LSTM 모델 설계:</strong> Keras와 TensorFlow를 사용하여 GPU 환경에 최적화된 LSTM 모델 구조를 설계하고 훈련했습니다.</li>
+            <li class="list-item"><strong>추세 분석:</strong> 과거 일정 기간 동안의 데이터 추세를 기반으로 미래 고장 여부를 예측하는 모델의 성능을 평가했습니다.</li>
+        </ul>
+
+        <h2>🛠️ 주요 구현 내용</h2>
+        <ul class="list-disc ml-6 mt-3">
+            <li class="list-item"><strong>시퀀스 길이 정의:</strong> sequence_length를 정의하여 LSTM이 몇 개의 과거 시점을 고려할지 결정했습니다.</li>
+            <li class="list-item"><strong>데이터 Reshaping:</strong> NumPy의 reshape 기능을 사용하여 2D 테이블 형태의 훈련 데이터를 LSTM 입력 형식인 3D 텐서로 변환했습니다.</li>
+            <li class="list-item"><strong>모델 훈련 및 평가:</strong> GPU를 활용하여 훈련 시간을 단축하고, 훈련된 모델의 예측 결과를 실제 고장 기록과 비교하여 예측력을 검증했습니다.</li>
+        </ul>
+
+        <h2>📌 주요 코드 로직 (시퀀스 데이터 변환 추상화)</h2>
+        <div class="code-block">
+            <pre>import numpy as np
+
+# 데이터프레임을 NumPy 배열로 변환
+x_train = x_train.to_numpy() 
+
+# 시퀀스 길이 (예: 10일간의 데이터를 시퀀스로 사용)
+sequence_length = 10 
+
+# LSTM 입력 형태로 데이터 Reshaping (3차원: 샘플 수, 시퀀스 길이, 특징 수)
+x_train = x_train.reshape(int(x_train.shape[0] / sequence_length),
+                          sequence_length,
+                          x_train.shape[1])
+                          
+# x_train의 최종 형태: (num_sequences, sequence_length, num_features)</pre>
+        </div>
+    </div>
+</body>
+</html>
+
+

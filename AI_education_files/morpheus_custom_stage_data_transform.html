@@ -3,68 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morpheus - 커스텀 스테이지 데이터 변환 요약</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <title>Morpheus 커스텀 스테이지 데이터 변환 요약</title>
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap)" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
-        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
-        .header { border-bottom: 3px solid #14b8a6; padding-bottom: 1rem; margin-bottom: 2rem; }
-        h1 { font-size: 2.25rem; font-weight: 700; color: #0f766e; }
-        h2 { font-size: 1.5rem; font-weight: 700; color: #14b8a6; margin-top: 1.5rem; border-left: 4px solid #14b8a6; padding-left: 0.75rem; }
-        .tag-group { margin-top: 1rem; }
-        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
-        .tag-morpheus { background-color: #ccfbf1; color: #0d9488; }
-        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
-        .list-item { margin-bottom: 0.5rem; }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f7f9fb; color: #1f2937; }
+        .container { max-width: 900px; }
+        .header { border-bottom: 4px solid #4f46e5; padding-bottom: 1rem; margin-bottom: 2rem; }
+        .section-title { font-size: 1.5rem; font-weight: 700; color: #1e40af; border-left: 4px solid #3b82f6; padding-left: 1rem; margin-bottom: 1rem; }
+        .card { background-color: #ffffff; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .tech-tag { display: inline-block; background-color: #e0f2fe; color: #0284c7; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; margin-right: 0.5rem; margin-bottom: 0.5rem; }
+        .code-block { background-color: #1f2937; color: #f9fafb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-top: 1rem; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>[Morpheus] 커스텀 스테이지 데이터 변환 요약</h1>
-            <p class="text-gray-600 mt-2">Mutable DataFrame을 사용하여 cuDF 페이로드의 컬럼 값을 안전하고 효율적으로 변환</p>
-            <div class="tag-group">
-                <span class="tag tag-morpheus">Morpheus</span>
+<body class="p-4 sm:p-8">
+    <div class="container mx-auto">
+        <header class="header">
+            <h1 class="text-3xl font-bold text-gray-800">Morpheus 커스텀 스테이지 구현: 데이터 변환 및 업데이트 요약</h1>
+            <p class="text-gray-500 mt-1">프로젝트 과정 해석 및 기술 역량 상세 설명 (코드 제외)</p>
+        </header>
+
+        <section class="mb-8">
+            <h2 class="section-title">프로젝트 개요 및 목표</h2>
+            <div class="card">
+                <p class="text-gray-700">Morpheus 파이프라인의 핵심인 **사용자 정의 스테이지(Custom Stage)**를 구현하고, 이 스테이지 내에서 메시지 페이로드의 **cuDF 데이터**를 직접 수정하는 로직을 개발했습니다. 이는 파이프라인의 특정 지점에서 필요한 비즈니스 로직(데이터 변환, 정규화 등)을 삽입하는 기본 역량을 보여줍니다.</p>
+                <div class="mt-4">
+                    <span class="tech-tag">Custom Stage</span>
+                    <span class="tech-tag">cuDF Data Modification</span>
+                    <span class="tech-tag">MessageMeta</span>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <h2>프로젝트 개요</h2>
-        <p>Morpheus 파이프라인의 핵심인 **`SinglePortStage`**를 상속받아, 메시지 내부의 데이터 페이로드(cuDF DataFrame)를 수정하는 커스텀 스테이지를 구현했습니다. 이는 데이터 정규화, 문자열 처리, 특정 필드 변환 등 **파이프라인 내의 모든 전처리 및 특징 엔지니어링**을 GPU 상에서 수행할 수 있는 기본 역량입니다.</p>
+        <section class="mb-8">
+            <h2 class="section-title">기술적 도전 및 문제 해결 과정</h2>
+            <div class="card">
+                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. 커스텀 스테이지 기본 구조 확립</h3>
+                <p class="text-gray-700">
+                    **도전:** Morpheus의 파이프라인과 원활하게 통합되면서도 커스텀 로직을 수행할 수 있는 스테이지 구조를 만들어야 했습니다.
+                </p>
+                <p class="text-gray-700 mt-1">
+                    **해결:** `SinglePortStage`와 `PassThruTypeMixin`을 상속받아 스테이지의 기본 입/출력 구조와 타입 정보를 정의했습니다. 핵심 로직은 `on_data` 메서드 내에 구현하여, 들어온 메시지를 처리한 후 다음 스테이지로 전달하도록 했습니다.
+                </p>
 
-        <h2>⚙️ 주요 기술 및 역할</h2>
-        <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>기술:</strong> Morpheus `SinglePortStage`, `PassThruTypeMixin`, `MessageMeta`, `ControlMessage`.</li>
-            <li class="list-item"><strong>데이터 가변성 확보:</strong> `with message.mutable_dataframe() as df:` 컨텍스트 관리자를 사용하여 GPU 메모리에 있는 cuDF 데이터에 대한 **안전하고 변경 가능한(Mutable)** 접근을 구현했습니다. 이는 멀티 스레드 환경에서 데이터 무결성을 보장합니다.</li>
-            <li class="list-item"><strong>데이터 변환 로직:</strong> `on_data` 메서드 내에서 cuDF의 문자열 조작 함수(예: `.str.upper()`)를 활용하여 특정 컬럼의 데이터를 일괄적으로 변환하는 GPU 가속 로직을 적용했습니다.</li>
-        </ul>
+                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. GPU 데이터의 안전한 수정 로직</h3>
+                <p class="text-gray-700">
+                    **도전:** GPU 메모리에 상주하는 데이터프레임(cuDF)을 여러 스레드가 동시에 접근하여 수정할 때 발생하는 **경쟁 조건(Race Condition)**을 피하고 안전하게 데이터를 업데이트해야 했습니다.
+                </p>
+                <p class="text-gray-700 mt-1">
+                    **해결:** 메시지 객체가 제공하는 **`with message.mutable_dataframe() as df:`** 컨텍스트 관리자를 사용했습니다. 이 구문은 데이터 수정 시 잠금(Lock) 메커니즘을 적용하여 안전성을 확보하며, 개발자는 `df` 객체를 마치 Pandas처럼 사용하여 GPU 데이터를 효율적으로 수정할 수 있었습니다.
+                </p>
 
-        <h2>🛠️ 주요 구현 내용 (UpdateMessageStage)</h2>
-        <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>클래스 정의:</strong> `UpdateMessageStage`를 정의하고 `on_data` 메서드를 오버라이드하여 실제 데이터 처리 로직을 삽입했습니다.</li>
-            <li class="list-item"><strong>컬럼 변환 예시:</strong> 사용자 인증 로그 데이터에서 'user' 컬럼의 모든 값을 **대문자**로 변경하는 로직을 적용하여 데이터 변환을 시연했습니다.</li>
-            <li class="list-item"><strong>파이프라인 통합:</strong> `FileSource`와 `Deserialize` 이후, `InMemorySink` 이전에 이 커스텀 스테이지를 삽입하여 데이터 처리 흐름을 검증했습니다.</li>
-        </ul>
+                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">3. 데이터 변환 로직 구현</h3>
+                <p class="text-gray-700">
+                    예시로, 사용자 인증 로그 데이터에서 **`user` 컬럼의 값을 대문자(Uppercase)로 일괄 변경**하는 로직을 구현했습니다. 이는 데이터 정규화 및 표준화와 같은 실무 전처리 작업에 즉시 적용 가능한 역량을 입증합니다.
+                </p>
+            </div>
+        </section>
 
-        <h2>📌 주요 코드 로직 (Mutable DataFrame 접근 추상화)</h2>
-        <div class="code-block">
-            <pre>from morpheus.pipeline import SinglePortStage
-from morpheus.messages import MessageMeta 
+        <section>
+            <h2 class="section-title">API 키 및 코드 처리 방안</h2>
+            <div class="card bg-yellow-50 border border-yellow-300">
+                <p class="text-gray-700 font-semibold">
+                    이 프로젝트는 Morpheus의 내부 데이터 처리 로직에 집중했으며 외부 API Key는 사용하지 않았습니다.
+                </p>
+                <p class="text-gray-700 mt-2">
+                    **코드 포메이션 대신:** **커스텀 스테이지 설계 방법**, **`mutable_dataframe()`을 사용한 GPU 데이터의 안전한 수정 로직**, 그리고 **경쟁 조건 회피** 등 시스템 안정성 및 개발 능력을 중심으로 기술 해석을 진행했습니다.
+                </p>
+            </div>
+        </section>
 
-class UpdateMessageStage(SinglePortStage):
-    def on_data(self, message: MessageMeta) -> MessageMeta:
-        # mutable_dataframe() 컨텍스트를 통해 cuDF를 안전하게 수정
-        with message.mutable_dataframe() as df:
-            
-            # 예시: 'user' 컬럼의 모든 값을 대문자로 변경
-            if 'user' in df.columns:
-                df['user'] = df['user'].str.upper()
-                
-        # 수정된 데이터프레임을 포함하는 메시지를 다음 스테이지로 전달
-        return message</pre>
-        </div>
+        <footer class="text-center mt-8 text-gray-500 text-sm">
+            Morpheus 커스텀 스테이지 구현 및 데이터 변환 요약
+        </footer>
     </div>
 </body>
 </html>
-
-

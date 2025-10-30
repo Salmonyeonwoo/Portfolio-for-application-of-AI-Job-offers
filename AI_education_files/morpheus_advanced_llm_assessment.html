@@ -4,72 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Morpheus 고급 파이프라인 및 대규모 모델 평가 요약</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap)" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
-        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
-        .header { border-bottom: 3px solid #14b8a6; padding-bottom: 1rem; margin-bottom: 2rem; }
-        h1 { font-size: 2.25rem; font-weight: 700; color: #0f766e; }
-        h2 { font-size: 1.5rem; font-weight: 700; color: #14b8a6; margin-top: 1.5rem; border-left: 4px solid #14b8a6; padding-left: 0.75rem; }
-        .tag-group { margin-top: 1rem; }
-        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
-        .tag-morpheus { background-color: #ccfbf1; color: #0d9488; }
-        .tag-llm { background-color: #fbcfe8; color: #9d174d; }
-        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
-        .list-item { margin-bottom: 0.5rem; }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f7f9fb; color: #1f2937; }
+        .container { max-width: 900px; }
+        .header { border-bottom: 4px solid #4f46e5; padding-bottom: 1rem; margin-bottom: 2rem; }
+        .section-title { font-size: 1.5rem; font-weight: 700; color: #1e40af; border-left: 4px solid #3b82f6; padding-left: 1rem; margin-bottom: 1rem; }
+        .card { background-color: #ffffff; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .tech-tag { display: inline-block; background-color: #e0f2fe; color: #0284c7; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; margin-right: 0.5rem; margin-bottom: 0.5rem; }
+        .code-block { background-color: #1f2937; color: #f9fafb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-top: 1rem; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>[Morpheus] 고급 파이프라인 및 LLM 평가 솔루션 요약</h1>
-            <p class="text-gray-600 mt-2">비선형 흐름, 커스텀 스테이지 내 그래프 구축 및 DeepSpeed LLM 평가 통합</p>
-            <div class="tag-group">
-                <span class="tag tag-morpheus">Morpheus</span>
-                <span class="tag tag-llm">LLM</span>
+<body class="p-4 sm:p-8">
+    <div class="container mx-auto">
+        <header class="header">
+            <h1 class="text-3xl font-bold text-gray-800">Morpheus 고급 파이프라인 및 대규모 모델 평가 요약</h1>
+            <p class="text-gray-500 mt-1">프로젝트 과정 해석 및 기술 역량 상세 설명 (코드 제외)</p>
+        </header>
+
+        <section class="mb-8">
+            <h2 class="section-title">프로젝트 개요 및 목표</h2>
+            <div class="card">
+                <p class="text-gray-700">Morpheus의 비선형 구조, 조건부 라우팅, 그리고 **DeepSpeed** 프레임워크를 활용한 **대규모 언어 모델(LLM) 평가** 솔루션을 구현했습니다. 이는 복잡하고 리소스 집약적인 AI 파이프라인을 설계하고 운영하는 능력을 입증합니다.</p>
+                <div class="mt-4">
+                    <span class="tech-tag">DeepSpeed</span>
+                    <span class="tech-tag">LLM Assessment</span>
+                    <span class="tech-tag">비선형 파이프라인</span>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <h2>프로젝트 개요</h2>
-        <p>Morpheus의 고급 기능들을 통합적으로 활용하여 **비선형 데이터 흐름**, **조건부 라우팅** 등을 구현하고, 나아가 **DeepSpeed** 프레임워크를 이용한 **대규모 언어 모델(LLM) 평가 솔루션**까지 구현했습니다. 이는 복잡한 엔터프라이즈급 AI 파이프라인 설계 및 운영 능력을 입증합니다.</p>
+        <section class="mb-8">
+            <h2 class="section-title">기술적 도전 및 문제 해결 과정</h2>
+            <div class="card">
+                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. LLM 평가를 위한 메모리 효율성 확보</h3>
+                <p class="text-gray-700">
+                    **도전:** MinGPT, Vision Transformers 같은 대규모 모델을 GPU 환경에서 효율적으로 훈련/평가하려면 방대한 GPU 메모리 관리가 필수적이었습니다.
+                </p>
+                <p class="text-gray-700 mt-1">
+                    **해결:** **DeepSpeed** 프레임워크를 활용하여 모델을 포팅하고, **활성화 체크포인팅(Activation Checkpointing)** 및 **ZeRo 리던던시 옵티마이저**를 포함한 최적화 전략을 적용했습니다. 이를 통해 메모리 사용량을 획기적으로 줄이고 모델 평가를 안정적으로 수행할 수 있었습니다.
+                </p>
 
-        <h2>⚙️ 주요 기술 및 역할</h2>
-        <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>기술:</strong> Morpheus `Pipeline` (비선형), `RouterStage`, MRC Builder, DeepSpeed (LLM Assessment 추론).</li>
-            <li class="list-item"><strong>비선형 및 라우팅:</strong> `Pipeline` 클래스와 `RouterStage`의 `key_fn`을 사용하여 메시지 페이로드 조건에 따른 **동적 분기**를 구현했습니다.</li>
-            <li class="list-item"><strong>커스텀 스테이지 그래프:</strong> 단일 커스텀 스테이지 내부에 MRC 노드들을 병렬 또는 직렬로 연결하여 복잡한 로직을 모듈화하는 방법을 습득했습니다.</li>
-            <li class="list-item"><strong>대규모 모델 통합:</strong> `minGPT`, `Vision Transformers`와 같은 대규모 모델을 **DeepSpeed**로 최적화하고, `Assessment` 추론을 위한 복잡한 딥러닝 트레이닝 파이프라인을 구축했습니다.</li>
-        </ul>
+                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. 유연한 파이프라인 구조 설계</h3>
+                <p class="text-gray-700">
+                    **기술 통합:** 앞서 학습한 비선형 파이프라인(`Pipeline` 클래스)과 `RouterStage`를 통합하여, 들어오는 데이터의 유형이나 조건에 따라 **LLM 평가 브랜치**와 **일반 추론 브랜치**로 메시지를 분기하는 동적 구조를 설계했습니다.
+                </p>
 
-        <h2>🛠️ 주요 구현 내용 (LLM Assessment 통합)</h2>
-        <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>DeepSpeed 최적화:</strong> LLM 훈련 시 메모리 효율성을 극대화하는 **활성화 체크포인팅** 및 **ZeRo 리던던시 옵티마이저** 기술을 적용했습니다.</li>
-            <li class="list-item"><strong>다단계 PCAP 분석:</strong> 복잡한 PCAP 데이터 분석을 여러 커스텀 스테이지로 분리하여 선형 파이프라인으로 구성하는 다단계 전처리 능력을 시연했습니다.</li>
-            <li class="list-item"><strong>라우팅 유연성:</strong> 메시지에 태그된 'route' 메타데이터를 기반으로 'nvsmi\_route'와 'pcap\_route'를 분기하는 라우팅 함수를 구현했습니다.</li>
-        </ul>
+                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">3. 모듈화 및 재사용성 확보</h3>
+                <p class="text-gray-700">
+                    복잡한 로직(예: LLM 전처리/후처리)을 단일 커스텀 스테이지 내부에 MRC 노드들을 연결하는 **스테이지 그래프(Stage-graphs)** 형태로 모듈화했습니다. 이 방식은 코드의 재사용성을 높이고 복잡한 파이프라인 디버깅 및 유지보수를 용이하게 했습니다.
+                </p>
+            </div>
+        </section>
 
-        <h2>📌 주요 코드 로직 (비선형 라우팅 추상화)</h2>
-        <div class="code-block">
-            <pre>from morpheus.stages.general.router_stage import RouterStage
-from morpheus.messages import MessageMeta
+        <section>
+            <h2 class="section-title">API 키 및 코드 처리 방안</h2>
+            <div class="card bg-yellow-50 border border-yellow-300">
+                <p class="text-gray-700 font-semibold">
+                    이 프로젝트는 LLM 평가 프레임워크 구축에 중점을 두었으며 외부 API Key(OpenAI 등) 대신 DeepSpeed를 활용한 로컬/클라우드 GPU 환경에서의 모델 최적화 및 평가에 집중했습니다.
+                </p>
+                <p class="text-gray-700 mt-2">
+                    **코드 포메이션 대신:** **DeepSpeed 최적화 기술의 이해**, **비선형 파이프라인 설계 능력**, 그리고 복잡한 AI 시스템을 모듈화하는 **설계적 사고**를 중심으로 기술 해석을 진행했습니다.
+                </p>
+            </div>
+        </section>
 
-# 라우팅 키 함수: 메시지 메타데이터 상태를 기반으로 분기 결정
-def router_key_fn(message: MessageMeta) -> str:
-    # 캡스톤 프로젝트에서 NVSMI와 PCAP을 분기하는 데 사용된 로직과 유사
-    route_key = message.get_metadata('route')
-    if route_key == 'nvsmi_data':
-        return "nvsmi_route"
-    else:
-        return "pcap_route" # 기본값 또는 다른 경로로 처리
-
-# 비선형 파이프라인 구축 및 연결
-# pipeline = Pipeline(config)
-# router = pipeline.add_stage(RouterStage(config, keys=["nvsmi_route", "pcap_route"], key_fn=router_key_fn))
-# pipeline.add_edge(router.output_ports[0], nvsmi_preprocessing_stage)</pre>
-        </div>
+        <footer class="text-center mt-8 text-gray-500 text-sm">
+            Morpheus Advanced Pipelines (LLM Assessment) 요약
+        </footer>
     </div>
 </body>
 </html>
-
-

@@ -3,56 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RIVA/TTS 논문 검색 및 요약</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <title>Riva/TTS 논문 검색 및 요약</title>
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap)" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
-        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
-        .header { border-bottom: 3px solid #6d28d9; padding-bottom: 1rem; margin-bottom: 2rem; }
-        h1 { font-size: 2.25rem; font-weight: 700; color: #4c1d95; }
-        h2 { font-size: 1.5rem; font-weight: 700; color: #6d28d9; margin-top: 1.5rem; border-left: 4px solid #6d28d9; padding-left: 0.75rem; }
-        .tag-group { margin-top: 1rem; }
-        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
-        .tag-ai { background-color: #ede9fe; color: #5b21b6; }
-        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
-        .list-item { margin-bottom: 0.5rem; }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f7f9fb; color: #1f2937; }
+        .container { max-width: 900px; }
+        .header { border-bottom: 4px solid #4f46e5; padding-bottom: 1rem; margin-bottom: 2rem; }
+        .section-title { font-size: 1.5rem; font-weight: 700; color: #1e40af; border-left: 4px solid #3b82f6; padding-left: 1rem; margin-bottom: 1rem; }
+        .card { background-color: #ffffff; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .tech-tag { display: inline-block; background-color: #e0f2fe; color: #0284c7; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; margin-right: 0.5rem; margin-bottom: 0.5rem; }
+        .code-block { background-color: #1f2937; color: #f9fafb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-top: 1rem; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>[RIVA/TTS] 논문 검색 및 요약 요약</h1>
-            <p class="text-gray-600 mt-2">Riva와 TTS 기술을 활용한 텍스트 기반 논문 검색 결과의 음성 요약 시스템</p>
-            <div class="tag-group">
-                <span class="tag tag-ai">AI</span>
+<body class="p-4 sm:p-8">
+    <div class="container mx-auto">
+        <header class="header">
+            <h1 class="text-3xl font-bold text-gray-800">Riva/TTS 논문 검색 및 요약 (기반 이론 학습)</h1>
+            <p class="text-gray-500 mt-1">프로젝트 과정 해석 및 기술 역량 상세 설명 (코드 제외)</p>
+        </header>
+
+        <section class="mb-8">
+            <h2 class="section-title">프로젝트 개요 및 목표</h2>
+            <div class="card">
+                <p class="text-gray-700">Riva가 제공하는 고성능 Speech AI 서비스의 기반이 되는 **딥러닝 모델(예: QuartzNet, FastPitch)**에 대한 기술 논문을 분석하고 요약했습니다. 이는 솔루션의 구현 능력뿐만 아니라, **기반 모델의 작동 원리 및 이론**을 이해하는 능력을 입증합니다.</p>
+                <div class="mt-4">
+                    <span class="tech-tag">기술 논문 분석</span>
+                    <span class="tech-tag">ASR/TTS 이론</span>
+                    <span class="tech-tag">Sequence-to-Sequence</span>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <h2>프로젝트 개요</h2>
-        <p>복잡한 논문 검색 결과를 텍스트로 제공하는 것에 그치지 않고, **Riva의 TTS 기술**을 활용하여 그 내용을 **음성으로 요약**하여 제공하는 시스템을 구현했습니다. 이는 정보 접근성을 높이고, 사용자가 문서를 직접 읽지 않고도 핵심 내용을 빠르게 파악할 수 있도록 돕습니다.</p>
+        <section class="mb-8">
+            <h2 class="section-title">기술적 도전 및 문제 해결 과정</h2>
+            <div class="card">
+                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. 모델 구조의 핵심 파악</h3>
+                <p class="text-gray-700">
+                    **도전:** 복잡한 딥러닝 논문(RNN, Transformer 기반 모델)에서 Riva 서비스에 적용된 **'고성능'**의 핵심 기술 요소를 파악해야 했습니다.
+                </p>
+                <p class="text-gray-700 mt-1">
+                    **해결:**
+                    * **ASR (QuartzNet):** 모델 경량화 및 효율적인 훈련을 가능하게 한 **"Time-Channel Separable Convolution"**의 구조적 특징과 이점이 Riva 서버의 낮은 지연 시간에 어떻게 기여하는지 분석했습니다.
+                    * **TTS (FastPitch/WaveGlow):** 고품질의 음성 합성을 위한 **피치 예측 모듈**과 병렬적인 오디오 샘플 생성을 위한 **Flow-based Generative Model**의 역할에 중점을 두어 학습했습니다.
+                </p>
 
-        <h2>⚙️ 주요 기술 및 역할</h2>
-        <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>기술:</strong> NVIDIA Riva TTS, 텍스트 요약(Text Summarization) NLP 모델, 정보 검색(Information Retrieval) 시스템.</li>
-            <li class="list-item"><strong>요약 엔진 통합:</strong> 검색된 논문 텍스트를 입력받아 핵심 내용을 간결하게 요약하는 NLP 모델을 사용했습니다.</li>
-            <li class="list-item"><strong>TTS 변환:</strong> 요약된 텍스트를 Riva TTS API로 전송하여 고품질의 음성 파일로 변환하는 로직을 구현했습니다.</li>
-        </ul>
+                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. 서비스 성능과 이론의 연결</h3>
+                <p class="text-gray-700">
+                    단순히 논문을 요약하는 것을 넘어, "이 논문의 기술적 혁신이 Riva 서비스의 **실시간(Low Latency) 응답**에 어떻게 반영되었는가?"를 중점적으로 연결하여 실무적 관점에서 이론을 해석했습니다.
+                </p>
+            </div>
+        </section>
 
-        <h2>🛠️ 주요 구현 내용</h2>
-        <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>정보 검색:</strong> 특정 키워드에 해당하는 논문을 데이터베이스 또는 외부 API를 통해 검색합니다.</li>
-            <li class="list-item"><strong>요약 및 음성 생성:</strong> 검색 결과의 본문을 요약한 후, Riva TTS 클라이언트를 호출하여 음성 데이터를 생성하고 사용자에게 재생합니다.</li>
-        </ul>
+        <section>
+            <h2 class="section-title">API 키 및 코드 처리 방안</h2>
+            <div class="card bg-yellow-50 border border-yellow-300">
+                <p class="text-gray-700 font-semibold">
+                    이 프로젝트는 이론 학습 및 논문 분석에 집중했으며, 코딩이나 API Key는 사용되지 않았습니다.
+                </p>
+                <p class="text-gray-700 mt-2">
+                    **코드 포메이션 대신:** **AI 솔루션의 기반이 되는 모델 아키텍처에 대한 심도 있는 이해**, 그리고 **이론적 지식을 상용 서비스의 성능과 연결하는 분석 능력**을 중심으로 기술 해석을 진행했습니다.
+                </p>
+            </div>
+        </section>
 
-        <h2>📌 논문 음성 요약 파이프라인</h2>
-        <div class="code-block">
-            <pre>1. User Query (Text)
-2. Information Retrieval (Search)
-3. NLP Model (Text Summarization)
-4. Riva TTS (Text-to-Speech)
-5. System Output (Audio Summary)</pre>
-        </div>
+        <footer class="text-center mt-8 text-gray-500 text-sm">
+            Riva/TTS 논문 검색 및 요약
+        </footer>
     </div>
 </body>
 </html>

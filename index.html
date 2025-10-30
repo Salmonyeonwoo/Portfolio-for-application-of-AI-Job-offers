@@ -47,6 +47,7 @@
             gap: 0.75rem;
         }
         
+        /* 기존의 어두운 테마 프로젝트 카드 (Resume, Notebooks 섹션 유지) */
         .project-card { 
             background-color: rgba(0, 0, 0, 0.4); 
             border-radius: 1rem; 
@@ -95,12 +96,61 @@
         .tag.jp { background: rgba(255, 217, 179, 0.5); color: #663300; }
         .tag.html { background: rgba(255, 204, 153, 0.5); color: #993d00; }
         .tag.ai { background: rgba(153, 204, 255, 0.5); color: #003366; }
-        .tag.pt { background: rgba(255, 153, 153, 0.5); color: #990000; } 
-        .tag.morpheus { background: rgba(153, 255, 204, 0.5); color: #004d33; }
-        .tag.network { background: rgba(255, 204, 204, 0.5); color: #800000; }
 
 
-        /* Audio Player Styles */
+        /* === 새로 추가된 AI 교육 PT 섹션 카드 스타일: 밝은 배경 및 가운데 정렬 === */
+        .project-card-ai-pt { 
+            background-color: rgba(255, 255, 255, 0.9); /* 밝은 투명 흰색 */
+            border-radius: 1rem; 
+            border: 1px solid transparent;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            backdrop-filter: blur(4px); 
+            color: #1f2937; /* 어두운 텍스트 색상 */
+            border-left-width: 6px;
+            border-left-color: #00ff73; /* 기본 색상 지정 */
+            min-height: 180px;
+            text-align: center; /* 카드 내용 가운데 정렬 */
+        }
+        .project-card-ai-pt:hover { 
+            transform: translateY(-5px); /* 더 부드러운 호버 효과 */
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+        .project-card-ai-pt:nth-child(3n+1) { border-left-color: #a200ff; }
+        .project-card-ai-pt:nth-child(3n+2) { border-left-color: #ff5252; }
+        .project-card-ai-pt:nth-child(3n+3) { border-left-color: #00ff73; }
+
+        .project-card-ai-pt h4 { 
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e40af; /* 제목 색상 강조 */
+            margin-bottom: 0.5rem;
+        }
+        .project-card-ai-pt p { 
+            font-size: 1rem; 
+            color: #4b5563; /* 본문 텍스트 색상 */
+            margin-top: 0.5rem; 
+            flex-grow: 1; 
+        }
+
+        .project-card-ai-pt .tags { margin-top: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; } /* 태그 가운데 정렬 */
+        .project-card-ai-pt .tag { font-size: 0.8rem; font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 9999px; font-weight: 600; }
+        
+        /* AI PT 섹션 태그 색상 (밝은 배경에 맞춰 조정) */
+        .project-card-ai-pt .tag.pt { background: rgba(153, 0, 0, 0.2); color: #990000; } 
+        .project-card-ai-pt .tag.morpheus { background: rgba(0, 77, 51, 0.2); color: #004d33; }
+        .project-card-ai-pt .tag.network { background: rgba(128, 0, 0, 0.2); color: #800000; }
+        .project-card-ai-pt .tag.gpu { background: rgba(0, 77, 153, 0.2); color: #004d99; }
+        .project-card-ai-pt .tag.ml { background: rgba(128, 0, 93, 0.2); color: #80005d; }
+        .project-card-ai-pt .tag.ai { background: rgba(0, 51, 102, 0.2); color: #003366; }
+        .project-card-ai-pt .tag.api { background: rgba(0, 102, 77, 0.2); color: #00664d; }
+
+
+        /* Audio Player Styles - (기존 그대로 유지) */
         #audio-container {
             position: fixed;
             bottom: 1.5rem;
@@ -180,7 +230,7 @@
 
         <main class="space-y-16">
 
-            <!-- *** Resume & Storytelling Section (Content Enhanced) *** -->
+            <!-- *** Resume & Storytelling Section (Original CSS maintained) *** -->
             <section>
                 <h2 class="section-title"><i class="fas fa-user-circle"></i>My resume and storytelling details for myself</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -191,7 +241,7 @@
                         </div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag kr">KR</span></div>
                     </a>
-                    <a href="%E8%81%B7%E5%8B%99%E7%B5%8C%E6%AD%B4%E6%9B%B8%20(%E6%97%A5%E6%9C%AC%E8%AA%9E)%20%E3%82%A6%E3%82%A7%E3%83%96%E3%83%97%E3%83%AC%E3%82%BC%E3%83%B3%E3%83%86%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3.html" target="_blank" class="project-card">
+                    <a href="%E8%81%B7%E5%8B%99%E7%B5%8C%E6%AD%B4%E6%9B%B8%20(%E6%97%A5%E6%9C%AC%E8%AA%9E)%20%E3%82%A6%E3%82%a7%E3%83%96%E3%83%97%E3%83%AC%E3%82%BC%E3%83%B3%E3%83%86%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3.html" target="_blank" class="project-card">
                         <div><h4>職務経歴書 (日本語 - ウェブ PT)</h4>
                             <p>AIチャットボックス QA, アカウントのセキュリティの分析等のデータベースの成果に基いた日本市場によって特化された職務経歴書です。</p>
                         </div>
@@ -226,13 +276,13 @@
             </section>
             <!-- *** End of Section *** -->
             
-            <!-- *** AI Education Files Section (UPDATED: DOCX to HTML PT) - START *** -->
+            <!-- *** AI Education Files Section (UPDATED: Bright Background & Centered) - START *** -->
             <section>
                 <h2 class="section-title"><i class="fas fa-desktop"></i>AI 교육 프로젝트 요약 (HTML 프레젠테이션)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                    <!-- [예측 유지보수] 섹션 (3개) -->
-                    <a href="AI_education_files/Applications of AI for Predictive Maintenance/Predictive conservation_ GPU LSTM.html" target="_blank" class="project-card">
+                    <!-- [예측 유지보수] 섹션 (3개) - Class changed to project-card-ai-pt -->
+                    <a href="predictive_maintenance_lstm.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[예측 유지보수] GPU LSTM 시계열 요약</h4>
                             <p>GPU Keras/TensorFlow 기반 LSTM 모델을 활용한 시계열 예측 유지보수 방법론 요약본입니다.</p>
@@ -240,7 +290,7 @@
                         <div class="tags"><span class="tag pt">HTML PT</span><span class="tag gpu">GPU</span><span class="tag ml">ML</span></div>
                     </a>
                     
-                    <a href="AI_education_files/Applications of AI for Predictive Maintenance/Predictive conservation_ Summary for GPU XGBoost.html" target="_blank" class="project-card">
+                    <a href="predictive_maintenance_xgboost.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[예측 유지보수] GPU XGBoost 요약</h4>
                             <p>NVIDIA RAPIDS cuML을 활용한 GPU 가속 XGBoost 모델 기반 예측 유지보수 적용 사례 요약본입니다.</p>
@@ -248,7 +298,7 @@
                         <div class="tags"><span class="tag pt">HTML PT</span><span class="tag gpu">GPU</span><span class="tag ml">ML</span></div>
                     </a>
 
-                    <a href="AI_education_files/Applications of AI for Predictive Maintenance/Predictive conservation_ Detection of error for auto-encoder.html" target="_blank" class="project-card">
+                    <a href="predictive_maintenance_autoencoder.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[예측 유지보수] 오토인코더 기반 이상 탐지 요약</h4>
                             <p>정상 데이터 학습을 통한 재구성 오류 임계치 설정 기반의 오토인코더(AE) 이상 탐지 기법 요약본입니다.</p>
@@ -256,8 +306,8 @@
                         <div class="tags"><span class="tag pt">HTML PT</span><span class="tag ml">ML</span></div>
                     </a>
 
-                    <!-- [LLM/RIVA/CrewAI] 섹션 (6개) -->
-                    <a href="AI_education_files/Riva and TTS (Conversational AI)/Guidelines to diverge Riva and TTS servers via AI Server.html" target="_blank" class="project-card">
+                    <!-- [LLM/RIVA/CrewAI] 섹션 (6개) - Class changed to project-card-ai-pt -->
+                    <a href="riva_tts_deployment_guide.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[RIVA/TTS] Speech AI 서버 배포 가이드</h4>
                             <p>NVIDIA Riva Speech AI 서비스를 Docker 기반으로 배포하고 활용하는 기술 가이드라인 요약본입니다.</p>
@@ -265,7 +315,7 @@
                         <div class="tags"><span class="tag pt">HTML PT</span><span class="tag ai">AI</span><span class="tag gpu">GPU</span></div>
                     </a>
                     
-                    <a href="AI_education_files/Riva and TTS (Conversational AI)/System to display Q&A for Riva and TTS Servers.html" target="_blank" class="project-card">
+                    <a href="riva_qa_system_summary.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[RIVA/TTS] 질의응답 (QA) 시스템 구현</h4>
                             <p>Riva를 활용한 실시간 음성 질의응답(Q&A) 시스템 구축 과정 및 핵심 기술 요약본입니다.</p>
@@ -273,7 +323,7 @@
                         <div class="tags"><span class="tag pt">HTML PT</span><span class="tag ai">AI</span></div>
                     </a>
                     
-                    <a href="AI_education_files/Riva and TTS (Conversational AI)/Riva - AI Pipelines for conversational Riva and TTS.html" target="_blank" class="project-card">
+                    <a href="riva_conversational_pipeline.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[RIVA/TTS] 대화형 AI 파이프라인</h4>
                             <p>Riva를 이용한 ASR 및 TTS를 포함하는 End-to-End 대화형 AI 파이프라인 구축 요약본입니다.</p>
@@ -281,7 +331,7 @@
                         <div class="tags"><span class="tag pt">HTML PT</span><span class="tag ai">AI</span></div>
                     </a>
                     
-                    <a href="AI_education_files/Riva and TTS (Conversational AI)/Searching and summary for logistics of Riva and TTS.html" target="_blank" class="project-card">
+                    <a href="riva_paper_summary.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[RIVA/TTS] 논문 검색 및 요약</h4>
                             <p>Riva와 TTS 기술을 활용하여 텍스트 기반 논문 검색 결과를 음성으로 요약 제공하는 시스템 구축 요약본입니다.</p>
@@ -289,7 +339,7 @@
                         <div class="tags"><span class="tag pt">HTML PT</span><span class="tag ai">AI</span></div>
                     </a>
                     
-                    <a href="AI_education_files/Summary for CrewAI.html" target="_blank" class="project-card">
+                    <a href="crewai_stock_analysis.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>CrewAI - 주식 분석팀 요약</h4>
                             <p>다중 AI 에이전트가 협력하여 주식 시장 분석 리포트를 생성하는 CrewAI 프레임워크 활용 프로젝트 요약본입니다.</p>
@@ -297,7 +347,7 @@
                         <div class="tags"><span class="tag pt">HTML PT</span><span class="tag api">API</span></div>
                     </a>
                     
-                    <a href="AI_education_files/LLM - Summary for split preference.html" target="_blank" class="project-card">
+                    <a href="llm_preference_prediction.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>LLM - 선호도 예측 분류 모델 요약</h4>
                             <p>TF-IDF 및 수치형 특징을 결합하여 LLM 응답에 대한 사용자 선호도를 예측하는 모델 개발 요약본입니다.</p>
@@ -305,10 +355,10 @@
                         <div class="tags"><span class="tag pt">HTML PT</span><span class="tag ai">AI</span></div>
                     </a>
 
-                    <!-- *** [Morpheus] 통합 파이프라인 섹션 (총 9개로 확장) *** -->
+                    <!-- *** [Morpheus] 통합 파이프라인 섹션 (총 9개로 확장) - Class changed to project-card-ai-pt *** -->
                     
                     <!-- 1. PCAP E2E -->
-                    <a href="AI_education_files/morpheus_pcap_end_to_end.html" target="_blank" class="project-card">
+                    <a href="morpheus_pcap_end_to_end.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[Morpheus] PCAP 엔드투엔드 분석 파이프라인</h4>
                             <p>네트워크 PCAP 데이터를 Triton 추론 서버를 통해 실시간으로 처리하고 암호화폐 채굴을 탐지하는 E2E 파이프라인 요약입니다.</p>
@@ -317,7 +367,7 @@
                     </a>
 
                     <!-- 2. 복합 필터링 -->
-                    <a href="AI_education_files/morpheus_advanced_filters.html" target="_blank" class="project-card">
+                    <a href="morpheus_advanced_filters.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[Morpheus] 복합 필터링 및 조건부 분석</h4>
                             <p>다중 FilterStage를 병렬로 배치하고 복합적인 조건으로 메시지를 분리, 보안 분석 로직을 적용하는 고급 필터링 요약입니다.</p>
@@ -326,7 +376,7 @@
                     </a>
 
                     <!-- 3. 데이터 분할/복제 -->
-                    <a href="AI_education_files/morpheus_data_split_broadcast.html" target="_blank" class="project-card">
+                    <a href="morpheus_data_split_broadcast.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[Morpheus] 데이터 분할 및 복제 로직</h4>
                             <p>단일 메시지 페이로드에서 조건부 데이터 분할 및 MRC Broadcast 노드를 활용한 다중 경로 복제 로직 구현 요약입니다.</p>
@@ -335,7 +385,7 @@
                     </a>
 
                     <!-- 4. 커스텀 스테이지 데이터 변환 -->
-                    <a href="AI_education_files/morpheus_custom_stage_data_transform.html" target="_blank" class="project-card">
+                    <a href="morpheus_custom_stage_data_transform.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[Morpheus] 커스텀 스테이지 데이터 변환</h4>
                             <p>Mutable DataFrame을 사용하여 메시지 페이로드(cuDF)의 컬럼 값을 안전하고 효율적으로 변환하는 커스텀 스테이지 구현 요약입니다.</p>
@@ -344,7 +394,7 @@
                     </a>
                     
                     <!-- 5. 비선형 라우팅 -->
-                    <a href="AI_education_files/morpheus_nonlinear_routing_control.html" target="_blank" class="project-card">
+                    <a href="morpheus_nonlinear_routing_control.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[Morpheus] 비선형 파이프라인 및 라우팅 제어</h4>
                             <p>RouterStage와 key_fn을 활용하여 메시지 상태(성공/실패)에 따라 데이터를 동적으로 분기하는 비선형 파이프라인 설계 요약입니다.</p>
@@ -353,7 +403,7 @@
                     </a>
 
                     <!-- 6. ControlMessage 활용 (기존 4번) -->
-                    <a href="AI_education_files/Morpheus - Summary for function of control message.html" target="_blank" class="project-card">
+                    <a href="morpheus_control_message_pipeline_v2.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[Morpheus] ControlMessage 파이프라인 통합 및 활용</h4>
                             <p>메시지에 메타데이터와 태스크 정보를 주입하는 커스텀 스테이지를 통해 파이프라인 흐름을 동적으로 제어하는 방법 요약입니다.</p>
@@ -362,7 +412,7 @@
                     </a>
                     
                     <!-- 7. Broadcast 노드 -->
-                    <a href="AI_education_files/morpheus_broadcast_node.html" target="_blank" class="project-card">
+                    <a href="morpheus_broadcast_node.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[Morpheus] Broadcast 노드 활용</h4>
                             <p>단일 입력 메시지를 여러 다운스트림 스테이지로 동시에 복제 및 전송하는 Broadcast 노드 커스텀 스테이지 구현 요약입니다.</p>
@@ -371,7 +421,7 @@
                     </a>
 
                     <!-- 8. MIMO 캡스톤 (기존 5번) -->
-                    <a href="AI_education_files/Morpheus - Multiple inputs and outputs of capstone pipelines.html" target="_blank" class="project-card">
+                    <a href="morpheus_mimo_capstone.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[Morpheus] 캡스톤 다중 입력/출력 (MIMO)</h4>
                             <p>GPU 텔레메트리/PCAP 로그를 통합 처리하고 Triton 추론을 통해 채굴 활동을 탐지하는 캡스톤 프로젝트 요약입니다.</p>
@@ -380,7 +430,7 @@
                     </a>
 
                     <!-- 9. 고급 파이프라인 및 LLM 평가 -->
-                    <a href="AI_education_files/morpheus_advanced_llm_assessment.html" target="_blank" class="project-card">
+                    <a href="morpheus_advanced_llm_assessment.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[Morpheus] 고급 파이프라인 및 LLM 평가 솔루션</h4>
                             <p>비선형 라우팅, 커스텀 스테이지 내 그래프 구축 및 DeepSpeed를 활용한 대규모 LLM 평가 솔루션 구축 요약입니다.</p>
@@ -389,7 +439,7 @@
                     </a>
                     
                     <!-- 10. 커스텀 스테이지 기본기 (기존 3번) -->
-                    <a href="AI_education_files/morpheus_custom_stage_basics_v2.html" target="_blank" class="project-card">
+                    <a href="morpheus_custom_stage_basics_v2.html" target="_blank" class="project-card-ai-pt">
                         <div>
                             <h4>[Morpheus] 커스텀 스테이지 기본 구조 및 업데이트</h4>
                             <p>MessageMeta의 페이로드(cuDF)를 안전하게 읽고 수정하는 커스텀 스테이지 개발 기본 로직을 요약했습니다.</p>

@@ -3,71 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morpheus - 비선형 파이프라인 및 라우팅 제어 요약</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <title>Morpheus 비선형 파이프라인 및 라우팅 제어 요약</title>
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap)" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
-        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
-        .header { border-bottom: 3px solid #14b8a6; padding-bottom: 1rem; margin-bottom: 2rem; }
-        h1 { font-size: 2.25rem; font-weight: 700; color: #0f766e; }
-        h2 { font-size: 1.5rem; font-weight: 700; color: #14b8a6; margin-top: 1.5rem; border-left: 4px solid #14b8a6; padding-left: 0.75rem; }
-        .tag-group { margin-top: 1rem; }
-        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
-        .tag-morpheus { background-color: #ccfbf1; color: #0d9488; }
-        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
-        .list-item { margin-bottom: 0.5rem; }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f7f9fb; color: #1f2937; }
+        .container { max-width: 900px; }
+        .header { border-bottom: 4px solid #4f46e5; padding-bottom: 1rem; margin-bottom: 2rem; }
+        .section-title { font-size: 1.5rem; font-weight: 700; color: #1e40af; border-left: 4px solid #3b82f6; padding-left: 1rem; margin-bottom: 1rem; }
+        .card { background-color: #ffffff; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .tech-tag { display: inline-block; background-color: #e0f2fe; color: #0284c7; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; margin-right: 0.5rem; margin-bottom: 0.5rem; }
+        .code-block { background-color: #1f2937; color: #f9fafb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-top: 1rem; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>[Morpheus] 비선형 파이프라인 및 라우팅 제어 요약</h1>
-            <p class="text-gray-600 mt-2">RouterStage와 key_fn을 활용하여 데이터 메시지를 동적으로 분기하는 로직 실습</p>
-            <div class="tag-group">
-                <span class="tag tag-morpheus">Morpheus</span>
+<body class="p-4 sm:p-8">
+    <div class="container mx-auto">
+        <header class="header">
+            <h1 class="text-3xl font-bold text-gray-800">Morpheus 비선형 파이프라인 및 라우팅 제어</h1>
+            <p class="text-gray-500 mt-1">프로젝트 과정 해석 및 기술 역량 상세 설명 (코드 제외)</p>
+        </header>
+
+        <section class="mb-8">
+            <h2 class="section-title">프로젝트 개요 및 목표</h2>
+            <div class="card">
+                <p class="text-gray-700">Morpheus의 고급 기능인 **비선형 파이프라인 구축**과 `RouterStage`를 활용하여 데이터 메시지를 동적으로 분기하는 로직을 실습했습니다. 이는 단일 데이터 스트림을 조건에 따라 서로 다른 모델이나 분석 로직으로 보내는 데 필수적인 기술입니다.</p>
+                <div class="mt-4">
+                    <span class="tech-tag">Morpheus Pipeline</span>
+                    <span class="tech-tag">RouterStage</span>
+                    <span class="tech-tag">조건부 제어</span>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <h2>프로젝트 개요</h2>
-        <p>Morpheus의 `RouterStage`를 활용하여 메시지의 페이로드(cuDF 데이터)를 검사하고, 그 결과에 따라 메시지를 서로 다른 다운스트림 브랜치로 분기하는 **동적 제어 로직**을 구현했습니다. 이는 '성공 로그인' 메시지는 데이터 저장 브랜치로, '실패 로그인' 메시지는 보안 분석 브랜치로 보내는 등 **비선형 파이프라인** 구축에 필수적인 기술입니다.</p>
+        <section class="mb-8">
+            <h2 class="section-title">기술적 도전 및 문제 해결 과정</h2>
+            <div class="card">
+                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. 비선형 데이터 흐름 설계</h3>
+                <p class="text-gray-700">
+                    일반적인 `LinearPipeline`은 데이터를 한 방향으로만 처리합니다. 저는 복잡한 분기/결합 구조를 위해 **`Pipeline` 클래스**를 사용하여 메시지 흐름이 자유로운 그래프 구조를 정의했습니다. 이를 통해 파이프라인의 유연성을 확보하고 동적 제어 로직을 삽입할 준비를 마쳤습니다.
+                </p>
 
-        <h2>⚙️ 주요 기술 및 역할</h2>
-        <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>기술:</strong> Morpheus `Pipeline` (Graph API), `RouterStage`, `key_fn` (라우팅 함수), MRC Builder.</li>
-            <li class="list-item"><strong>비선형 구조 구축:</strong> `LinearPipeline` 대신 일반 `Pipeline` 객체를 사용하여 메시지 흐름이 분기했다가 다시 결합되는 복잡한 그래프 구조를 정의했습니다.</li>
-            <li class="list-item"><strong>조건부 라우팅:</strong> `RouterStage`에 사용자 정의 함수(`router_key_fn`)를 제공하여, 메시지의 페이로드(예: 'status' 컬럼)를 기반으로 라우팅 키를 반환하고 데이터 스트림을 분기했습니다.</li>
-        </ul>
+                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. 조건 기반 동적 라우팅 구현</h3>
+                <p class="text-gray-700">
+                    **도전:** 들어오는 메시지의 데이터(로그인 상태)를 실시간으로 확인하고 '성공'과 '실패' 메시지를 분리해야 했습니다.
+                </p>
+                <p class="text-gray-700 mt-1">
+                    **해결:** `RouterStage`를 사용하고, 메시지의 페이로드(cuDF 데이터)를 검사하여 라우팅 키를 반환하는 **커스텀 `key_fn` 함수**를 작성했습니다. 이 함수가 데이터의 `status` 컬럼 값을 기반으로 'success' 또는 'failure' 라우팅 키를 생성하여 메시지를 적절한 다운스트림 브랜치로 분기하도록 논리를 구축했습니다.
+                </p>
 
-        <h2>🛠️ 주요 구현 내용 (RouterStage)</h2>
-        <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>라우팅 키 함수 개발:</strong> 메시지 데이터 내 'status' 컬럼 값을 확인하여 "success\_route" 또는 "failure\_route"와 같은 라우팅 키를 반환하는 함수를 작성했습니다.</li>
-            <li class="list-item"><strong>라우터 연결:</strong> `RouterStage`의 출력 포트(`router.output_ports[0]`, `[1]`)를 사용하여 성공 처리 싱크와 실패 처리 싱크에 각각 연결하여 분기 로직을 완성했습니다.</li>
-            <li class="list-item"><strong>메시지 태깅:</strong> 라우팅된 메시지에 **어떤 브랜치를 통과했는지** 확인하는 메타데이터(`processing_branch`)를 추가하여 파이프라인의 성공적인 동적 라우팅을 검증했습니다.</li>
-        </ul>
+                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">3. 파이프라인 정확성 검증</h3>
+                <p class="text-gray-700">
+                    라우팅된 메시지가 올바른 브랜치를 통과했는지 확인하기 위해, 각 브랜치(Success/Failure)의 최종 출력 메시지에 **`processing_branch`** 메타데이터를 추가했습니다. 최종 Sink에서 이 메타데이터를 확인하여 라우팅이 정확하게 이루어졌는지 검증하는 **유닛 테스트 개념**을 적용했습니다.
+                </p>
+            </div>
+        </section>
 
-        <h2>📌 주요 코드 로직 (라우팅 함수 및 연결 추상화)</h2>
-        <div class="code-block">
-            <pre>from morpheus.stages.general.router_stage import RouterStage
-from morpheus.messages import ControlMessage
+        <section>
+            <h2 class="section-title">API 키 및 코드 처리 방안</h2>
+            <div class="card bg-yellow-50 border border-yellow-300">
+                <p class="text-gray-700 font-semibold">
+                    이 프로젝트는 NVIDIA Morpheus 프레임워크의 핵심 로직을 다루었으므로, 외부에 노출될 수 있는 API Key를 사용하지 않았습니다. 모든 데이터 처리는 GPU 메모리 내에서 폐쇄적이고 안전하게 이루어졌습니다.
+                </p>
+                <p class="text-gray-700 mt-2">
+                    **코드 포메이션 대신:** 구체적인 Python 코드는 제외하고, 위에 설명된 **`RouterStage`의 역할, `key_fn` 함수의 논리적 설계, 비선형 구조 선택의 당위성** 등 프로젝트의 핵심 **기술 해석**에 집중했습니다.
+                </p>
+            </div>
+        </section>
 
-# 1. 라우팅 키 함수 정의: 메시지 페이로드 상태를 기반으로 키 반환
-def router_key_fn(message: ControlMessage) -> str:
-    df = message.payload().get_data()
-    # 'status' 컬럼의 첫 번째 값을 기준으로 라우팅 키 결정
-    if df['status'].iloc[0] == 'success':
-        return "success_route"
-    else:
-        return "failure_route"
-
-# 2. 파이프라인에 RouterStage 추가
-# router = pipeline.add_stage(RouterStage(config, 
-#                                         keys=["success_route", "failure_route"], 
-#                                         key_fn=router_key_fn))
-# 3. 라우터 출력 포트 연결 (비선형 분기)
-# pipeline.add_edge(router.output_ports[0], success_sink)
-# pipeline.add_edge(router.output_ports[1], failure_sink)</pre>
-        </div>
+        <footer class="text-center mt-8 text-gray-500 text-sm">
+            Morpheus Advanced Pipelines (RouterStage) 요약
+        </footer>
     </div>
 </body>
 </html>

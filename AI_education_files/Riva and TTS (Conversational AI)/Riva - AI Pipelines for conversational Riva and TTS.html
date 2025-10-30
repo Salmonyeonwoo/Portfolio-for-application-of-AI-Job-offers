@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RIVA/TTS Speech AI 서버 배포 및 활용 가이드 요약</title>
+    <title>Riva/TTS 대화형 AI 파이프라인 요약</title>
     <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
     <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap)" rel="stylesheet">
     <style>
@@ -19,18 +19,18 @@
 <body class="p-4 sm:p-8">
     <div class="container mx-auto">
         <header class="header">
-            <h1 class="text-3xl font-bold text-gray-800">RIVA/TTS Speech AI 서버 배포 및 활용 가이드 요약</h1>
+            <h1 class="text-3xl font-bold text-gray-800">Riva/TTS 대화형 AI 파이프라인 요약</h1>
             <p class="text-gray-500 mt-1">프로젝트 과정 해석 및 기술 역량 상세 설명 (코드 제외)</p>
         </header>
 
         <section class="mb-8">
             <h2 class="section-title">프로젝트 개요 및 목표</h2>
             <div class="card">
-                <p class="text-gray-700">NVIDIA Riva Speech AI SDK를 사용하여 **실시간 음성 인식(ASR)** 및 **음성 합성(TTS)** 서비스를 Docker 컨테이너 환경에서 배포하고 활용하는 과정을 실습했습니다. 이는 고성능 Conversational AI 인프라 구축 및 관리 능력을 입증합니다.</p>
+                <p class="text-gray-700">Riva ASR과 TTS 기능을 활용하여 **대화형(Conversational) 에이전트**를 구축했습니다. 사용자의 음성 명령을 ASR로 받아들이고, **의도 인식(NLU)**을 통해 적절히 응답하는 로직을 통합하여, 음성 인터페이스 기반의 AI 시스템을 완성했습니다.</p>
                 <div class="mt-4">
-                    <span class="tech-tag">Riva SDK</span>
-                    <span class="tech-tag">Docker 배포</span>
-                    <span class="tech-tag">gRPC 클라이언트</span>
+                    <span class="tech-tag">Conversational AI</span>
+                    <span class="tech-tag">NLU (Intent Recognition)</span>
+                    <span class="tech-tag">음성 상호작용</span>
                 </div>
             </div>
         </section>
@@ -38,25 +38,17 @@
         <section class="mb-8">
             <h2 class="section-title">기술적 도전 및 문제 해결 과정</h2>
             <div class="card">
-                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. GPU 기반 서비스 배포 환경 구축</h3>
+                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. 대화 흐름 결정을 위한 NLU 통합</h3>
                 <p class="text-gray-700">
-                    **도전:** Riva는 GPU 가속이 필수적이며, 이를 위한 복잡한 환경 의존성(CUDA, cuDNN 등)을 맞춰야 했습니다.
+                    **도전:** 단순히 음성을 텍스트로 바꾸는 것을 넘어, 사용자의 발화가 '볼륨 조절'인지 '음악 재생'인지 **의도를 정확히 파악**하는 기능이 필요했습니다.
                 </p>
                 <p class="text-gray-700 mt-1">
-                    **해결:** NVIDIA가 제공하는 **Riva 컨테이너 이미지**를 사용하여 복잡한 환경 설정을 회피하고, Docker 환경에서 GPU 리소스를 컨테이너에 올바르게 할당하여 서비스를 신속하게 실행했습니다. 필요에 따라 Helm을 사용한 Kubernetes 배포 과정도 이해했습니다.
+                    **해결:** ASR의 출력 텍스트를 NLU(자연어 이해) 모델의 입력으로 넣고, NLU의 결과인 **'의도(Intent)'**와 **'개체(Entity)'**를 받아 대화의 다음 단계를 결정하는 로직을 구현했습니다. (예: "음악 재생해 줘" → Intent: PlayMusic, Entity: None)
                 </p>
 
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. 클라이언트-서버 통신 구현 (gRPC)</h3>
+                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. 실시간 응답 파이프라인 구성</h3>
                 <p class="text-gray-700">
-                    **핵심 로직:** Riva 서버는 gRPC 프로토콜을 사용하므로, Python 클라이언트에서 Riva 서버의 TTS 및 ASR 기능에 접속하기 위해 **gRPC 스텁(Stub) 및 클라이언트 로직**을 구현했습니다. 이는 고성능 분산 시스템과의 상호작용 능력을 의미합니다.
-                </p>
-                <p class="text-gray-700 mt-1">
-                    **성과:** 텍스트를 입력받아 음성 오디오를 스트리밍으로 받는 **TTS 클라이언트**와, 마이크 입력 또는 오디오 파일에서 실시간으로 텍스트를 추출하는 **ASR 클라이언트** 기능을 구현하고 성공적으로 서버와 통신했습니다.
-                </p>
-
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">3. 성능 검증</h3>
-                <p class="text-gray-700">
-                    실시간 스트리밍 모드에서 ASR 및 TTS 서비스의 **낮은 지연 시간(Latency)**과 고품질의 출력을 확인하여, Riva가 상업적 서비스에 적합한 성능을 제공함을 검증했습니다.
+                    음성 입력 → ASR → NLU → 응답 텍스트 생성 → TTS → 음성 출력의 전체 과정을 짧은 지연 시간(Low Latency) 내에 완료하도록 파이프라인을 구성했습니다. 이처럼 **실시간 상호작용**이 필수적인 서비스(음성 비서, 차량 시스템)에 적합한 아키텍처를 설계하는 능력을 입증했습니다.
                 </p>
             </div>
         </section>
@@ -65,16 +57,16 @@
             <h2 class="section-title">API 키 및 코드 처리 방안</h2>
             <div class="card bg-yellow-50 border border-yellow-300">
                 <p class="text-gray-700 font-semibold">
-                    Riva는 온프레미스/클라우드 환경에서 자체 모델을 배포하는 솔루션이므로, 외부 상용 API Key는 사용하지 않았습니다.
+                    이 프로젝트 역시 자체 배포된 Riva 서버를 사용했으며, 외부 상용 API Key는 사용하지 않았습니다.
                 </p>
                 <p class="text-gray-700 mt-2">
-                    **코드 포메이션 대신:** **Docker를 사용한 GPU 서비스 배포 능력**, **gRPC를 활용한 클라이언트-서버 통신 구현 로직**, 그리고 **고성능 AI 서비스 인프라 구축에 대한 이해**를 중심으로 기술 해석을 진행했습니다.
+                    **코드 포메이션 대신:** **NLU를 통한 의도 파악 로직의 중요성**, **음성-텍스트 데이터의 상호 운용성 확보**, 그리고 **실시간 대화 에이전트 설계 아키텍처**에 대한 이해를 중심으로 기술 해석을 진행했습니다.
                 </p>
             </div>
         </section>
 
         <footer class="text-center mt-8 text-gray-500 text-sm">
-            RIVA Speech AI 서버 배포 및 활용 요약
+            Riva/TTS 대화형 AI 파이프라인 요약
         </footer>
     </div>
 </body>

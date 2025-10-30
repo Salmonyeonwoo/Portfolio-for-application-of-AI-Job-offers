@@ -4,65 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Morpheus 커스텀 스테이지 기본기 및 메시지 업데이트 요약</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap)" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
-        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
-        .header { border-bottom: 3px solid #14b8a6; padding-bottom: 1rem; margin-bottom: 2rem; }
-        h1 { font-size: 2.25rem; font-weight: 700; color: #0f766e; }
-        h2 { font-size: 1.5rem; font-weight: 700; color: #14b8a6; margin-top: 1.5rem; border-left: 4px solid #14b8a6; padding-left: 0.75rem; }
-        .tag-group { margin-top: 1rem; }
-        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
-        .tag-morpheus { background-color: #ccfbf1; color: #0d9488; }
-        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
-        .list-item { margin-bottom: 0.5rem; }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f7f9fb; color: #1f2937; }
+        .container { max-width: 900px; }
+        .header { border-bottom: 4px solid #4f46e5; padding-bottom: 1rem; margin-bottom: 2rem; }
+        .section-title { font-size: 1.5rem; font-weight: 700; color: #1e40af; border-left: 4px solid #3b82f6; padding-left: 1rem; margin-bottom: 1rem; }
+        .card { background-color: #ffffff; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .tech-tag { display: inline-block; background-color: #e0f2fe; color: #0284c7; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; margin-right: 0.5rem; margin-bottom: 0.5rem; }
+        .code-block { background-color: #1f2937; color: #f9fafb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-top: 1rem; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>[Morpheus] 커스텀 스테이지 기본기 및 메시지 업데이트</h1>
-            <p class="text-gray-600 mt-2">Morpheus 커스텀 스테이지 정의 및 MessageMeta 페이로드(cuDF) 안전 업데이트 로직 구현</p>
-            <div class="tag-group">
-                <span class="tag tag-morpheus">Morpheus</span>
+<body class="p-4 sm:p-8">
+    <div class="container mx-auto">
+        <header class="header">
+            <h1 class="text-3xl font-bold text-gray-800">Morpheus 커스텀 스테이지 기본 구조 및 메시지 업데이트 요약</h1>
+            <p class="text-gray-500 mt-1">프로젝트 과정 해석 및 기술 역량 상세 설명 (코드 제외)</p>
+        </header>
+
+        <section class="mb-8">
+            <h2 class="section-title">프로젝트 개요 및 목표</h2>
+            <div class="card">
+                <p class="text-gray-700">Morpheus의 핵심인 **사용자 정의 스테이지(Custom Stage)**를 작성하는 방법을 학습하고, 메시지 메타데이터와 페이로드의 데이터를 직접 **업데이트**하는 커스텀 로직을 구현했습니다. 이는 파이프라인의 유연성과 확장성을 확보하는 기본 역량입니다.</p>
+                <div class="mt-4">
+                    <span class="tech-tag">Custom Stage 개발</span>
+                    <span class="tech-tag">Mutable DataFrame</span>
+                    <span class="tech-tag">데이터 업데이트 로직</span>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <h2>프로젝트 개요</h2>
-        <p>Morpheus 파이프라인의 유연성을 위해 필수적인 **사용자 정의 스테이지(Custom Stage)** 작성 방법을 학습하고, 데이터 메시지(MessageMeta 또는 ControlMessage)의 내부 데이터(cuDF DataFrame)를 안전하게 읽고 수정하는 로직을 구현했습니다.</p>
+        <section class="mb-8">
+            <h2 class="section-title">기술적 도전 및 문제 해결 과정</h2>
+            <div class="card">
+                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. 커스텀 스테이지의 기본 구조 확립</h3>
+                <p class="text-gray-700">
+                    **해결:** `SinglePortStage`를 상속받아 `name`, `supports_cpp_node`, `on_data` 메서드를 정의하는 기본 구조를 확립했습니다. 초기에는 입력 메시지를 그대로 반환하는 `Passthrough Stage`를 구현하여 데이터의 흐름을 먼저 검증했습니다.
+                </p>
 
-        <h2>⚙️ 주요 기술 및 역할</h2>
-        <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>기술:</strong> Morpheus SinglePortStage, MessageMeta.mutable_dataframe(), GpuAndCpuMixin.</li>
-            <li class="list-item"><strong>Custom Stage 정의:</strong> `SinglePortStage`를 상속받아 Morpheus 파이프라인에 통합될 커스텀 클래스의 기본 구조(name, on_data)를 확립했습니다.</li>
-            <li class="list-item"><strong>안전한 데이터 업데이트:</strong> `with message.mutable_dataframe() as df:` 컨텍스트 관리자를 사용하여 GPU 메모리에 있는 cuDF 데이터를 안전하게 수정함으로써, 멀티 스레드 환경에서 발생할 수 있는 **경쟁 조건(Race Condition)**을 방지했습니다.</li>
-        </ul>
+                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. GPU 데이터의 안전한 수정 로직 구현</h3>
+                <p class="text-gray-700">
+                    **도전:** GPU 메모리 상의 `cuDF` 데이터를 여러 스레드에서 동시에 접근하여 수정할 때 발생하는 **경쟁 조건(Race Condition)**을 피해야 했습니다.
+                </p>
+                <p class="text-gray-700 mt-1">
+                    **해결:** `with message.mutable_dataframe() as df:` 구문을 사용하여, 데이터프레임에 대한 **잠금(Lock) 메커니즘**을 적용했습니다. 이 컨텍스트 관리자 덕분에 GPU 데이터를 안전하게 수정할 수 있었으며, 사용자 인증 로그 데이터에서 `user` 컬럼 값을 **대문자(Uppercase)**로 변경하는 로직을 성공적으로 적용했습니다.
+                </p>
 
-        <h2>🛠️ 주요 구현 내용</h2>
-        <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>Passthrough Stage:</strong> 입력 메시지를 변경 없이 그대로 반환하는 가장 기본적인 `Passthrough Stage`를 구현하여 데이터 흐름을 확인했습니다.</li>
-            <li class="list-item"><strong>메시지 페이로드 수정:</strong> 사용자 인증 로그 데이터에서 'user' 컬럼의 값을 **대문자(Uppercase)**로 일괄 변경하는 데이터 변환 로직을 `on_data` 메서드 내에 적용했습니다.</li>
-        </ul>
+                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">3. 데이터 업데이트의 즉각적인 반영</h3>
+                <p class="text-gray-700">
+                    수정된 데이터가 다음 스테이지로 전달될 때, `ControlMessage` 또는 `MessageMeta`에 변경 사항이 즉각 반영되는 것을 확인했습니다. 이는 데이터 정제 및 변환 로직이 파이프라인에 실시간으로 적용됨을 의미합니다.
+                </p>
+            </div>
+        </section>
 
-        <h2>📌 주요 코드 로직 (메시지 페이로드 업데이트 추상화)</h2>
-        <div class="code-block">
-            <pre>from morpheus.pipeline.single_port_stage import SinglePortStage
-from morpheus.messages import MessageMeta
+        <section>
+            <h2 class="section-title">API 키 및 코드 처리 방안</h2>
+            <div class="card bg-yellow-50 border border-yellow-300">
+                <p class="text-gray-700 font-semibold">
+                    이 프로젝트는 Morpheus의 내부 데이터 처리 로직에 집중했으며 외부 API Key는 사용하지 않았습니다.
+                </p>
+                <p class="text-gray-700 mt-2">
+                    **코드 포메이션 대신:** **`mutable_dataframe()`을 사용한 안전한 데이터 수정 로직**, **경쟁 조건 회피**, 그리고 **Custom Stage 클래스 설계 방법** 등 GPU 기반 파이프라인 개발 능력을 중심으로 기술 해석을 진행했습니다.
+                </p>
+            </div>
+        </section>
 
-# 메시지 페이로드(DataFrame)를 수정하는 커스텀 스테이지
-class UpdateMessageStage(SinglePortStage):
-    def on_data(self, message: MessageMeta) -> MessageMeta:
-        # mutable_dataframe() 컨텍스트 관리자를 사용하여 안전하게 데이터 수정
-        with message.mutable_dataframe() as df:
-            # 예시: 'user' 컬럼의 모든 값을 대문자로 변경
-            if 'user' in df.columns:
-                df['user'] = df['user'].str.upper()
-                
-        return message</pre>
-        </div>
+        <footer class="text-center mt-8 text-gray-500 text-sm">
+            Morpheus Custom Stages: 기본 구조 및 메시지 업데이트 요약
+        </footer>
     </div>
 </body>
 </html>
-
-

@@ -3,73 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morpheus - Control Message 파이프라인 통합 및 활용 요약</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <title>Morpheus Control Message 파이프라인 통합 및 활용 요약</title>
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap)" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
-        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
-        .header { border-bottom: 3px solid #14b8a6; padding-bottom: 1rem; margin-bottom: 2rem; }
-        h1 { font-size: 2.25rem; font-weight: 700; color: #0f766e; }
-        h2 { font-size: 1.5rem; font-weight: 700; color: #14b8a6; margin-top: 1.5rem; border-left: 4px solid #14b8a6; padding-left: 0.75rem; }
-        .tag-group { margin-top: 1rem; }
-        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
-        .tag-morpheus { background-color: #ccfbf1; color: #0d9488; }
-        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
-        .list-item { margin-bottom: 0.5rem; }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f7f9fb; color: #1f2937; }
+        .container { max-width: 900px; }
+        .header { border-bottom: 4px solid #4f46e5; padding-bottom: 1rem; margin-bottom: 2rem; }
+        .section-title { font-size: 1.5rem; font-weight: 700; color: #1e40af; border-left: 4px solid #3b82f6; padding-left: 1rem; margin-bottom: 1rem; }
+        .card { background-color: #ffffff; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .tech-tag { display: inline-block; background-color: #e0f2fe; color: #0284c7; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; margin-right: 0.5rem; margin-bottom: 0.5rem; }
+        .code-block { background-color: #1f2937; color: #f9fafb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-top: 1rem; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>[Morpheus] ControlMessage 파이프라인 통합 및 활용 요약</h1>
-            <p class="text-gray-600 mt-2">메시지에 메타데이터와 태스크 정보를 주입하는 커스텀 스테이지를 통한 동적 흐름 제어</p>
-            <div class="tag-group">
-                <span class="tag tag-morpheus">Morpheus</span>
+<body class="p-4 sm:p-8">
+    <div class="container mx-auto">
+        <header class="header">
+            <h1 class="text-3xl font-bold text-gray-800">Morpheus Control Message 파이프라인 통합 및 활용 요약</h1>
+            <p class="text-gray-500 mt-1">프로젝트 과정 해석 및 기술 역량 상세 설명 (코드 제외)</p>
+        </header>
+
+        <section class="mb-8">
+            <h2 class="section-title">프로젝트 개요 및 목표</h2>
+            <div class="card">
+                <p class="text-gray-700">Morpheus의 핵심인 **`ControlMessage`** 객체를 파이프라인에 통합하고, 메시지에 메타데이터와 **태스크 정보(다운스트림 스테이지가 수행할 작업)**를 주입하는 **커스텀 스테이지(`AddMetadataAndTaskStage`)**를 개발했습니다. 이는 데이터 흐름을 동적으로 제어하는 능력을 입증합니다.</p>
+                <div class="mt-4">
+                    <span class="tech-tag">ControlMessage</span>
+                    <span class="tech-tag">Custom Stage 개발</span>
+                    <span class="tech-tag">동적 태스크 주입</span>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <h2>프로젝트 개요</h2>
-        <p>Morpheus의 핵심 제어 객체인 **`ControlMessage`**를 활용하여 파이프라인 내 데이터 흐름을 동적으로 제어하는 방법을 실습했습니다. 메시지에 **메타데이터(metadata)**와 후속 스테이지가 처리해야 할 **태스크(tasks)** 정보를 주입하는 커스텀 스테이지를 개발하여, 메시지별로 맞춤형 처리를 지시하는 로직을 구현했습니다.</p>
+        <section class="mb-8">
+            <h2 class="section-title">기술적 도전 및 문제 해결 과정</h2>
+            <div class="card">
+                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. 메시지 타입 변환 문제 해결</h3>
+                <p class="text-gray-700">
+                    **도전:** `FileSourceStage`의 출력은 `MessageMeta`인데, `ControlMessage` 기반의 커스텀 스테이지에 연결하려면 타입 변환이 필요했습니다.
+                </p>
+                <p class="text-gray-700 mt-1">
+                    **해결:** 소스 스테이지 바로 뒤에 **`DeserializeStage`**를 배치하여 `MessageMeta`를 `ControlMessage`로 변환하도록 명시적으로 지정했습니다. 이로써 `ControlMessage`의 고급 기능을 사용할 수 있는 환경을 마련했습니다.
+                </p>
 
-        <h2>⚙️ 주요 기술 및 역할</h2>
-        <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>기술:</strong> Morpheus `ControlMessage`, `DeserializeStage`, `AddMetadataAndTaskStage` (커스텀).</li>
-            <li class="list-item"><strong>메시지 타입 변환:</strong> `FileSourceStage`에서 출력되는 `MessageMeta`를 `DeserializeStage`를 통해 **`ControlMessage`**로 변환하여 메타데이터 및 태스크를 추가할 수 있는 상태로 만들었습니다.</li>
-            <li class="list-item"><strong>커스텀 스테이지 개발:</strong> `ControlMessage`를 입력/출력으로 받으며, 초기화 시 전달받은 설정 값(`metadata`, `tasks`)을 메시지에 주입하는 `AddMetadataAndTaskStage`를 개발했습니다.</li>
-            <li class="list-item"><strong>동적 정보 주입:</strong> 메시지에 `priority: high` 메타데이터를 추가하거나, 다운스트림 필터링 스테이지가 사용할 `filter` 태스크와 상세 조건(예: `IP` 주소 필터링)을 첨부했습니다.</li>
-        </ul>
+                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. 태스크 및 메타데이터 주입 로직 개발</h3>
+                <p class="text-gray-700">
+                    **핵심 로직:** 개발한 커스텀 스테이지(`AddMetadataAndTaskStage`)는 초기화 시점에 `metadata`와 `tasks` 딕셔너리를 인수로 받습니다. 이 스테이지의 `on_data` 메서드 내에서 메시지의 **`set_metadata()`**와 **`add_task()`** 헬퍼 함수를 호출하여 외부에서 정의된 제어 정보를 메시지에 주입하는 로직을 구현했습니다.
+                </p>
+                <p class="text-gray-700 mt-1">
+                    **활용:** 예를 들어, 메시지에 `{'priority': 'high'}` 메타데이터를 추가하거나, 특정 IP/Port 필터링을 지시하는 태스크를 추가하여 후속 스테이지의 처리 방식에 영향을 미치도록 했습니다.
+                </p>
 
-        <h2>🛠️ 주요 구현 내용 (AddMetadataAndTaskStage)</h2>
-        <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>ControlMessage 전용:</strong> 커스텀 스테이지의 `accepted_types`에 `ControlMessage`를 명시하여, 파이프라인이 정확한 메시지 타입만 처리하도록 유도했습니다.</li>
-            <li class="list-item"><strong>메타데이터 설정:</strong> `message.set_metadata(key, value)` 함수를 사용하여 메시지에 메타데이터를 효율적으로 추가했습니다.</li>
-            <li class="list-item"><strong>태스크 정의:</strong> `message.add_task(task_name, task_details)` 함수를 사용하여 하위 스테이지가 수행해야 할 동적 명령을 메시지에 포함시켰습니다.</li>
-        </ul>
+                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">3. 커스텀 스테이지의 타입 안정성 확보</h3>
+                <p class="text-gray-700">
+                    개발된 커스텀 스테이지의 `accepted_types()` 메서드에 **`(ControlMessage, )`**를 명시적으로 지정하여, 이 스테이지가 오직 `ControlMessage`만 처리하도록 타입 안정성을 확보했습니다.
+                </p>
+            </div>
+        </section>
 
-        <h2>📌 주요 코드 로직 (ControlMessage 데이터 추가 추상화)</h2>
-        <div class="code-block">
-            <pre>from morpheus.messages import ControlMessage
-from morpheus.pipeline import SinglePortStage
+        <section>
+            <h2 class="section-title">API 키 및 코드 처리 방안</h2>
+            <div class="card bg-yellow-50 border border-yellow-300">
+                <p class="text-gray-700 font-semibold">
+                    이 프로젝트는 Morpheus 파이프라인의 제어 흐름 구현에 초점을 맞추었으며 외부 API Key를 사용하지 않았습니다.
+                </p>
+                <p class="text-gray-700 mt-2">
+                    **코드 포메이션 대신:** 위에 설명된 **커스텀 스테이지의 역할 정의, `on_data`에서의 제어 함수 호출 로직, 메시지 타입 변환 문제 해결 과정** 등 파이프라인 제어 구조 설계 능력을 보여주는 기술 해석에 집중했습니다.
+                </p>
+            </div>
+        </section>
 
-class AddMetadataAndTaskStage(SinglePortStage):
-    # ... __init__ 에서 metadata와 tasks를 인스턴스 변수로 저장 ...
-
-    def accepted_types(self) -> tuple:
-        return (ControlMessage, )
-
-    def on_data(self, message: ControlMessage) -> ControlMessage:
-        # ControlMessage의 set_metadata/add_task 헬퍼 함수 활용
-        if self._metadata:
-            for key, value in self._metadata.items():
-                message.set_metadata(key, value)
-                
-        if self._tasks:
-            for task_name, task_details in self._tasks.items():
-                message.add_task(task_name, task_details)
-                
-        return message</pre>
-        </div>
+        <footer class="text-center mt-8 text-gray-500 text-sm">
+            Morpheus Advanced Pipelines (ControlMessage) 요약
+        </footer>
     </div>
 </body>
 </html>

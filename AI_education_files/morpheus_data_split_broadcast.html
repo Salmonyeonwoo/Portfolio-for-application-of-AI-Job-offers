@@ -3,71 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morpheus - 데이터 분할 및 복제 로직 요약</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <title>Morpheus 데이터 분할 및 복제 로직 요약</title>
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap)" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #1f2937; }
-        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
-        .header { border-bottom: 3px solid #14b8a6; padding-bottom: 1rem; margin-bottom: 2rem; }
-        h1 { font-size: 2.25rem; font-weight: 700; color: #0f766e; }
-        h2 { font-size: 1.5rem; font-weight: 700; color: #14b8a6; margin-top: 1.5rem; border-left: 4px solid #14b8a6; padding-left: 0.75rem; }
-        .tag-group { margin-top: 1rem; }
-        .tag { display: inline-block; padding: 0.25rem 0.75rem; margin-right: 0.5rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
-        .tag-morpheus { background-color: #ccfbf1; color: #0d9488; }
-        .code-block { background-color: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: monospace; }
-        .list-item { margin-bottom: 0.5rem; }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f7f9fb; color: #1f2937; }
+        .container { max-width: 900px; }
+        .header { border-bottom: 4px solid #4f46e5; padding-bottom: 1rem; margin-bottom: 2rem; }
+        .section-title { font-size: 1.5rem; font-weight: 700; color: #1e40af; border-left: 4px solid #3b82f6; padding-left: 1rem; margin-bottom: 1rem; }
+        .card { background-color: #ffffff; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .tech-tag { display: inline-block; background-color: #e0f2fe; color: #0284c7; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; margin-right: 0.5rem; margin-bottom: 0.5rem; }
+        .code-block { background-color: #1f2937; color: #f9fafb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-top: 1rem; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>[Morpheus] 데이터 분할 및 복제 로직 요약</h1>
-            <p class="text-gray-600 mt-2">커스텀 스테이지를 통한 메시지 페이로드의 조건부 분할 및 MRC Broadcast 활용</p>
-            <div class="tag-group">
-                <span class="tag tag-morpheus">Morpheus</span>
+<body class="p-4 sm:p-8">
+    <div class="container mx-auto">
+        <header class="header">
+            <h1 class="text-3xl font-bold text-gray-800">Morpheus 데이터 분할 및 복제 로직 요약</h1>
+            <p class="text-gray-500 mt-1">프로젝트 과정 해석 및 기술 역량 상세 설명 (코드 제외)</p>
+        </header>
+
+        <section class="mb-8">
+            <h2 class="section-title">프로젝트 개요 및 목표</h2>
+            <div class="card">
+                <p class="text-gray-700">들어오는 단일 메시지(`MessageMeta`)의 데이터를 **특정 조건에 따라 분할**하고, 분할된 메시지만을 **별도의 출력 포트**로 보내는 커스텀 스테이지(`FilterSplitStage`)를 구현했습니다. 이는 원본 데이터는 유지하면서 조건에 맞는 일부 데이터만 심층 분석 경로로 보내는 데 사용됩니다.</p>
+                <div class="mt-4">
+                    <span class="tech-tag">조건부 분할</span>
+                    <span class="tech-tag">Multi-Output Port</span>
+                    <span class="tech-tag">cuDF Query</span>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <h2>프로젝트 개요</h2>
-        <p>단일 입력 메시지(MessageMeta) 내의 데이터를 특정 필터 조건에 따라 분할하고, 분할된 메시지와 원본 메시지를 각각 별도의 출력 포트로 전송하는 **`FilterSplitStage`** 커스텀 스테이지를 구현했습니다. 이는 비선형 파이프라인에서 데이터 복제(Broadcast) 및 조건부 분할(Split)을 수행하는 핵심 기술입니다.</p>
+        <section class="mb-8">
+            <h2 class="section-title">기술적 도전 및 문제 해결 과정</h2>
+            <div class="card">
+                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. 다중 출력 포트 정의 및 메시지 생성</h3>
+                <p class="text-gray-700">
+                    **도전:** 하나의 입력에서 '필터링된 데이터'와 '원본 데이터'라는 두 개의 다른 메시지를 내보내야 했습니다.
+                </p>
+                <p class="text-gray-700 mt-1">
+                    **해결:** `Stage` 클래스를 상속받아 `_create_ports(1, 2)`를 선언하여 **2개의 출력 포트**를 정의했습니다. `_build` 메서드 내에서 `message.get_data().query()`를 사용하여 `cuDF` 데이터프레임을 필터링하고, 이 필터링된 데이터프레임으로 **`새로운 MessageMeta 객체`**를 생성하여 첫 번째 출력 포트로 전송했습니다.
+                </p>
 
-        <h2>⚙️ 주요 기술 및 역할</h2>
-        <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>기술:</strong> Morpheus `Stage` (PassThruTypeMixin 미사용), MRC Builder, `MessageMeta` 객체 생성.</li>
-            <li class="list-item"><strong>조건부 데이터 분할:</strong> `message.get_data().query()`를 사용하여 메시지 페이로드(cuDF)에서 특정 조건(예: 메시지 길이 > 100)을 만족하는 행만을 분리했습니다.</li>
-            <li class="list-item"><strong>다중 출력 관리:</strong> `self._create_ports(1, 2)`를 선언하여 1개의 입력과 2개의 출력을 정의하고, `_build` 메서드에서 **분할된 데이터(filtered)**와 **원본 데이터(pass-through)**를 독립적인 출력 노드로 전송했습니다.</li>
-            <li class="list-item"><strong>메시지 복제(Broadcast):</strong> 단일 메시지를 여러 경로로 전달하는 MRC의 `Broadcast` 기능을 이해하고 활용했습니다.</li>
-        </ul>
+                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. 조건부 분할 로직 구현</h3>
+                <p class="text-gray-700">
+                    **핵심 로직:** `on_data` 메서드에서 사용자 정의 필터 함수(`filter_fn`)를 적용하여 데이터프레임을 쿼리(Query)했습니다. 예를 들어, `data_len > 100`과 같이 특정 조건(길이가 긴 로그)을 만족하는 행만을 추출하여 새로운 메시지를 만들었습니다.
+                </p>
 
-        <h2>🛠️ 주요 구현 내용 (FilterSplitStage)</h2>
-        <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>새 메시지 생성:</strong> 필터링된 데이터프레임을 사용하여 `MessageMeta(메시지.meta_data, filtered_df)`와 같이 **새로운 `MessageMeta` 객체**를 생성하여 메모리 효율성을 유지했습니다.</li>
-            <li class="list-item"><strong>Pass-Through:</strong> 원본 메시지는 변경 없이 다른 출력 포트로 보내져, 다운스트림 스테이지가 필터링된 데이터와 원본 데이터를 동시에 처리할 수 있는 MIMO 구조를 완성했습니다.</li>
-        </ul>
+                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">3. 원본 데이터 Pass-Through 구현</h3>
+                <p class="text-gray-700">
+                    두 번째 출력 포트로는 **원본 메시지**(`MessageMeta` 객체)를 변경 없이 그대로 전송하도록 했습니다. 이로써 **"심층 분석 브랜치(필터링됨)"**와 **"표준 처리 브랜치(원본 전체)"**를 동시에 downstream에서 활용할 수 있는 구조를 완성했습니다.
+                </p>
+            </div>
+        </section>
 
-        <h2>📌 주요 코드 로직 (MRC 노드 및 포트 정의 추상화)</h2>
-        <div class="code-block">
-            <pre>from morpheus.pipeline import Stage
-# ... MRC 임포트 ...
+        <section>
+            <h2 class="section-title">API 키 및 코드 처리 방안</h2>
+            <div class="card bg-yellow-50 border border-yellow-300">
+                <p class="text-gray-700 font-semibold">
+                    이 프로젝트는 Morpheus의 내부 데이터 처리 로직에 집중했으며 외부 API Key는 사용하지 않았습니다.
+                </p>
+                <p class="text-gray-700 mt-2">
+                    **코드 포메이션 대신:** **`MessageMeta`와 `cuDF`를 활용한 메시지 분할 로직**, **`_create_ports`를 사용한 다중 출력 포트 정의**, 그리고 **조건부 분할과 원본 통과를 통한 데이터 복제 논리** 등 고급 파이프라인 제어 능력을 중심으로 기술 해석을 진행했습니다.
+                </p>
+            </div>
+        </section>
 
-class FilterSplitStage(Stage):
-    def __init__(self, config, filter_fn):
-        super().__init__(config)
-        self._filter_fn = filter_fn
-        # 1 input, 2 outputs (Filtered data, Original data)
-        self._create_ports(1, 2) 
-
-    def _build(self, builder, input_nodes):
-        # MRC builder를 사용하여 복제 및 분할 로직을 담당하는 노드 생성
-        # MRC 노드를 통해 두 개의 독립된 출력(outgoing_filtered, outgoing_passthrough) 생성
-        # ... (내부 분할 로직) ...
-        
-        # Stage의 출력 포트에 대응하는 MRC 노드 반환
-        return [outgoing_filtered, outgoing_passthrough]</pre>
-        </div>
+        <footer class="text-center mt-8 text-gray-500 text-sm">
+            Morpheus Data Split: 데이터 분할 및 복제 로직 요약
+        </footer>
     </div>
 </body>
 </html>
-
-

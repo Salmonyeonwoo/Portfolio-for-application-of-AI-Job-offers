@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>터틀 익스플로러 게임 (WSL 시각화 & ROS 원리 분석)</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tone.js 로드: 사운드 효과 생성 라이브러리 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <style>
+        body {
+            background-color: #0d1117; /* 다크 모드 배경 */
+            font-family: 'Inter', sans-serif;
+            color: #c9d1d9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .game-container {
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 20px;
+            background-color: #161b22;
+            border: 2px solid #30363d;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            background-color: #24292f; /* 게임 보드 색상 */
+        }
+        .info-panel {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: #010409;
+            color: #58a6ff;
+            font-weight: bold;
+        }
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        .message-box {
+            background: #22c55e;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            color: #010409;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        .control-button {
+            width: 50px;
+            height: 50px;
+            background-color: #30363d;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.25rem;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.1s;
+        }
+        .control-button:active {
+            background-color: #58a6ff;
+        }
+        .guide {
+            padding: 15px 0;
+            text-align: center;
+            color: #c9d1d9;
+            font-size: 0.9rem;
+        }
+        .ros-guide {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 700px;
+            width: 100%;
+        }
+        .ros-guide h3 {
+            color: #58a6ff;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .ros-code-abstract {
+            background-color: #010409;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            overflow-x: auto;
+        }
+        /* Mobile adjustment */
+        @media (max-width: 600px) {
+            .controls {
+                gap: 5px;
+            }
+            .control-button {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="text-center mb-6">
+        <h1 class="text-3xl font-extrabold text-white">터틀 익스플로러 (WSL 시각화)</h1>
+        <p class="text-gray-400">WASD 키로 거북이를 조종하여 목표물을 획득하세요.</p>
+    </div>
+
+    <div class="game-container">
+        <div class="info-panel">
+            <span>점수: <span id="score">0</span></span>
+            <span>속도: <span id="speed">0.00</span></span>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+        <div id="overlay" class="overlay hidden">
+            <div id="messageBox" class="message-box"></div>
+        </div>
+        
+        <div class="guide">
+            조작 키: 
+            <span class="bg-gray-700 p-1 rounded">W (전진)</span>, 
+            <span class="bg-gray-700 p-1 rounded">S (후진)</span>, 
+            <span class="bg-gray-700 p-1 rounded">A (좌회전)</span>, 
+            <span class="bg-gray-700 p-1 rounded">D (우회전)</span>
+        </div>
+
+        <!-- Mobile Controls (Touch Input) -->
+        <div class="controls md:hidden">
+            <div class="flex flex-col items-center">
+                <div id="btn-up" class="control-button">W</div>
+                <div id="btn-down" class="control-button mt-2">S</div>
+            </div>
+            <div class="flex items-center gap-2">
+                <div id="btn-left" class="control-button">A</div>
+                <div id="btn-right" class="control-button">D</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION: ROS 원리 분석 -->
+    <div class="ros-guide mt-8">
+        <h2 class="text-2xl header text-white">ROS 2 통신 원리 분석 (코드 추상화)</h2>
+        <p class="text-gray-400 mb-4">
+            이 게임은 ROS 2의 핵심 통신 구조인 **Publisher/Subscriber** 원리를 구현합니다.
+        </p>
+
+        <h3 class="text-lg">1. 거북이 위치(Pose) 구독 및 속도 발행</h3>
+        <p class="text-gray-400 text-sm">
+            Turtlesim에서 거북이의 위치 정보(`/turtle1/pose`)를 받아와 제어하는 것과 동일합니다.
+        </p>
+        <div class="ros-code-abstract">
+            <span class="text-yellow-400">ROS Subscriber (Pose):</span> <br>
+            노드는 주기적으로 거북이의 현재 위치(X, Y, Theta) 상태를 업데이트 받습니다. <br>
+            <span class="text-yellow-400">ROS Publisher (Cmd_vel):</span> <br>
+            WASD 키 입력은 선속도(Linear X)와 각속도(Angular Z) 명령으로 변환되어 거북이에게 발행됩니다.
+        </div>
+
+        <h3 class="text-lg mt-4">2. 자율 주행 로직 (추상화된 코드)</h3>
+        <p class="text-gray-400 text-sm">
+            ROS 노드가 콜백 함수에서 현재 위치를 기반으로 다음 움직임을 결정하는 로직을 추상화했습니다.
+        </p>
+        <div class="ros-code-abstract">
+            <span class="text-green-400">function checkBoundaryAndMove()</span> {<br>
+            &nbsp;&nbsp;if (turtle.x &lt; 0 || turtle.x &gt; boundary) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;// 벽에 닿았을 때: 경고음 발생 및 속도 초기화<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;playCollisionSound();<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;current_linear_x = 0; <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;current_angular_z = 0; <br>
+            &nbsp;&nbsp;} else if (distanceToTarget &lt; radius) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;// 목표물 획득: 득점 및 효과음 발생<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;playAcquireSound();<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;score++;<br>
+            &nbsp;&nbsp;} <br>
+            &nbsp;&nbsp;// 최종 계산된 속도(Cmd_vel)로 거북이 위치(Pose) 갱신<br>
+            }
+        </div>
+    </div>
+
+    <script>
+        // Tone.js 설정
+        const synth = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: "square" },
+            envelope: { release: 0.1, sustain: 0.05, attack: 0.01 }
+        }).toDestination();
+        
+        function playAcquireSound() {
+            synth.triggerAttackRelease(["C5", "E5"], "16n");
+        }
+        function playCollisionSound() {
+            synth.triggerAttackRelease("C2", "8n");
+        }
+        
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const speedElement = document.getElementById('speed');
+        const messageBox = document.getElementById('messageBox');
+        const overlay = document.getElementById('overlay');
+        
+        const W = 600; 
+        const H = 400; 
+        let isRunning = true;
+        
+        // ROS/Turtlesim 변수 추상화
+        let turtle = { 
+            x: W / 2, 
+            y: H / 2, 
+            theta: -Math.PI / 2, // 거북이의 각도 (Pose.theta)
+            linear_x: 0, 
+            angular_z: 0, 
+            size: 15,
+            trail: []
+        };
+        
+        let target = { x: 100, y: 100, size: 10 };
+        let score = 0;
+        const speedMultiplier = 10; // 캔버스 좌표계에 맞춘 속도 배율
+        
+        // 키 상태
+        let keys = {};
+        
+        // 캔버스 크기 초기화 (반응형)
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            const containerWidth = container.clientWidth;
+            
+            // 비율 600:400 유지 (1.5:1)
+            canvas.width = containerWidth;
+            canvas.height = containerWidth * (400 / 600); 
+            
+            // 좌표계도 업데이트 (W, H 변수는 고정하고, 렌더링 시 비율 적용)
+            // W, H는 내부 로직의 고정된 가상 좌표계로 사용
+        }
+        
+        // 캔버스 리사이즈 이벤트 리스너
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas(); // 초기 실행
+        
+        // 목표물 위치 랜덤 생성
+        function generateTarget() {
+            const margin = 30;
+            target.x = margin + Math.random() * (W - 2 * margin);
+            target.y = margin + Math.random() * (H - 2 * margin);
+        }
+        
+        // 캔버스 그리기 함수
+        function draw() {
+            // 캔버스 크기 비율 계산
+            const scaleX = canvas.width / W;
+            const scaleY = canvas.height / H;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 1. 경계선 그리기 (벽)
+            ctx.strokeStyle = '#30363d';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+            ctx.save();
+            ctx.scale(scaleX, scaleY);
+        
+            // 2. 동선 (Trail) 그리기
+            ctx.beginPath();
+            if (turtle.trail.length > 0) {
+                ctx.moveTo(turtle.trail[0].x, turtle.trail[0].y);
+                for (let i = 1; i < turtle.trail.length; i++) {
+                    ctx.lineTo(turtle.trail[i].x, turtle.trail[i].y);
+                }
+            }
+            ctx.strokeStyle = 'rgba(88, 166, 255, 0.5)'; // ROS Blue
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            ctx.closePath();
+            
+            // 3. 목표물 (Coin) 그리기
+            ctx.beginPath();
+            ctx.arc(target.x, target.y, target.size, 0, Math.PI * 2);
+            ctx.fillStyle = '#f97316'; // 주황색 코인
+            ctx.fill();
+            ctx.closePath();
+        
+            // 4. 거북이 (SVG Triangle) 그리기
+            ctx.save();
+            ctx.translate(turtle.x, turtle.y);
+            ctx.rotate(turtle.theta); // 거북이 각도 (Pose.theta) 적용
+            
+            // SVG 삼각형 (거북이)
+            ctx.beginPath();
+            ctx.moveTo(turtle.size, 0);
+            ctx.lineTo(-turtle.size / 2, turtle.size / 2);
+            ctx.lineTo(-turtle.size / 2, -turtle.size / 2);
+            ctx.closePath();
+            ctx.fillStyle = '#3fb950'; // ROS Green
+            ctx.fill();
+            ctx.restore();
+            
+            ctx.restore();
+        }
+        
+        // ROS Node Logic / Update Loop (콜백 함수 추상화)
+        function update(dt) {
+            if (!isRunning) return;
+        
+            // WASD 키를 Cmd_vel (Twist) 명령으로 변환 (Publisher 역할)
+            let linear = 0;
+            let angular = 0;
+            const linearSpeed = 50;
+            const angularSpeed = 3;
+        
+            if (keys['w']) linear = linearSpeed;
+            if (keys['s']) linear = -linearSpeed * 0.5; // 후진은 느리게
+            if (keys['a']) angular = angularSpeed;
+            if (keys['d']) angular = -angularSpeed;
+            
+            turtle.linear_x = linear;
+            turtle.angular_z = angular;
+        
+            // 거북이 위치 갱신 (Subscriber 역할: Pose 업데이트)
+            // ROS 2 노드의 'main' 함수에서 rclpy.spin()이 하는 역할 추상화
+            
+            // 1. 각도(Theta) 업데이트
+            turtle.theta += turtle.angular_z * dt;
+            
+            // 2. 위치(X, Y) 업데이트 (Pose)
+            turtle.x += turtle.linear_x * Math.cos(turtle.theta) * dt;
+            turtle.y += turtle.linear_x * Math.sin(turtle.theta) * dt;
+            
+            // 3. 동선 추가
+            turtle.trail.push({ x: turtle.x, y: turtle.y });
+            if (turtle.trail.length > 50) { // 꼬리 길이 제한
+                turtle.trail.shift();
+            }
+
+            // 4. 경계 충돌 및 목표물 확인 (로직)
+            checkCollisions();
+            
+            // 5. UI 업데이트
+            scoreElement.textContent = score;
+            speedElement.textContent = turtle.linear_x.toFixed(2);
+        }
+        
+        function checkCollisions() {
+            // 경계 충돌 (벽)
+            if (turtle.x < turtle.size || turtle.x > W - turtle.size || 
+                turtle.y < turtle.size || turtle.y > H - turtle.size) 
+            {
+                // 충돌 시 속도 초기화 및 게임 오버 (ROS 충돌 처리 추상화)
+                playCollisionSound();
+                turtle.linear_x = 0;
+                turtle.angular_z = 0;
+                gameOver();
+                return;
+            }
+        
+            // 목표물 획득
+            const dx = turtle.x - target.x;
+            const dy = turtle.y - target.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+        
+            if (distance < turtle.size + target.size) {
+                // 아이템 획득 (ROS 로직 추상화)
+                playAcquireSound();
+                score += 10;
+                generateTarget();
+            }
+        }
+
+        function gameOver() {
+            isRunning = false;
+            messageBox.innerHTML = `
+                <p class="text-2xl mb-3">게임 오버!</p>
+                <p class="text-xl mb-4">최종 점수: ${score}</p>
+                <button onclick="startGame()" class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700">다시 시작</button>
+            `;
+            overlay.classList.remove('hidden');
+        }
+        
+        function startGame() {
+            resizeCanvas();
+            turtle.x = W / 2;
+            turtle.y = H / 2;
+            turtle.theta = -Math.PI / 2;
+            turtle.linear_x = 0;
+            turtle.angular_z = 0;
+            turtle.trail = [];
+            score = 0;
+            generateTarget();
+            isRunning = true;
+            overlay.classList.add('hidden');
+        }
+        
+        // =======================================================
+        // 이벤트 핸들러
+        // =======================================================
+        
+        document.addEventListener('keydown', (e) => {
+            if (!isRunning) return;
+            keys[e.key.toLowerCase()] = true;
+        });
+        
+        document.addEventListener('keyup', (e) => {
+            keys[e.key.toLowerCase()] = false;
+        });
+        
+        // 모바일 터치 컨트롤
+        function setupButton(id, key) {
+            const btn = document.getElementById(id);
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault(); 
+                keys[key] = true;
+            });
+            btn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                keys[key] = false;
+            });
+        }
+
+        setupButton('btn-up', 'w');
+        setupButton('btn-down', 's');
+        setupButton('btn-left', 'a');
+        setupButton('btn-right', 'd');
+
+        // =======================================================
+        // 메인 게임 루프 (rclpy.spin() 역할)
+        // =======================================================
+        let lastTime;
+        function gameLoop(timestamp) {
+            if (!lastTime) lastTime = timestamp;
+            const dt = (timestamp - lastTime) / 1000; // Delta Time (초)
+        
+            update(dt);
+            draw();
+        
+            lastTime = timestamp;
+            window.requestAnimationFrame(gameLoop);
+        }
+        
+        // 초기 시작
+        startGame();
+        window.requestAnimationFrame(gameLoop);
+
+    </script>
+
+</body>
+</html>

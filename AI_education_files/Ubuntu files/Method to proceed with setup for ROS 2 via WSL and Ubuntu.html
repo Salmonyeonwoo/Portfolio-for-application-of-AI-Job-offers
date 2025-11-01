@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROS 2/Ubuntu 환경 마스터 가이드</title>
+    <!-- Tailwind CSS CDN 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 폰트 설정 -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .code-block {
+            background-color: #2d3748; /* Darker slate for code */
+            color: #d1d5db; /* Light gray text */
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+        }
+        .step-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background-color: #6366f1; /* Indigo-500 */
+            color: white;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen p-4 sm:p-8">
+    
+    <!-- Header -->
+    <header class="text-center mb-12">
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-400 mb-2 tracking-tight">
+            ROS 2/Ubuntu 환경 마스터 가이드
+        </h1>
+        <p class="text-lg text-gray-400">WSL, Conda, ROS 2 빌드 오류를 해결하는 핵심 루틴</p>
+    </header>
+
+    <div class="max-w-4xl mx-auto space-y-8">
+
+        <!-- Section 1: Core Problem Diagnosis -->
+        <div class="bg-gray-800 p-6 rounded-xl shadow-2xl border border-gray-700">
+            <h2 class="text-2xl font-bold text-red-400 mb-4 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.398 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                핵심 문제 진단: 'Package not found'의 원인
+            </h2>
+            <ul class="list-disc list-inside text-gray-300 space-y-3 pl-4">
+                <li>**Conda 충돌:** `(llm_agent_env)` 활성화 상태에서 `source install/setup.bash`를 실행하면 Conda 환경이 ROS 경로를 덮어씁니다. **(해결책: `conda deactivate` 후 Source)**</li>
+                <li>**Source 누락:** `colcon build` 후 **새 터미널을 열었거나** `cd` 후 **`source install/setup.bash`** 명령을 잊어버린 경우.</li>
+                <li>**파이썬 빌드 오류:** `setup.py`의 `data_files` 경로 설정이나 `resource` 파일이 누락되어 빌드가 불완전하게 완료됩니다.</li>
+            </ul>
+        </div>
+
+        <!-- Section 2: Final Success Routine (The Master Flow) -->
+        <div class="bg-indigo-900 p-8 rounded-xl shadow-2xl border-4 border-indigo-600">
+            <h2 class="text-3xl font-extrabold text-white mb-6 text-center">
+                <span class="bg-indigo-600 px-3 py-1 rounded-full text-lg mr-2">⭐</span> 최종 성공 루틴 (4단계)
+            </h2>
+            <p class="text-indigo-200 mb-6 text-center">ROS 2 패키지 빌드 및 실행을 **단 한 번에** 성공시키는 필수 절차입니다.</p>
+
+            <ol class="space-y-6">
+                <!-- Step 1: Clean Build Prep -->
+                <li class="p-4 bg-indigo-800 rounded-lg shadow-md">
+                    <div class="flex items-center mb-2">
+                        <span class="step-icon">1</span>
+                        <span class="text-lg font-bold text-yellow-300">Clean 및 리소스 확인</span>
+                    </div>
+                    <p class="text-sm text-indigo-300 mb-3">빌드 환경 오류와 잔여물을 완전히 제거하고, 필수 리소스 파일을 만듭니다.</p>
+                    <div class="code-block">
+                        <pre># 워크스페이스 루트로 이동 (필수)
+cd ~/ros2_study
+
+# 필수 리소스 파일 생성 (Cursor AI 최종 해결책)
+mkdir -p src/my_first_package/resource
+touch src/my_first_package/resource/my_first_package
+touch src/my_first_package/my_first_package_1/__init__.py
+
+# 기존 빌드 결과 완전 삭제
+rm -rf install build log</pre>
+                    </div>
+                </li>
+
+                <!-- Step 2: Build -->
+                <li class="p-4 bg-indigo-800 rounded-lg shadow-md">
+                    <div class="flex items-center mb-2">
+                        <span class="step-icon">2</span>
+                        <span class="text-lg font-bold text-yellow-300">패키지 빌드</span>
+                    </div>
+                    <p class="text-sm text-indigo-300 mb-3">설정 파일(setup.py)을 기반으로 실행 파일을 생성합니다.</p>
+                    <div class="code-block">
+                        <pre>colcon build</pre>
+                    </div>
+                    <p class="text-xs text-red-300 mt-2">**주의:** 이 단계에서 오류가 없어야 합니다. 오류 발생 시, `package.xml`의 `<name>` 중복을 확인하세요.</p>
+                </li>
+                
+                <!-- Step 3: Source -->
+                <li class="p-4 bg-indigo-800 rounded-lg shadow-md">
+                    <div class="flex items-center mb-2">
+                        <span class="step-icon">3</span>
+                        <span class="text-lg font-bold text-yellow-300">환경 로드 (Source)</span>
+                    </div>
+                    <p class="text-sm text-indigo-300 mb-3">ROS 2가 방금 빌드된 패키지를 찾도록 현재 셸에 경로를 등록합니다. **(가장 중요)**</p>
+                    <div class="code-block">
+                        <pre>source install/setup.bash</pre>
+                    </div>
+                </li>
+
+                <!-- Step 4: Run -->
+                <li class="p-4 bg-indigo-800 rounded-lg shadow-md">
+                    <div class="flex items-center mb-2">
+                        <span class="step-icon">4</span>
+                        <span class="text-lg font-bold text-yellow-300">노드 실행 확인</span>
+                    </div>
+                    <p class="text-sm text-indigo-300 mb-3">`.py` 확장자를 제외하고 `setup.py`에 등록된 이름으로 실행합니다.</p>
+                    <div class="code-block">
+                        <pre># 등록 확인: my_first_package turtle_cmd_and_pose 가 출력되어야 합니다.
+ros2 pkg executables my_first_package
+
+# 최종 실행
+ros2 run my_first_package turtle_cmd_and_pose</pre>
+                    </div>
+                </li>
+            </ol>
+        </div>
+        
+        <!-- Section 3: Code Abstraction and ROS Principle -->
+        <div class="bg-gray-800 p-6 rounded-xl shadow-2xl border border-gray-700">
+            <h2 class="text-2xl font-bold text-cyan-400 mb-4 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.12-9.998 4.002 4.002 0 10-6.762-2.193m10.158 4.191a3.001 3.001 0 00-3-3m-10 8a3.001 3.001 0 003 3" />
+                </svg>
+                ROS 코딩 원리 추상화 (Turtle 제어 로직)
+            </h2>
+            <p class="text-gray-300 mb-3">우리가 작성한 `turtle_cmd_and_pose.py` 노드가 어떻게 거북이를 자율적으로 제어하는지에 대한 설명입니다.</p>
+            <div class="bg-gray-900 p-4 rounded-lg border border-gray-700 space-y-3">
+                <h3 class="text-xl font-semibold text-white">1. ROS 통신 모델</h3>
+                <p class="text-sm text-gray-400">이 노드는 ROS의 **Publisher/Subscriber (발행/구독)** 모델을 사용합니다. 코드는 하나의 **노드** 역할을 수행합니다.</p>
+                
+                <h3 class="text-xl font-semibold text-white">2. 입력 (Subscriber)</h3>
+                <p class="text-sm text-gray-400">노드는 `/turtle1/pose` 토픽을 **구독**합니다. 이 토픽을 통해 거북이 시뮬레이터(Turtlesim)로부터 거북이의 **현재 X, Y 좌표 및 회전 각도(Theta)**를 실시간으로 입력 받습니다.</p>
+                
+                <h3 class="text-xl font-semibold text-white">3. 제어 로직 (Decision Making)</h3>
+                <p class="text-sm text-gray-400">입력된 위치(`Pose`) 정보가 **X 좌표 8.0**을 초과하는 순간, 노드는 '벽에 부딪힐 위험'을 감지합니다. 이 때, 노드는 주행 상태를 변경합니다.</p>
+                <ul class="list-disc list-inside text-sm text-gray-400 pl-4">
+                    <li>**주행 (Moving):** 평소에는 `Linear.x = 2.0` (직진) 명령을 `/turtle1/cmd_vel` 토픽으로 발행합니다.</li>
+                    <li>**회피 (Turning):** X > 8.0이 되면 `Linear.x = 0.0` (정지) 및 `Angular.z = -1.5` (제자리 좌회전) 명령을 발행하여 거북이가 벽에서 멀어지도록 유도합니다.</li>
+                </ul>
+                
+                <h3 class="text-xl font-semibold text-white">4. 출력 (Publisher)</h3>
+                <p class="text-sm text-gray-400">노드는 계산된 움직임 명령(`Twist` 메시지, 즉 선속도/각속도)을 `/turtle1/cmd_vel` 토픽으로 **발행**합니다. 이 명령을 Turtlesim이 받아 거북이를 움직이게 됩니다.</p>
+            </div>
+        </div>
+
+
+        <!-- Section 4: The Setup.py Configuration -->
+        <div class="bg-gray-800 p-6 rounded-xl shadow-2xl border border-gray-700">
+            <h2 class="text-2xl font-bold text-cyan-400 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+                Setup.py (핵심 경로 설정)
+            </h2>
+            <p class="text-gray-300 mb-4">`package.xml` 복사 오류와 실행 파일 등록을 담당하는 핵심 코드입니다.</p>
+            
+            <div class="code-block">
+                <pre># setup.py 파일 내 핵심 섹션 (경로 오류 방지)
+
+# 1. 패키지 리소스 등록 (Cursor AI 해결책)
+data_files=[
+    ('share/ament_index/resource_index/packages',
+        ['resource/' + package_name]),
+    ('share/' + package_name, ['package.xml']), # package.xml 복사
+    # ...
+],
+
+# 2. 실행 파일 등록 (ros2 run 명령 인식)
+entry_points={
+    'console_scripts': [
+        'turtle_cmd_and_pose = my_first_package_1.turtle_cmd_and_pose:main',
+    ],
+},</pre>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="text-center mt-12 text-sm text-gray-500">
+        <p>이제 지긋지긋한 오류는 없습니다! - ROS 2/Ubuntu Environment Mastered</p>
+    </footer>
+</body>
+</html>

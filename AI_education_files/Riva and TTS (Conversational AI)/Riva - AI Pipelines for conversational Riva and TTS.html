@@ -4,102 +4,204 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riva/TTS 대화형 AI 파이프라인 요약</title>
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-    <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap)" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            /* 1. 요청 사항: 배경색을 밝은 파란색 계열로 변경 */
-            background-color: #e6f0ff; 
+            /* 톤 통일을 위해 배경색을 전문적이고 차분한 색상으로 조정 */
+            background-color: #f4f7f9; 
             font-family: 'Noto Sans KR', sans-serif;
             line-height: 1.6;
             color: #333;
-            padding: 20px 0; 
+            padding: 30px 0; 
         }
         .container {
-            /* 2. 요청 사항: 콘텐츠 영역 가운데 정렬 */
             max-width: 1000px;
             margin: 0 auto; 
             background-color: #ffffff; 
             padding: 40px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
         }
         h1 {
-            color: #1a73e8; /* 구글 블루 */
-            border-bottom: 2px solid #e6f0ff;
-            padding-bottom: 10px;
+            color: #1a73e8;
+            border-bottom: 3px solid #e6f0ff;
+            padding-bottom: 15px;
             margin-top: 0;
+            font-size: 2.25rem; /* text-3xl */
         }
+        /* 레이아웃 변화: 섹션 제목 스타일 변경 */
         h2 {
-            color: #3c4043; /* 구글 다크 그레이 */
-            margin-top: 25px;
+            color: #ffffff;
+            background-color: #1a73e8; /* Blue background */
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-top: 35px;
+            font-size: 1.75rem; /* text-2xl */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        ul {
-            list-style-type: disc;
-            margin-left: 20px;
-            padding-left: 0;
+        h3 {
+            color: #0d47a1;
+            font-weight: 700;
+            margin-top: 20px;
         }
-        li {
-            margin-bottom: 10px;
+        p {
+            margin-bottom: 15px;
+            color: #4a5568;
         }
-        strong {
-            color: #202124;
+        .card {
+            background-color: #f7f9fc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .tech-tag {
+            display: inline-block;
+            background-color: #e3f2fd; 
+            color: #1a73e8; 
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        /* Conversational Flow Diagram CSS */
+        .flow-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e6f0ff;
+            border-radius: 10px;
+        }
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            position: relative;
+        }
+        .flow-box {
+            background-color: #ffffff;
+            border: 2px solid #2196F3;
+            padding: 10px 5px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #0d47a1;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .flow-step:not(:last-child):after {
+            content: '➡️';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: #1a73e8;
+            font-weight: bold;
+            z-index: 10;
+        }
+        .flow-step:nth-child(2n) .flow-box {
+            border-color: #4CAF50; /* NLU, TTS는 Green */
+            color: #388E3C;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
 <body>
     <div class="container mx-auto">
         <header class="header">
-            <h1 class="text-3xl font-bold text-gray-800">Riva/TTS 대화형 AI 파이프라인 요약</h1>
-            <p class="text-gray-500 mt-1">프로젝트 과정 해석 및 기술 역량 상세 설명 (코드 제외)</p>
+            <h1 class="font-bold text-gray-800">Riva/TTS 대화형 AI 파이프라인 구축 및 실시간 통합 요약</h1>
+            <p class="text-gray-500 mt-2">NVIDIA Riva와 NLU 모델을 결합한 Conversational AI 아키텍처 구현</p>
         </header>
 
-        <section class="mb-8">
-            <h2 class="section-title">프로젝트 개요 및 목표</h2>
+        <section class="mb-10">
+            <h2 class="section-title">1. 프로젝트 개요 및 목표</h2>
             <div class="card">
-                <p class="text-gray-700">Riva ASR과 TTS 기능을 활용하여 **대화형(Conversational) 에이전트**를 구축했습니다. 사용자의 음성 명령을 ASR로 받아들이고, **의도 인식(NLU)**을 통해 적절히 응답하는 로직을 통합하여, 음성 인터페이스 기반의 AI 시스템을 완성했습니다.</p>
-                <div class="mt-4">
+                <p>본 프로젝트는 Riva의 **ASR (음성 인식)** 및 **TTS (음성 합성)** 기능을 기반으로 사용자 의도를 파악하는 **NLU (자연어 이해)** 모델을 통합하여, 짧은 지연 시간(Low Latency)의 **대화형(Conversational) AI 에이전트**를 구축하는 것을 목표로 했습니다.</p>
+                <p>이는 단순한 음성 처리 모듈을 넘어, 실시간으로 사용자와 상호작용하고 명령을 실행하는 복합적인 AI 시스템을 설계하고 운영할 수 있는 능력을 입증합니다.</p>
+
+                <div class="mt-4 flex flex-wrap">
                     <span class="tech-tag">Conversational AI</span>
-                    <span class="tech-tag">NLU (Intent Recognition)</span>
-                    <span class="tech-tag">음성 상호작용</span>
+                    <span class="tech-tag">Riva ASR/TTS</span>
+                    <span class="tech-tag">NLU/Intent Recognition</span>
+                    <span class="tech-tag">실시간 파이프라인</span>
                 </div>
             </div>
         </section>
 
-        <section class="mb-8">
-            <h2 class="section-title">기술적 도전 및 문제 해결 과정</h2>
-            <div class="card">
-                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. 대화 흐름 결정을 위한 NLU 통합</h3>
-                <p class="text-gray-700">
-                    **도전:** 단순히 음성을 텍스트로 바꾸는 것을 넘어, 사용자의 발화가 '볼륨 조절'인지 '음악 재생'인지 **의도를 정확히 파악**하는 기능이 필요했습니다.
-                </p>
-                <p class="text-gray-700 mt-1">
-                    **해결:** ASR의 출력 텍스트를 NLU(자연어 이해) 모델의 입력으로 넣고, NLU의 결과인 **'의도(Intent)'**와 **'개체(Entity)'**를 받아 대화의 다음 단계를 결정하는 로직을 구현했습니다. (예: "음악 재생해 줘" → Intent: PlayMusic, Entity: None)
-                </p>
-
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. 실시간 응답 파이프라인 구성</h3>
-                <p class="text-gray-700">
-                    음성 입력 → ASR → NLU → 응답 텍스트 생성 → TTS → 음성 출력의 전체 과정을 짧은 지연 시간(Low Latency) 내에 완료하도록 파이프라인을 구성했습니다. 이처럼 **실시간 상호작용**이 필수적인 서비스(음성 비서, 차량 시스템)에 적합한 아키텍처를 설계하는 능력을 입증했습니다.
-                </p>
+        <section class="mb-10">
+            <h2 class="section-title">2. 실시간 대화 흐름 파이프라인 (가시화)</h2>
+            <p>사용자의 발화가 최종 응답 음성으로 출력되기까지의 End-to-End 흐름을 도식화했습니다.</p>
+            
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <div class="flow-box">음성 입력 (User Voice)</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-box">ASR (Riva):<br>Speech $\rightarrow$ Text</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-box">NLU Model:<br>Intent & Entity 파악</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-box">텍스트 응답 생성 (Logic)</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-box">TTS (Riva):<br>Text $\rightarrow$ Speech</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-box">음성 출력 (Response)</div>
+                </div>
             </div>
+
+            <div class="mt-8">
+                <p class="font-semibold text-gray-700 mb-2">대화형 AI 시스템 전체 구조 (API 통합)</p>
+                <img src="https://placehold.co/900x300/e8731a/ffffff?text=Conversational+AI+System+Architecture+Diagram" alt="대화형 AI 시스템 아키텍처 다이어그램 스크린샷" class="mx-auto rounded-lg shadow-md border border-gray-200">
+                <p class="text-center text-sm text-gray-500 mt-2">ASR, NLU, TTS가 결합된 실시간 AI 서비스 구조</p>
+            </div>
+
         </section>
 
-        <section>
-            <h2 class="section-title">API 키 및 코드 처리 방안</h2>
-            <div class="card bg-yellow-50 border border-yellow-300">
-                <p class="text-gray-700 font-semibold">
-                    이 프로젝트 역시 자체 배포된 Riva 서버를 사용했으며, 외부 상용 API Key는 사용하지 않았습니다.
+        <section class="mb-10">
+            <h2 class="section-title">3. 기술적 도전 및 문제 해결 과정</h2>
+            <div class="card">
+                
+                <h3 class="mb-2">3-1. ASR 출력과 NLU 입력 간의 데이터 연계 확보</h3>
+                <p class="text-gray-700">
+                    **도전:** Riva ASR이 반환하는 텍스트가 후속 NLU 모델의 입력 포맷 및 요구사항과 정확하게 일치하도록 보장해야 했습니다. 특히 실시간 스트리밍 환경에서는 ASR의 출력 방식(중간 결과, 최종 결과)에 따라 NLU 호출 시점을 정밀하게 제어해야 했습니다.
                 </p>
-                <p class="text-gray-700 mt-2">
-                    **코드 포메이션 대신:** **NLU를 통한 의도 파악 로직의 중요성**, **음성-텍스트 데이터의 상호 운용성 확보**, 그리고 **실시간 대화 에이전트 설계 아키텍처**에 대한 이해를 중심으로 기술 해석을 진행했습니다.
+                <p class="text-gray-700 mt-1">
+                    **해결:** ASR의 최종 텍스트 결과물을 수신하는 즉시 NLU 서비스 호출 스텁에 전달하는 **모듈 간 논리적 인터페이스**를 구현했습니다. NLU는 사용자 의도(`Intent`)와 주요 매개변수(`Entity`)를 추출하며, 이를 바탕으로 동적 응답 텍스트를 생성하는 브릿지 로직을 완성했습니다.
+                </p>
+
+                <h3 class="mt-6 mb-2">3-2. Low Latency 응답 파이프라인 구성</h3>
+                <p class="text-gray-700">
+                    음성 기반 서비스는 사용자 경험을 위해 응답 지연 시간이 극도로 짧아야 합니다. 전체 파이프라인(ASR $\rightarrow$ NLU $\rightarrow$ Logic $\rightarrow$ TTS)의 각 단계를 최적화하여 end-to-end 지연 시간을 최소화하는 것이 중요했습니다.
+                </p>
+                <p class="text-gray-700 mt-1">
+                    **해결:** 모든 AI 구성 요소가 GPU 가속 환경인 Riva 서버에서 실행되도록 배포하고, **gRPC**와 같은 고성능 통신 프로토콜을 사용하여 모듈 간의 데이터 전달 속도를 높였습니다. 이는 **실시간 상호작용**이 필수적인 환경에 적합한 아키텍처 설계 및 구현 능력을 입증합니다.
                 </p>
             </div>
         </section>
 
         <footer class="text-center mt-8 text-gray-500 text-sm">
-            Riva/TTS 대화형 AI 파이프라인 요약
+            문서 작성자: [작성자 이름] / 프로젝트: Riva Conversational AI
         </footer>
     </div>
 </body>
 </html>
-

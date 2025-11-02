@@ -43,32 +43,27 @@ body {
 </footer>
 
 <script>
-const IMAGE_FOLDER = 'Slides%20';
-const IMAGE_PREFIX = 'slide';
-const IMAGE_EXTENSION = 'png';
-const MAX_SLIDES = 50; // 최대 감지 장 수
-
-let slides = [];
-let currentSlideIndex = 0;
-
-const slideImage = document.getElementById('slide-image');
-const counter = document.getElementById('counter');
-const progressBar = document.getElementById('progress-bar');
-const prevButton = document.getElementById('prev');
-const nextButton = document.getElementById('next');
+const IMAGE_FOLDER = 'Slides%20'; 
+const IMAGE_PREFIX = 'slide'; 
+const IMAGE_EXTENSION = 'png'; 
+const MAX_SLIDES = 50; // 최대 50장까지 감지 
+  
+let slides = []; 
+let currentSlideIndex = 0; 
+const slideImage = document.getElementById('slide-image'); 
+const counter = document.getElementById('counter'); 
+const progressBar = document.getElementById('progress-bar'); 
+const prevButton = document.getElementById('prev'); 
+const nextButton = document.getElementById('next'); 
 const errorMessage = document.getElementById('error-message');
 const errorPath = document.getElementById('error-path');
-
-// --- 존재하는 파일만 slides 배열에 추가 ---
-let tempSlides = [];
-let loadedCount = 0;
 
 for (let i = 1; i <= MAX_SLIDES; i++) {
   const path = `${IMAGE_FOLDER}${IMAGE_PREFIX}${i}.${IMAGE_EXTENSION}`;
   const img = new Image();
   
   img.onload = () => {
-    tempSlides.push({ index: i, path: path });
+    Slides.push({ index: i, path: path });
     loadedCount++;
     checkAllLoaded();
   };
@@ -85,9 +80,9 @@ for (let i = 1; i <= MAX_SLIDES; i++) {
 
 // --- 모든 이미지 로드 후 처리 ---
 function checkAllLoaded() {
-  if (loadedCount === MAX_SLIDES || loadedCount === tempSlides.length + (MAX_SLIDES - tempSlides.length)) {
+  if (loadedCount === MAX_SLIDES || loadedCount === Slides.length + (MAX_SLIDES - Slides.length)) {
     // 번호 기준 오름차순 정렬
-    slides = tempSlides.sort((a, b) => a.index - b.index).map(item => item.path);
+    slides = Slides.sort((a, b) => a.index - b.index).map(item => item.path);
     if (slides.length > 0) {
       showSlide(0);
     } else {

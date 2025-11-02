@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>포트폴리오 배포 이슈 해결 보고서</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+/* Reset and Global Styles */
+body {
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    margin: 0;
+    overflow: hidden;
+    background: #0a0a0a;
+    color: #f3f4f6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+/* Slide Container */
+.slide-container {
+    width: 100%;
+    max-width: 1000px; /* 더 넓게 설정 */
+    height: 600px;
+    background: #1f2937;
+    border-radius: 1.5rem;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+    position: relative;
+    overflow: hidden;
+}
+/* Individual Slide */
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 3rem;
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+    opacity: 0;
+    transform: translateX(100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+.slide.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+.slide.prev {
+    transform: translateX(-100%);
+}
+/* Utility Styles */
+.code-block {
+    background-color: #111827;
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    font-family: monospace;
+    color: #e5e7eb;
+    margin-top: 1.5rem;
+    white-space: pre-wrap;
+    width: 100%;
+    font-size: 0.95rem;
+    border-left: 5px solid #38bdf8;
+}
+.highlight-main {
+    color: #facc15;
+    font-weight: bold;
+}
+.highlight-code {
+    color: #22c55e;
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<main class="w-full max-w-5xl">
+    <div class="slide-container">
+        <!-- 슬라이드 내용이 여기에 삽입됩니다. -->
+    </div>
+</main>
+
+<footer class="w-full max-w-5xl mt-6 flex justify-between items-center px-4">
+    <button id="prev" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200 disabled:opacity-30" disabled>
+        ← 이전
+    </button>
+    <div id="counter" class="text-xl font-semibold text-gray-400">1 / 5</div>
+    <button id="next" class="bg-cyan-500 hover:bg-cyan-400 text-gray-900 font-bold py-2 px-6 rounded-lg transition-colors duration-200 disabled:opacity-30">
+        다음 →
+    </button>
+</footer>
+
+<script>
+const slidesData = [
+    { 
+        title: "포트폴리오 배포 이슈 해결 보고서", 
+        content: `
+            <h1 class="text-5xl font-extrabold mb-4 text-cyan-400">웹 포트폴리오 배포 시 발생한</h1>
+            <h2 class="text-4xl font-bold mb-8 text-white">경로 및 파일 관리 이슈 해결 과정</h2>
+            <p class="text-2xl text-gray-300">기술 블로그 / 포트폴리오 배포 과정에서 발생한 3가지 핵심 문제와 해결책을 정리합니다.</p>
+            <ul class="list-disc list-inside space-y-2 mt-8 text-xl text-yellow-300">
+                <li>파일 재배치로 인한 경로 변경</li>
+                <li>Jupyter 파일 일괄 삭제를 통한 콘텐츠 정제</li>
+                <li>가장 치명적인 문제: <span class="highlight-main">폴더명 공백 (Space) 불일치</span> 해결</li>
+            </ul>
+        `
+    },
+    { 
+        title: "문제 1: 파일 구조 변경 및 경로 일치", 
+        content: `
+            <h1 class="text-4xl font-extrabold mb-4 text-cyan-400">1. 파일 재배치 및 상대 경로 관리</h1>
+            <p class="text-xl mb-4">프로젝트 초기에는 복잡하게 흩어져 있던 파일을 포트폴리오 폴더(<span class="highlight-code">Presentation files for AI competitions</span>) 내부로 일괄 이동했습니다.</p>
+            
+            <h3 class="text-2xl font-bold mt-6 mb-3 text-white">처리 과정</h3>
+            <div class="space-y-3 text-lg">
+                <p>① **HTML 파일 이동:** <span class="highlight-code">K-Food_...FIXED.html</span> 파일을 최종 배포 폴더로 이동.</p>
+                <p>② **슬라이드 폴더 이동:** 이미지 폴더(<span class="highlight-code">Slides</span>)를 HTML 파일과 **같은 계층**으로 이동.</p>
+                <p>③ **경로 점검:** HTML 코드 내 이미지 경로가 <span class="highlight-code">./Slides/slide1.png</span> 형식의 <span class="highlight-main">상대 경로</span>로 지정되었는지 확인하여 파일 구조 변경에 대응했습니다.</p>
+            </div>
+        `
+    },
+    { 
+        title: "문제 2: 콘텐츠 정제 및 저작권/소유권 정리", 
+        content: `
+            <h1 class="text-4xl font-extrabold mb-4 text-cyan-400">2. 불필요 파일 일괄 삭제 (Refactoring)</h1>
+            <p class="text-xl mb-4">포트폴리오의 명확성과 소유권 문제 해결을 위해 불필요하거나 복잡한 파일을 정리했습니다.</p>
+            
+            <h3 class="text-2xl font-bold mt-6 mb-3 text-white">정제 목표: 코드의 명확성 확보</h3>
+            <ul class="list-disc list-inside space-y-3 text-lg pl-4">
+                <li>**Jupyter/IPYNB 파일 삭제:** AI 분석 과정의 일부였던 <span class="highlight-code">.ipynb</span> (Jupyter Notebook) 파일을 일괄 삭제했습니다.</li>
+                <li>**삭제 이유:** 해당 파일들의 복잡한 내부 로직과 <span class="highlight-main">원천 소유권</span> 문제가 발생할 소지가 있어, 최종 포트폴리오에는 순수 HTML/JS 코드와 최종 결과물(슬라이드)만을 남기도록 결정했습니다.</li>
+                <li>**효과:** 포트폴리오의 초점을 '배포된 웹 애플리케이션'의 **안정성 확보**로 집중시켰습니다.</li>
+            </ul>
+        `
+    },
+    { 
+        title: "문제 3: URL 인코딩 불일치 (치명적 오류)", 
+        content: `
+            <h1 class="text-4xl font-extrabold mb-4 text-cyan-400">3. 치명적 문제: 폴더명 공백과 URL 인코딩</h1>
+            <p class="text-xl mb-4">모든 파일 이동 후에도 이미지가 로딩되지 않는 치명적인 404 오류가 발생했습니다.</p>
+            
+            <h3 class="text-2xl font-bold text-yellow-400 mt-6 mb-3">오류 원인: 공백(Space) 인식 실패</h3>
+            <ul class="list-disc list-inside space-y-3 text-lg pl-4">
+                <li>**실제 폴더명:** <span class="highlight-main">'Slides '</span> (끝에 공백이 포함된 이름)</li>
+                <li>**코드 설정:** <span class="highlight-code">const IMAGE_FOLDER = 'Slides/';</span> (공백을 무시함)</li>
+                <li>**결과:** 웹 브라우저는 공백을 <span class="highlight-main">인코딩된 경로</span>로 처리해야 하지만, 코드에서 이를 놓쳐 파일 로딩에 실패했습니다.</li>
+            </ul>
+        `
+    },
+    { 
+        title: "해결책: %20/ 적용 및 결론", 
+        content: `
+            <h1 class="text-4xl font-extrabold mb-4 text-cyan-400">4. 최종 해결: URL 인코딩 (%20/) 적용</h1>
+            <p class="text-xl mb-6">문제의 핵심인 공백을 **URL 인코딩 규칙**에 따라 <span class="highlight-main">%20</span>으로 대체하여 해결했습니다.</p>
+            
+            <h3 class="text-3xl font-bold text-white mb-2">💡 해결 코드</h3>
+            <div class="code-block">
+                // 폴더 이름 끝의 공백을 %20으로 정확히 인코딩
+                const IMAGE_FOLDER = <span class="highlight-code">'Slides%20/'</span>; 
+                // 최종 로드 경로: [프로젝트경로]/Slides%20/slide1.png
+            </div>
+            
+            <h3 class="text-2xl font-bold text-yellow-300 mt-6">핵심 교훈</h3>
+            <p class="text-xl">웹 환경 배포 시, 파일명이나 폴더명에 포함된 모든 <span class="highlight-main">특수문자 및 공백</span>에 대해 **URL 인코딩** 원칙을 적용해야 한다는 것을 체득했습니다.</p>
+        `
+    },
+];
+
+let currentSlide = 0;
+const container = document.querySelector('.slide-container');
+const prevButton = document.getElementById('prev');
+const nextButton = document.getElementById('next');
+const counter = document.getElementById('counter');
+
+function renderSlides() {
+    slidesData.forEach((data, index) => {
+        const slide = document.createElement('div');
+        slide.className = 'slide ' + (index === 0 ? 'active' : 'next-slide');
+        slide.id = 'slide-' + index;
+        slide.innerHTML = data.content;
+        container.appendChild(slide);
+    });
+}
+
+function updateUI() {
+    const slides = document.querySelectorAll('.slide');
+    slides.forEach((slide, index) => {
+        slide.classList.remove('active', 'prev', 'next');
+        if (index === currentSlide) {
+            slide.classList.add('active');
+        } else if (index < currentSlide) {
+            slide.classList.add('prev');
+        } else {
+            slide.classList.add('next');
+        }
+    });
+
+    counter.textContent = `${currentSlide + 1} / ${slidesData.length}`;
+    prevButton.disabled = currentSlide === 0;
+    nextButton.disabled = currentSlide === slidesData.length - 1;
+}
+
+function showNext() {
+    if (currentSlide < slidesData.length - 1) {
+        currentSlide++;
+        updateUI();
+    }
+}
+
+function showPrev() {
+    if (currentSlide > 0) {
+        currentSlide--;
+        updateUI();
+    }
+}
+
+prevButton.addEventListener('click', showPrev);
+nextButton.addEventListener('click', showNext);
+
+// 키보드 이벤트로 슬라이드 넘기기 (화살표 키, 스페이스바)
+document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        showNext();
+    } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        showPrev();
+    }
+});
+
+renderSlides();
+updateUI();
+</script>
+
+</body>
+</html>

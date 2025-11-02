@@ -6,105 +6,217 @@
 <title>K-Food 슬라이드 자동 감지</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
+/* 폰트 및 기본 스타일 */
 body {
   font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  margin:0; overflow:hidden; background:#111; color:white; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh;
+  margin: 0;
+  overflow: hidden;
+  background: #111;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
-#slide-image { transition: opacity 0.3s ease-in-out; max-height:80vh; width:100%; object-fit:contain; }
-#error-message { display:none; position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); color:#f55; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2rem;}
+/* 이미지 컨테이너 */
+.slide-container {
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#slide-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.3s ease-in-out;
+}
+/* 로딩/에러 메시지 오버레이 */
+#overlay-message {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  transition: opacity 0.5s;
+  z-index: 10;
+}
+.hidden-overlay {
+    display: none !important;
+}
 </style>
 </head>
 <body>
 
-<main class="w-full max-w-6xl bg-gray-800 rounded-lg shadow-2xl relative overflow-hidden">
-  <div class="aspect-w-16 aspect-h-9 relative">
-    <img id="slide-image" src="" alt="슬라이드 이미지">
-    <div id="error-message">
-      <h2 class="text-3xl font-bold text-red-400 mb-4">이미지 로딩 실패</h2>
-      <p class="text-xl text-gray-300 mb-2">
-        <code id="error-path" class="bg-gray-700 text-yellow-300 px-2 py-1 rounded"></code>
-      </p>
-      <p class="text-lg text-gray-400 max-w-2xl">
-        이 HTML 파일과 같은 폴더에 <code class="bg-gray-700 px-1 rounded">Slides</code> 폴더가 있고, <code class="bg-gray-700 px-1 rounded">slide1.png ~ slideN.png</code> 파일이 들어있는지 확인하세요.
-      </p>
+<main class="w-full max-w-6xl bg-gray-900 rounded-xl shadow-2xl relative overflow-hidden">
+  <div class="slide-container">
+    <div id="overlay-message" class="transition-opacity duration-500">
+      <div id="loading-spinner" class="animate-spin rounded-full h-12 w-12 border-4 border-t-4 border-cyan-500 border-gray-600 mb-4"></div>
+      <h2 class="text-2xl font-bold text-cyan-400 mb-2">슬라이드 파일 확인 중...</h2>
+      <p class="text-lg text-gray-300">최대 50개 슬라이드를 순서대로 로드합니다.</p>
     </div>
+
+    <img id="slide-image" src="" alt="슬라이드 이미지">
   </div>
+  
   <div class="w-full bg-gray-700 h-2">
     <div id="progress-bar" class="bg-cyan-500 h-2 transition-all duration-300" style="width:0%"></div>
   </div>
 </main>
 
-<footer class="w-full max-w-6xl mt-4 flex items-center justify-between px-2">
+<footer class="w-full max-w-6xl mt-4 flex items-center justify-between px-4">
   <div class="flex gap-3">
-    <button id="prev" class="bg-gray-700 hover:bg-cyan-600 text-white font-bold py-2 px-5 rounded-lg transition-colors duration-200">이전 (←)</button>
-    <button id="next" class="bg-cyan-500 hover:bg-cyan-400 text-gray-900 font-bold py-2 px-5 rounded-lg transition-colors duration-200">다음 (→)</button>
+    <button id="prev" class="bg-gray-700 hover:bg-cyan-600 text-white font-bold py-2 px-5 rounded-lg transition-colors duration-200 disabled:opacity-50" disabled>
+      이전 (←)
+    </button>
+    <button id="next" class="bg-cyan-500 hover:bg-cyan-400 text-gray-900 font-bold py-2 px-5 rounded-lg transition-colors duration-200 disabled:opacity-50" disabled>
+      다음 (→)
+    </button>
   </div>
-  <div id="counter" class="text-lg font-semibold text-gray-300">Slide 1 / ?</div>
+  <div id="counter" class="text-xl font-semibold text-gray-300">
+    슬라이드를 찾는 중...
+  </div>
 </footer>
 
 <script>
-const IMAGE_FOLDER = 'Slides%20'; 
-const IMAGE_PREFIX = 'slide'; 
-const IMAGE_EXTENSION = 'png'; 
-const MAX_SLIDES = 50;
+// ⭐ 핵심 수정 부분: 깃허브 스크린샷을 바탕으로 'Slides/'로 수정했습니다.
+// 'Slides/' 뒤에 슬래시를 붙여야 파일 경로가 올바르게 연결됩니다.
+// 사용자님의 요청에 따라, 폴더 이름 끝의 공백을 URL 인코딩 문자열 '%20'으로 변경했습니다.
+const IMAGE_FOLDER = 'Slides%20/';
+const IMAGE_PREFIX = 'slide';
+const IMAGE_EXTENSION = 'png';
+const MAX_SLIDE_TRIES = 50; // 최대 시도 횟수 (실제 슬라이드 개수 아님)
 
 let slides = [];
-let loadedCount = 0;
 let currentSlideIndex = 0;
+let isReady = false;
 
-const slideImage = document.getElementById('slide-image'); 
-const counter = document.getElementById('counter'); 
-const progressBar = document.getElementById('progress-bar'); 
-const prevButton = document.getElementById('prev'); 
-const nextButton = document.getElementById('next'); 
-const errorMessage = document.getElementById('error-message');
+const slideImage = document.getElementById('slide-image');
+const counter = document.getElementById('counter');
+const progressBar = document.getElementById('progress-bar');
+const prevButton = document.getElementById('prev');
+const nextButton = document.getElementById('next');
+const overlayMessage = document.getElementById('overlay-message');
 
-for (let i = 1; i <= MAX_SLIDES; i++) {
-  const path = `${IMAGE_FOLDER}${IMAGE_PREFIX}${i}.${IMAGE_EXTENSION}`;
-  const img = new Image();
-  
-  img.onload = () => {
-    slides.push({ index: i, path: path });
-    loadedCount++;
-    checkAllLoaded();
-  };
-  
-  img.onerror = () => {
-    loadedCount++;
-    console.warn(`Slide not found: ${path}`);
-    checkAllLoaded();
-  };
+/**
+ * 슬라이드를 순차적으로 로드하여 전체 슬라이드 개수를 동적으로 찾습니다.
+ */
+async function loadSlides() {
+  let i = 1;
+  overlayMessage.querySelector('h2').textContent = '슬라이드 파일 확인 중...';
 
-  img.src = path;
-}
+  while (i <= MAX_SLIDE_TRIES) {
+    const path = `${IMAGE_FOLDER}${IMAGE_PREFIX}${i}.${IMAGE_EXTENSION}`;
+    
+    // 로딩 상태 업데이트
+    counter.textContent = `슬라이드를 찾는 중... (${i}번째 시도)`;
 
-function checkAllLoaded() {
-  if (loadedCount === MAX_SLIDES) {
-    slides.sort((a,b) => a.index - b.index);
-    if (slides.length > 0) {
-      showSlide(0);
-    } else {
-      errorMessage.style.display = 'flex';
-      errorMessage.textContent = "No slides found!";
+    try {
+      // Promise를 사용하여 Image 로드를 비동기적으로 기다립니다.
+      await new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = path;
+      });
+      
+      // 로드 성공 시 슬라이드 목록에 추가
+      slides.push({ index: i, path: path });
+      i++;
+      
+    } catch (error) {
+      // 로드 실패 시 (404 Not Found 등), 슬라이드 목록의 끝으로 간주하고 루프 종료
+      console.log(`✅ 마지막 슬라이드 발견: ${i-1}번`);
+      break;
     }
+  }
+  
+  // 모든 슬라이드 로딩 후 처리
+  if (slides.length > 0) {
+    slides.sort((a, b) => a.index - b.index); // 만약을 대비해 다시 정렬
+    isReady = true;
+    showSlide(0);
+    overlayMessage.classList.add('opacity-0');
+    setTimeout(() => overlayMessage.classList.add('hidden-overlay'), 500); // 애니메이션 후 제거
+  } else {
+    // 슬라이드가 하나도 없는 경우
+    overlayMessage.querySelector('#loading-spinner').style.display = 'none';
+    overlayMessage.querySelector('h2').textContent = '⚠️ 이미지 로딩 실패';
+    overlayMessage.querySelector('p').innerHTML = `
+      <p class="text-red-400">
+        <code class="bg-gray-800 text-yellow-300 px-2 py-1 rounded">경로: ${IMAGE_FOLDER}</code> 에서 <code class="bg-gray-800 text-yellow-300 px-2 py-1 rounded">slide1.png</code> 파일을 찾지 못했습니다.
+      </p>
+      <p class="mt-4 text-gray-400 text-base">
+        **이 HTML 파일과 같은 위치에 'Slides (뒤에 공백 포함)' 폴더가 있는지** 확인해주세요.
+      </p>
+    `;
+    // 버튼 비활성화 유지
   }
 }
 
+/**
+ * 특정 인덱스의 슬라이드를 화면에 표시하고 UI를 업데이트합니다.
+ */
 function showSlide(idx) {
-  if (idx < 0 || idx >= slides.length) return;
+  if (!isReady || idx < 0 || idx >= slides.length) return;
+  
   currentSlideIndex = idx;
-  slideImage.src = slides[idx].path;
-  counter.textContent = `${idx+1} / ${slides.length}`;
-  progressBar.style.width = `${((idx+1)/slides.length)*100}%`;
+  
+  // 이미지 전환 시 깜빡임을 줄이기 위한 처리
+  slideImage.style.opacity = 0;
+  setTimeout(() => {
+    slideImage.src = slides[idx].path;
+    slideImage.style.opacity = 1;
+  }, 100);
+
+  // 카운터 및 진행률 업데이트
+  counter.textContent = `Slide ${idx + 1} / ${slides.length}`;
+  progressBar.style.width = `${((idx + 1) / slides.length) * 100}%`;
+  
+  // 버튼 활성화/비활성화
+  prevButton.disabled = idx === 0;
+  nextButton.disabled = idx === slides.length - 1;
+  
+  // 버튼 스타일 업데이트 (접근성)
+  prevButton.classList.toggle('bg-gray-700', idx !== 0);
+  prevButton.classList.toggle('bg-cyan-600', idx === 0);
+  nextButton.classList.toggle('bg-cyan-500', idx !== slides.length - 1);
+  nextButton.classList.toggle('bg-gray-700', idx === slides.length - 1);
 }
 
-prevButton.onclick = () => showSlide(currentSlideIndex-1);
-nextButton.onclick = () => showSlide(currentSlideIndex+1);
+// 이벤트 리스너 설정
+prevButton.onclick = () => showSlide(currentSlideIndex - 1);
+nextButton.onclick = () => showSlide(currentSlideIndex + 1);
 
 document.addEventListener('keydown', e => {
-  if(e.key==='ArrowRight'||e.key===' ') { e.preventDefault(); nextButton.click(); }
-  if(e.key==='ArrowLeft') { e.preventDefault(); prevButton.click(); }
+  if (!isReady) return;
+  
+  if (e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    nextButton.click();
+  }
+  if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    prevButton.click();
+  }
 });
+
+// 시작 함수 호출
+loadSlides();
 
 </script>
 

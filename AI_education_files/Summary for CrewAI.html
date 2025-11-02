@@ -3,115 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CrewAI 주식 분석팀 요약</title>
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-    <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap)" rel="stylesheet">
+    <title>CrewAI 프로젝트: 다중 에이전트 기반 주식 분석팀 구축 요약</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            /* 1. 요청 사항: 배경색을 밝은 파란색 계열로 변경 */
-            background-color: #e6f0ff; 
+            background-color: #f7fbfd; 
             font-family: 'Noto Sans KR', sans-serif;
             line-height: 1.6;
             color: #333;
-            padding: 20px 0; 
+            padding: 30px 0; 
         }
         .container {
-            /* 2. 요청 사항: 콘텐츠 영역 가운데 정렬 */
             max-width: 1000px;
             margin: 0 auto; 
             background-color: #ffffff; 
             padding: 40px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            border-top: 5px solid #00c853; /* Green accent */
         }
         h1 {
-            color: #1a73e8; /* 구글 블루 */
+            color: #1a73e8;
             border-bottom: 2px solid #e6f0ff;
             padding-bottom: 10px;
             margin-top: 0;
+            font-size: 2rem;
+            font-weight: 700;
         }
         h2 {
-            color: #3c4043; /* 구글 다크 그레이 */
-            margin-top: 25px;
+            color: #00c853;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 5px;
+            margin-top: 30px;
+            font-size: 1.5rem;
+            font-weight: 700;
         }
-        ul {
-            list-style-type: disc;
-            margin-left: 20px;
-            padding-left: 0;
+        h3 {
+            color: #388e3c;
+            font-weight: 700;
+            margin-top: 15px;
         }
-        li {
-            margin-bottom: 10px;
+        p {
+            margin-bottom: 15px;
+            color: #4a5568;
         }
-        strong {
-            color: #202124;
+        .card {
+            background-color: #f0fff4; /* Light green background */
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #c8e6c9;
+        }
+        .tech-tag {
+            display: inline-block;
+            background-color: #e8f5e9; 
+            color: #388e3c; 
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        /* 에이전트 워크플로우 다이어그램 */
+        .workflow-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .agent-box {
+            width: 30%;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #00c853;
+            background-color: #ffffff;
+            transition: all 0.3s;
+        }
+        .agent-box:hover {
+            box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
+            transform: translateY(-2px);
+        }
+        .arrow {
+            font-size: 2rem;
+            color: #00c853;
+            font-weight: 700;
+        }
+        .security-card {
+            background-color: #fff3e0;
+            border: 2px solid #ff9800;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
 <body>
     <div class="container mx-auto">
         <header class="header">
-            <h1 class="text-3xl font-bold text-gray-800">CrewAI 프로젝트: 다중 에이전트 기반 주식 분석팀 구축 요약</h1>
-            <p class="text-gray-500 mt-1">프로젝트 과정 해석 및 기술 역량 상세 설명 (API 보안 및 코드 제외)</p>
+            <h1 class="font-bold text-gray-800">CrewAI 프로젝트: 다중 에이전트 기반 주식 분석팀 구축 요약</h1>
+            <p class="text-gray-500 mt-2">LLM 에이전트의 자율적 협업 워크플로우 설계 및 API 보안 관리</p>
         </header>
 
-        <section class="mb-8">
-            <h2 class="section-title">프로젝트 개요 및 목표</h2>
+        <section class="mb-10">
+            <h2>1. 프로젝트 개요 및 핵심 목표</h2>
             <div class="card">
-                <p class="text-gray-700">CrewAI 프레임워크를 활용하여 **주식 분석가, 전략가, 리포터** 3가지 역할을 수행하는 자율적인 AI 에이전트 팀을 구축하고, 특정 주식에 대한 심층 분석 및 투자 보고서를 자동으로 생성했습니다. 이는 복잡한 비즈니스 태스크를 AI 팀으로 해결하는 **멀티 에이전트 시스템 설계 능력**을 입증합니다.</p>
-                <div class="mt-4">
+                <p>CrewAI 프레임워크를 활용하여 **주식 분석가, 전략가, 리포터** 세 가지 역할을 수행하는 자율적인 AI 에이전트 팀을 구축했습니다. 목표는 특정 주식에 대한 실시간 정보 접근 및 분석을 통해 **심층 투자 보고서**를 자동으로 생성하는 멀티 에이전트 시스템을 설계하는 것입니다.</p>
+
+                <h3 class="mt-4 mb-2">핵심 기술 역량</h3>
+                <div class="mt-2 flex flex-wrap">
                     <span class="tech-tag">CrewAI Framework</span>
                     <span class="tech-tag">Multi-Agent System</span>
-                    <span class="tech-tag">LLM Integration</span>
+                    <span class="tech-tag">Sequential Task Definition</span>
+                    <span class="tech-tag">Secure API Handling</span>
                 </div>
             </div>
-        </section>
-
-        <section class="mb-8">
-            <h2 class="section-title">기술적 도전 및 문제 해결 과정</h2>
-            <div class="card">
-                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. API Key 보안 관리 전략 (가장 중요)</h3>
-                <p class="text-gray-700 font-semibold">
-                    **API 키 노출 방지:** LLM (OpenAI) API Key를 코드에 직접 노출하는 것은 보안상 심각한 결함입니다.
-                </p>
-                <p class="text-gray-700 mt-1">
-                    **해결:** 저는 API Key를 코드 외부의 **환경 변수(`os.environ`)**로 저장하고, CrewAI 초기화 시점에 이 환경 변수 값을 안전하게 로드하여 사용하는 로직을 구현했습니다. 이는 민감 정보를 관리하는 **최신 보안 개발 표준**을 준수했음을 의미합니다.
-                </p>
-
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. 자율적인 워크플로우 설계</h3>
-                <p class="text-gray-700">
-                    **도전:** 세 에이전트가 순차적으로, 그리고 상호 의존적으로 태스크를 수행하도록 논리적인 워크플로우를 정의해야 했습니다.
-                </p>
-                <p class="text-gray-700 mt-1">
-                    **해결:**
-                    1. **분석가:** 웹 검색 Tool을 사용하여 주식 정보 수집 (Tool 통합).
-                    2. **전략가:** 분석가의 결과를 입력으로 받아 투자 추천 전략 도출.
-                    3. **리포터:** 분석가와 전략가의 최종 결과를 취합하여 최종 보고서 형식으로 출력 (Task 정의).
-                    이러한 **Sequential Task** 구성을 통해 에이전트들이 자율적으로 협업하는 시스템을 완성했습니다.
-                </p>
-
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">3. 실시간 정보 접근(Tool Integration)</h3>
-                <p class="text-gray-700">
-                    에이전트들이 정적인 지식 대신 최신 주가 정보와 뉴스를 기반으로 판단하도록, CrewAI의 **Tool 통합 기능**을 사용하여 에이전트에게 **실시간 웹 검색 능력**을 부여했습니다.
-                </p>
+            
+            <div class="mt-8">
+                <p class="font-semibold text-gray-700 mb-2">CrewAI 에이전트 팀 구조 </p>
+                <img src="https://placehold.co/900x300/388e3c/ffffff?text=CrewAI+Multi-Agent+System+Visualization" alt="CrewAI 다중 에이전트 시스템 시각화" class="mx-auto rounded-lg shadow-md border border-gray-200">
             </div>
         </section>
 
-        <section>
-            <h2 class="section-title">API 키 및 코드 처리 방안</h2>
-            <div class="card bg-yellow-50 border border-yellow-300">
-                <p class="text-gray-700 font-semibold">
-                    위에 설명된 대로, API Key는 **환경 변수(`os.environ`)**를 통해 안전하게 관리되었으며, 코드에 직접 노출되는 방식은 철저히 배제되었습니다.
+        <section class="mb-10">
+            <h2>2. 기술적 도전 및 해결 과정</h2>
+
+            <div class="security-card">
+                <h3 class="text-lg font-bold text-red-700">🚨 도전 1: LLM API Key 보안 관리 전략 (최우선 과제)</h3>
+                <p class="text-gray-700">
+                    LLM (OpenAI) API Key를 코드에 직접 노출하여 발생하는 **심각한 보안 결함**을 방지해야 했습니다.
                 </p>
-                <p class="text-gray-700 mt-2">
-                    **코드 포메이션 대신:** **보안 표준 준수(API Key 관리)**, **Sequential Task 정의를 통한 워크플로우 설계**, 그리고 **Tool 통합**을 통한 에이전트의 능력 확장 등 시스템 설계 및 운영 능력을 중심으로 기술 해석을 진행했습니다.
+                <p class="text-gray-700 mt-1 font-bold">
+                    ✅ **해결:** API Key를 코드 외부의 **환경 변수(`os.environ`)**로 분리하여 저장하고, CrewAI 초기화 시점에 안전하게 로드하는 로직을 구현했습니다. 이는 민감 정보를 관리하는 **최신 보안 개발 표준**을 준수했음을 입증합니다.
                 </p>
             </div>
+            
+            <h3 class="mt-6 mb-2">도전 2: 자율적인 Sequential 워크플로우 설계</h3>
+            <p class="text-gray-700">에이전트들이 순차적으로 결과를 넘겨받아 최종 결과물을 도출하는 논리적이고 상호 의존적인 태스크 흐름을 정의해야 했습니다.</p>
+            
+            <div class="workflow-diagram">
+                <div class="agent-box">
+                    <span class="font-bold text-xl text-green-700">1. 분석가 (Researcher)</span>
+                    <p class="text-sm mt-1">Tool 사용: 웹 검색 (실시간 데이터 수집)</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="agent-box">
+                    <span class="font-bold text-xl text-yellow-700">2. 전략가 (Strategist)</span>
+                    <p class="text-sm mt-1">Input: 분석가의 데이터 + NLU (투자 전략 도출)</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="agent-box">
+                    <span class="font-bold text-xl text-red-700">3. 리포터 (Reporter)</span>
+                    <p class="text-sm mt-1">Output: 최종 보고서 형식으로 취합 및 출력</p>
+                </div>
+            </div>
+            
+            <h3 class="mt-6 mb-2">도전 3: 실시간 정보 접근을 위한 Tool 통합</h3>
+            <p class="text-gray-700">
+                정적인 학습 데이터가 아닌, **최신 주가 정보와 뉴스**를 기반으로 판단하도록 에이전트의 능력을 확장했습니다. 이를 위해 CrewAI의 **Tool 통합 기능**을 활용하여 에이전트에게 실시간 웹 검색 능력을 부여했습니다.
+            </p>
         </section>
 
         <footer class="text-center mt-8 text-gray-500 text-sm">
-            CrewAI 다중 에이전트 주식 분석팀 요약
+            문서 작성자: [작성자 이름] / 프로젝트: CrewAI 다중 에이전트 시스템
         </footer>
     </div>
 </body>
 </html>
-

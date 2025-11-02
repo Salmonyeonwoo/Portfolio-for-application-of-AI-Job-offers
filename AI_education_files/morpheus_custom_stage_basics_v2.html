@@ -3,108 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morpheus 커스텀 스테이지 기본기 및 메시지 업데이트 요약</title>
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-    <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap)" rel="stylesheet">
+    <title>Morpheus 커스텀 스테이지 기본 구조 및 메시지 업데이트 요약</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            /* 1. 요청 사항: 배경색을 밝은 파란색 계열로 변경 */
-            background-color: #e6f0ff; 
+            background-color: #f7fbfd; 
             font-family: 'Noto Sans KR', sans-serif;
             line-height: 1.6;
             color: #333;
-            padding: 20px 0; 
+            padding: 30px 0; 
         }
         .container {
-            /* 2. 요청 사항: 콘텐츠 영역 가운데 정렬 */
             max-width: 1000px;
             margin: 0 auto; 
             background-color: #ffffff; 
             padding: 40px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            border-top: 5px solid #29b6f6; /* Light Blue accent */
         }
         h1 {
-            color: #1a73e8; /* 구글 블루 */
-            border-bottom: 2px solid #e6f0ff;
-            padding-bottom: 10px;
+            color: #1a73e8;
+            border-bottom: 3px solid #e6f0ff;
+            padding-bottom: 15px;
             margin-top: 0;
+            font-size: 2.25rem;
         }
         h2 {
-            color: #3c4043; /* 구글 다크 그레이 */
-            margin-top: 25px;
+            color: #29b6f6;
+            border-bottom: 2px solid #e3f2fd;
+            padding-bottom: 5px;
+            margin-top: 35px;
+            font-size: 1.75rem;
+            font-weight: 700;
         }
-        ul {
-            list-style-type: disc;
-            margin-left: 20px;
-            padding-left: 0;
+        h3 {
+            color: #0288d1;
+            font-weight: 700;
+            margin-top: 20px;
         }
-        li {
-            margin-bottom: 10px;
+        p {
+            margin-bottom: 15px;
+            color: #4a5568;
         }
-        strong {
-            color: #202124;
+        .card {
+            background-color: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #90caf9;
+        }
+        .tech-tag {
+            display: inline-block;
+            background-color: #e3f2fd; 
+            color: #29b6f6; 
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        /* Lock 다이어그램 CSS */
+        .lock-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .data-lock-box {
+            background-color: #f0f4c3;
+            border: 3px solid #cddc39;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            color: #689f38;
+            position: relative;
+        }
+        .lock-icon {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            font-size: 2rem;
+            color: #ffb74d;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+        img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
 <body>
     <div class="container mx-auto">
         <header class="header">
-            <h1 class="text-3xl font-bold text-gray-800">Morpheus 커스텀 스테이지 기본 구조 및 메시지 업데이트 요약</h1>
-            <p class="text-gray-500 mt-1">프로젝트 과정 해석 및 기술 역량 상세 설명 (코드 제외)</p>
+            <h1 class="font-bold text-gray-800">Morpheus 커스텀 스테이지 기본 구조 및 메시지 업데이트 요약</h1>
+            <p class="text-gray-500 mt-2">`SinglePortStage` 설계 및 `mutable_dataframe()`을 사용한 GPU 데이터 안전 수정</p>
         </header>
 
-        <section class="mb-8">
-            <h2 class="section-title">프로젝트 개요 및 목표</h2>
-            <div class="card">
-                <p class="text-gray-700">Morpheus의 핵심인 **사용자 정의 스테이지(Custom Stage)**를 작성하는 방법을 학습하고, 메시지 메타데이터와 페이로드의 데이터를 직접 **업데이트**하는 커스텀 로직을 구현했습니다. 이는 파이프라인의 유연성과 확장성을 확보하는 기본 역량입니다.</p>
-                <div class="mt-4">
-                    <span class="tech-tag">Custom Stage 개발</span>
-                    <span class="tech-tag">Mutable DataFrame</span>
-                    <span class="tech-tag">데이터 업데이트 로직</span>
+        <section class="mb-10">
+            <h2>1. 프로젝트 개요 및 커스텀 스테이지 설계</h2>
+            <div class="card bg-white">
+                <p>Morpheus 파이프라인의 유연성과 확장성을 위해 **`SinglePortStage`**를 상속받아 사용자 정의 로직을 수행하는 커스텀 스테이지를 구현했습니다. 핵심 목표는 GPU 메모리에 상주하는 메시지의 `cuDF` 데이터를 **스레드 안전성(Thread Safety)**을 확보하며 수정하는 것입니다.</p>
+
+                <h3 class="mt-4 mb-2">핵심 기술 역량</h3>
+                <div class="mt-2 flex flex-wrap">
+                    <span class="tech-tag">Custom Stage Development</span>
+                    <span class="tech-tag">GPU Data Modification (cuDF)</span>
+                    <span class="tech-tag">Thread Safety (Locking)</span>
+                    <span class="tech-tag">Data Standardization</span>
                 </div>
             </div>
-        </section>
-
-        <section class="mb-8">
-            <h2 class="section-title">기술적 도전 및 문제 해결 과정</h2>
-            <div class="card">
-                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. 커스텀 스테이지의 기본 구조 확립</h3>
-                <p class="text-gray-700">
-                    **해결:** `SinglePortStage`를 상속받아 `name`, `supports_cpp_node`, `on_data` 메서드를 정의하는 기본 구조를 확립했습니다. 초기에는 입력 메시지를 그대로 반환하는 `Passthrough Stage`를 구현하여 데이터의 흐름을 먼저 검증했습니다.
-                </p>
-
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. GPU 데이터의 안전한 수정 로직 구현</h3>
-                <p class="text-gray-700">
-                    **도전:** GPU 메모리 상의 `cuDF` 데이터를 여러 스레드에서 동시에 접근하여 수정할 때 발생하는 **경쟁 조건(Race Condition)**을 피해야 했습니다.
-                </p>
-                <p class="text-gray-700 mt-1">
-                    **해결:** `with message.mutable_dataframe() as df:` 구문을 사용하여, 데이터프레임에 대한 **잠금(Lock) 메커니즘**을 적용했습니다. 이 컨텍스트 관리자 덕분에 GPU 데이터를 안전하게 수정할 수 있었으며, 사용자 인증 로그 데이터에서 `user` 컬럼 값을 **대문자(Uppercase)**로 변경하는 로직을 성공적으로 적용했습니다.
-                </p>
-
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">3. 데이터 업데이트의 즉각적인 반영</h3>
-                <p class="text-gray-700">
-                    수정된 데이터가 다음 스테이지로 전달될 때, `ControlMessage` 또는 `MessageMeta`에 변경 사항이 즉각 반영되는 것을 확인했습니다. 이는 데이터 정제 및 변환 로직이 파이프라인에 실시간으로 적용됨을 의미합니다.
-                </p>
+            
+            <div class="mt-8">
+                <p class="font-semibold text-gray-700 mb-2">커스텀 스테이지 개발 과정 </p>
+                <img src="https://placehold.co/900x300/0288d1/ffffff?text=Morpheus+Custom+Stage+Development+Flow" alt="Morpheus 커스텀 스테이지 개발 흐름 시각화" class="mx-auto rounded-lg shadow-md border border-gray-200">
             </div>
         </section>
 
-        <section>
-            <h2 class="section-title">API 키 및 코드 처리 방안</h2>
-            <div class="card bg-yellow-50 border border-yellow-300">
-                <p class="text-gray-700 font-semibold">
-                    이 프로젝트는 Morpheus의 내부 데이터 처리 로직에 집중했으며 외부 API Key는 사용하지 않았습니다.
+        <section class="mb-10">
+            <h2>2. 기술적 도전: GPU 데이터의 안전한 수정</h2>
+
+            <div class="card">
+                <h3 class="mt-0 text-red-700 font-bold">🚩 도전: GPU 데이터의 경쟁 조건 (Race Condition) 회피</h3>
+                <p class="text-gray-700">Morpheus는 고성능 병렬 처리를 위해 여러 스레드를 사용합니다. 이 스레드들이 GPU 메모리(`cuDF`)에 동시 접근하여 데이터를 수정할 때 데이터 충돌(Data Corruption)을 일으키는 **경쟁 조건**을 피해야 했습니다.</p>
+                
+                <h3 class="mt-6 text-green-700 font-bold">✅ 해결: `mutable_dataframe()`을 사용한 잠금(Lock) 구현</h3>
+                <p class="text-gray-700 font-medium">
+                    메시지 객체의 **`with message.mutable_dataframe() as df:`** 컨텍스트 관리자를 활용했습니다. 이 구문은 데이터 수정 시 **내부적인 잠금(Lock) 메커니즘**을 적용하여 스레드 안전성을 확보했습니다. 개발자는 일반 Pandas처럼 `df` 객체를 사용하여 `user` 컬럼을 대문자로 변경하는 등의 변환 로직을 안전하게 구현했습니다.
                 </p>
-                <p class="text-gray-700 mt-2">
-                    **코드 포메이션 대신:** **`mutable_dataframe()`을 사용한 안전한 데이터 수정 로직**, **경쟁 조건 회피**, 그리고 **Custom Stage 클래스 설계 방법** 등 GPU 기반 파이프라인 개발 능력을 중심으로 기술 해석을 진행했습니다.
+            </div>
+        </section>
+        
+        <section class="mb-10">
+            <h2>3. `mutable_dataframe()` 잠금 로직 시각화</h2>
+            
+            <div class="lock-diagram">
+                <div class="data-lock-box">
+                    GPU 메모리 (cuDF DataFrame)
+                    <span class="lock-icon">🔒</span>
+                    <p class="text-sm mt-2 font-normal text-gray-700">데이터 수정 중 Lock 상태</p>
+                </div>
+                <p class="mt-4 text-center text-sm text-gray-600">
+                    `mutable_dataframe()` 컨텍스트 진입 시 Lock이 걸려 다른 스레드의 동시 접근을 막고,<br>
+                    컨텍스트를 벗어날 때 Lock이 해제됩니다.
                 </p>
             </div>
         </section>
 
         <footer class="text-center mt-8 text-gray-500 text-sm">
-            Morpheus Custom Stages: 기본 구조 및 메시지 업데이트 요약
+            문서 작성자: [작성자 이름] / 프로젝트: Morpheus Custom Stage 기본기
         </footer>
     </div>
 </body>
 </html>
-

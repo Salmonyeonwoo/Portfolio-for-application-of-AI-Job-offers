@@ -36,10 +36,10 @@
             <div id="error-message" class="absolute inset-0 w-full h-full flex flex-col items-center justify-center text-center p-8">
                 <h2 class="text-3xl font-bold text-red-400 mb-4">이미지 로딩 실패</h2>
                 <p class="text-xl text-gray-300 mb-2">
-                    <code id="error-path" class="bg-gray-700 text-yellow-300 px-2 py-1 rounded">slides/slide1.png</code>
+                    <code id="error-path" class="bg-gray-700 text-yellow-300 px-2 py-1 rounded">Presentation files for AI competitions /Slides /slide1.png</code>
                 </p>
                 <p class="text-lg text-gray-400 max-w-2xl">
-                    이 HTML 파일과 같은 폴더에 <code class="bg-gray-700 px-1 rounded">slides</code> 라는 폴더를 만들고, 그 안에 파워포인트에서 내보낸 이미지 파일들을 <code class="bg-gray-700 px-1 rounded">slide1.png</code>, <code class="bg-gray-700 px-1 rounded">slide2.png</code> ... 이름으로 저장했는지 확인해 주세요.
+                    이 HTML 파일과 같은 폴더에 <code class="bg-gray-700 px-1 rounded">Presentation files for AI competitions /Slides</code> 라는 폴더를 만들고, 그 안에 파워포인트에서 내보낸 이미지 파일들을 <code class="bg-gray-700 px-1 rounded">slide1.png</code>, <code class="bg-gray-700 px-1 rounded">slide2.png</code> ... 이름으로 저장했는지 확인해 주세요.
                 </p>
             </div>
         </div>
@@ -118,7 +118,7 @@
         // 이미지 로딩 실패 시
         slideImage.onerror = function() {
             slideImage.style.display = 'none'; // 깨진 이미지 숨기기
-            errorPath.textContent = slideImage.src.split('/').slice(-2).join('/'); // 예: slides/slide1.png
+            errorPath.textContent = slideImage.src.split('/').slice(-2).join('/'); // 예: Presentation files for AI competitions /Slides /slide1.png
             errorMessage.style.display = 'flex'; // 에러 메시지 보여주기
         }
 

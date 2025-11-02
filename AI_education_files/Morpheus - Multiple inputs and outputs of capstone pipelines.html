@@ -3,111 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morpheus 캡스톤 다중 입력/출력 파이프라인 요약</title>
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-    <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap)" rel="stylesheet">
+    <title>Morpheus 캡스톤 다중 입력/출력 (MIMO) 파이프라인 요약</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            /* 1. 요청 사항: 배경색을 밝은 파란색 계열로 변경 */
-            background-color: #e6f0ff; 
+            background-color: #f7fbfd; 
             font-family: 'Noto Sans KR', sans-serif;
             line-height: 1.6;
             color: #333;
-            padding: 20px 0; 
+            padding: 30px 0; 
         }
         .container {
-            /* 2. 요청 사항: 콘텐츠 영역 가운데 정렬 */
             max-width: 1000px;
             margin: 0 auto; 
             background-color: #ffffff; 
             padding: 40px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
         }
         h1 {
-            color: #1a73e8; /* 구글 블루 */
-            border-bottom: 2px solid #e6f0ff;
-            padding-bottom: 10px;
+            color: #1a73e8;
+            border-bottom: 3px solid #e6f0ff;
+            padding-bottom: 15px;
             margin-top: 0;
+            font-size: 2.25rem;
         }
+        /* 레이아웃 변화: 주요 도전 과제를 대비되는 색상으로 강조 */
         h2 {
-            color: #3c4043; /* 구글 다크 그레이 */
-            margin-top: 25px;
+            color: #3c4043;
+            background-color: #f3f7fe;
+            border-left: 5px solid #1a73e8;
+            padding: 10px 15px;
+            margin-top: 35px;
+            font-size: 1.75rem;
+            font-weight: 700;
         }
-        ul {
-            list-style-type: disc;
-            margin-left: 20px;
-            padding-left: 0;
+        h3 {
+            color: #0d47a1;
+            font-weight: 700;
+            margin-top: 20px;
         }
-        li {
-            margin-bottom: 10px;
+        p {
+            margin-bottom: 15px;
+            color: #4a5568;
         }
-        strong {
-            color: #202124;
+        .card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .tech-tag {
+            display: inline-block;
+            background-color: #e3f2fd; 
+            color: #1a73e8; 
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        /* MIMO 파이프라인 다이어그램 CSS */
+        .mimo-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 40px 0;
+        }
+        .input-group {
+            display: flex;
+            justify-content: space-around;
+            width: 80%;
+        }
+        .input-box {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: 700;
+            width: 45%;
+            text-align: center;
+        }
+        .flow-line {
+            width: 2px;
+            height: 20px;
+            background-color: #1a73e8;
+        }
+        .router-box {
+            background-color: #1a73e8;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .output-group {
+            display: flex;
+            justify-content: space-around;
+            width: 90%;
+            margin-top: 30px;
+        }
+        .output-box {
+            width: 40%;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #ff9800;
+            background-color: #fff3e0;
+        }
+        .output-box-title {
+            font-weight: 700;
+            color: #e65100;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
 <body>
     <div class="container mx-auto">
         <header class="header">
-            <h1 class="text-3xl font-bold text-gray-800">Morpheus 캡스톤 다중 입력/출력 (MIMO) 파이프라인 요약</h1>
-            <p class="text-gray-500 mt-1">프로젝트 과정 해석 및 기술 역량 상세 설명 (코드 제외)</p>
+            <h1 class="font-bold text-gray-800">Morpheus 캡스톤 다중 입력/출력 (MIMO) 파이프라인 요약</h1>
+            <p class="text-gray-500 mt-2">이질적인 데이터 소스(GPU 로그, PCAP)를 통합하여 다중 ML 모델로 처리하는 비선형 아키텍처 구현</p>
         </header>
 
-        <section class="mb-8">
-            <h2 class="section-title">프로젝트 개요 및 목표</h2>
+        <section class="mb-10">
+            <h2>1. 프로젝트 개요 및 핵심 기술</h2>
             <div class="card">
-                <p class="text-gray-700">NVIDIA 교육 과정의 **캡스톤 프로젝트**로, GPU 텔레메트리(NVSMI)와 네트워크 패킷(PCAP)이라는 **두 가지 유형의 입력 데이터**를 받아, 유형에 따라 서로 다른 ML 모델로 라우팅하여 암호화폐 채굴 활동을 탐지하는 **MIMO(Multi-Input/Multi-Output) 비선형 파이프라인**을 완성했습니다.</p>
-                <div class="mt-4">
-                    <span class="tech-tag">캡스톤 프로젝트</span>
-                    <span class="tech-tag">MIMO</span>
-                    <span class="tech-tag">Triton Inference</span>
+                <p>NVIDIA 교육 과정의 **캡스톤 프로젝트**로, GPU 텔레메트리(NVSMI)와 네트워크 패킷(PCAP)이라는 **두 가지 이질적인 입력 데이터**를 동시에 받아 처리하는 **MIMO(Multi-Input/Multi-Output) 비선형 파이프라인**을 구축했습니다. 이를 통해 암호화폐 채굴과 같은 다중 보안 위협을 실시간으로 탐지했습니다.</p>
+
+                <h3 class="mt-4 mb-2">핵심 기술 역량</h3>
+                <div class="mt-2 flex flex-wrap">
+                    <span class="tech-tag">MIMO Architecture</span>
+                    <span class="tech-tag">RouterStage (Conditional Routing)</span>
+                    <span class="tech-tag">Triton Inference Integration</span>
+                    <span class="tech-tag">Metadata Tagging</span>
                 </div>
             </div>
-        </section>
-
-        <section class="mb-8">
-            <h2 class="section-title">기술적 도전 및 문제 해결 과정</h2>
-            <div class="card">
-                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. 이질적인 데이터 통합 처리 문제</h3>
-                <p class="text-gray-700">
-                    **도전:** GPU 로그와 네트워크 패킷이라는 두 개의 이질적인 데이터 소스를 하나의 파이프라인에서 처리해야 했습니다.
-                </p>
-                <p class="text-gray-700 mt-1">
-                    **해결:** `Pipeline` 객체에 **두 개의 독립적인 `FileSourceStage`**를 설정하여 멀티-입력을 구현했습니다. 각 소스 뒤에 **커스텀 메타데이터 태깅 스테이지**를 배치하여 메시지에 'NVSMI' 또는 'PCAP' 태그를 부여함으로써 데이터의 정체성을 명확히 했습니다.
-                </p>
-
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. 조건부 라우팅 및 다중 추론 구현</h3>
-                <p class="text-gray-700">
-                    **핵심 로직:** 태깅된 메타데이터를 기반으로 **`RouterStage`**를 사용하여 메시지를 NVSMI 전용 브랜치(XGBoost 모델 1)와 PCAP 전용 브랜치(XGBoost 모델 2)로 분기했습니다. 각 브랜치에는 **`TritonInferenceStage`**를 통해 해당 데이터에 최적화된 ML 모델 추론을 통합했습니다.
-                </p>
-                <p class="text-gray-700 mt-1">
-                    **성과:** 하나의 파이프라인에서 두 가지의 독립적인 보안 위협 탐지 로직이 병렬적으로 실행되는 **실전적인 다중 탐지 시스템**을 구현하여 Morpheus의 비선형 및 다중 입력 처리 능력을 완벽하게 입증했습니다.
-                </p>
-
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">3. 파이프라인 모니터링</h3>
-                <p class="text-gray-700">
-                    두 브랜치의 최종 출력을 다시 하나로 모아(add_edge로 연결) **`MonitorStage`**를 배치했습니다. 이를 통해 파이프라인 전체의 통합 처리량(throughput)을 모니터링하여 시스템의 성능을 지속적으로 측정했습니다.
-                </p>
+            
+            <div class="mt-8">
+                <p class="font-semibold text-gray-700 mb-2">Morpheus의 MIMO 파이프라인 구조 </p>
+                <img src="https://placehold.co/900x300/e65100/ffffff?text=Morpheus+MIMO+Pipeline+Visualization" alt="Morpheus MIMO 파이프라인 시각화" class="mx-auto rounded-lg shadow-md border border-gray-200">
             </div>
         </section>
 
-        <section>
-            <h2 class="section-title">API 키 및 코드 처리 방안</h2>
-            <div class="card bg-yellow-50 border border-yellow-300">
-                <p class="text-gray-700 font-semibold">
-                    이 프로젝트는 내부 모델 추론(Triton 서버 활용)에 집중했으며, 외부 API Key는 사용하지 않았습니다.
+        <section class="mb-10">
+            <h2>2. MIMO 파이프라인 흐름 시각화</h2>
+            
+            <div class="mimo-diagram">
+                <div class="input-group">
+                    <div class="input-box">Input 1: GPU 텔레메트리 (NVSMI)</div>
+                    <div class="input-box">Input 2: 네트워크 패킷 (PCAP)</div>
+                </div>
+                <div class="flow-line h-8"></div>
+                <p class="text-sm text-gray-600 mb-2 font-semibold">태깅 및 단일 스트림으로 통합</p>
+                <div class="flow-line h-8"></div>
+
+                <div class="router-box">
+                    RouterStage<br>(조건부 분기)
+                </div>
+                
+                <p class="text-sm text-gray-600 mt-4 mb-2 font-semibold">데이터 타입(Tag)에 따라 메시지 분기</p>
+                <div class="flow-line h-8"></div>
+                
+                <div class="output-group">
+                    <div class="output-box border-green-700 bg-green-50">
+                        <div class="output-box-title text-green-700">분기 1: NVSMI 전용 브랜치</div>
+                        <p class="text-sm text-gray-700">ML 모델 1 (GPU 로그 분석) 추론</p>
+                    </div>
+                    <div class="output-box border-purple-700 bg-purple-50">
+                        <div class="output-box-title text-purple-700">분기 2: PCAP 전용 브랜치</div>
+                        <p class="text-sm text-gray-700">ML 모델 2 (네트워크 패킷 분석) 추론</p>
+                    </div>
+                </div>
+                <div class="flow-line h-8"></div>
+                <p class="text-sm text-gray-600 mt-2 font-semibold">MonitorStage를 통한 최종 결과 통합 모니터링</p>
+            </div>
+        </section>
+
+        <section class="mb-10">
+            <h2>3. 기술적 도전 및 문제 해결 과정</h2>
+            <div class="card">
+                <h3 class="mb-2">3-1. 이질적인 데이터의 통합 처리</h3>
+                <p class="text-gray-700">
+                    **해결:** `Pipeline` 객체에 두 개의 독립적인 **`FileSourceStage`**를 설정하여 멀티-입력을 구현했습니다. 각 소스 뒤에 **커스텀 메타데이터 태깅 스테이지**를 배치하여 메시지에 'NVSMI' 또는 'PCAP' 태그를 부여함으로써 데이터의 정체성을 명확히 했습니다.
                 </p>
-                <p class="text-gray-700 mt-2">
-                    **코드 포메이션 대신:** **멀티-입력 및 비선형 구조 설계의 필요성**, **메타데이터 태깅을 통한 라우팅 제어 논리**, 그리고 **Triton을 통한 모델 통합 과정** 등 엔터프라이즈급 AI 시스템 설계 능력을 중심으로 기술 해석을 진행했습니다.
+
+                <h3 class="mt-6 mb-2">3-2. 다중 추론 및 조건부 라우팅</h3>
+                <p class="text-gray-700">
+                    **해결:** 태깅된 메타데이터를 기반으로 **`RouterStage`**를 사용하여 메시지를 두 개의 독립된 TritonInferenceStage (각기 다른 ML 모델 사용)로 분기했습니다. 이를 통해 하나의 파이프라인에서 **두 가지 독립적인 탐지 로직**을 병렬적으로 실행했습니다.
+                </p>
+
+                <h3 class="mt-6 mb-2">3-3. 파이프라인 모니터링 및 성능 검증</h3>
+                <p class="text-gray-700">
+                    두 브랜치의 최종 출력을 다시 하나로 모아 **`MonitorStage`**를 배치했습니다. 이를 통해 시스템의 통합 처리량(throughput)을 지속적으로 측정하고, 다중 위협 탐지 시스템의 성능을 검증했습니다.
                 </p>
             </div>
         </section>
 
         <footer class="text-center mt-8 text-gray-500 text-sm">
-            Morpheus 캡스톤 프로젝트 (MIMO Pipeline) 요약
+            문서 작성자: [작성자 이름] / 프로젝트: Morpheus 캡스톤 (MIMO Pipeline)
         </footer>
     </div>
 </body>
 </html>
-

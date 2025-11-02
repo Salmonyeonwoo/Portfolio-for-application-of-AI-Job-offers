@@ -3,108 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>예측 유지보수: Keras+TensorFlow LSTM 요약</title>
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-    <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap)" rel="stylesheet">
+    <title>예측 유지보수: Keras+TensorFlow LSTM을 활용한 시계열 예측</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            /* 1. 요청 사항: 배경색을 밝은 파란색 계열로 변경 */
-            background-color: #e6f0ff; 
+            /* 톤 통일을 위해 배경색을 전문적이고 차분한 색상으로 조정 */
+            background-color: #f4f7f9; 
             font-family: 'Noto Sans KR', sans-serif;
             line-height: 1.6;
             color: #333;
-            padding: 20px 0; 
+            padding: 30px 0; 
         }
         .container {
-            /* 2. 요청 사항: 콘텐츠 영역 가운데 정렬 */
             max-width: 1000px;
             margin: 0 auto; 
             background-color: #ffffff; 
             padding: 40px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
         }
         h1 {
-            color: #1a73e8; /* 구글 블루 */
-            border-bottom: 2px solid #e6f0ff;
-            padding-bottom: 10px;
+            color: #1a73e8;
+            border-bottom: 3px solid #e6f0ff;
+            padding-bottom: 15px;
             margin-top: 0;
+            font-size: 2.25rem; /* text-3xl */
         }
         h2 {
-            color: #3c4043; /* 구글 다크 그레이 */
-            margin-top: 25px;
+            color: #3c4043;
+            margin-top: 35px;
+            font-size: 1.75rem; /* text-2xl */
+            border-left: 5px solid #1a73e8;
+            padding-left: 10px;
         }
-        ul {
-            list-style-type: disc;
-            margin-left: 20px;
-            padding-left: 0;
+        h3 {
+            color: #0d47a1;
+            font-weight: 700;
+            margin-top: 20px;
         }
-        li {
-            margin-bottom: 10px;
+        p {
+            margin-bottom: 15px;
+            color: #4a5568;
         }
-        strong {
-            color: #202124;
+        .card {
+            background-color: #f7f9fc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .tech-tag {
+            display: inline-block;
+            background-color: #e3f2fd; /* Light Blue */
+            color: #1a73e8; /* Google Blue */
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        /* 시각화를 위한 CSS 추가 */
+        .diagram-box {
+            background-color: #ffffff;
+            border: 2px solid #1a73e8;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            color: #1a73e8;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .arrow {
+            font-size: 2rem;
+            color: #1a73e8;
+            margin: 10px 0;
+            text-align: center;
+            font-weight: 700;
+        }
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .flow-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px;
+            min-width: 150px;
+        }
+        .flow-item:not(:last-child):after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 30px;
+            border-right: 3px solid #1a73e8;
+            margin-top: 10px;
+            transform: rotate(90deg) translate(0px, 0px); /* 화살표 대체 */
+        }
+        .flow-container > .flow-item:not(:last-child):after {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 0;
+            border-top: 3px solid #1a73e8;
+            margin: 0 -10px;
+            position: relative;
+        }
+        .flow-container > .flow-item:not(:last-child) {
+            margin-right: 20px;
+        }
+        .flow-container > .flow-item:not(:last-child):after {
+            content: '→'; /* 간단한 화살표 */
+            border: none;
+            font-size: 2rem;
+            line-height: 0;
+            color: #1a73e8;
+        }
+        .flow-item:nth-child(2n) .diagram-box {
+            min-width: 250px; /* 중간 단계 박스 크기 키우기 */
+            border-style: dashed;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
 <body>
     <div class="container mx-auto">
         <header class="header">
-            <h1 class="text-3xl font-bold text-gray-800">예측 유지보수: Keras+TensorFlow LSTM을 활용한 시계열 예측 요약</h1>
-            <p class="text-gray-500 mt-1">프로젝트 과정 해석 및 기술 역량 상세 설명 (코드 제외)</p>
+            <h1 class="font-bold text-gray-800">예측 유지보수: Keras+TensorFlow LSTM을 활용한 시계열 예측</h1>
+            <p class="text-gray-500 mt-2">시계열 데이터의 장기적 추세 분석을 위한 딥러닝 모델 구축 프로젝트 요약</p>
         </header>
 
-        <section class="mb-8">
-            <h2 class="section-title">프로젝트 개요 및 목표</h2>
+        <section class="mb-10">
+            <h2 class="section-title">1. 프로젝트 개요 및 목표</h2>
             <div class="card">
-                <p class="text-gray-700">XGBoost와 달리, **시계열 데이터의 시간적 흐름(Time Sequence)**을 분석하여 미래 고장 가능성을 예측하는 **LSTM (Long Short-Term Memory)** 모델을 Keras+TensorFlow를 사용하여 구축했습니다. 이는 장기간의 데이터 추세를 파악하는 예측 유지보수 분야의 핵심 딥러닝 기법입니다.</p>
-                <div class="mt-4">
+                <p>본 프로젝트는 기존 XGBoost와 달리, 장비 센서 데이터와 같은 **시계열 데이터의 시간적 종속성(Time Dependency)**을 학습하여 미래 고장 시점을 예측하는 **LSTM (Long Short-Term Memory)** 딥러닝 모델을 Keras와 TensorFlow를 기반으로 구축하는 것을 목표로 했습니다.</p>
+                <p>핵심 기술은 LSTM 모델의 요구사항을 충족시키기 위해 2차원 데이터를 **시간적 흐름**이 포함된 3차원 시퀀스 형태로 효율적으로 변환하는 전처리 로직 구현 능력을 입증하는 것이었습니다.</p>
+
+                <div class="mt-4 flex flex-wrap">
                     <span class="tech-tag">Keras/TensorFlow</span>
                     <span class="tech-tag">LSTM RNN</span>
-                    <span class="tech-tag">시퀀스 데이터 변환</span>
+                    <span class="tech-tag">시계열 분석</span>
+                    <span class="tech-tag">GPU 최적화</span>
                 </div>
             </div>
         </section>
 
-        <section class="mb-8">
-            <h2 class="section-title">기술적 도전 및 문제 해결 과정</h2>
-            <div class="card">
-                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. 시퀀스 데이터 변환 문제 해결</h3>
-                <p class="text-gray-700">
-                    **도전:** 2차원 테이블 형태의 원본 시계열 데이터를 LSTM 모델이 요구하는 **3차원 시퀀스 데이터(`(samples, timesteps, features)`)** 형태로 변환해야 했습니다.
-                </p>
-                <p class="text-gray-700 mt-1">
-                    **해결:** **NumPy의 `reshape` 기능**과 **커스텀 데이터 생성 함수**를 사용하여, `sequence_length` (예: 과거 10일치 데이터)를 정의하고 이를 기반으로 2D 데이터를 3D 텐서로 변환하는 전처리 로직을 구현했습니다. 이 과정은 LSTM 모델의 정확한 입력 구조를 맞추는 데 핵심적이었습니다.
-                </p>
-
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. GPU 최적화 LSTM 모델 설계</h3>
-                <p class="text-gray-700">
-                    Keras와 TensorFlow를 사용하여 GPU 환경에 최적화된 **LSTM 레이어** 구조(유닛 수, 드롭아웃 설정)를 설계하고 훈련했습니다. 이는 대규모 시계열 데이터셋에서도 빠르게 모델을 반복 훈련할 수 있는 환경을 구축했음을 의미합니다.
-                </p>
-
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">3. 추세 분석 기반 예측</h3>
-                <p class="text-gray-700">
-                    모델의 예측은 단일 시점의 데이터가 아닌, **과거 일정 기간 동안의 데이터 추세**를 기반으로 이루어집니다. 이 모델을 통해 장기간의 경향성 변화가 고장 가능성에 미치는 영향을 분석하고, XGBoost와는 차별화된 예측 성능을 평가했습니다.
-                </p>
+        <section class="mb-10">
+            <h2 class="section-title">2. 시퀀스 데이터 변환 과정 (가시화)</h2>
+            <p>LSTM 모델은 시간 순서 정보를 담는 3차원 텐서 입력을 요구합니다. 2차원 데이터를 3차원으로 리쉐이핑하는 핵심 과정을 도식화했습니다.</p>
+            
+            <div class="flow-container">
+                <div class="flow-item">
+                    <div class="diagram-box">
+                        2D 원본 데이터<br>(Samples, Features)
+                    </div>
+                </div>
+                <div class="flow-item">
+                    <div class="diagram-box" style="min-width: 250px;">
+                        **전처리: 시퀀스 변환**<br>
+                        (`timesteps` 정의)<br>
+                        <span class="text-xs font-normal text-gray-500 mt-1">NumPy `reshape` 활용</span>
+                    </div>
+                </div>
+                <div class="flow-item">
+                    <div class="diagram-box">
+                        3D 입력 텐서<br>
+                        (Samples, Timesteps, Features)
+                    </div>
+                </div>
+                <div class="flow-item">
+                    <div class="diagram-box">
+                        LSTM 레이어 입력
+                    </div>
+                </div>
             </div>
+
+            <div class="mt-8">
+                <p class="font-semibold text-gray-700 mb-2">LSTM 모델 구조 개요 (시퀀스 처리 메커니즘)</p>
+                <img src="https://placehold.co/800x250/338c7f/ffffff?text=LSTM+Model+Architecture+Screenshot+(Time-Series+Focus)" alt="LSTM 모델 구조 개요 이미지" class="mx-auto rounded-lg shadow-md border border-gray-200">
+            </div>
+
         </section>
 
-        <section>
-            <h2 class="section-title">API 키 및 코드 처리 방안</h2>
-            <div class="card bg-yellow-50 border border-yellow-300">
-                <p class="text-gray-700 font-semibold">
-                    이 프로젝트는 Keras/TensorFlow를 사용한 딥러닝 모델 개발에 집중했으며 외부 API Key는 사용하지 않았습니다.
+        <section class="mb-10">
+            <h2 class="section-title">3. 기술적 도전 및 문제 해결 과정</h2>
+            <div class="card">
+                
+                <h3 class="mb-2">3-1. 3차원 시퀀스 데이터 구조화 로직 구현</h3>
+                <p class="text-gray-700">
+                    **도전:** 2차원 테이블 형태의 원본 데이터를 LSTM이 요구하는 **3차원 시퀀스 텐서 `(Samples, Timesteps, Features)`** 형태로 변환해야 하는 복잡한 전처리 과정을 설계해야 했습니다.
                 </p>
-                <p class="text-gray-700 mt-2">
-                    **코드 포메이션 대신:** **3차원 텐서로의 데이터 리쉐이핑 로직 구현**, **`sequence_length` 파라미터의 의미와 중요성**, 그리고 **순환 신경망(RNN)의 시계열 분석 원리** 등 딥러닝 기반 시계열 예측 능력을 중심으로 기술 해석을 진행했습니다.
+                <p class="text-gray-700 mt-1">
+                    **해결:** **NumPy 배열 슬라이싱** 및 **커스텀 데이터 생성 함수**를 구현하여 `sequence_length` (예: 과거 50일치 데이터)를 기반으로 시퀀스를 추출하고 3차원 텐서로 변환하는 전처리 로직을 완성했습니다. 이는 딥러닝 모델에 필요한 데이터 구조를 능동적으로 설계할 수 있는 역량을 보여줍니다.
+                </p>
+
+                <h3 class="mt-6 mb-2">3-2. GPU 최적화 LSTM 모델 설계</h3>
+                <p class="text-gray-700">
+                    Keras의 API를 활용하여 인코더-디코더 또는 다중 LSTM 레이어 구조를 설계하고, GPU 환경에 최적화된 **LSTM Layer** 및 **Dropout** 설정을 적용했습니다. 대규모 시계열 데이터셋에서도 모델을 효율적으로 반복 훈련할 수 있는 안정적인 환경을 구축했습니다.
+                </p>
+
+                <h3 class="mt-6 mb-2">3-3. 장기 추세 분석 기반 예측 성능 평가</h3>
+                <p class="text-gray-700">
+                    LSTM 모델은 단일 시점의 데이터가 아닌, **과거의 장기간 데이터 추세**를 종합적으로 학습하여 예측을 수행합니다. 이 모델을 통해 장기간의 패턴 변화가 고장 가능성에 미치는 영향을 분석하고, 전통적인 ML 모델(XGBoost)과는 차별화된 예측 성능 및 추세 분석 능력을 평가했습니다.
                 </p>
             </div>
         </section>
 
         <footer class="text-center mt-8 text-gray-500 text-sm">
-            예측 유지보수: Keras+TensorFlow LSTM 요약
+            문서 작성자: [작성자 이름] / 프로젝트: 예측 유지보수 LSTM
         </footer>
     </div>
 </body>
 </html>
-

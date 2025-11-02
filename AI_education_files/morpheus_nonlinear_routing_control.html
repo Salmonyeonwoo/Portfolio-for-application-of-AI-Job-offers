@@ -4,107 +4,229 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Morpheus 비선형 파이프라인 및 라우팅 제어 요약</title>
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-    <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap)" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            /* 1. 요청 사항: 배경색을 밝은 파란색 계열로 변경 */
-            background-color: #e6f0ff; 
+            background-color: #f4f7f9; 
             font-family: 'Noto Sans KR', sans-serif;
             line-height: 1.6;
             color: #333;
-            padding: 20px 0; 
+            padding: 30px 0; 
         }
         .container {
-            /* 2. 요청 사항: 콘텐츠 영역 가운데 정렬 */
             max-width: 1000px;
             margin: 0 auto; 
             background-color: #ffffff; 
             padding: 40px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
         }
         h1 {
-            color: #1a73e8; /* 구글 블루 */
-            border-bottom: 2px solid #e6f0ff;
-            padding-bottom: 10px;
+            color: #1a73e8;
+            border-bottom: 3px solid #e6f0ff;
+            padding-bottom: 15px;
             margin-top: 0;
+            font-size: 2.25rem;
         }
+        /* 레이아웃 변화: 섹션 제목을 중앙 정렬된 배지로 변경 */
         h2 {
-            color: #3c4043; /* 구글 다크 그레이 */
-            margin-top: 25px;
+            color: #ffffff;
+            background-color: #1a73e8;
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 9999px;
+            margin-top: 35px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
         }
-        ul {
-            list-style-type: disc;
-            margin-left: 20px;
-            padding-left: 0;
+        .section-header {
+            display: flex;
+            justify-content: center;
         }
-        li {
-            margin-bottom: 10px;
+        h3 {
+            color: #0d47a1;
+            font-weight: 700;
+            margin-top: 20px;
         }
-        strong {
-            color: #202124;
+        p {
+            margin-bottom: 15px;
+            color: #4a5568;
+        }
+        .card {
+            background-color: #f7f9fc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .tech-tag {
+            display: inline-block;
+            background-color: #e3f2fd; 
+            color: #1a73e8; 
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        /* 라우팅 다이어그램 CSS */
+        .routing-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+        .input-router-box {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 700;
+            width: 200px;
+            text-align: center;
+        }
+        .router-stage {
+            background-color: #1a73e8; /* Blue */
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50%; /* Diamond shape approximation */
+            transform: rotate(45deg);
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .router-text {
+            transform: rotate(-45deg);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .output-paths {
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+            margin-top: 10px;
+        }
+        .path-box {
+            width: 48%;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px dashed;
+        }
+        .path-success {
+            border-color: #4CAF50;
+            background-color: #e8f5e9;
+        }
+        .path-failure {
+            border-color: #c62828;
+            background-color: #ffebee;
+        }
+        .arrow-line {
+            height: 20px;
+            width: 2px;
+            background-color: #1a73e8;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
 <body>
     <div class="container mx-auto">
         <header class="header">
-            <h1 class="text-3xl font-bold text-gray-800">Morpheus 비선형 파이프라인 및 라우팅 제어</h1>
-            <p class="text-gray-500 mt-1">프로젝트 과정 해석 및 기술 역량 상세 설명 (코드 제외)</p>
+            <h1 class="font-bold text-gray-800">Morpheus 비선형 파이프라인 및 동적 라우팅 제어 요약</h1>
+            <p class="text-gray-500 mt-2">RouterStage를 활용한 조건부 데이터 분기 및 비선형 파이프라인 구축</p>
         </header>
 
-        <section class="mb-8">
-            <h2 class="section-title">프로젝트 개요 및 목표</h2>
+        <section class="mb-10">
+            <div class="section-header">
+                <h2>1. 프로젝트 개요 및 비선형 구조 선택</h2>
+            </div>
             <div class="card">
-                <p class="text-gray-700">Morpheus의 고급 기능인 **비선형 파이프라인 구축**과 `RouterStage`를 활용하여 데이터 메시지를 동적으로 분기하는 로직을 실습했습니다. 이는 단일 데이터 스트림을 조건에 따라 서로 다른 모델이나 분석 로직으로 보내는 데 필수적인 기술입니다.</p>
-                <div class="mt-4">
-                    <span class="tech-tag">Morpheus Pipeline</span>
-                    <span class="tech-tag">RouterStage</span>
-                    <span class="tech-tag">조건부 제어</span>
+                <p>본 프로젝트는 Morpheus의 `RouterStage`와 **비선형 파이프라인**을 활용하여 들어오는 데이터 메시지를 조건에 따라 **서로 다른 분석 경로**로 동적으로 분기하는 로직을 구현했습니다. 이는 단일 데이터 스트림에 대해 여러 ML 모델을 적용하거나, 조건부 로그 처리가 필요할 때 필수적인 고급 파이프라인 제어 기술입니다.</p>
+
+                <h3 class="mt-6 mb-2">핵심 기술 역량</h3>
+                <div class="mt-2 flex flex-wrap">
+                    <span class="tech-tag">Morpheus RouterStage</span>
+                    <span class="tech-tag">Non-Linear Pipeline</span>
+                    <span class="tech-tag">Dynamic Key Function</span>
+                    <span class="tech-tag">Message Graph Control</span>
+                </div>
+            </div>
+            
+            <div class="mt-8">
+                <p class="font-semibold text-gray-700 mb-2">Morpheus의 비선형 파이프라인 그래프 구조</p>
+                <img src="https://placehold.co/900x300/1a73e8/ffffff?text=Morpheus+Non-Linear+Pipeline+Graph" alt="Morpheus 비선형 파이프라인 그래프 이미지 스크린샷" class="mx-auto rounded-lg shadow-md border border-gray-200">
+            </div>
+        </section>
+
+        <section class="mb-10">
+            <div class="section-header">
+                <h2>2. 동적 라우팅 로직 시각화</h2>
+            </div>
+            <p class="text-center">메시지의 페이로드(cuDF 데이터)를 기반으로 라우팅 키를 반환하여 메시지 흐름을 동적으로 제어합니다.</p>
+            
+            <div class="routing-diagram">
+                <div class="input-router-box">
+                    입력 메시지 (로그 데이터)
+                </div>
+                <div class="arrow-line"></div>
+                
+                <div class="router-stage">
+                    <div class="router-text">RouterStage</div>
+                </div>
+                
+                <p class="text-sm text-gray-600 font-semibold mb-4">커스텀 `key_fn` 함수 실행: Data.status 값 확인</p>
+
+                <div class="output-paths">
+                    <div class="path-box path-success">
+                        <h3 class="text-xl font-bold text-green-700 mt-0">라우팅 경로: 'success'</h3>
+                        <p class="text-sm text-gray-700">로그인 성공 → **표준 감사/모니터링** 파이프라인으로 전송</p>
+                    </div>
+                    <div class="path-box path-failure">
+                        <h3 class="text-xl font-bold text-red-700 mt-0">라우팅 경로: 'failure'</h3>
+                        <p class="text-sm text-gray-700">로그인 실패 → **심층 이상 탐지** 파이프라인으로 전송</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="mb-8">
-            <h2 class="section-title">기술적 도전 및 문제 해결 과정</h2>
+        <section class="mb-10">
+            <div class="section-header">
+                <h2>3. 기술적 도전 및 해결 방안</h2>
+            </div>
             <div class="card">
-                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. 비선형 데이터 흐름 설계</h3>
+                
+                <h3 class="mb-2">3-1. 비선형 데이터 흐름 설계 능력</h3>
                 <p class="text-gray-700">
-                    일반적인 `LinearPipeline`은 데이터를 한 방향으로만 처리합니다. 저는 복잡한 분기/결합 구조를 위해 **`Pipeline` 클래스**를 사용하여 메시지 흐름이 자유로운 그래프 구조를 정의했습니다. 이를 통해 파이프라인의 유연성을 확보하고 동적 제어 로직을 삽입할 준비를 마쳤습니다.
-                </p>
-
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. 조건 기반 동적 라우팅 구현</h3>
-                <p class="text-gray-700">
-                    **도전:** 들어오는 메시지의 데이터(로그인 상태)를 실시간으로 확인하고 '성공'과 '실패' 메시지를 분리해야 했습니다.
+                    **도전:** 선형 파이프라인만으로는 복잡한 비즈니스 로직(조건부 분기)을 처리할 수 없었습니다.
                 </p>
                 <p class="text-gray-700 mt-1">
-                    **해결:** `RouterStage`를 사용하고, 메시지의 페이로드(cuDF 데이터)를 검사하여 라우팅 키를 반환하는 **커스텀 `key_fn` 함수**를 작성했습니다. 이 함수가 데이터의 `status` 컬럼 값을 기반으로 'success' 또는 'failure' 라우팅 키를 생성하여 메시지를 적절한 다운스트림 브랜치로 분기하도록 논리를 구축했습니다.
+                    **해결:** `LinearPipeline` 대신 일반 **`Pipeline` 클래스**를 사용하여 메시지 흐름이 자유로운 그래프 구조를 정의하고, `RouterStage`를 핵심 노드로 삽입하여 유연성을 확보했습니다.
                 </p>
 
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">3. 파이프라인 정확성 검증</h3>
+                <h3 class="mt-6 mb-2">3-2. 동적 라우팅 로직 (key_fn) 구현</h3>
                 <p class="text-gray-700">
-                    라우팅된 메시지가 올바른 브랜치를 통과했는지 확인하기 위해, 각 브랜치(Success/Failure)의 최종 출력 메시지에 **`processing_branch`** 메타데이터를 추가했습니다. 최종 Sink에서 이 메타데이터를 확인하여 라우팅이 정확하게 이루어졌는지 검증하는 **유닛 테스트 개념**을 적용했습니다.
+                    라우터 스테이지가 메시지를 어떻게 분기할지 결정하는 **핵심 함수(`key_fn`)**를 구현하는 것이 중요했습니다.
                 </p>
-            </div>
-        </section>
-
-        <section>
-            <h2 class="section-title">API 키 및 코드 처리 방안</h2>
-            <div class="card bg-yellow-50 border border-yellow-300">
-                <p class="text-gray-700 font-semibold">
-                    이 프로젝트는 NVIDIA Morpheus 프레임워크의 핵심 로직을 다루었으므로, 외부에 노출될 수 있는 API Key를 사용하지 않았습니다. 모든 데이터 처리는 GPU 메모리 내에서 폐쇄적이고 안전하게 이루어졌습니다.
-                </p>
-                <p class="text-gray-700 mt-2">
-                    **코드 포메이션 대신:** 구체적인 Python 코드는 제외하고, 위에 설명된 **`RouterStage`의 역할, `key_fn` 함수의 논리적 설계, 비선형 구조 선택의 당위성** 등 프로젝트의 핵심 **기술 해석**에 집중했습니다.
+                <p class="text-gray-700 mt-1">
+                    **해결:** `on_data` 메서드와 유사하게 작동하는 `key_fn`을 작성하여, 들어온 메시지의 `status` 컬럼을 검사하고 그 결과를 기반으로 'success' 또는 'failure'라는 **라우팅 키(Key)**를 동적으로 반환하도록 논리를 구축했습니다.
                 </p>
             </div>
         </section>
 
         <footer class="text-center mt-8 text-gray-500 text-sm">
-            Morpheus Advanced Pipelines (RouterStage) 요약
+            문서 작성자: [작성자 이름] / 프로젝트: Morpheus 비선형 라우팅 제어
         </footer>
     </div>
 </body>
 </html>
-

@@ -46,31 +46,31 @@ body {
 const IMAGE_FOLDER = 'Slides%20'; 
 const IMAGE_PREFIX = 'slide'; 
 const IMAGE_EXTENSION = 'png'; 
-const MAX_SLIDES = 50; // 최대 50장까지 감지 
-  
-let slides = []; 
-let currentSlideIndex = 0; 
+const MAX_SLIDES = 50;
+
+let slides = [];
+let loadedCount = 0;
+let currentSlideIndex = 0;
+
 const slideImage = document.getElementById('slide-image'); 
 const counter = document.getElementById('counter'); 
 const progressBar = document.getElementById('progress-bar'); 
 const prevButton = document.getElementById('prev'); 
 const nextButton = document.getElementById('next'); 
 const errorMessage = document.getElementById('error-message');
-const errorPath = document.getElementById('error-path');
 
 for (let i = 1; i <= MAX_SLIDES; i++) {
   const path = `${IMAGE_FOLDER}${IMAGE_PREFIX}${i}.${IMAGE_EXTENSION}`;
   const img = new Image();
   
   img.onload = () => {
-    Slides.push({ index: i, path: path });
+    slides.push({ index: i, path: path });
     loadedCount++;
     checkAllLoaded();
   };
   
   img.onerror = () => {
     loadedCount++;
-    // 로드 실패 파일 표시 (선택 사항)
     console.warn(`Slide not found: ${path}`);
     checkAllLoaded();
   };
@@ -78,38 +78,34 @@ for (let i = 1; i <= MAX_SLIDES; i++) {
   img.src = path;
 }
 
-// --- 모든 이미지 로드 후 처리 ---
 function checkAllLoaded() {
-  if (loadedCount === MAX_SLIDES || loadedCount === Slides.length + (MAX_SLIDES - Slides.length)) {
-    // 번호 기준 오름차순 정렬
-    slides = Slides.sort((a, b) => a.index - b.index).map(item => item.path);
+  if (loadedCount === MAX_SLIDES) {
+    slides.sort((a,b) => a.index - b.index);
     if (slides.length > 0) {
       showSlide(0);
     } else {
-      errorMessage.style.display = 'block';
+      errorMessage.style.display = 'flex';
       errorMessage.textContent = "No slides found!";
     }
   }
 }
 
-// --- 슬라이드 표시 함수 ---
 function showSlide(idx) {
   if (idx < 0 || idx >= slides.length) return;
   currentSlideIndex = idx;
-  slideImage.src = slides[idx];
-  counter.textContent = `${idx + 1} / ${slides.length}`;
-  progressBar.value = ((idx + 1) / slides.length) * 100;
+  slideImage.src = slides[idx].path;
+  counter.textContent = `${idx+1} / ${slides.length}`;
+  progressBar.style.width = `${((idx+1)/slides.length)*100}%`;
 }
 
-function nextSlide(){ showSlide(currentSlideIndex+1); }
-function prevSlide(){ showSlide(currentSlideIndex-1); }
+prevButton.onclick = () => showSlide(currentSlideIndex-1);
+nextButton.onclick = () => showSlide(currentSlideIndex+1);
 
-nextButton.addEventListener('click', nextSlide);
-prevButton.addEventListener('click', prevSlide);
 document.addEventListener('keydown', e => {
-  if(e.key==='ArrowRight'||e.key===' ') { e.preventDefault(); nextSlide(); }
-  if(e.key==='ArrowLeft') { e.preventDefault(); prevSlide(); }
+  if(e.key==='ArrowRight'||e.key===' ') { e.preventDefault(); nextButton.click(); }
+  if(e.key==='ArrowLeft') { e.preventDefault(); prevButton.click(); }
 });
+
 </script>
 
 </body>

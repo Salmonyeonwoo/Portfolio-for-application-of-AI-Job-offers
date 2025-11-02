@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI/ML Core Projects Portfolio Summary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* GitHub Dark Mode Background */
+            color: #c9d1d9; /* Light text color */
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .slide {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            scroll-snap-align: start;
+            padding: 40px 20px;
+        }
+        .slider-container {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+        .card {
+            background-color: #161b22; /* Slightly Lighter Dark Background */
+            border: 1px solid #30363d;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: default;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+        }
+        .key-point-icon {
+            color: #58a6ff; /* Blue color for focus */
+        }
+        .api-table th {
+            background-color: #30363d;
+            color: #f0f6f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+
+        <!-- Slide 1: Main Title & Security Summary -->
+        <div id="slide1" class="slide bg-gray-900">
+            <div class="card p-12 max-w-4xl text-center rounded-xl">
+                <h1 class="text-5xl font-extrabold text-[#79c0ff] mb-4">
+                    AI/ML End-to-End System Development Portfolio
+                </h1>
+                <p class="text-xl text-gray-400 mb-8">
+                    Summary of Practical AI Projects using NVIDIA Riva, PyTorch, and NGC
+                </p>
+                <div class="bg-yellow-900/50 border border-yellow-700/50 p-6 rounded-lg">
+                    <h2 class="text-2xl font-bold text-yellow-300 mb-3">
+                        🎯 Core Security/Copyright Policy Summary
+                    </h2>
+                    <p class="text-lg text-yellow-200">
+                        NGC API Key, Riva Server URI, and Competition Submit Key were all securely handled using **Environment Variables or Local Server Addresses**, with no sensitive information hardcoded directly into the files. (Git history cleaned)
+                    </p>
+                </div>
+                <p class="text-sm mt-8 text-gray-500">
+                    Scroll down to view the next project slides.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 2: RIVA ASR Pipeline and NGC Resource Management -->
+        <div id="slide2" class="slide">
+            <div class="card p-10 max-w-5xl rounded-xl w-full">
+                <div class="flex items-center mb-6">
+                    <span class="text-4xl key-point-icon mr-4">🗣️</span>
+                    <h2 class="text-3xl font-bold text-[#58a6ff]">
+                        Project 1: RIVA ASR Pipeline and NGC Resource Management
+                    </h2>
+                </div>
+                <p class="text-gray-400 mb-6">
+                    Establishment of a Real-Time Automatic Speech Recognition (ASR) system based on server-client architecture and AI resource management via NGC.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-300 mb-3 border-b border-gray-700 pb-2">
+                            ⚙️ Core Technology & Role
+                        </h3>
+                        <ul class="space-y-2 text-gray-400 text-base">
+                            <li class="flex items-start">
+                                <span class="key-point-icon mr-2 mt-1">•</span>
+                                <span>**NGC CLI & NGC API Key**: Managed authentication for downloading proprietary AI models and resources.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="key-point-icon mr-2 mt-1">•</span>
+                                <span>**Riva gRPC API**: Sent ASR inference requests to a local container (localhost:50051).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="key-point-icon mr-2 mt-1">•</span>
+                                <span>**NeMo Model**: Implemented End-to-End ASR and optimized accuracy with ITN post-processing.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="key-point-icon mr-2 mt-1">•</span>
+                                <span>**Docker Container**: Established the deployment and operational environment for the Riva server.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-300 mb-3 border-b border-gray-700 pb-2">
+                            🌟 Practical Applications
+                        </h3>
+                        <ul class="space-y-2 text-gray-400 text-base">
+                            <li class="flex items-start">
+                                <span class="key-point-icon mr-2 mt-1">✓</span>
+                                <span>**Conversational AI Services**: Built large-scale real-time speech processing systems (e.g., call center automation, live meeting transcription).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="key-point-icon mr-2 mt-1">✓</span>
+                                <span>**MLOps Pipeline**: Securely deployed and managed models and datasets in an enterprise environment.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-sm bg-gray-800 p-4 rounded-lg">
+                    <p class="font-mono text-gray-400"># Riva Client Core Logic (Python Abstraction)</p>
+                    <pre class="whitespace-pre-wrap text-green-300">auth = riva.client.Auth(uri='localhost:50051')
+riva_asr = riva.client.ASRService(auth)
+response = riva_asr.recognize(audio_data, config)
+<span class="text-red-300"># -> Real-time audio data conversion and transmission</span></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: RIVA QA System Integration & Evaluation (Conversational AI) -->
+        <div id="slide3" class="slide">
+            <div class="card p-10 max-w-5xl rounded-xl w-full">
+                <div class="flex items-center mb-6">
+                    <span class="text-4xl key-point-icon mr-4">🤖</span>
+                    <h2 class="text-3xl font-bold text-[#58a6ff]">
+                        Project 2: RIVA QA System Integration & Evaluation (Virtual Assistant)
+                    </h2>
+                </div>
+                <p class="text-gray-400 mb-6">
+                    Built an End-to-End Speech-to-Speech Conversational AI Assistant integrating ASR, QA, and TTS.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-300 mb-3 border-b border-gray-700 pb-2">
+                            ⚙️ Core Technology & Role
+                        </h3>
+                        <ul class="space-y-2 text-gray-400 text-base">
+                            <li class="flex items-start">
+                                <span class="key-point-icon mr-2 mt-1">•</span>
+                                <span>**ASR → QA → TTS Pipeline**: Implemented sequential linkage from voice input to voice response.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="key-point-icon mr-2 mt-1">•</span>
+                                <span>**Riva QA Service**: Used a BERT-based Extractive QA model to extract answers from knowledge documents.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="key-point-icon mr-2 mt-1">•</span>
+                                <span>**Riva TTS Service**: Converted QA response text into high-quality synthesized speech.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-300 mb-3 border-b border-gray-700 pb-2">
+                            🌟 Practical Applications
+                        </h3>
+                        <ul class="space-y-2 text-gray-400 text-base">
+                            <li class="flex items-start">
+                                <span class="key-point-icon mr-2 mt-1">✓</span>
+                                <span>**Domain-Specific QA**: Extracted precise answer spans within knowledge domains (e.g., call centers, educational chatbots).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="key-point-icon mr-2 mt-1">✓</span>
+                                <span>**Voice Interface**: Services requiring essential voice input/output (e.g., navigation, kiosks).</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-sm bg-gray-800 p-4 rounded-lg">
+                    <p class="font-mono text-gray-400"># End-to-End Pipeline (Abstraction)</p>
+                    <pre class="whitespace-pre-wrap text-green-300">transcript = asr_predict(audio_sample)
+dm_answer = dm_predict(transcript, knowledge_context) <span class="text-red-300"># Answer extraction</span>
+synth_audio = tts_predict(dm_answer)
+<span class="text-red-300"># -> Play final synthesized audio</span></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: CNN Image Classification & Model Optimization -->
+        <div id="slide4" class="slide">
+            <div class="card p-10 max-w-5xl rounded-xl w-full">
+                <div class="flex items-center mb-6">
+                    <span class="text-4xl key-point-icon mr-4">🖼️</span>
+                    <h2 class="text-3xl font-bold text-[#58a6ff]">
+                        Project 3: CNN Image Classification & Model Optimization
+                    </h2>
+                </div>
+                <p class="text-gray-400 mb-6">
+                    Designed a custom PyTorch-based CNN model and optimized it for a competition (AIFactory) submission environment.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-300 mb-3 border-b border-gray-700 pb-2">
+                            ⚙️ Core Technology & Role
+                        </h3>
+                        <ul class="space-y-2 text-gray-400 text-base">
+                            <li class="flex items-start">
+                                <span class="key-point-icon mr-2 mt-1">•</span>
+                                <span>**PyTorch CNN Design**: Configured convolution layers, pooling, and FC layers by inheriting `nn.Module`.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="key-point-icon mr-2 mt-1">•</span>
+                                <span>**PyTorch CUDA**: Enabled GPU-accelerated training using `model.to(device)`.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="key-point-icon mr-2 mt-1">•</span>
+                                <span>**Environment Optimization**: Packaged the model for a specific CUDA version and implemented a version with reduced CPU usage.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-300 mb-3 border-b border-gray-700 pb-2">
+                            🌟 Practical Applications
+                        </h3>
+                        <ul class="space-y-2 text-gray-400 text-base">
+                            <li class="flex items-start">
+                                <span class="key-point-icon mr-2 mt-1">✓</span>
+                                <span>**Computer Vision**: Developed image classification models (e.g., manufacturing defect inspection, medical image analysis).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="key-point-icon mr-2 mt-1">✓</span>
+                                <span>**AI Model Deployment**: Mastered the model verification and packaging process via external validation platforms (AIFactory) submission.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-sm bg-gray-800 p-4 rounded-lg">
+                    <p class="font-mono text-gray-400"># CNN Model Definition (PyTorch Abstraction)</p>
+                    <pre class="whitespace-pre-wrap text-green-300">class SimpleCNN(nn.Module):
+    ... (Convolution layers, Pooling, FC layers)
+    def forward(self, x):
+        ... (Layer passing logic)
+        return x
+<span class="text-red-300"># -> Model definition and AIFactory submission</span></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Project Map & Conclusion -->
+        <div id="slide5" class="slide bg-gray-900">
+            <div class="card p-12 max-w-4xl text-center rounded-xl">
+                <h2 class="text-4xl font-bold text-[#79c0ff] mb-6">
+                    Project Competency Summary
+                </h2>
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div class="p-4 bg-[#238636]/50 rounded-lg">
+                        <span class="text-4xl mb-2 block">🖥️</span>
+                        <p class="font-semibold">MLOps/Deployment</p>
+                        <p class="text-sm text-gray-300">NGC, Docker, CUDA Environment Readiness</p>
+                    </div>
+                    <div class="p-4 bg-[#b73e00]/50 rounded-lg">
+                        <span class="text-4xl mb-2 block">💬</span>
+                        <p class="font-semibold">Conversational AI</p>
+                        <p class="text-sm text-gray-300">Riva ASR/QA/TTS E2E Pipeline</p>
+                    </div>
+                    <div class="p-4 bg-[#8957e5]/50 rounded-lg">
+                        <span class="text-4xl mb-2 block">🔬</span>
+                        <p class="font-semibold">Model Design/Optimization</p>
+                        <p class="text-sm text-gray-300">PyTorch CNN, NeMo Model Utilization</p>
+                    </div>
+                </div>
+                <p class="text-lg mt-8 text-gray-400">
+                    This portfolio demonstrates end-to-end practical ability to design, develop, optimize, and securely deploy GPU-based AI services.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

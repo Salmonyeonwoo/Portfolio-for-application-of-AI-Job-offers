@@ -1,0 +1,1122 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI K-Culture Scripter Policy Proposal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Using Merriweather for titles and DM Sans for body text -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&amp;family=DM+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* 1. THE SETUP */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #e2e8f0; /* Light gray background for the page */
+            display: grid;
+            gap: 20px;
+            grid-template-columns: 1fr;
+            margin: 0;
+            min-height: 100vh;
+            padding: 20px 0;
+            place-items: center;
+            font-family: 'DM Sans', sans-serif; /* Default body font */
+        }
+
+        .slide-container {
+            align-items: center;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 720px;
+            justify-content: center;
+            overflow: hidden;
+            padding: 60px;
+            position: relative;
+            width: 1280px;
+            /* Default light theme */
+            background-color: #f3f0df; /* Cream background */
+            color: #1e293b; /* Dark text */
+        }
+
+        /* 1.1 BACKGROUND STYLING */
+        .slide-container::before {
+            content: '';
+            height: 100%;
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            z-index: 0;
+        }
+
+        .slide-container > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 2. CONSISTENT TYPOGRAPHY */
+
+        /* Headings Font */
+        .slide-container h1,
+        .slide-container h2,
+        .slide-container h3,
+        .slide-container .quote-layout blockquote {
+            font-family: 'Merriweather', serif; /* Serif font for titles */
+            font-weight: 700;
+            margin: 0;
+        }
+
+        /* Body Text Font */
+        .slide-container p,
+        .slide-container li,
+        .slide-container .subtitle,
+        .slide-container .number-label,
+        .slide-container .legend li,
+        .slide-container .chart-summary,
+        .slide-container .bar .label,
+        .slide-container th,
+        .slide-container td,
+        .slide-container .quote-layout cite,
+        .slide-container .bleed-text-side p {
+            font-family: 'DM Sans', sans-serif; /* Sans-serif for body */
+            color: #334155; /* Slightly softer dark text */
+        }
+
+        /* Consistent Font Sizes */
+        .slide-container h1 {
+            font-size: 70px;
+            line-height: 1.1;
+        }
+
+        .slide-container .slide-title { /* This is an h2 */
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-align: left;
+            width: 100%;
+            color: #005088; /* Blue for titles */
+        }
+
+        .slide-container h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #005088; /* Blue for subtitles */
+        }
+
+        /* Unified body text size */
+        .slide-container p,
+        .slide-container li,
+        .slide-container .subtitle,
+        .slide-container .legend li,
+        .slide-container .chart-summary,
+        .slide-container .bar .label,
+        .slide-container th,
+        .slide-container td,
+        .slide-container .bleed-text-side p {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .slide-container .subtitle {
+            font-size: 22px;
+            font-weight: 400;
+            margin: 20px auto;
+        }
+
+        .slide-container .content-area {
+            align-items: center;
+            display: flex;
+            flex-grow: 1;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* 3. LAYOUT DEFINITIONS */
+
+        /* Title_Slide */
+        .title-layout {
+            text-align: center;
+        }
+        /* Dark Theme Override for Title */
+        .slide-container.dark-theme {
+            background-color: #005088; /* Deep Blue background */
+        }
+        .dark-theme h1,
+        .dark-theme .subtitle {
+            color: #FFFFFF; /* White text */
+        }
+
+        /* Two_Column layouts */
+        .two-column {
+            align-items: flex-start;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            width: 100%;
+        }
+
+        /* Two_Column_Tiled_Text */
+        .two-column.tiled {
+            align-items: stretch;
+        }
+        .two-column.tiled > div {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            border: 1px solid #d1dce5;
+            padding: 40px;
+        }
+        .two-column.tiled h3 {
+            margin-top: 0;
+        }
+
+        .two-column ul {
+            list-style: disc;
+            margin: 0;
+            padding-left: 25px;
+        }
+        .two-column li {
+            margin-bottom: 15px;
+        }
+
+        /* Image_Right_Text_Left */
+        .image-wrapper {
+            border-radius: 12px;
+            height: 400px;
+            overflow: hidden;
+            width: 100%;
+            border: 1px solid #d1dce5;
+        }
+        .image-wrapper img {
+            height: 100%;
+            object-fit: cover;
+            width: 100%;
+        }
+        .two-column .image-wrapper img {
+            object-fit: contain; /* Use contain for charts/diagrams */
+        }
+
+        /* Tiled_Text_With_Icons */
+        .tiled-content {
+            align-items: stretch;
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            width: 100%;
+        }
+        .tile {
+            align-items: flex-start; /* Align text left */
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            border: 1px solid #d1dce5;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            justify-content: flex-start;
+            padding: 30px;
+            text-align: left;
+        }
+        .tile .icon {
+            color: #005088; /* Blue icon */
+            font-size: 40px;
+            margin-bottom: 20px;
+            /* Icon styling */
+            background-color: #e0e8f0;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tile h3 {
+            margin-top: 0;
+        }
+        .tile p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        /* Quote */
+        .quote-layout {
+            text-align: center;
+            width: 80%;
+        }
+        .quote-layout blockquote {
+            color: #1e293b;
+            font-size: 40px; /* Slightly smaller for policy quote */
+            font-weight: 700;
+            line-height: 1.4;
+            margin: 0 0 30px 0;
+            padding: 0 40px;
+            position: relative;
+        }
+        .quote-layout blockquote::before,
+        .quote-layout blockquote::after {
+            color: #aab8c3; /* Softer quote marks */
+            content: '"';
+            font-size: 80px;
+            line-height: 0;
+            position: absolute;
+        }
+        .quote-layout blockquote::before {
+            left: -10px;
+            top: 20px;
+        }
+        .quote-layout blockquote::after {
+            bottom: 0px;
+            right: -10px;
+        }
+        .quote-layout cite {
+            color: #334155;
+            font-size: 18px;
+            font-style: normal;
+        }
+
+        /* Highlighted_Numbers */
+        .highlight-numbers-layout > div:first-child {
+            flex: 0 0 40%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #005088; /* Blue background */
+            border-radius: 12px;
+            color: #FFFFFF;
+            padding: 40px;
+        }
+        .highlight-numbers-layout .number {
+            color: #FFFFFF; /* White text */
+            font-size: 60px; /* Smaller for text */
+            font-weight: 700;
+            font-family: 'Merriweather', serif;
+            line-height: 1.2;
+        }
+        .highlight-numbers-layout .number-label {
+            font-size: 20px;
+            font-weight: 400;
+            color: #e0e8f0;
+        }
+        .highlight-numbers-layout > div:last-child {
+            padding-left: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .highlight-numbers-layout p, .highlight-numbers-layout li {
+            font-size: 20px;
+            line-height: 1.6;
+        }
+
+        /* Bleed_Image_Right */
+        .slide-container.bleed-image-layout {
+            align-items: start;
+            display: grid;
+            gap: 50px;
+            grid-template-columns: 1fr 1fr;
+            padding: 0;
+            background-color: #f3f0df; /* Cream background */
+        }
+        .slide-container.bleed-image-layout > .content-container {
+            padding: 60px 0 60px 60px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .slide-container.bleed-image-layout > .image-container {
+            height: 100%;
+            overflow: hidden;
+            width: 100%;
+        }
+        .slide-container.bleed-image-layout img.bleed-image-side {
+            border-radius: 0 8px 8px 0;
+            height: 100%;
+            max-width: 100%;
+            max-height: 720px;
+            object-fit: cover;
+            object-position: center;
+            width: 100%;
+        }
+        .slide-container.bleed-image-layout .bleed-text-side {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-grow: 1;
+        }
+        .slide-container.bleed-image-layout .bleed-text-side p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        /* Table */
+        .table-layout {
+            width: 100%;
+        }
+        .table-layout table {
+            border-collapse: collapse;
+            width: 100%;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .table-layout th,
+        .table-layout td {
+            border-bottom: 1px solid #d1dce5;
+            padding: 16px 20px;
+            text-align: left;
+        }
+        .table-layout th {
+            background-color: #e0e8f0; /* Light blue header */
+            color: #005088;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .table-layout td {
+            font-size: 16px;
+        }
+        .table-layout tr:last-child td {
+            border-bottom: none;
+        }
+        .table-layout .w-20 { width: 20%; }
+        .table-layout .w-25 { width: 25%; }
+        .table-layout .w-55 { width: 55%; }
+
+        /* Q&A */
+        .qa-layout {
+            text-align: center;
+            width: 100%;
+            align-self: center;
+        }
+        .qa-layout h2 {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: #005088;
+        }
+        .qa-layout p {
+            font-size: 22px;
+            color: #334155;
+        }
+        .qa-layout .contact-info {
+            color: #334155;
+            font-size: 20px;
+            margin-top: 40px;
+        }
+
+        /* Utility */
+        .slide-container li strong {
+            color: #005088; /* Blue for strong text */
+            font-weight: 700;
+        }
+    </style>
+<style>
+  .attribution-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .attribution-list__item {
+    align-items: center;
+    border-bottom: 1px solid #757575;
+    display: grid;
+    gap: 25px;
+    grid-template-columns: 90px 1fr;
+    padding: 15px 0;
+  }
+  .attribution-list__item:last-child {
+    border-bottom: none;
+  }
+  .attribution-list__item .attribution__thumbnail {
+    background-color: #f1f5f9;
+    height: 50px;
+    width: 90px;
+  }
+  .attribution__thumbnail .attribution__thumbnail__image {
+    border-radius: 8px;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+  .attribution__details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .attribution__details .attribution__raw-url {
+    color: inherit;
+    font-size: 13px;
+    margin: 0;
+    word-break: break-all;
+  }
+  .attribution__details .attribution__title {
+    color: inherit;
+    font-size: 16px;
+    margin: 0;
+  }
+  .attribution__details .attribution__title > .attribution__link {
+    color: #4f46e5;
+    text-decoration: none;
+  }
+</style><style>
+  /* The container that fills available space. It's the positioning context. */
+  #slideshow-holder {
+      position: relative;
+      flex-grow: 1; /* Replaces flex-grow Tailwind class for clarity */
+      width: 100%;
+      padding: 1rem; /* Replaces p-4 Tailwind class */
+  }
+
+  /* The element that is scaled and centered. */
+  #slideshow-wrapper {
+      width: 1280px;
+      height: 720px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-origin: center;
+      transform: translate(-50%, -50%) scale(var(--scale-factor, 1));
+      transition: transform 0.3s ease-in-out;
+      /* Visual styles moved here from the holder */
+      border-radius: 0.5rem;
+      box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+      overflow: hidden;
+  }
+
+  /* Update slide container styles */
+  .slide-container {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease-in-out;
+    }
+
+  /* Make the active slide visible */
+  .slide-container.active {
+      opacity: 1;
+      pointer-events: auto;
+  }
+</style><script src="https://cdn.tailwindcss.com"></script><script>
+  tailwind.config = { darkMode: 'class', }
+</script></head>
+<body class="bg-gray-100 dark:bg-gray-900 flex flex-col h-screen transition-colors duration-300">
+
+    <!-- Header and Controls Wrapper (Simplified) -->
+    <div id="nav-controls" class="relative flex-shrink-0 w-full flex justify-center items-center p-4">
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" class="absolute top-4 right-4 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm p-2 rounded-full shadow-md text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-all duration-300 z-20">
+            <svg id="theme-toggle-dark-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 5.05a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414l-.707-.707zM5 10a1 1 0 01-1-1H3a1 1 0 110-2h1a1 1 0 011 1zm4.95-4.95a1 1 0 011.414 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+        </button>
+
+        <!-- Slide Counter -->
+        <span id="slide-counter" class="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-medium text-gray-600 dark:text-gray-400"></span>
+
+        <!-- Navigation Buttons -->
+        <div class="flex items-center space-x-2">
+            <button id="prev-slide" class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 p-2 rounded-md transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-md">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            <button id="next-slide" class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 p-2 rounded-md transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-md">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- SLIDESHOW HOLDER AND WRAPPER -->
+    <div id="slideshow-holder">
+        <div id="slideshow-wrapper">
+            <!-- Slide 1: Title_Slide -->
+            <div class="slide-container dark-theme active" id="slide1">
+                <div class="title-layout">
+                    <h1 style="font-size: 64px;">The AI K-Culture Scripter Platform</h1>
+                    <p class="subtitle" style="max-width: 900px;">A Strategic Blueprint for Converting Passive K-Content Viewing into Active Global Economic Output</p>
+                </div>
+            </div>
+
+            <!-- Slide 2: Executive Summary (Image_Right_Text_Left) -->
+            <div class="slide-container" id="slide2">
+                <h2 class="slide-title">Executive Summary: The Core Inefficiency</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <ul>
+                                <li>The global success of Hallyu (K-Content) is primarily driven by <strong>passive viewing</strong> on OTT platforms.</li>
+                                <li>A crucial inefficiency exists: this massive cultural consumption <strong>fails to translate</strong> into direct, measurable economic activity (tourism, F&amp;B, goods).</li>
+                                <li>This policy addresses the <strong>systemic weak link</strong> between cultural curiosity and economic conversion.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <!-- Using the generated bar chart image -->
+                            <div class="image-wrapper" style="border: none;">
+                                <img alt="Bar chart showing high content viewership but low economic conversion" src="https://lh3.googleusercontent.com/gg-dl/ABS2GSmyGOdTv2-NAVdKNaWZFMUz4E1VzFTCXp-xb4f56NWvjztH9ESxG-mWBCJFXnz3gK_B9RMeXiPF727YD7EWaNbyoCinT_sa5Yq1FZfYZ8RygNizebuhjv82NmoT2w4OTBjRlboPT7W4gWKtXPBqNUCqE7NbSK-yJUVFS4q1B-h4W2lFQQ" crossorigin="use-credentials">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: The Proposed Solution (Highlighted_Numbers) -->
+            <div class="slide-container" id="slide3">
+                <h2 class="slide-title">The Proposed Solution</h2>
+                <div class="content-area">
+                    <div class="two-column highlight-numbers-layout">
+                        <div>
+                            <div class="number">AI K-Culture Scripter</div>
+                            <div class="number-label">An Interactive Culture-Economy Platform</div>
+                        </div>
+                        <div>
+                            <p>We propose an AI-based platform integrated into OTT streams (e.g., Netflix) using:</p>
+                            <ul>
+                                <li><strong>Vision AI:</strong> To recognize objects, food, and locations in real-time.</li>
+                                <li><strong>Generative AI:</strong> To provide context, recipes, and translations.</li>
+                            </ul>
+                            <p>The goal is to create seamless, real-time, <strong>"click-to-purchase" pathways</strong> to immediately capture and monetize viewer curiosity.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Policy Context (Two_Column_Tiled_Text) -->
+            <div class="slide-container" id="slide4">
+                <h2 class="slide-title">Policy &amp; Contest Context</h2>
+                <div class="content-area">
+                    <div class="two-column tiled">
+                        <div>
+                            <h3>2025 Future Korea Idea Contest</h3>
+                            <p>This proposal was submitted for the "AI Great Transformation Policy Idea for Technology-Led Growth" theme, soliciting creative and effective policies for Korea's future.</p>
+                        </div>
+                        <div>
+                            <h3>Category: AI Growth Economic Vitality</h3>
+                            <p>Our policy aligns with this mandate by positioning the cultural sector not just as soft power, but as a sophisticated, <strong>data-driven engine</strong> for new revenue.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: The Problem: Passive Consumption (Bleed_Image_Right) -->
+            <div class="slide-container bleed-image-layout" id="slide5">
+                <div class="content-container">
+                    <h2 class="slide-title">The Consumption Barrier: Passive Viewing</h2>
+                    <div class="content-area">
+                        <div class="bleed-text-side">
+                            <p>Current OTTs offer only superficial metadata (actors, music). Viewers with deep cultural curiosity must <strong>interrupt their viewing</strong> to conduct separate external searches.</p>
+                            <p>This disruption creates a significant <strong>friction point</strong>, leading to a high rate of lost consumption opportunities.</p>
+                            <p>This policy aims to eradicate this friction and dramatically increase the <strong>economic yield per viewer</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <!-- Using the retrieved image of a confused viewer -->
+                    <img class="bleed-image-side" alt="Person watching TV and looking at their phone, looking confused" src="https://img.freepik.com/premium-photo/man-watching-tv-while-holding-remote_527653-886.jpg">
+                </div>
+            </div>
+
+            <!-- Slide 6: The Problem: Cultural Nuance (Two_Column_Tiled_Text) -->
+            <div class="slide-container" id="slide6">
+                <h2 class="slide-title">The Deeper Problem: The Nuance Gap</h2>
+                <div class="content-area">
+                    <div class="two-column tiled">
+                        <div>
+                            <h3>The Linguistic Gap</h3>
+                            <p>Simple translated subtitles are insufficient. They fail to convey rich cultural context, such as Korean honorifics (존칭) and humility (겸양). This "linguistic flattening" hinders deep cultural understanding.</p>
+                        </div>
+                        <div>
+                            <h3>AI as a Cultural Diplomat</h3>
+                            <p>The platform will use AI to deliver real-time, context-sensitive explanations of these nuances, moving Hallyu from simple entertainment to <strong>educational engagement</strong> and enhancing long-term soft power.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 7: Solution: Technical Architecture (Tiled_Text_With_Icons) -->
+            <div class="slide-container" id="slide7">
+                <h2 class="slide-title">A Technologically Mature Solution</h2>
+                <div class="content-area">
+                    <div class="tiled-content">
+                        <div class="tile">
+                            <div class="icon"><i class="fa-solid fa-eye"></i></div>
+                            <h3>Vision AI</h3>
+                            <p>For real-time object, food, and location recognition directly within the video stream. This technology is commercially ready.</p>
+                        </div>
+                        <div class="tile">
+                            <div class="icon"><i class="fa-solid fa-brain"></i></div>
+                            <h3>Generative AI</h3>
+                            <p>For context-specific information generation, recipe creation, and high-quality, nuanced multilingual translation (e.g., Google Gemini Pro).</p>
+                        </div>
+                        <div class="tile">
+                            <div class="icon"><i class="fa-solid fa-check-circle"></i></div>
+                            <h3>Commercially Viable</h3>
+                            <p>The necessary architecture is mature. This policy is achievable now, without requiring long-term basic R&amp;D.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 8: The Economic Linkage (The Flow) (Image_Right_Text_Left) -->
+            <div class="slide-container" id="slide8">
+                <h2 class="slide-title">The User Flow: Converting Curiosity to Commerce</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <p>The platform's value is a low-friction process that bridges interest with transaction.</p>
+                            <ol style="list-style: decimal; padding-left: 25px; font-size: 18px; line-height: 1.6;">
+                                <li style="margin-bottom: 10px;"><strong>Viewing:</strong> A user watches a K-Drama.</li>
+                                <li style="margin-bottom: 10px;"><strong>AI Recognition:</strong> The system identifies an item (e.g., *Dalkbokkeum-tang*).</li>
+                                <li style="margin-bottom: 10px;"><strong>User Click:</strong> The user clicks the recognized item.</li>
+                                <li style="margin-bottom: 10px;"><strong>Info Window:</strong> An interactive popup offers options: "VIEW RECIPE," "BUY MEAL-KIT," "FIND RESTAURANT."</li>
+                                <li style="margin-bottom: 10px;"><strong>E-Commerce:</strong> Clicking "BUY MEAL-KIT" links to a store, creating economic value.</li>
+                            </ol>
+                        </div>
+                        <div>
+                            <!-- Using the generated 4-step diagram -->
+                            <div class="image-wrapper" style="border: none;">
+                                <img alt="4-step diagram: Watch, Click, Info, Purchase" src="https://lh3.googleusercontent.com/gg-dl/ABS2GSmyGOdTv2-NAVdKNaWZFMUz4E1VzFTCXp-xb4f56NWvjztH9ESxG-mWBCJFXnz3gK_B9RMeXiPF727YD7EWaNbyoCinT_sa5Yq1FZfYZ8RygNizebuhjv82NmoT2w4OTBjRlboPT7W4gWKtXPBqNUCqE7NbSK-yJUVFS4q1B-h4W2lFQQ" crossorigin="use-credentials">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 9: Pillar 1: Food Linkage (Two_Column_Tiled_Text) -->
+            <div class="slide-container" id="slide9">
+                <h2 class="slide-title">Consumption Pillar 1: K-Food Linkage</h2>
+                <div class="content-area">
+                    <div class="two-column tiled">
+                        <div>
+                            <h3>For Viewers Abroad</h3>
+                            <p>The AI provides instant links to purchase ingredients or pre-packaged <strong>meal-kits</strong> from online shopping malls, directly driving K-Food exports.</p>
+                        </div>
+                        <div>
+                            <h3>For Viewers in Korea</h3>
+                            <p>The AI uses location data to <strong>recommend nearby Korean restaurants</strong> (Hansik-dang) that serve the featured dish, driving immediate local economic activity.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 10: Pillar 2: Tourism Linkage (Bleed_Image_Right) -->
+            <div class="slide-container bleed-image-layout" id="slide10">
+                <div class="content-container">
+                    <h2 class="slide-title">Consumption Pillar 2: K-Tourism Linkage</h2>
+                    <div class="content-area">
+                        <div class="bleed-text-side">
+                            <p>The platform converts cultural curiosity into high-value tourism demand by providing detailed information on drama filming locations.</p>
+                            <p>It creates an experiential loop by:</p>
+                            <ul>
+                                <li>Integrating with <strong>Korea Tourism Organization (KTO)</strong> official products.</li>
+                                <li>Providing customized guides to visitors.</li>
+                                <li>Offering opportunities for <strong>free food sampling</strong> (like in *Dae Jang Geum*) at major cultural sites.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <!-- Using the retrieved Gyeongbokgung Palace image -->
+                    <img class="bleed-image-side" alt="Gyeongbokgung Palace in Seoul" src="https://www.realtravelling.com/tpl/lib/img/private/media/hyangwonjeong-in-gyeongbokgung-palace-seoil-images-vnmigrrigf8.jpg">
+                </div>
+            </div>
+
+            <!-- Slide 11: Pillar 3: Product Linkage (Image_Right_Text_Left) -->
+            <div class="slide-container" id="slide11">
+                <h2 class="slide-title">Consumption Pillar 3: K-Product Linkage</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <p>The AI immediately recognizes PPL (Product Placement) items, such as K-Beauty and K-Fashion, used by characters.</p>
+                            <p>It provides a <strong>direct, traceable link</strong> to the official seller or e-commerce channel.</p>
+                            <p>This seamless connection eliminates external searches, <strong>maximizing the conversion rate</strong> for consumer goods exports and capturing impulse buys.</p>
+                        </div>
+                        <div>
+                            <!-- Using the retrieved K-Beauty image -->
+                            <div class="image-wrapper">
+                                <img alt="Flat lay of assorted K-Beauty products" src="https://ohlolly.com/cdn/shop/files/Korean_Skincare_Kit_for_Normal_Skin_Types.jpg?v=1760404468&amp;width=1200">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 12: Risk & Mitigation (Tiled_Text_With_Icons) -->
+            <div class="slide-container" id="slide12">
+                <h2 class="slide-title">Governance &amp; Risk Management</h2>
+                <div class="content-area">
+                    <div class="tiled-content">
+                        <div class="tile">
+                            <div class="icon"><i class="fa-solid fa-gavel"></i></div>
+                            <h3>The Core Risk</h3>
+                            <p>The primary risk is legal and commercial complexity surrounding <strong>Intellectual Property (IP)</strong> rights, content copyright, and PPL utilization rights.</p>
+                        </div>
+                        <div class="tile">
+                            <div class="icon"><i class="fa-solid fa-shield-alt"></i></div>
+                            <h3>The Mitigation</h3>
+                            <p>A <strong>Mandatory Revenue Sharing (수익 공유)</strong> framework must be legally defined and agreed upon *before* the platform's construction.</p>
+                        </div>
+                        <div class="tile">
+                            <div class="icon"><i class="fa-solid fa-handshake"></i></div>
+                            <h3>The Goal: 상생</h3>
+                            <p>This creates an incentivized, "all-participants-win" ecosystem (상생하는 생태계) to ensure sustainability and stakeholder buy-in.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 13: Economic Impact (Two_Column_Tiled_Text) -->
+            <div class="slide-container" id="slide13">
+                <h2 class="slide-title">Quantifiable Economic Impact</h2>
+                <div class="content-area">
+                    <div class="two-column tiled">
+                        <div>
+                            <h3>Reduces Marketing Costs</h3>
+                            <p>Enables direct, instantaneous product exposure to a high-intent global audience, dramatically reducing the need for costly traditional overseas marketing campaigns.</p>
+                        </div>
+                        <div>
+                            <h3>Creates Data-Driven Strategy</h3>
+                            <p>Captures invaluable, real-time data on global preferences (K-Food, K-Beauty, tourism) to establish sophisticated, proactive, and data-based export strategies.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 14: Conclusion (Quote) -->
+            <div class="slide-container" id="slide14">
+                <h2 class="slide-title">Strategic Recommendation</h2>
+                <div class="content-area">
+                    <div class="quote-layout">
+                        <blockquote>This policy leverages cultural dominance to solve a critical market failure, positioning K-Content as a primary engine for the nation's 'AI Growth Economic Vitality'.</blockquote>
+                        <cite>We strongly recommend immediate government backing to formalize the Collaborative Governance Model and the Mandatory Revenue Sharing Agreement.</cite>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 15: Appendix: Contest Timeline (Table) -->
+            <div class="slide-container" id="slide15">
+                <h2 class="slide-title">Appendix: 2025 Future Korea Idea Contest Timeline</h2>
+                <div class="content-area">
+                    <div class="table-layout">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Phase</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1st Submission Period</td>
+                                    <td>2025/09/01 (Mon)</td>
+                                    <td>2025/10/19 (Sun)</td>
+                                    <td>Policy Proposal (A4 5 pages max), Card News, or Video</td>
+                                </tr>
+                                <tr>
+                                    <td>Screening Period</td>
+                                    <td>2025/10/22 (Wed)</td>
+                                    <td>2025/10/27 (Mon)</td>
+                                    <td>Judging of submissions</td>
+                                </tr>
+                                <tr>
+                                    <td>Selection Announcement</td>
+                                    <td>2025/10/29 (Wed)</td>
+                                    <td></td>
+                                    <td>10 proposals selected</td>
+                                </tr>
+                                <tr>
+                                    <td>Public Voting</td>
+                                    <td>2025/10/29 (Wed)</td>
+                                    <td>2025/11/03 (Mon)</td>
+                                    <td>Online feedback; Selection of top 4 proposals</td>
+                                </tr>
+                                <tr>
+                                    <td>Debate/Presentation</td>
+                                    <td>2025/11/07 (Fri)</td>
+                                    <td></td>
+                                    <td>Top 4 proposals present and debate with judges</td>
+                                </tr>
+                                <tr>
+                                    <td>Awards Ceremony</td>
+                                    <td>2025/11/13 (Thu)</td>
+                                    <td></td>
+                                    <td>Final Awarding (Subject to Change)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 16: Appendix: Award Structure (Table) -->
+            <div class="slide-container" id="slide16">
+                <h2 class="slide-title">Appendix: Contest Award Structure</h2>
+                <div class="content-area">
+                    <div class="table-layout">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Award Level</th>
+                                    <th>Awarding Entity</th>
+                                    <th>Quantity</th>
+                                    <th>Prize Money (KRW)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Grand Prize (대상)</strong></td>
+                                    <td>Deputy Prime Minister and Minister of Economy and Finance</td>
+                                    <td>1</td>
+                                    <td><strong>5,000,000</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Top Excellence (최우수상)</td>
+                                    <td>President of the Korea Institute for R&amp;D</td>
+                                    <td>1</td>
+                                    <td>3,000,000</td>
+                                </tr>
+                                <tr>
+                                    <td>Excellence (우수상)</td>
+                                    <td>President of Seoul Economic Daily</td>
+                                    <td>8</td>
+                                    <td>1,000,000 each</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 17: Q&A -->
+            <div class="slide-container" id="slide17">
+                <div class="qa-layout">
+                    <h2>Q&amp;A</h2>
+                    <p>Thank you for your attention.</p>
+                </div>
+            </div>
+
+            <!-- Image Sources Appendix (Hidden Slide, for reference) -->
+            <div class="slide-container" id="slide-attributions-1">
+                <h2 class="slide-title">Image Sources</h2>
+                <div class="content-area">
+                    <ul class="attribution-list">
+                        <li class="attribution-list__item">
+                            <div class="attribution__thumbnail">
+                                <img class="attribution__thumbnail__image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd285WWvOGxodfQAXDaCh6mLkx_UB6LDJk9R8WANj5xDXY6zAdv0GpqsDECVYj" alt="Thumbnail for www.freepik.com">
+                            </div>
+                            <div class="attribution__details">
+                                <p class="attribution__raw-url">https://img.freepik.com/premium-photo/man-watching-tv-while-holding-remote_527653-886.jpg</p>
+                                <p class="attribution__title">Source: <a href="https://www.freepik.com/premium-photo/confused-man-looking-phone-screen-while-sitting-sofa_33874243.htm" target="_blank" class="attribution__link">www.freepik.com</a></p>
+                            </div>
+                        </li>
+                        <li class="attribution-list__item">
+                            <div class="attribution__thumbnail">
+                                <img class="attribution__thumbnail__image" src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcR4S-lutvYYMzXSdlma0v5s-I2glKL5CyZngFSNp6MG6a6VeTLhRTCC-6K8BbEp" alt="Thumbnail for www.realtravelling.com">
+                            </div>
+                            <div class="attribution__details">
+                                <p class="attribution__raw-url">https://www.realtravelling.com/tpl/lib/img/private/media/hyangwonjeong-in-gyeongbokgung-palace-seoil-images-vnmigrrigf8.jpg</p>
+                                <p class="attribution__title">Source: <a href="https://www.realtravelling.com/south-korea-uncovered" target="_blank" class="attribution__link">www.realtravelling.com</a></p>
+                            </div>
+                        </li>
+                        <li class="attribution-list__item">
+                            <div class="attribution__thumbnail">
+                                <img class="attribution__thumbnail__image" src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRVo4j2T_4AhtLf2sfnlJ4_0nfck7DF-pMMShrjEfRH05ZCTJcVpNk5MQl39n3A" alt="Thumbnail for ohlolly.com">
+                            </div>
+                            <div class="attribution__details">
+                                <p class="attribution__raw-url">https://ohlolly.com/cdn/shop/files/Korean_Skincare_Kit_for_Normal_Skin_Types.jpg?v=1760404468&amp;width=1200</p>
+                                <p class="attribution__title">Source: <a href="https://ohlolly.com/products/ohlolly-korean-skincare-kit-for-normal-skin-types" target="_blank" class="attribution__link">ohlolly.com</a></p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+/**
+ * Fetches an image blob using a method that attempts to bypass CORS issues
+ * by adding 'alr=yes' to the URL and following redirects.
+ */
+async function fetchFifeImageBlobUsingAlr(urlString) {
+  if (urlString.startsWith('blob:') || urlString.startsWith('data:')) {
+      throw new Error('Input URL is already a blob or data URL.');
+  }
+  let url = new URL(urlString, window.location.href);
+  url.searchParams.set('alr', 'yes');
+  for (let i = 0; i < 5; i++) {
+      const response = await fetch(url.toString(), { credentials: 'include' });
+      if (!response.ok) throw new Error(`Fetch received not OK response: ${response.status}`);
+      if (!response.headers.get('content-type')?.startsWith('text/plain')) {
+          const blob = await response.blob();
+          if (blob.size > 0 && blob.type.startsWith('image/')) return blob;
+          // This will now correctly throw an error for non-image types like fonts.
+          else throw new Error('Fetched blob is not a valid image.');
+      }
+      url = new URL(await response.text());
+  }
+  throw new Error('Exceeded maximum number of redirects.');
+}
+
+async function updateImageSourcesUsingAlr() {
+  // Get all img elements on the page.
+  const allImages = Array.from(document.querySelectorAll('img'));
+
+  // Use Promise.all to handle all updates concurrently for better performance.
+  await Promise.all(allImages.map(async (img) => {
+    // Only proceed if the img tag has a valid 'src' attribute with a
+    // googleusercontent URL.
+    if (img.src && img.src.includes('googleusercontent')) {
+      try {
+        const blob = await fetchFifeImageBlobUsingAlr(img.src);
+        // Create a new URL from the Blob and set it as the image's source.
+        img.src = URL.createObjectURL(blob);
+      } catch (error) {
+        // Do nothing.
+      }
+    }
+  }));
+}
+
+async function updateBackgroundImagesUsingAlr() {
+  // Find all elements with a googleusercontent background image.
+  const elementsToProcess = document.querySelectorAll('[style*="googleusercontent"]');
+  const urlRegex = /url\((['"]?)(https?:\/\/.*?googleusercontent.*?)\1\)/;
+
+  if (elementsToProcess.length > 0) {
+
+      const promises = Array.from(elementsToProcess).map(element => {
+          return new Promise(async (resolve) => {
+              const style = element.style.backgroundImage;
+              const match = style.match(urlRegex);
+
+              if (match && match[2]) {
+                  const originalUrl = match[2];
+                  try {
+                      const blob = await fetchFifeImageBlobUsingAlr(originalUrl);
+                      const blobUrl = URL.createObjectURL(blob);
+
+                      // Directly update the element's style property.
+                      const newBackgroundImage = style.replace(originalUrl, blobUrl);
+                      element.style.backgroundImage = newBackgroundImage;
+                  } catch (error) {
+                      // Do nothing.
+                  }
+              }
+              resolve();
+          });
+      });
+
+      // Wait for all images to be processed.
+      await Promise.all(promises);
+  }
+}
+
+// --- SLIDESHOW LOGIC ---
+function initializeSlideshowUI() {
+    // Find all slide elements, excluding the attribution slide for navigation count
+    const allSlides = Array.from(document.querySelectorAll('.slide-container'));
+    const slides = allSlides.filter(slide => !slide.id.includes('attributions')); 
+
+    const prevButton = document.getElementById('prev-slide');
+    const nextButton = document.getElementById('next-slide');
+    const slideCounter = document.getElementById('slide-counter');
+    let currentSlide = 0;
+
+    function updateUI() {
+        // Set the active class for the current slide (including attribution slides)
+        allSlides.forEach((slide, index) => {
+            slide.classList.remove('active');
+        });
+        
+        // Find the actual current slide index in the *filtered* list
+        const currentSlideElement = slides[currentSlide];
+        
+        // Show the current slide
+        if (currentSlideElement) {
+            currentSlideElement.classList.add('active');
+        }
+
+
+        // Navigation logic for main slides
+        prevButton.disabled = currentSlide === 0;
+        nextButton.disabled = currentSlide === slides.length - 1;
+        slideCounter.textContent = `Slide ${currentSlide + 1} of ${slides.length}`;
+    }
+
+    function showNextSlide() {
+        if (currentSlide < slides.length - 1) {
+            currentSlide++;
+            updateUI();
+        }
+    }
+
+    function showPrevSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            updateUI();
+        }
+    }
+
+    // Event Listeners for Navigation
+    nextButton.addEventListener('click', showNextSlide);
+    prevButton.addEventListener('click', showPrevSlide);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') showNextSlide();
+        else if (e.key === 'ArrowLeft') showPrevSlide();
+    });
+
+    // Theme Toggle Logic
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const htmlEl = document.documentElement;
+
+    function setTheme(isDark) {
+        htmlEl.classList.toggle('dark', isDark);
+        darkIcon.classList.toggle('hidden', isDark);
+        lightIcon.classList.toggle('hidden', !isDark);
+        localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
+    }
+    const isDarkMode = localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    setTheme(isDarkMode);
+    themeToggleBtn.addEventListener('click', () => setTheme(!htmlEl.classList.contains('dark')));
+
+    // Scaling Logic
+    function updateScale() {
+        const baseWidth = 1280;
+        const baseHeight = 720;
+        const slideshowWrapper = document.getElementById('slideshow-wrapper');
+        const slideshowHolder = document.getElementById('slideshow-holder');
+
+        // The available space is the dimensions of the holder div.
+        const availableWidth = slideshowHolder.clientWidth;
+        const availableHeight = slideshowHolder.clientHeight;
+
+        // Calculate the scale ratio based on both width and height
+        const scaleX = availableWidth / baseWidth;
+        const scaleY = availableHeight / baseHeight;
+
+        // Use the smaller of the two ratios to ensure it fits
+        const finalScale = Math.min(scaleX, scaleY);
+
+        slideshowWrapper.style.setProperty('--scale-factor', finalScale);
+    }
+
+    updateUI();
+    updateScale();
+    window.addEventListener('resize', updateScale);
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+    await Promise.all([
+      updateImageSourcesUsingAlr(),
+      updateBackgroundImagesUsingAlr()
+    ]);
+    initializeSlideshowUI();
+});
+</script></body></html>

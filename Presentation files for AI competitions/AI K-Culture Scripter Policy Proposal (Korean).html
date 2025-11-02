@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI K-컬처 스크립터 정책 제안</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- 제목: Merriweather, 본문: DM Sans 사용 -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&amp;family=DM+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* 1. 기본 설정 */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #e2e8f0; /* 페이지 배경 */
+            display: grid;
+            gap: 20px;
+            grid-template-columns: 1fr;
+            margin: 0;
+            min-height: 100vh;
+            padding: 20px 0;
+            place-items: center;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .slide-container {
+            align-items: center;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 720px;
+            justify-content: center;
+            overflow: hidden;
+            padding: 60px;
+            position: relative;
+            width: 1280px;
+            /* 기본 라이트 테마 */
+            background-color: #f3f0df; /* 크림 배경 */
+            color: #1e293b; /* 어두운 텍스트 */
+        }
+
+        /* 1.1 배경 스타일링 (선택적) */
+        .slide-container::before {
+            content: '';
+            height: 100%;
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            z-index: 0;
+        }
+
+        .slide-container > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 2. 일관된 타이포그래피 */
+
+        /* 제목 폰트 */
+        .slide-container h1,
+        .slide-container h2,
+        .slide-container h3,
+        .slide-container .quote-layout blockquote {
+            font-family: 'Merriweather', serif;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        /* 본문 폰트 */
+        .slide-container p,
+        .slide-container li,
+        .slide-container .subtitle,
+        .slide-container .number-label,
+        .slide-container .legend li,
+        .slide-container .chart-summary,
+        .slide-container .bar .label,
+        .slide-container th,
+        .slide-container td,
+        .slide-container .quote-layout cite,
+        .slide-container .bleed-text-side p {
+            font-family: 'DM Sans', sans-serif;
+            color: #334155;
+        }
+
+        /* 일관된 폰트 크기 */
+        .slide-container h1 {
+            font-size: 70px;
+            line-height: 1.1;
+        }
+
+        .slide-container .slide-title { /* h2 */
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-align: left;
+            width: 100%;
+            color: #005088; /* 파란색 제목 */
+        }
+
+        .slide-container h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #005088;
+        }
+
+        /* 통일된 본문 텍스트 크기 */
+        .slide-container p,
+        .slide-container li,
+        .slide-container .subtitle,
+        .slide-container .legend li,
+        .slide-container .chart-summary,
+        .slide-container .bar .label,
+        .slide-container th,
+        .slide-container td,
+        .slide-container .bleed-text-side p {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .slide-container .subtitle {
+            font-size: 22px;
+            font-weight: 400;
+            margin: 20px auto;
+        }
+
+        .slide-container .content-area {
+            align-items: center;
+            display: flex;
+            flex-grow: 1;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* 3. 레이아웃 정의 */
+
+        /* Title_Slide */
+        .title-layout {
+            text-align: center;
+        }
+        /* 다크 테마 오버라이드 */
+        .slide-container.dark-theme {
+            background-color: #005088; /* 진한 파란색 배경 */
+        }
+        .dark-theme h1,
+        .dark-theme .subtitle {
+            color: #FFFFFF; /* 흰색 텍스트 */
+        }
+
+        /* Two_Column 레이아웃 */
+        .two-column {
+            align-items: flex-start;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            width: 100%;
+        }
+
+        /* Two_Column_Tiled_Text */
+        .two-column.tiled {
+            align-items: stretch;
+        }
+        .two-column.tiled > div {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            border: 1px solid #d1dce5;
+            padding: 40px;
+        }
+        .two-column.tiled h3 {
+            margin-top: 0;
+        }
+
+        .two-column ul {
+            list-style: disc;
+            margin: 0;
+            padding-left: 25px;
+        }
+        .two-column li {
+            margin-bottom: 15px;
+        }
+
+        /* Image_Right_Text_Left */
+        .image-wrapper {
+            border-radius: 12px;
+            height: 400px;
+            overflow: hidden;
+            width: 100%;
+            border: 1px solid #d1dce5;
+        }
+        .image-wrapper img {
+            height: 100%;
+            object-fit: cover;
+            width: 100%;
+        }
+        .two-column .image-wrapper img {
+            object-fit: contain; /* 차트/다이어그램의 경우 contain 사용 */
+        }
+
+        /* Tiled_Text_With_Icons */
+        .tiled-content {
+            align-items: stretch;
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            width: 100%;
+        }
+        .tile {
+            align-items: flex-start;
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            border: 1px solid #d1dce5;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            justify-content: flex-start;
+            padding: 30px;
+            text-align: left;
+        }
+        .tile .icon {
+            color: #005088;
+            font-size: 40px;
+            margin-bottom: 20px;
+            /* 아이콘 스타일링 */
+            background-color: #e0e8f0;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tile h3 {
+            margin-top: 0;
+        }
+        .tile p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        /* Quote */
+        .quote-layout {
+            text-align: center;
+            width: 80%;
+        }
+        .quote-layout blockquote {
+            color: #1e293b;
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.4;
+            margin: 0 0 30px 0;
+            padding: 0 40px;
+            position: relative;
+        }
+        .quote-layout blockquote::before,
+        .quote-layout blockquote::after {
+            color: #aab8c3;
+            content: '“';
+            font-size: 80px;
+            line-height: 0;
+            position: absolute;
+        }
+        .quote-layout blockquote::before {
+            left: -10px;
+            top: 20px;
+        }
+        .quote-layout blockquote::after {
+            bottom: 0px;
+            right: -10px;
+        }
+        .quote-layout cite {
+            color: #334155;
+            font-size: 18px;
+            font-style: normal;
+        }
+
+        /* Highlighted_Numbers */
+        .highlight-numbers-layout > div:first-child {
+            flex: 0 0 40%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #005088;
+            border-radius: 12px;
+            color: #FFFFFF;
+            padding: 40px;
+        }
+        .highlight-numbers-layout .number {
+            color: #FFFFFF;
+            font-size: 60px;
+            font-weight: 700;
+            font-family: 'Merriweather', serif;
+            line-height: 1.2;
+        }
+        .highlight-numbers-layout .number-label {
+            font-size: 20px;
+            font-weight: 400;
+            color: #e0e8f0;
+        }
+        .highlight-numbers-layout > div:last-child {
+            padding-left: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .highlight-numbers-layout p, .highlight-numbers-layout li {
+            font-size: 20px;
+            line-height: 1.6;
+        }
+
+        /* Bleed_Image_Right */
+        .slide-container.bleed-image-layout {
+            align-items: start;
+            display: grid;
+            gap: 50px;
+            grid-template-columns: 1fr 1fr;
+            padding: 0;
+            background-color: #f3f0df;
+        }
+        .slide-container.bleed-image-layout > .content-container {
+            padding: 60px 0 60px 60px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .slide-container.bleed-image-layout > .image-container {
+            height: 100%;
+            overflow: hidden;
+            width: 100%;
+        }
+        .slide-container.bleed-image-layout img.bleed-image-side {
+            border-radius: 0 8px 8px 0;
+            height: 100%;
+            max-width: 100%;
+            max-height: 720px;
+            object-fit: cover;
+            object-position: center;
+            width: 100%;
+        }
+        .slide-container.bleed-image-layout .bleed-text-side {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-grow: 1;
+        }
+        .slide-container.bleed-image-layout .bleed-text-side p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        /* Table */
+        .table-layout {
+            width: 100%;
+        }
+        .table-layout table {
+            border-collapse: collapse;
+            width: 100%;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .table-layout th,
+        .table-layout td {
+            border-bottom: 1px solid #d1dce5;
+            padding: 16px 20px;
+            text-align: left;
+        }
+        .table-layout th {
+            background-color: #e0e8f0;
+            color: #005088;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .table-layout td {
+            font-size: 16px;
+        }
+        .table-layout tr:last-child td {
+            border-bottom: none;
+        }
+        .table-layout .w-20 { width: 20%; }
+        .table-layout .w-25 { width: 25%; }
+        .table-layout .w-55 { width: 55%; }
+
+        /* Q&A */
+        .qa-layout {
+            text-align: center;
+            width: 100%;
+            align-self: center;
+        }
+        .qa-layout h2 {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: #005088;
+        }
+        .qa-layout p {
+            font-size: 22px;
+            color: #334155;
+        }
+        .qa-layout .contact-info {
+            color: #334155;
+            font-size: 20px;
+            margin-top: 40px;
+        }
+
+        /* Utility */
+        .slide-container li strong {
+            color: #005088;
+            font-weight: 700;
+        }
+    </style>
+<style>
+  .attribution-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .attribution-list__item {
+    align-items: center;
+    border-bottom: 1px solid #757575;
+    display: grid;
+    gap: 25px;
+    grid-template-columns: 90px 1fr;
+    padding: 15px 0;
+  }
+  .attribution-list__item:last-child {
+    border-bottom: none;
+  }
+  .attribution-list__item .attribution__thumbnail {
+    background-color: #f1f5f9;
+    height: 50px;
+    width: 90px;
+  }
+  .attribution__thumbnail .attribution__thumbnail__image {
+    border-radius: 8px;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+  .attribution__details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .attribution__details .attribution__raw-url {
+    color: inherit;
+    font-size: 13px;
+    margin: 0;
+    word-break: break-all;
+  }
+  .attribution__details .attribution__title {
+    color: inherit;
+    font-size: 16px;
+    margin: 0;
+  }
+  .attribution__details .attribution__title > .attribution__link {
+    color: #4f46e5;
+    text-decoration: none;
+  }
+</style><style>
+  /* The container that fills available space. It's the positioning context. */
+  #slideshow-holder {
+      position: relative;
+      flex-grow: 1; /* Replaces flex-grow Tailwind class for clarity */
+      width: 100%;
+      padding: 1rem; /* Replaces p-4 Tailwind class */
+  }
+
+  /* The element that is scaled and centered. */
+  #slideshow-wrapper {
+      width: 1280px;
+      height: 720px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-origin: center;
+      transform: translate(-50%, -50%) scale(var(--scale-factor, 1));
+      transition: transform 0.3s ease-in-out;
+      /* Visual styles moved here from the holder */
+      border-radius: 0.5rem;
+      box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+      overflow: hidden;
+  }
+
+  /* Update slide container styles */
+  .slide-container {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease-in-out;
+    }
+
+  /* Make the active slide visible */
+  .slide-container.active {
+      opacity: 1;
+      pointer-events: auto;
+  }
+</style><script src="https://cdn.tailwindcss.com"></script><script>
+  tailwind.config = { darkMode: 'class', }
+</script></head>
+<body class="bg-gray-100 dark:bg-gray-900 flex flex-col h-screen transition-colors duration-300">
+
+    <!-- Header and Controls Wrapper (Simplified) -->
+    <div id="nav-controls" class="relative flex-shrink-0 w-full flex justify-center items-center p-4">
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" class="absolute top-4 right-4 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm p-2 rounded-full shadow-md text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-all duration-300 z-20">
+            <svg id="theme-toggle-dark-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 5.05a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414l-.707-.707zM5 10a1 1 0 01-1-1H3a1 1 0 110-2h1a1 1 0 011 1zm4.95-4.95a1 1 0 011.414 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+        </button>
+
+        <!-- Slide Counter -->
+        <span id="slide-counter" class="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-medium text-gray-600 dark:text-gray-400"></span>
+
+        <!-- Navigation Buttons -->
+        <div class="flex items-center space-x-2">
+            <button id="prev-slide" class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 p-2 rounded-md transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-md">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            <button id="next-slide" class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 p-2 rounded-md transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-md">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- SLIDESHOW HOLDER AND WRAPPER -->
+    <div id="slideshow-holder">
+        <div id="slideshow-wrapper">
+            <!-- Slide 1: Title_Slide -->
+            <div class="slide-container dark-theme active" id="slide1">
+                <div class="title-layout">
+                    <h1 style="font-size: 64px;">AI K-컬처 스크립터 플랫폼 제안</h1>
+                    <p class="subtitle" style="max-width: 900px;">K-콘텐츠의 수동적 시청을 능동적인 글로벌 경제 창출로 전환하기 위한 전략적 청사진</p>
+                </div>
+            </div>
+
+            <!-- Slide 2: Executive Summary (Image_Right_Text_Left) -->
+            <div class="slide-container" id="slide2">
+                <h2 class="slide-title">핵심 요약: 비효율성 문제</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <ul>
+                                <li>한류(K-콘텐츠)의 글로벌 성공은 OTT 플랫폼 기반의 **수동적 시청**에 크게 의존합니다.</li>
+                                <li>핵심적인 비효율성이 존재합니다: 이 엄청난 문화 소비가 관광, F&amp;B, 상품 구매 등 **직접적이고 측정 가능한 경제 활동**으로 즉시 전환되지 못합니다.</li>
+                                <li>본 정책은 문화적 호기심과 경제적 소비 전환 사이의 **시스템적인 취약 고리**를 해결합니다.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <!--  -->
+                            <div class="image-wrapper" style="border: none;">
+                                <img alt="높은 콘텐츠 시청률과 낮은 경제 전환율을 보여주는 막대 그래프" src="https://lh3.googleusercontent.com/gg-dl/ABS2GSmyGOdTv2-NAVdKNaWZFMUz4E1VzFTCXp-xb4f56NWvjztH9ESxG-mWBCJFXnz3gK_B9RMeXiPF727YD7EWaNbyoCinT_sa5Yq1FZfYZ8RygNizebuhjv82NmoT2w4OTBjRlboPT7W4gWKtXPBqNUCqE7NbSK-yJUVFS4q1FZfYZ8RygNizebuhjv82NmoT2w4OTBjRlboPT7W4gWKtXPBqNUCqE7NbSK-yJUVFS4q1B-h4W2lFQQ" crossorigin="use-credentials">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: The Proposed Solution (Highlighted_Numbers) -->
+            <div class="slide-container" id="slide3">
+                <h2 class="slide-title">제안된 해결책</h2>
+                <div class="content-area">
+                    <div class="two-column highlight-numbers-layout">
+                        <div>
+                            <div class="number">AI K-컬처 스크립터</div>
+                            <div class="number-label">인터랙티브 문화-경제 플랫폼</div>
+                        </div>
+                        <div>
+                            <p>저희는 OTT 스트림(예: 넷플릭스)에 통합된 AI 기반 플랫폼을 제안하며, 다음 기술을 사용합니다:</p>
+                            <ul>
+                                <li>**Vision AI:** 영상 속 사물, 음식, 장소를 실시간으로 인식.</li>
+                                <li>**생성형 AI:** 맥락, 레시피, 문화적 번역 정보 제공.</li>
+                            </ul>
+                            <p>목표는 시청자의 호기심을 즉시 포착하고 수익화할 수 있는, **끊김 없는 실시간 '클릭-투-구매' 경로**를 만드는 것입니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Policy Context (Two_Column_Tiled_Text) -->
+            <div class="slide-container" id="slide4">
+                <h2 class="slide-title">정책 및 공모전 배경</h2>
+                <div class="content-area">
+                    <div class="two-column tiled">
+                        <div>
+                            <h3>2025 미래한국 아이디어 공모전</h3>
+                            <p>본 제안은 'AI를 활용한 기술주도성장을 위한 AI 대전환 정책 아이디어'라는 주제로 제출되었으며, 대한민국의 미래를 위한 창의적이고 실효성 있는 정책 아이디어를 모집합니다.</p>
+                        </div>
+                        <div>
+                            <h3>분야: AI 성장 경제활력</h3>
+                            <p>저희 정책은 문화 부문을 단순한 소프트 파워가 아니라, 새로운 수익을 창출하는 **정교하고 데이터 기반의 엔진**으로 포지셔닝함으로써 이 요구 사항과 일치합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: The Problem: Passive Consumption (Bleed_Image_Right) -->
+            <div class="slide-container bleed-image-layout" id="slide5">
+                <div class="content-container">
+                    <h2 class="slide-title">소비 장벽: 수동적 시청</h2>
+                    <div class="content-area">
+                        <div class="bleed-text-side">
+                            <p>현재 OTT는 피상적인 메타데이터(배우, 음악)만 제공합니다. 깊은 문화적 호기심을 가진 시청자는 별도의 외부 검색을 위해 **시청 흐름을 중단**해야 합니다.</p>
+                            <p>이러한 중단은 상당한 **마찰 지점**을 만들고, 잠재적인 소비 기회를 잃게 만듭니다.</p>
+                            <p>본 정책은 이러한 마찰을 제거하고 **시청자당 경제적 수익**을 획기적으로 증가시키는 것을 목표로 합니다. </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <!-- Image of a confused viewer -->
+                    <img class="bleed-image-side" alt="TV를 시청하며 리모컨을 들고 있는 남성" src="https://img.freepik.com/premium-photo/man-watching-tv-while-holding-remote_527653-886.jpg">
+                </div>
+            </div>
+
+            <!-- Slide 6: The Problem: Cultural Nuance (Two_Column_Tiled_Text) -->
+            <div class="slide-container" id="slide6">
+                <h2 class="slide-title">심층적 문제: 문화적 뉘앙스 격차</h2>
+                <div class="content-area">
+                    <div class="two-column tiled">
+                        <div>
+                            <h3>언어적 격차</h3>
+                            <p>단순 번역 자막은 불충분합니다. 한국어 존칭(존칭) 및 겸양(겸양)과 같은 풍부한 문화적 맥락을 전달하지 못합니다. 이러한 '언어적 평면화'는 깊은 문화 이해를 방해합니다.</p>
+                        </div>
+                        <div>
+                            <h3>문화 외교관으로서의 AI</h3>
+                            <p>이 플랫폼은 AI를 사용하여 이러한 뉘앙스에 대한 실시간, 문맥 감지 설명을 제공하여, 한류를 단순 엔터테인먼트에서 **교육적 참여**로 옮겨 장기적인 소프트 파워를 강화합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 7: Solution: Technical Architecture (Tiled_Text_With_Icons) -->
+            <div class="slide-container" id="slide7">
+                <h2 class="slide-title">기술적으로 성숙한 해결책</h2>
+                <div class="content-area">
+                    <div class="tiled-content">
+                        <div class="tile">
+                            <div class="icon"><i class="fa-solid fa-eye"></i></div>
+                            <h3>Vision AI</h3>
+                            <p>영상 스트림 내에서 사물, 음식, 장소를 실시간으로 인식합니다. 이 기술은 상업적으로 준비되어 있습니다.</p>
+                        </div>
+                        <div class="tile">
+                            <div class="icon"><i class="fa-solid fa-brain"></i></div>
+                            <h3>생성형 AI</h3>
+                            <p>문맥별 정보 생성, 레시피 생성, 고품질의 뉘앙스를 반영한 다국어 번역(예: Google Gemini Pro)에 사용됩니다.</p>
+                        </div>
+                        <div class="tile">
+                            <div class="icon"><i class="fa-solid fa-check-circle"></i></div>
+                            <h3>상업적 실현 가능성</h3>
+                            <p>필요한 아키텍처는 이미 성숙했습니다. 이 정책은 장기적인 기초 R&amp;D 없이도 지금 당장 달성 가능합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 8: The Economic Linkage (The Flow) (Image_Right_Text_Left) -->
+            <div class="slide-container" id="slide8">
+                <h2 class="slide-title">사용자 흐름: 호기심을 상업으로 전환</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <p>이 플랫폼의 가치는 관심사를 거래와 연결하는 낮은 마찰의 과정입니다.</p>
+                            <ol style="list-style: decimal; padding-left: 25px; font-size: 18px; line-height: 1.6;">
+                                <li style="margin-bottom: 10px;">**시청:** 사용자가 K-드라마를 시청합니다.</li>
+                                <li style="margin-bottom: 10px;">**AI 인식:** 시스템이 화면 속 아이템(예: *닭볶음탕*)을 식별합니다.</li>
+                                <li style="margin-bottom: 10px;">**사용자 클릭:** 사용자가 인식된 아이템을 클릭합니다.</li>
+                                <li style="margin-bottom: 10px;">**정보 창:** 인터랙티브 팝업이 "레시피 보기," "밀키트 구매," "주변 식당 찾기" 옵션을 제공합니다.</li>
+                                <li style="margin-bottom: 10px;">**E-커머스:** "밀키트 구매"를 클릭하면 상점으로 연결되어 경제적 가치를 창출합니다.</li>
+                            </ol>
+                        </div>
+                        <div>
+                            <!--  -->
+                            <div class="image-wrapper" style="border: none;">
+                                <img alt="4단계 다이어그램: 시청, 클릭, 정보, 구매" src="https://lh3.googleusercontent.com/gg-dl/ABS2GSmyGOdTv2-NAVdKNaWZFMUz4E1VzFTCXp-xb4f56NWvjztH9ESxG-mWBCJFXnz3gK_B9RMeXiPF727YD7EWaNbyoCinT_sa5Yq1FZfYZ8RygNizebuhjv82NmoT2w4OTBjRlboPT7W4gWKtXPBqNUCqE7NbSK-yJUVFS4q1B-h4W2lFQQ" crossorigin="use-credentials">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 9: Pillar 1: Food Linkage (Two_Column_Tiled_Text) -->
+            <div class="slide-container" id="slide9">
+                <h2 class="slide-title">소비 기둥 1: K-푸드 연계</h2>
+                <div class="content-area">
+                    <div class="two-column tiled">
+                        <div>
+                            <h3>해외 시청자 대상</h3>
+                            <p>AI는 온라인 쇼핑몰에서 식재료 또는 포장된 **밀키트**를 구매할 수 있는 즉각적인 링크를 제공하여, K-푸드 수출을 직접적으로 촉진합니다.</p>
+                        </div>
+                        <div>
+                            <h3>국내 시청자 대상</h3>
+                            <p>AI는 위치 데이터를 사용하여 해당 요리를 제공하는 **주변 한식당(한식당)**을 추천하여, 즉각적인 지역 경제 활동을 촉진합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 10: Pillar 2: Tourism Linkage (Bleed_Image_Right) -->
+            <div class="slide-container bleed-image-layout" id="slide10">
+                <div class="content-container">
+                    <h2 class="slide-title">소비 기둥 2: K-관광 연계</h2>
+                    <div class="content-area">
+                        <div class="bleed-text-side">
+                            <p>이 플랫폼은 드라마 촬영지에 대한 상세 정보를 제공하여 문화적 호기심을 고부가가치 관광 수요로 전환합니다.</p>
+                            <p>다음과 같은 체험 루프를 만듭니다:</p>
+                            <ul>
+                                <li>**한국관광공사(KTO)** 공식 상품과의 통합.</li>
+                                <li>방문객에게 맞춤형 가이드 제공.</li>
+                                <li>주요 문화 유적지에서 **무료 음식 시식** 기회(예: *대장금*에 나오는 음식) 제공. </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <!-- Image of Gyeongbokgung Palace -->
+                    <img class="bleed-image-side" alt="경복궁 내 향원정" src="https://www.realtravelling.com/tpl/lib/img/private/media/hyangwonjeong-in-gyeongbokgung-palace-seoil-images-vnmigrrigf8.jpg">
+                </div>
+            </div>
+
+            <!-- Slide 11: Pillar 3: Product Linkage (Image_Right_Text_Left) -->
+            <div class="slide-container" id="slide11">
+                <h2 class="slide-title">소비 기둥 3: K-상품 연계</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <p>AI는 등장인물이 사용하는 PPL(간접 광고) 아이템, 즉 K-뷰티 및 K-패션 상품을 즉시 인식합니다.</p>
+                            <p>공식 판매처 또는 E-커머스 채널로 **직접적이고 추적 가능한 링크**를 제공합니다.</p>
+                            <p>이러한 끊김 없는 연결은 외부 검색을 제거하여, 소비재 수출의 **전환율을 극대화**하고 충동 구매를 포착합니다. </p>
+                        </div>
+                        <div>
+                            <!-- Image of K-Beauty Kit -->
+                            <div class="image-wrapper">
+                                <img alt="K-뷰티 스킨케어 키트" src="https://ohlolly.com/cdn/shop/files/Korean_Skincare_Kit_for_Normal_Skin_Types.jpg?v=1760404468&amp;width=1200">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 12: Risk & Mitigation (Tiled_Text_With_Icons) -->
+            <div class="slide-container" id="slide12">
+                <h2 class="slide-title">거버넌스 및 위험 관리</h2>
+                <div class="content-area">
+                    <div class="tiled-content">
+                        <div class="tile">
+                            <div class="icon"><i class="fa-solid fa-gavel"></i></div>
+                            <h3>핵심 위험</h3>
+                            <p>주요 위험은 지적 재산권(IP), 콘텐츠 저작권 및 PPL 활용 권리와 관련된 법적 및 상업적 복잡성입니다.</p>
+                        </div>
+                        <div class="tile">
+                            <div class="icon"><i class="fa-solid fa-shield-alt"></i></div>
+                            <h3>완화 전략</h3>
+                            <p>플랫폼 구축 **이전**에 **의무적 수익 공유(수익 공유)** 프레임워크를 법적으로 정의하고 합의해야 합니다.</p>
+                        </div>
+                        <div class="tile">
+                            <div class="icon"><i class="fa-solid fa-handshake"></i></div>
+                            <h3>목표: 상생</h3>
+                            <p>이는 지속 가능성과 이해관계자 참여를 보장하기 위해 인센티브가 부여된, "**모든 참여자가 승리하는**" 생태계(상생하는 생태계)를 만듭니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 13: Economic Impact (Two_Column_Tiled_Text) -->
+            <div class="slide-container" id="slide13">
+                <h2 class="slide-title">정량화 가능한 경제적 파급 효과</h2>
+                <div class="content-area">
+                    <div class="two-column tiled">
+                        <div>
+                            <h3>마케팅 비용 절감</h3>
+                            <p>높은 구매 의도를 가진 글로벌 시청자에게 직접적이고 즉각적인 제품 노출을 가능하게 하여, 비용이 많이 드는 전통적인 해외 마케팅 캠페인의 필요성을 획기적으로 줄입니다.</p>
+                        </div>
+                        <div>
+                            <h3>데이터 기반 전략 수립</h3>
+                            <p>글로벌 선호도(K-푸드, K-뷰티, 관광지)에 대한 귀중한 실시간 데이터를 포착하여, 정교하고 사전 예방적인 **데이터 기반 수출 전략**을 수립할 수 있도록 합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 14: Conclusion (Quote) -->
+            <div class="slide-container" id="slide14">
+                <h2 class="slide-title">전략적 권고</h2>
+                <div class="content-area">
+                    <div class="quote-layout">
+                        <blockquote>본 정책은 문화적 우위를 활용하여 중요한 시장 실패를 해결하고, K-콘텐츠를 국가의 'AI 성장 경제활력'을 위한 주요 엔진으로 포지셔닝합니다.</blockquote>
+                        <cite>협력적 거버넌스 모델과 의무적 수익 공유 협약을 공식화하기 위해 정부의 즉각적인 지원을 강력히 권고합니다.</cite>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 15: Appendix: Contest Timeline (Table) -->
+            <div class="slide-container" id="slide15">
+                <h2 class="slide-title">부록: 2025 미래한국 아이디어 공모전 일정</h2>
+                <div class="content-area">
+                    <div class="table-layout">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>단계</th>
+                                    <th>시작일</th>
+                                    <th>종료일</th>
+                                    <th>세부 내용</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1차 접수기간</td>
+                                    <td>2025/09/01 (월)</td>
+                                    <td>2025/10/19 (일)</td>
+                                    <td>정책 제안서(A4 5쪽 내외), 카드뉴스, 또는 영상(스토리보드)</td>
+                                </tr>
+                                <tr>
+                                    <td>심사 기간</td>
+                                    <td>2025/10/22 (수)</td>
+                                    <td>2025/10/27 (월)</td>
+                                    <td>제출작 심사</td>
+                                </tr>
+                                <tr>
+                                    <td>선정 발표</td>
+                                    <td>2025/10/29 (수)</td>
+                                    <td></td>
+                                    <td>10건 선정</td>
+                                </tr>
+                                <tr>
+                                    <td>대국민 투표</td>
+                                    <td>2025/10/29 (수)</td>
+                                    <td>2025/11/03 (월)</td>
+                                    <td>온라인 피드백; 상위 4건 선정</td>
+                                </tr>
+                                <tr>
+                                    <td>토론/발표</td>
+                                    <td>2025/11/07 (금)</td>
+                                    <td></td>
+                                    <td>상위 4건 발표 및 심사위원 토론</td>
+                                </tr>
+                                <tr>
+                                    <td>시상식</td>
+                                    <td>2025/11/13 (목)</td>
+                                    <td></td>
+                                    <td>최종 수상작 시상 (추후 변동 가능)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 16: Appendix: Award Structure (Table) -->
+            <div class="slide-container" id="slide16">
+                <h2 class="slide-title">부록: 공모전 시상 내역</h2>
+                <div class="content-area">
+                    <div class="table-layout">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>상명</th>
+                                    <th>시상 주체</th>
+                                    <th>수량(건)</th>
+                                    <th>상금(KRW)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>**대상**</td>
+                                    <td>부총리 겸 기획재정부장관</td>
+                                    <td>1</td>
+                                    <td>**5,000,000**</td>
+                                </tr>
+                                <tr>
+                                    <td>최우수상</td>
+                                    <td>한국연구개발원장상</td>
+                                    <td>1</td>
+                                    <td>3,000,000</td>
+                                </tr>
+                                <tr>
+                                    <td>우수상</td>
+                                    <td>서울경제사장상</td>
+                                    <td>8</td>
+                                    <td>각 1,000,000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 17: Q&A -->
+            <div class="slide-container" id="slide17">
+                <div class="qa-layout">
+                    <h2>질의응답</h2>
+                    <p>경청해 주셔서 감사합니다.</p>
+                </div>
+            </div>
+
+            <!-- 이미지 출처 부록 (참고용) -->
+            <div class="slide-container" id="slide-attributions-1">
+                <h2 class="slide-title">이미지 출처</h2>
+                <div class="content-area">
+                    <ul class="attribution-list">
+                        <li class="attribution-list__item">
+                            <div class="attribution__thumbnail">
+                                <img class="attribution__thumbnail__image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd285WWvOGxodfQAXDaCh6mLkx_UB6LDJk9R8WANj5xDXY6zAdv0GpqsDECVYj" alt="Thumbnail for www.freepik.com">
+                            </div>
+                            <div class="attribution__details">
+                                <p class="attribution__raw-url">https://img.freepik.com/premium-photo/man-watching-tv-while-holding-remote_527653-886.jpg</p>
+                                <p class="attribution__title">Source: <a href="https://www.freepik.com/premium-photo/confused-man-looking-phone-screen-while-sitting-sofa_33874243.htm" target="_blank" class="attribution__link">www.freepik.com</a></p>
+                            </div>
+                        </li>
+                        <li class="attribution-list__item">
+                            <div class="attribution__thumbnail">
+                                <img class="attribution__thumbnail__image" src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcR4S-lutvYYMzXSdlma0v5s-I2glKL5CyZngFSNp6MG6a6VeTLhRTCC-6K8BbEp" alt="Thumbnail for www.realtravelling.com">
+                            </div>
+                            <div class="attribution__details">
+                                <p class="attribution__raw-url">https://www.realtravelling.com/tpl/lib/img/private/media/hyangwonjeong-in-gyeongbokgung-palace-seoil-images-vnmigrrigf8.jpg</p>
+                                <p class="attribution__title">Source: <a href="https://www.realtravelling.com/south-korea-uncovered" target="_blank" class="attribution__link">www.realtravelling.com</a></p>
+                            </div>
+                        </li>
+                        <li class="attribution-list__item">
+                            <div class="attribution__thumbnail">
+                                <img class="attribution__thumbnail__image" src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRVo4j2T_4AhtLf2sfnlJ4_0nfck7DF-pMMShrjEfRH05ZCTJcVpNk5MQl39n3A" alt="Thumbnail for ohlolly.com">
+                            </div>
+                            <div class="attribution__details">
+                                <p class="attribution__raw-url">https://ohlolly.com/cdn/shop/files/Korean_Skincare_Kit_for_Normal_Skin_Types.jpg?v=1760404468&amp;width=1200</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+/**
+ * Fetches an image blob using a method that attempts to bypass CORS issues
+ * by adding 'alr=yes' to the URL and following redirects.
+ */
+async function fetchFifeImageBlobUsingAlr(urlString) {
+  if (urlString.startsWith('blob:') || urlString.startsWith('data:')) {
+      throw new Error('Input URL is already a blob or data URL.');
+  }
+  let url = new URL(urlString, window.location.href);
+  url.searchParams.set('alr', 'yes');
+  for (let i = 0; i < 5; i++) {
+      const response = await fetch(url.toString(), { credentials: 'include' });
+      if (!response.ok) throw new Error(`Fetch received not OK response: ${response.status}`);
+      if (!response.headers.get('content-type')?.startsWith('text/plain')) {
+          const blob = await response.blob();
+          if (blob.size > 0 && blob.type.startsWith('image/')) return blob;
+          // This will now correctly throw an error for non-image types like fonts.
+          else throw new Error('Fetched blob is not a valid image.');
+      }
+      url = new URL(await response.text());
+  }
+  throw new Error('Exceeded maximum number of redirects.');
+}
+
+async function updateImageSourcesUsingAlr() {
+  // Get all img elements on the page.
+  const allImages = Array.from(document.querySelectorAll('img'));
+
+  // Use Promise.all to handle all updates concurrently for better performance.
+  await Promise.all(allImages.map(async (img) => {
+    // Only proceed if the img tag has a valid 'src' attribute with a
+    // googleusercontent URL.
+    if (img.src && img.src.includes('googleusercontent')) {
+      try {
+        const blob = await fetchFifeImageBlobUsingAlr(img.src);
+        // Create a new URL from the Blob and set it as the image's source.
+        img.src = URL.createObjectURL(blob);
+      } catch (error) {
+        // Do nothing.
+      }
+    }
+  }));
+}
+
+async function updateBackgroundImagesUsingAlr() {
+  // Find all elements with a googleusercontent background image.
+  const elementsToProcess = document.querySelectorAll('[style*="googleusercontent"]');
+  const urlRegex = /url\((['"]?)(https?:\/\/.*?googleusercontent.*?)\1\)/;
+
+  if (elementsToProcess.length > 0) {
+
+      const promises = Array.from(elementsToProcess).map(element => {
+          return new Promise(async (resolve) => {
+              const style = element.style.backgroundImage;
+              const match = style.match(urlRegex);
+
+              if (match && match[2]) {
+                  const originalUrl = match[2];
+                  try {
+                      const blob = await fetchFifeImageBlobUsingAlr(originalUrl);
+                      const blobUrl = URL.createObjectURL(blob);
+
+                      // Directly update the element's style property.
+                      const newBackgroundImage = style.replace(originalUrl, blobUrl);
+                      element.style.backgroundImage = newBackgroundImage;
+                  } catch (error) {
+                      // Do nothing.
+                  }
+              }
+              resolve();
+          });
+      });
+
+      // Wait for all images to be processed.
+      await Promise.all(promises);
+  }
+}
+
+// --- SLIDESHOW LOGIC ---
+function initializeSlideshowUI() {
+    // Find all slide elements, excluding the attribution slide for navigation count
+    const allSlides = Array.from(document.querySelectorAll('.slide-container'));
+    const slides = allSlides.filter(slide => !slide.id.includes('attributions')); 
+
+    const prevButton = document.getElementById('prev-slide');
+    const nextButton = document.getElementById('next-slide');
+    const slideCounter = document.getElementById('slide-counter');
+    let currentSlide = 0;
+
+    function updateUI() {
+        // Set the active class for the current slide (including attribution slides)
+        allSlides.forEach((slide, index) => {
+            slide.classList.remove('active');
+        });
+        
+        // Find the actual current slide index in the *filtered* list
+        const currentSlideElement = slides[currentSlide];
+        
+        // Show the current slide
+        if (currentSlideElement) {
+            currentSlideElement.classList.add('active');
+        }
+
+
+        // Navigation logic for main slides
+        prevButton.disabled = currentSlide === 0;
+        nextButton.disabled = currentSlide === slides.length - 1;
+        slideCounter.textContent = `슬라이드 ${currentSlide + 1} / ${slides.length}`;
+    }
+
+    function showNextSlide() {
+        if (currentSlide < slides.length - 1) {
+            currentSlide++;
+            updateUI();
+        }
+    }
+
+    function showPrevSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            updateUI();
+        }
+    }
+
+    // Event Listeners for Navigation
+    nextButton.addEventListener('click', showNextSlide);
+    prevButton.addEventListener('click', showPrevSlide);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') showNextSlide();
+        else if (e.key === 'ArrowLeft') showPrevSlide();
+    });
+
+    // Theme Toggle Logic
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const htmlEl = document.documentElement;
+
+    function setTheme(isDark) {
+        htmlEl.classList.toggle('dark', isDark);
+        darkIcon.classList.toggle('hidden', isDark);
+        lightIcon.classList.toggle('hidden', !isDark);
+        localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
+    }
+    const isDarkMode = localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    setTheme(isDarkMode);
+    themeToggleBtn.addEventListener('click', () => setTheme(!htmlEl.classList.contains('dark')));
+
+    // Scaling Logic
+    function updateScale() {
+        const baseWidth = 1280;
+        const baseHeight = 720;
+        const slideshowWrapper = document.getElementById('slideshow-wrapper');
+        const slideshowHolder = document.getElementById('slideshow-holder');
+
+        // The available space is the dimensions of the holder div.
+        const availableWidth = slideshowHolder.clientWidth;
+        const availableHeight = slideshowHolder.clientHeight;
+
+        // Calculate the scale ratio based on both width and height
+        const scaleX = availableWidth / baseWidth;
+        const scaleY = availableHeight / baseHeight;
+
+        // Use the smaller of the two ratios to ensure it fits
+        const finalScale = Math.min(scaleX, scaleY);
+
+        slideshowWrapper.style.setProperty('--scale-factor', finalScale);
+    }
+
+    updateUI();
+    updateScale();
+    window.addEventListener('resize', updateScale);
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+    await Promise.all([
+      updateImageSourcesUsingAlr(),
+      updateBackgroundImagesUsingAlr()
+    ]);
+    initializeSlideshowUI();
+});
+</script>
+</body>
+</html>

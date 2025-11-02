@@ -3,111 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LLM 선호도 예측 분류 모델 개발 요약</title>
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-    <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap)" rel="stylesheet">
+    <title>LLM 선호도 예측 분류 모델 개발 요약 (Kaggle 기반)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            /* 1. 요청 사항: 배경색을 밝은 파란색 계열로 변경 */
-            background-color: #e6f0ff; 
+            background-color: #f7fbfd; 
             font-family: 'Noto Sans KR', sans-serif;
             line-height: 1.6;
             color: #333;
-            padding: 20px 0; 
+            padding: 30px 0; 
         }
         .container {
-            /* 2. 요청 사항: 콘텐츠 영역 가운데 정렬 */
             max-width: 1000px;
             margin: 0 auto; 
             background-color: #ffffff; 
             padding: 40px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            border-bottom: 5px solid #ff9800; /* Orange accent */
         }
         h1 {
-            color: #1a73e8; /* 구글 블루 */
-            border-bottom: 2px solid #e6f0ff;
-            padding-bottom: 10px;
+            color: #1a73e8;
+            border-bottom: 3px solid #e6f0ff;
+            padding-bottom: 15px;
             margin-top: 0;
+            font-size: 2.25rem;
         }
+        /* 레이아웃 변화: 도전/해결 섹션 강조 */
         h2 {
-            color: #3c4043; /* 구글 다크 그레이 */
-            margin-top: 25px;
+            color: #ff9800;
+            border-bottom: 2px solid #ffecb3;
+            padding-bottom: 5px;
+            margin-top: 35px;
+            font-size: 1.75rem;
+            font-weight: 700;
         }
-        ul {
-            list-style-type: disc;
-            margin-left: 20px;
-            padding-left: 0;
+        h3 {
+            color: #f57c00;
+            font-weight: 700;
+            margin-top: 20px;
         }
-        li {
+        p {
+            margin-bottom: 15px;
+            color: #4a5568;
+        }
+        .challenge-box, .solution-box {
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .challenge-box {
+            background-color: #fff3e0; 
+            border: 1px solid #ffb74d; 
+            margin-bottom: 20px;
+        }
+        .solution-box {
+            background-color: #e8f5e9; 
+            border: 1px solid #a5d6a7; 
+            margin-bottom: 20px;
+        }
+        .box-title {
+            font-weight: 700;
+            font-size: 1.125rem;
             margin-bottom: 10px;
+            color: #e65100;
         }
-        strong {
-            color: #202124;
+        .tech-tag {
+            display: inline-block;
+            background-color: #fff8e1; 
+            color: #ff9800; 
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        /* 전처리 흐름 다이어그램 */
+        .preprocess-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+        }
+        .flow-step {
+            width: 28%;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            background-color: #fbe9e7;
+            border: 2px solid #ff9800;
+            font-weight: 700;
+        }
+        .flow-arrow {
+            font-size: 2rem;
+            color: #ff9800;
+            font-weight: 700;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
 <body>
     <div class="container mx-auto">
         <header class="header">
-            <h1 class="text-3xl font-bold text-gray-800">LLM 선호도 예측 분류 모델 개발 요약 (Kaggle 기반)</h1>
-            <p class="text-gray-500 mt-1">프로젝트 과정 해석 및 기술 역량 상세 설명 (코드 제외)</p>
+            <h1 class="font-bold text-gray-800">LLM 선호도 예측 분류 모델 개발 요약 (Kaggle 기반)</h1>
+            <p class="text-gray-500 mt-2">이질적인 특징 통합 및 MultinomialNB 모델 최적화</p>
         </header>
 
-        <section class="mb-8">
-            <h2 class="section-title">프로젝트 개요 및 목표</h2>
-            <div class="card">
-                <p class="text-gray-700">사용자 응답 데이터를 기반으로 두 LLM(A vs B) 중 어떤 응답을 선호할지 예측하는 **다중 분류 모델**을 개발했습니다. 이는 AI 챗봇 QA 과정에서 사용자의 주관적인 만족도를 예측하여 모델 개선 방향을 제시하는 중요한 역량입니다.</p>
-                <div class="mt-4">
+        <section class="mb-10">
+            <h2>1. 프로젝트 개요 및 목표</h2>
+            <div class="card bg-white">
+                <p>사용자 응답 데이터를 기반으로 두 LLM(A 또는 B) 중 사용자가 어느 응답을 선호할지 예측하는 **다중 분류 모델**을 개발했습니다. 이는 정량적/정성적 데이터를 결합하여 사용자 만족도를 예측하고 LLM 성능 개선 방향을 제시하는 데 활용됩니다.</p>
+                
+                <h3 class="mt-4 mb-2">핵심 기술 역량</h3>
+                <div class="mt-2 flex flex-wrap">
                     <span class="tech-tag">Multi-Class Classification</span>
-                    <span class="tech-tag">Feature Engineering</span>
-                    <span class="tech-tag">MultinomialNB</span>
+                    <span class="tech-tag">TF-IDF Vectorization</span>
+                    <span class="tech-tag">Feature Scaling (MinMaxScaler)</span>
+                    <span class="tech-tag">MultinomialNB / Ensemble Comparison</span>
                 </div>
             </div>
         </section>
 
-        <section class="mb-8">
-            <h2 class="section-title">기술적 도전 및 문제 해결 과정</h2>
-            <div class="card">
-                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. 이질적인 특징의 통합 및 고급 특징 공학</h3>
-                <p class="text-gray-700">
-                    **도전:** 텍스트 데이터(응답 내용)와 수치 데이터(토큰 수, 구두점 수)라는 이질적인 특징을 통합하여 모델의 예측력을 높여야 했습니다.
-                </p>
-                <p class="text-gray-700 mt-1">
-                    **해결:** 텍스트에는 **TF-IDF 벡터화**를 적용하고, 여기에 수치형 특징을 결합하여 특징 공간을 확장했습니다. 이를 통해 모델이 응답의 **내용(키워드)** 뿐만 아니라 **길이나 문장 구조(수치)**까지 고려하도록 설계했습니다.
-                </p>
+        <section class="mb-10">
+            <h2>2. 기술적 도전 및 해결 과정</h2>
 
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. Multinomial Naive Bayes 적용 시의 오류 해결</h3>
-                <p class="text-gray-700">
-                    **도전:** `Multinomial Naive Bayes (MNB)` 모델은 입력 특징이 음수일 때 학습이 불가능하여 초기 단계에서 오류가 발생했습니다.
+            <div class="challenge-box">
+                <div class="box-title">🚩 도전 1: 이질적인 특징 (텍스트/수치)의 통합 문제</div>
+                <p>텍스트 데이터(응답 내용)와 수치 데이터(토큰 수, 구두점 수)를 효과적으로 결합하여 모델의 예측력을 높여야 했습니다.</p>
+                <p class="text-gray-700 mt-1 font-bold">
+                    ✅ **해결:** 텍스트에 **TF-IDF 벡터화**를 적용하고, 여기에 수치형 특징을 결합하여 특징 공간을 확장했습니다. 모델이 응답의 내용뿐 아니라 길이, 복잡성 같은 수치적 요소까지 통합적으로 고려하도록 설계했습니다.
                 </p>
-                <p class="text-gray-700 mt-1">
-                    **해결:** MNB 모델의 요구사항에 맞춰 **`MinMaxScaler`**를 사용하여 모든 특징 데이터를 $[0, 1]$ 범위로 스케일링하여 이 문제를 해결했습니다. 이 로직 수정 후 MNB 모델 훈련에 성공하여 Log Loss $0.0119$의 높은 훈련 성능을 확보했습니다.
-                </p>
+            </div>
 
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">3. 모델 비교 분석</h3>
-                <p class="text-gray-700">
-                    MNB 외에도 SVC, RandomForestClassifier를 적용하여 성능을 비교했습니다. 이를 통해 데이터셋 특성에 가장 적합한 모델을 선별하고, 각 모델의 장단점을 이해하는 능력을 보여주었습니다.
+            <div class="challenge-box">
+                <div class="box-title">🚩 도전 2: Multinomial Naive Bayes (MNB) 모델의 학습 오류 해결</div>
+                <p>MNB 모델은 입력 특징이 **음수일 때** 학습이 불가능하다는 제약 때문에 초기 단계에서 오류가 발생했습니다.</p>
+                <p class="text-gray-700 mt-1 font-bold">
+                    ✅ **해결:** MNB 모델의 요구사항을 충족시키기 위해 **`MinMaxScaler`**를 사용하여 모든 특징 데이터를 **$[0, 1]$ 범위로 스케일링**하여 문제를 근본적으로 해결했습니다. 이 로직 수정 후 MNB 모델 훈련에 성공하여 높은 성능을 확보했습니다.
                 </p>
             </div>
         </section>
-
-        <section>
-            <h2 class="section-title">API 키 및 코드 처리 방안</h2>
-            <div class="card bg-yellow-50 border border-yellow-300">
-                <p class="text-gray-700 font-semibold">
-                    이 프로젝트는 공개된 Kaggle 데이터를 사용했으며, LLM API Key를 사용하지 않았습니다.
-                </p>
-                <p class="text-gray-700 mt-2">
-                    **코드 포메이션 대신:** **TF-IDF, MinMaxScaler와 같은 전처리 기술의 선택 이유**, 그리고 MNB 모델의 제약 조건을 해결한 **데이터 스케일링 로직의 구현 과정** 등 문제를 해결한 논리적 사고를 중심으로 기술 해석을 진행했습니다.
-                </p>
+        
+        <section class="mb-10">
+            <h2>3. 데이터 전처리 및 특징 엔지니어링 흐름 시각화</h2>
+            
+            <div class="preprocess-flow">
+                <div class="flow-step">
+                    응답 텍스트 <span class="text-sm font-normal text-gray-600">(정성적)</span>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    TF-IDF 벡터화 <span class="text-sm font-normal text-gray-600">(수치 변환)</span>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    특징 결합 및 MinMaxScaler <span class="text-sm font-normal text-gray-600">($[0, 1]$ 스케일링)</span>
+                </div>
+            </div>
+            
+            <div class="mt-8">
+                <p class="font-semibold text-gray-700 mb-2">데이터 전처리 과정 </p>
+                <img src="https://placehold.co/900x300/e65100/ffffff?text=LLM+Feature+Engineering+Flow" alt="LLM 특징 엔지니어링 흐름 시각화" class="mx-auto rounded-lg shadow-md border border-gray-200">
             </div>
         </section>
 
         <footer class="text-center mt-8 text-gray-500 text-sm">
-            LLM 선호도 예측 분류 모델 개발 요약
+            문서 작성자: [작성자 이름] / 프로젝트: LLM 선호도 예측 분류
         </footer>
     </div>
 </body>
 </html>
-

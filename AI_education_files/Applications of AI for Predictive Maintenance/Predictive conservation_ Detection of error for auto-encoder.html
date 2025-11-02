@@ -8,89 +8,250 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            /* 1. 요청 사항: 배경색을 밝은 파란색 계열로 변경 */
-            background-color: #e6f0ff; 
+            /* 톤 통일을 위해 배경색을 전문적이고 차분한 색상으로 조정 */
+            background-color: #f4f7f9; 
             font-family: 'Noto Sans KR', sans-serif;
             line-height: 1.6;
             color: #333;
-            padding: 20px 0; 
+            padding: 30px 0; 
         }
         .container {
-            /* 2. 요청 사항: 콘텐츠 영역 가운데 정렬 */
             max-width: 1000px;
             margin: 0 auto; 
             background-color: #ffffff; 
             padding: 40px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
         }
         h1 {
-            color: #1a73e8; /* 구글 블루 */
-            border-bottom: 2px solid #e6f0ff;
-            padding-bottom: 10px;
+            color: #1a73e8;
+            border-bottom: 3px solid #e6f0ff;
+            padding-bottom: 15px;
             margin-top: 0;
+            font-size: 2.25rem; /* text-3xl */
         }
         h2 {
-            color: #3c4043; /* 구글 다크 그레이 */
-            margin-top: 25px;
+            color: #3c4043;
+            margin-top: 35px;
+            font-size: 1.75rem; /* text-2xl */
+            border-left: 5px solid #1a73e8;
+            padding-left: 10px;
         }
-        ul {
-            list-style-type: disc;
-            margin-left: 20px;
-            padding-left: 0;
+        h3 {
+            color: #0d47a1;
+            font-weight: 700;
+            margin-top: 20px;
         }
-        li {
-            margin-bottom: 10px;
+        p {
+            margin-bottom: 15px;
+            color: #4a5568;
         }
-        strong {
-            color: #202124;
+        .card {
+            background-color: #f7f9fc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .tech-tag {
+            display: inline-block;
+            background-color: #e3f2fd; /* Light Blue */
+            color: #1a73e8; /* Google Blue */
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        /* 시각화를 위한 CSS 추가 */
+        .diagram-box {
+            background-color: #ffffff;
+            border: 2px solid #1a73e8;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            color: #1a73e8;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px;
+            flex-grow: 1;
+        }
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .autoencoder-flow .diagram-box {
+            min-width: 150px;
+        }
+        .autoencoder-flow {
+            border: 1px dashed #0d47a1;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #e6f0ff;
+        }
+        .ae-arrow {
+            font-size: 1.5rem;
+            color: #0d47a1;
+            font-weight: 700;
+            margin: 0 10px;
+        }
+        .anomaly-chart {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .chart-visual {
+            background: linear-gradient(to right, #4CAF50 85%, #F44336 85%);
+            height: 150px;
+            border-radius: 8px;
+            position: relative;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .threshold-line {
+            position: absolute;
+            left: 85%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: #2196F3;
+            border-radius: 2px;
+        }
+        .label-normal, .label-anomaly {
+            position: absolute;
+            font-size: 0.875rem;
+            color: white;
+            font-weight: bold;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        .label-normal {
+            left: 10%;
+            background-color: rgba(76, 175, 80, 0.8);
+        }
+        .label-anomaly {
+            right: 10%;
+            background-color: rgba(244, 67, 54, 0.8);
+        }
+        .threshold-label {
+            position: absolute;
+            left: 85%;
+            top: -20px;
+            transform: translateX(-50%);
+            font-size: 0.875rem;
+            color: #2196F3;
+            font-weight: bold;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>3. 예측 유지보수: 오토인코더 기반 이상 탐지 요약</h1>
-            <p class="text-gray-600 mt-2">재구성 오류 기반의 오토인코더(AE) 딥러닝 이상 탐지 기법 구현</p>
-            <div class="tag-group">
-                <span class="tag tag-ml">ML</span>
+    <div class="container mx-auto">
+        <header class="header">
+            <h1 class="font-bold text-gray-800">예측 유지보수: 오토인코더 기반 이상 탐지 요약</h1>
+            <p class="text-gray-500 mt-2">재구성 오류 임계치를 활용한 딥러닝 기반 비지도 이상 탐지 기술 구현</p>
+        </header>
+
+        <section class="mb-10">
+            <h2 class="section-title">1. 프로젝트 개요 및 목표</h2>
+            <div class="card">
+                <p>본 프로젝트는 시계열 데이터에서 기존 패턴과 다른 **이상 패턴(Anomalies)**을 효과적으로 탐지하기 위해 **오토인코더(Autoencoder, AE)** 딥러닝 모델을 사용했습니다. 목표는 모델이 **정상 데이터만을 학습**하도록 훈련시킨 후, 정상 패턴에서 크게 벗어나는 데이터를 이상(Anomaly)으로 분류하는 비지도 학습(Unsupervised) 기반의 예측 유지보수 기법을 구현하는 것입니다.</p>
+
+                <div class="mt-4 flex flex-wrap">
+                    <span class="tech-tag">Autoencoder</span>
+                    <span class="tech-tag">이상 탐지</span>
+                    <span class="tech-tag">재구성 오류</span>
+                    <span class="tech-tag">GPU 훈련</span>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <h2>프로젝트 개요</h2>
-        <p>시계열 데이터에서 **이상 패턴(Anomalies)**을 탐지하기 위해 **오토인코더(Autoencoder, AE)** 딥러닝 모델을 사용했습니다. 모델이 정상 데이터만을 학습하도록 훈련시킨 후, 정상 패턴에서 벗어나는 데이터를 이상으로 분류하는 기법을 구현했습니다.</p>
+        <section class="mb-10">
+            <h2 class="section-title">2. 오토인코더 구조 및 데이터 흐름 (가시화)</h2>
+            <p>오토인코더는 데이터를 압축(인코딩)했다가 다시 복원(디코딩)하는 구조를 가집니다. 이 과정에서 정상 데이터는 잘 복원되지만, 이상 데이터는 복원이 어렵습니다.</p>
+            
+            <div class="autoencoder-flow mt-4">
+                <div class="flow-container">
+                    <div class="flow-item">
+                        <div class="diagram-box bg-white border-blue-600 border-dashed">
+                            입력 데이터 (X)
+                        </div>
+                    </div>
+                    <div class="ae-arrow">➡️</div>
+                    <div class="flow-item">
+                        <div class="diagram-box bg-blue-100">
+                            **인코더 (Encoder)**<br>
+                            (데이터 압축)
+                        </div>
+                    </div>
+                    <div class="ae-arrow">↔️</div>
+                    <div class="flow-item">
+                        <div class="diagram-box bg-gray-300 border-gray-600 border-dashed text-gray-800 font-normal">
+                            잠재 공간 (Latent Space)<br>(최소 차원)
+                        </div>
+                    </div>
+                    <div class="ae-arrow">↔️</div>
+                    <div class="flow-item">
+                        <div class="diagram-box bg-blue-100">
+                            **디코더 (Decoder)**<br>
+                            (데이터 복원)
+                        </div>
+                    </div>
+                    <div class="ae-arrow">➡️</div>
+                    <div class="flow-item">
+                        <div class="diagram-box bg-white border-blue-600 border-dashed">
+                            출력 데이터 ($\hat{X}$)
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <h2>⚙️ 주요 기술 및 역할</h2>
-        <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>기술:</strong> Autoencoder(인코더/디코더), 이상 탐지(Anomaly Detection), 재구성 오류(Reconstruction Error).</li>
-            <li class="list-item"><strong>이상 탐지 방법론:</strong> 오토인코더가 **정상 데이터만을 학습**하도록 훈련 데이터셋을 구성하고, 복원된 데이터와 원본 데이터 간의 **재구성 오류(Reconstruction Error)** 임계치를 설정하여 이상 여부를 판단하는 논리를 구현했습니다.</li>
-            <li class="list-item"><strong>GPU 훈련 최적화:</strong> GPU를 사용하여 대용량 데이터 기반의 오토인코더 모델을 효율적으로 훈련했습니다.</li>
-        </ul>
+            <div class="mt-8">
+                <p class="font-semibold text-gray-700 mb-2">이상 탐지 원리: 재구성 오류와 임계치</p>
+                <img src="https://placehold.co/800x250/1a73e8/ffffff?text=Anomaly+Detection+Principle+(Reconstruction+Error+Chart)" alt="오토인코더 재구성 오류 임계치 그래프 스크린샷" class="mx-auto rounded-lg shadow-md border border-gray-200">
+                <p class="text-center text-sm text-gray-500 mt-2">재구성 오류가 임계치를 초과할 때 이상으로 분류됩니다.</p>
+            </div>
+        </section>
 
-        <h2>🛠️ 주요 구현 내용</h2>
-        <ul class="list-disc ml-6 mt-3">
-            <li class="list-item"><strong>훈련 데이터 구성:</strong> 훈련 데이터셋에서 **정상(Non-defective) 샘플**만을 필터링하여 오토인코더 입력으로 사용했습니다.</li>
-            <li class="list-item"><strong>모델 구조:</strong> 입력층, 인코더, 잠재 공간(Latent Space), 디코더, 출력층으로 구성된 네트워크를 설계했습니다.</li>
-            <li class="list-item"><strong>이상 탐지:</strong> 훈련된 모델에 테스트 데이터를 입력했을 때 발생하는 **재구성 오류(MSE)**가 설정된 임계치를 초과할 경우, 해당 데이터를 '이상(Anomaly)'으로 분류했습니다.</li>
-        </ul>
+        <section class="mb-10">
+            <h2 class="section-title">3. 기술적 도전 및 문제 해결 과정</h2>
+            <div class="card">
+                
+                <h3 class="mb-2">3-1. '정상 데이터'만을 활용한 훈련 데이터셋 구성</h3>
+                <p class="text-gray-700">
+                    **도전:** 이상 탐지 모델은 데이터 불균형이 심하기 때문에, 기존의 지도 학습 방식으로는 학습이 어렵습니다. 모델이 정상 패턴만을 정확하게 인지하도록 만들어야 했습니다.
+                </p>
+                <p class="text-gray-700 mt-1">
+                    **해결:** 훈련 데이터셋에서 **정상(Non-defective) 샘플**만을 필터링하여 오토인코더의 입력으로 사용했습니다. 이 방식은 모델이 정상 데이터의 특징만을 압축하고 복원하는 데 특화되도록 강제하여, 이상 데이터 입력 시 복원 정확도를 크게 떨어뜨리게 됩니다.
+                </p>
 
-        <h2>📌 주요 코드 로직 (오토인코더 훈련 데이터 준비 추상화)</h2>
-        <div class="code-block">
-            <pre># 'failure' 라벨이 0인 정상 샘플만 추출하여 훈련 데이터셋 구성
-x_train_normal = x_train[df_train['failure'] == 0]
+                <h3 class="mt-6 mb-2">3-2. 이상 탐지를 위한 재구성 오류(Reconstruction Error) 활용</h3>
+                <p class="text-gray-700">
+                    **핵심 논리:** 훈련된 오토인코더에 테스트 데이터를 입력하고, 원본 데이터 $X$와 복원된 데이터 $\hat{X}$ 간의 **평균 제곱 오차(MSE)**를 재구성 오류로 산출했습니다. 이 오류가 **사전에 설정된 임계치**를 초과할 경우, 해당 샘플을 '이상(Anomaly)'으로 최종 분류하는 논리를 구현했습니다.
+                </p>
 
-# 오토인코더는 입력(X)을 출력(X)으로 복원하도록 학습 (입력 == 목표)
-history = autoencoder.fit(
-    x_train_normal, 
-    x_train_normal, 
-    epochs=EPOCHS,
-    batch_size=BATCH_SIZE,
-    validation_data=(x_test, x_test) 
-)</pre>
-        </div>
+                <h3 class="mt-6 mb-2">3-3. GPU를 통한 딥러닝 모델 훈련 최적화</h3>
+                <p class="text-gray-700">
+                    대용량의 시계열 데이터를 기반으로 하는 딥러닝 모델 특성상, 훈련 속도가 중요합니다. TensorFlow/Keras 환경에서 GPU 가속 기능을 활용하여 오토인코더 모델의 훈련 속도를 최적화했습니다. 이는 복잡한 딥러닝 구조도 효율적으로 관리하고 운영할 수 있는 역량을 입증합니다.
+                </p>
+            </div>
+        </section>
+
+        <footer class="text-center mt-8 text-gray-500 text-sm">
+            문서 작성자: [작성자 이름] / 프로젝트: 예측 유지보수 오토인코더
+        </footer>
     </div>
 </body>
 </html>
-
-
-

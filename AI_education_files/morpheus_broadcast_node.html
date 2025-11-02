@@ -4,110 +4,210 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Morpheus Broadcast 노드 구현 및 활용 요약</title>
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-    <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap)" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            /* 1. 요청 사항: 배경색을 밝은 파란색 계열로 변경 */
-            background-color: #e6f0ff; 
+            background-color: #f4f7f9; 
             font-family: 'Noto Sans KR', sans-serif;
             line-height: 1.6;
             color: #333;
-            padding: 20px 0; 
+            padding: 30px 0; 
         }
         .container {
-            /* 2. 요청 사항: 콘텐츠 영역 가운데 정렬 */
             max-width: 1000px;
             margin: 0 auto; 
             background-color: #ffffff; 
             padding: 40px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
         }
         h1 {
-            color: #1a73e8; /* 구글 블루 */
-            border-bottom: 2px solid #e6f0ff;
-            padding-bottom: 10px;
+            color: #1a73e8;
+            border-bottom: 3px solid #e6f0ff;
+            padding-bottom: 15px;
             margin-top: 0;
+            font-size: 2.25rem;
         }
+        /* 레이아웃 변화: 도전/해결 섹션 강조 */
         h2 {
-            color: #3c4043; /* 구글 다크 그레이 */
-            margin-top: 25px;
+            color: #3c4043;
+            border-left: 5px solid #1a73e8;
+            padding-left: 15px;
+            margin-top: 35px;
+            font-size: 1.75rem;
+            font-weight: 700;
         }
-        ul {
-            list-style-type: disc;
-            margin-left: 20px;
-            padding-left: 0;
+        h3 {
+            color: #0d47a1;
+            font-weight: 700;
+            margin-top: 20px;
         }
-        li {
+        p {
+            margin-bottom: 15px;
+            color: #4a5568;
+        }
+        .card {
+            background-color: #f7f9fc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .tech-tag {
+            display: inline-block;
+            background-color: #e3f2fd; 
+            color: #1a73e8; 
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        /* Broadcast 다이어그램 CSS */
+        .broadcast-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+        }
+        .center-box {
+            background-color: #1a73e8;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+        }
+        .input-arrow {
+            width: 2px;
+            height: 20px;
+            background-color: #1a73e8;
+        }
+        .horizontal-line {
+            width: 80%;
+            height: 2px;
+            background-color: #1a73e8;
+            margin: 10px 0;
+            position: relative;
+        }
+        .output-branches {
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+            margin-top: 10px;
+        }
+        .branch-box {
+            width: 30%;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            background-color: #ffffff;
+            font-size: 0.875rem;
+        }
+        .branch-box-title {
+            font-weight: 700;
+            color: #0d47a1;
+        }
+        .input-box {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 700;
             margin-bottom: 10px;
         }
-        strong {
-            color: #202124;
+        img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
 <body>
     <div class="container mx-auto">
         <header class="header">
-            <h1 class="text-3xl font-bold text-gray-800">Morpheus Broadcast 노드 구현 및 활용 요약</h1>
-            <p class="text-gray-500 mt-1">프로젝트 과정 해석 및 기술 역량 상세 설명 (코드 제외)</p>
+            <h1 class="font-bold text-gray-800">Morpheus Broadcast 노드 구현 및 활용 요약</h1>
+            <p class="text-gray-500 mt-2">단일 메시지를 다중 경로로 복제/전송하는 병렬 처리 아키텍처 구축</p>
         </header>
 
-        <section class="mb-8">
-            <h2 class="section-title">프로젝트 개요 및 목표</h2>
+        <section class="mb-10">
+            <h2>1. 프로젝트 개요 및 병렬 처리 목표</h2>
             <div class="card">
-                <p class="text-gray-700">Morpheus의 핵심인 **`mrc.core.node.Broadcast`**를 활용하여, 들어오는 단일 메시지를 여러 다운스트림 스테이지로 동시에 복제 및 전송하는 **`MpBroadcastStage`**를 개발했습니다. 이는 실시간 데이터를 여러 분석/저장 로직으로 병렬 처리하는 데 사용됩니다.</p>
-                <div class="mt-4">
-                    <span class="tech-tag">MRC Broadcast</span>
-                    <span class="tech-tag">다중 출력 포트</span>
-                    <span class="tech-tag">병렬 처리</span>
+                <p>Morpheus의 **`mrc.core.node.Broadcast`** 노드를 활용하여, 들어오는 단일 메시지를 손실 없이 여러 다운스트림 스테이지로 **동시에 복제 및 전송**하는 `MpBroadcastStage`를 개발했습니다. 이는 실시간 데이터를 **탐지, 저장, 시각화**와 같은 여러 분석 로직으로 **병렬 처리**하여 처리량(Throughput)을 극대화하는 데 필수적인 기술입니다.</p>
+
+                <h3 class="mt-4 mb-2">핵심 기술 역량</h3>
+                <div class="mt-2 flex flex-wrap">
+                    <span class="tech-tag">MRC Broadcast Node</span>
+                    <span class="tech-tag">Multi-Output Port Definition</span>
+                    <span class="tech-tag">Parallel Processing</span>
+                    <span class="tech-tag">Pipeline Integration</span>
+                </div>
+            </div>
+            
+            <div class="mt-8">
+                <p class="font-semibold text-gray-700 mb-2">Morpheus Broadcast 노드의 병렬 분배 구조 </p>
+                <img src="https://placehold.co/900x300/e8731a/ffffff?text=Morpheus+Broadcast+Visualization" alt="Morpheus Broadcast 노드 시각화" class="mx-auto rounded-lg shadow-md border border-gray-200">
+            </div>
+        </section>
+
+        <section class="mb-10">
+            <h2>2. 기술적 도전 및 해결 과정</h2>
+            
+            <h3 class="mt-6 mb-2">도전 1: 다중 출력 포트 정의 및 MRC 로직 통합</h3>
+            <p class="text-gray-700">
+                일반적인 스테이지와 달리, 메시지 복제와 전송을 위해 **3개의 출력 포트**를 정의하고 MRC 그래프에 `Broadcast` 노드를 명시적으로 통합해야 했습니다.
+            </p>
+            <p class="text-gray-700 mt-1 font-bold">
+                ✅ **해결:** `Stage` 클래스를 상속받아 **`_create_ports(1, 3)`**을 호출하여 1개 입력, 3개 출력을 정의했습니다. 이후 `_build` 메서드 내에서 **`mrc.core.node.Broadcast`** 객체를 생성하고, 입력 노드와 출력 포트들을 Broadcast 노드에 연결하는 MRC 로직을 직접 구현했습니다.
+            </p>
+
+            <h3 class="mt-6 mb-2">도전 2: 복제된 메시지의 동시성 및 무결성 검증</h3>
+            <p class="text-gray-700">
+                3개 포트로 복제된 메시지가 동기화되어 전달되고 내용이 손상되지 않음을 보장해야 했습니다.
+            </p>
+            <p class="text-gray-700 mt-1 font-bold">
+                ✅ **해결:** 3개의 출력 포트 각각에 독립적인 **`InMemorySinkStage`**를 연결하고, 최종적으로 각 Sink에서 수집된 메시지의 **개수와 내용이 완전히 동일함**을 확인하여 Broadcast 로직의 무결성을 검증했습니다.
+            </p>
+
+        </section>
+        
+        <section class="mb-10">
+            <h2>3. Broadcast를 활용한 병렬 분기 시각화</h2>
+            <div class="broadcast-diagram">
+                <div class="input-box">
+                    입력 메시지 (단일 로그)
+                </div>
+                <div class="input-arrow"></div>
+                
+                <div class="center-box">
+                    MpBroadcastStage (MRC Broadcast Node)
+                    <p class="text-xs mt-1 font-normal">(1 Input / 3 Outputs 정의)</p>
+                </div>
+                <div class="horizontal-line"></div>
+                
+                <div class="output-branches">
+                    <div class="branch-box">
+                        <div class="branch-box-title">Output 1</div>
+                        <p>실시간 탐지 모델 추론</p>
+                    </div>
+                    <div class="branch-box">
+                        <div class="branch-box-title">Output 2</div>
+                        <p>데이터베이스 저장 로직</p>
+                    </div>
+                    <div class="branch-box">
+                        <div class="branch-box-title">Output 3</div>
+                        <p>운영 대시보드 시각화</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="mb-8">
-            <h2 class="section-title">기술적 도전 및 문제 해결 과정</h2>
-            <div class="card">
-                <h3 class="text-lg font-semibold text-blue-600 mb-2">1. 다중 출력 포트 정의 및 관리</h3>
-                <p class="text-gray-700">
-                    **도전:** 일반적인 `SinglePortStage`와 달리, 복제된 메시지를 전송하기 위해 3개의 출력 포트를 정의해야 했습니다.
-                </p>
-                <p class="text-gray-700 mt-1">
-                    **해결:** `Stage` 클래스를 상속받고 `_create_ports(1, 3)`을 호출하여 명시적으로 **1개의 입력과 3개의 출력 포트**를 정의했습니다. 이를 통해 파이프라인 빌더가 Broadcast 노드를 인식하고 올바르게 연결할 수 있도록 준비했습니다.
-                </p>
-
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">2. 메시지 복제 로직 통합</h3>
-                <p class="text-gray-700">
-                    **핵심 로직:** 커스텀 스테이지의 `_build` 메서드 내에서 **`mrc.core.node.Broadcast`** 객체를 생성했습니다. 들어온 입력 노드를 Broadcast 노드에 연결하고, Broadcast 노드의 출력 포트 3개를 각각 다른 다운스트림 노드(예: 3개의 `InMemorySinkStage`)에 연결하는 MRC 로직을 구현했습니다.
-                </p>
-                <p class="text-gray-700 mt-1">
-                    **활용:** 이를 통해, 단일 로그 메시지가 '실시간 탐지 모델', '데이터베이스 저장 로직', '시각화 대시보드' 등 세 가지 독립적인 경로로 **동시에** 전송되도록 병렬 처리 능력을 극대화했습니다.
-                </p>
-
-                <h3 class="text-lg font-semibold text-blue-600 mt-4 mb-2">3. 복제 결과 검증</h3>
-                <p class="text-gray-700">
-                    3개의 출력 포트를 연결한 3개의 `InMemorySinkStage`에서 수집된 메시지의 **개수와 내용이 완전히 동일함**을 확인하여, Broadcast 로직이 데이터 손실 없이 완벽하게 작동함을 검증했습니다.
-                </p>
-            </div>
-        </section>
-
-        <section>
-            <h2 class="section-title">API 키 및 코드 처리 방안</h2>
-            <div class="card bg-yellow-50 border border-yellow-300">
-                <p class="text-gray-700 font-semibold">
-                    이 프로젝트는 Morpheus의 내부 MRC 노드를 활용하는 방법에 초점을 맞추었으며 외부 API Key를 사용하지 않았습니다.
-                </p>
-                <p class="text-gray-700 mt-2">
-                    **코드 포메이션 대신:** `_create_ports(1, 3)`을 통한 다중 출력 정의, `mrc.core.node.Broadcast`를 활용한 **복제 로직 구현 과정**, 그리고 병렬 처리를 통한 효율성 증대라는 **기술적 해석**에 집중했습니다.
-                </p>
-            </div>
-        </section>
-
         <footer class="text-center mt-8 text-gray-500 text-sm">
-            Morpheus Advanced Pipelines (Broadcast) 요약
+            문서 작성자: [작성자 이름] / 프로젝트: Morpheus Broadcast 노드 구현
         </footer>
     </div>
 </body>
 </html>
-

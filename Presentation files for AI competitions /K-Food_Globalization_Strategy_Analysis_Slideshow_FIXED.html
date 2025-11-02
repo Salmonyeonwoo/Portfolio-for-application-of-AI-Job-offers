@@ -9,30 +9,53 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
     body {
       font-family: 'Inter', 'Noto Sans KR', sans-serif;
+      margin: 0;
       overflow: hidden;
+      background: #111;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 0;
     }
     #slide-image {
       transition: opacity 0.3s ease-in-out;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      max-height: 80vh;
     }
     #error-message {
       display: none;
+      position: absolute;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.85);
+      color: #f55;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
     }
   </style>
 </head>
-<body class="bg-gray-900 text-white w-screen h-screen flex flex-col items-center justify-center p-4">
+<body class="flex flex-col items-center justify-center w-screen h-screen p-4">
 
   <!-- 슬라이드 컨테이너 -->
   <main class="w-full max-w-6xl bg-gray-800 rounded-lg shadow-2xl relative overflow-hidden">
-    <div class="aspect-w-16 aspect-h-9">
-      <img id="slide-image" src="" alt="프레젠테이션 슬라이드" class="w-full h-full object-contain">
-      <div id="error-message" class="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
+    <div class="aspect-w-16 aspect-h-9 relative">
+      <img id="slide-image" src="" alt="프레젠테이션 슬라이드">
+      <div id="error-message">
         <h2 class="text-3xl font-bold text-red-400 mb-4">이미지 로딩 실패</h2>
         <p class="text-xl text-gray-300 mb-2">
           <code id="error-path" class="bg-gray-700 text-yellow-300 px-2 py-1 rounded"></code>
         </p>
         <p class="text-lg text-gray-400 max-w-2xl">
           이 HTML 파일과 같은 폴더에 <code class="bg-gray-700 px-1 rounded">Slides</code> 폴더가 있고,
-          그 안에 <code class="bg-gray-700 px-1 rounded">slide1.png</code>, <code class="bg-gray-700 px-1 rounded">slide2.png</code> ... 파일이 들어있는지 확인하세요.
+          <code class="bg-gray-700 px-1 rounded">slide1.png</code>, <code class="bg-gray-700 px-1 rounded">slide2.png</code> ... 파일이 들어있는지 확인하세요.
         </p>
       </div>
     </div>
@@ -56,10 +79,10 @@
 
   <script>
     // --- 설정 ---
-    const TOTAL_SLIDES = 14;
-    const IMAGE_FOLDER = 'Slides';   // ✅ 실제 폴더명 그대로 (대문자 S)
-    const IMAGE_PREFIX = 'slide';    // ✅ 파일 접두사
-    const IMAGE_EXTENSION = 'png';   // ✅ 확장자
+    const IMAGE_FOLDER = 'Slides';   
+    const IMAGE_PREFIX = 'slide';    
+    const IMAGE_EXTENSION = 'png';   
+    const TOTAL_SLIDES = 14;  // 필요 시 자동 감지 버전으로 확장 가능
     // -------------
 
     const slideImage = document.getElementById('slide-image');
@@ -69,18 +92,22 @@
     const nextButton = document.getElementById('next');
     const errorMessage = document.getElementById('error-message');
     const errorPath = document.getElementById('error-path');
+
+    // 숫자 순서대로 슬라이드 경로 배열
+    const slides = Array.from({length: TOTAL_SLIDES}, (_, i) => `${IMAGE_FOLDER}/${IMAGE_PREFIX}${i+1}.${IMAGE_EXTENSION}`);
+
     let currentSlideIndex = 0;
 
     function showSlide(index) {
       currentSlideIndex = (index + TOTAL_SLIDES) % TOTAL_SLIDES;
-      const imagePath = `${IMAGE_FOLDER}/${IMAGE_PREFIX}${currentSlideIndex + 1}.${IMAGE_EXTENSION}`;
+      const imagePath = slides[currentSlideIndex];
       slideImage.style.opacity = 0;
       setTimeout(() => {
         slideImage.src = imagePath;
         slideImage.style.opacity = 1;
         errorMessage.style.display = 'none';
         slideImage.style.display = 'block';
-      }, 300);
+      }, 200);
       counter.textContent = `Slide ${currentSlideIndex + 1} / ${TOTAL_SLIDES}`;
       progressBar.style.width = `${((currentSlideIndex + 1) / TOTAL_SLIDES) * 100}%`;
     }

@@ -509,6 +509,20 @@
             <section>
                 <h2 class="section-title"><i class="fas fa-desktop"></i>Interactive Web Presentations (HTML)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <a href="Presentation files for AI competitions /NVIDIA 교육 성과 및 AI 대회 참가 이력 요약.html" target="_blank" class="project-card">
+                        <div><h4>NVIDIA에서 교육해 온 성과와 그에 따른 AI 대회 참가 이력</h4>
+                            <p>경진대회 참석했을 때 제출한 정책제안서 파일입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag kr">KR</span></div>
+                    </a>
+
+                    <a href="Presentation files for AI competitions /AI Learning via NVIDIA and histories of AI competitions.html" target="_blank" class="project-card">
+                        <div><h4>Accomplishment of AI education via NVIDIA at Korea and participation histories of AI competitions</h4>
+                            <p>This document is related to my accomplishment of AI education via NVIDIA and my careers of AI competitions so far.</p>
+                        </div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag kr">KR</span></div>
+                    </a>
                     
                     <a href="Presentation files for AI competitions /AI K-Culture Scripter Policy Proposal (Korean).html" target="_blank" class="project-card">
                         <div><h4>AI 경진대회 정책제안서</h4>
@@ -618,130 +632,8 @@
         </div>
     </div>
 
-    <!-- Audio Player HTML -->
-    <audio id="audioPlayer" class="hidden"></audio>
-    <div id="audio-container">
-        <button id="playBtn"><i class="fas fa-play"></i></button>
-        <button id="pauseBtn"><i class="fas fa-pause"></i></button>
-        <div id="songTitle">Loading...</div>
-        <button id="nextBtn"><i class="fas fa-forward"></i></button>
-    </div>
 
-
-    <!-- Modal & Audio JavaScript -->
-    <script>
-        // Contact Modal Logic
-        const contactButton = document.getElementById('contactButton');
-        const contactModal = document.getElementById('contactModal');
-        const closeModalButton = document.getElementById('closeModalButton');
-
-        function showModal() {
-            contactModal.classList.remove('hidden');
-        }
-
-        function hideModal() {
-            contactModal.classList.add('hidden');
-        }
-
-        contactButton.addEventListener('click', showModal);
-        closeModalButton.addEventListener('click', hideModal);
-        contactModal.addEventListener('click', (event) => {
-            if (event.target === contactModal) {
-                hideModal();
-            }
-        });
-
-        // Audio Player Logic
-        document.addEventListener('DOMContentLoaded', () => {
-            const audioPlayer = document.getElementById('audioPlayer');
-            const playBtn = document.getElementById('playBtn');
-            const pauseBtn = document.getElementById('pauseBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const songTitleEl = document.getElementById('songTitle');
-
-            // --- IMPORTANT ---
-            // These filenames MUST match the files you upload to GitHub
-            // -----------------
-            const songs = [
-                { src: 'Love Kmusic - 서다현 - 쿵  폭군의 셰프 OST Part.4.mp3', title: '서다현 - 쿵 (폭군의 셰프 OST)' },
-                { src: 'ClsQ - DOYOUNG (도영) - I Find You  Bon Appétit, Your Majesty (폭군의 셰프) OST Part. 1 MV [ENGIND].mp3', title: 'DOYOUNG - I Find You (폭군의 셰프 OST)' },
-                { src: 'BIBI (비비) - Very, Slowly (아주, 천천히)(스물다섯 스물하나) Twenty-Five Twenty-One OST Part 3-Noche Lin.mp3', title: '비비 - 아주 천천히 (스물 다섯 스물 하나 OST)' },
-                { src: 'BIBI (비비) - Very, Slowly (아주, 천천히)(스물다섯 스물하나) Twenty-Five Twenty-One OST Part 3-Noche Lin.mp3.m4a', title: 'Bibi - Very Slowly (스물 다섯 스물 하나 OST)' },
-                { src: '김태리, 남주혁 , 보나, 최현욱 , 이주명 - With (Twenty Five Twenty One OST Part. 7) 스물다섯 스물하나 OST Part. 7-K Music.mp3', title: '스물 다섯 스물 하나 응원가 OST' },
-                { src: '즐거운 생활 - 김이지 - When I see you.mp3', title: '트라이 OST - When I see you' },
-                { src: '1theK (원더케이) - [MV] EZ Kim(김이지) _ When I see you (The Winning Try  Original Television Soundtrack).mp3.m4a', title: '트라이 OST 김이지 - When I see you' },
-                { src: '가사 고마워 추억이 돼줘서_돌담즈 낭만닥터 김사부3 ost part10 직진커플 Ver.mp3', title: 'Doldams - Thank you for good memories' },
-                { src: '가사 고마워 추억이 돼줘서_돌담즈 낭만닥터 김사부3 ost part10 직진커플 Ver.mp3.m4a', title: '돌담즈 - 고마워 추억이 돼 줘서' },
-                { src: '가사 고마워 추억이 되줘서_ 돌담즈 낭만닥터김사부3 ostpart10.mp3', title: '낭만닥터 김사부3 ost - 고마워 추억이 돼 줘서' },
-                { src: '돌담즈 Doldams 고마워 추억이 되어줘서 Thank You for the Memories 낭만닥터 김사부3 OST part 10 낭만닥터김사부3 돌담즈 OST.mp3', title: '낭만닥터 김사부3 ost 돌담즈 - 고마워 추억이 돼 줘서' }
-            ];
-            let currentSongIndex = 0;
-
-            function loadSong(song) {
-                songTitleEl.textContent = song.title;
-                audioPlayer.src = song.src;
-                
-                // Handle potential load errors
-                audioPlayer.onerror = () => {
-                    songTitleEl.textContent = "Error: '" + song.src + "' not found.";
-                    console.error("Could not load audio file: " + song.src);
-                    console.error("Please ensure the file is named correctly and uploaded to the root of your GitHub repository.");
-                };
-                 audioPlayer.oncanplay = () => {
-                     songTitleEl.textContent = song.title; // Reset title on successful load
-                 };
-            }
-
-            function playSong() {
-                audioPlayer.play().then(() => {
-                    playBtn.style.display = 'none';
-                    pauseBtn.style.display = 'flex';
-                }).catch(error => {
-                    console.warn("Autoplay was prevented by the browser. User interaction is needed.", error);
-                    // Show play button if autoplay fails silently
-                    playBtn.style.display = 'flex';
-                    pauseBtn.style.display = 'none';
-                });
-            }
-
-            function pauseSong() {
-                audioPlayer.pause();
-                playBtn.style.display = 'flex';
-                pauseBtn.style.display = 'none';
-            }
-
-            function nextSong() {
-                currentSongIndex = (currentSongIndex + 1) % songs.length;
-                loadSong(songs[currentSongIndex]);
-                playSong();
-            }
-
-            // Event Listeners
-            playBtn.addEventListener('click', playSong);
-            pauseBtn.addEventListener('click', pauseSong);
-            nextBtn.addEventListener('click', nextSong);
-
-            // Play next song when one finishes
-            audioPlayer.addEventListener('ended', nextSong);
-
-            // Load the first song
-            loadSong(songs[currentSongIndex]);
-            
-            // Optional: Try to autoplay the first song. 
-            // This might be blocked by the browser until the user clicks somewhere.
-            // A click on the "Contact Me" or "Cover Letter" button might be the first interaction.
-            // We can add a "play on first click" listener to the body.
-            function playOnFirstInteraction() {
-                playSong();
-                // Remove this listener so it only fires once
-                document.body.removeEventListener('click', playOnFirstInteraction);
-                document.body.removeEventListener('touchstart', playOnFirstInteraction);
-            }
-            
-            document.body.addEventListener('click', playOnFirstInteraction, { once: true });
-            document.body.addEventListener('touchstart', playOnFirstInteraction, { once: true });
-
-        });
+    
 
     </script>
 </body>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated AI Learning & Competition Portfolio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font (Tailwind default) -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb; /* Light background */
+            min-height: 100vh;
+        }
+        .card-shadow {
+            box-shadow: 0 5px 15px -3px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-shadow:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1), 0 5px 5px -3px rgba(0, 0, 0, 0.05);
+        }
+        .tab-active {
+            border-bottom: 3px solid #4f46e5; /* Indigo-600 */
+            color: #1e293b; /* Slate-800 */
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <header class="text-center mb-6 sm:mb-10 max-w-7xl mx-auto">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 tracking-tight">
+            Integrated AI Learning & Project Portfolio
+        </h1>
+        <!-- Tab Navigation -->
+        <nav class="flex justify-center border-b border-gray-300">
+            <button id="tab-comp-btn" onclick="showTab('competitions')"
+                    class="py-3 px-6 text-gray-500 hover:text-gray-800 transition duration-150 ease-in-out tab-active">
+                Competition Overview
+            </button>
+            <button id="tab-intro-btn" onclick="showTab('introduction')"
+                    class="py-3 px-6 text-gray-500 hover:text-gray-800 transition duration-150 ease-in-out">
+                AI Education & Experience Summary
+            </button>
+        </nav>
+    </header>
+
+    <main id="app-container" class="max-w-7xl mx-auto">
+        
+        <!-- Tab 1: Competitions Summary -->
+        <section id="competitions-view" class="p-4 sm:p-6 bg-white rounded-xl card-shadow">
+            <p class="text-lg text-gray-500 mb-6">
+                Total of <span id="total-competitions" class="font-semibold text-indigo-600">0</span> Competitions Listed
+            </p>
+            <div id="competitions-list">
+                <!-- Competition cards will be rendered here -->
+            </div>
+        </section>
+
+        <!-- Tab 2: Self Introduction Draft -->
+        <section id="introduction-view" class="hidden p-6 sm:p-10 bg-white rounded-xl card-shadow">
+            <div class="prose max-w-none">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">AI Education Experience-Based Self-Introduction/Career Statement Draft</h2>
+                
+                <!-- Headline -->
+                <div class="mb-8 p-4 bg-indigo-50 border-l-4 border-indigo-500 rounded-lg">
+                    <h3 class="text-xl font-bold text-indigo-800">Core Summary (Headline)</h3>
+                    <p class="mt-2 text-indigo-700 font-semibold">
+                        AI Developer with Global Business Expertise: Enhanced Real-Time Streaming Data Processing through NVIDIA AI Academy
+                    </p>
+                    <p class="mt-1 text-sm text-indigo-600">
+                        (Alternative: At the Intersection of Business and AI: Growth as an Expert in Overseas AI Solution Application using Multilingual Skills)
+                    </p>
+                </div>
+
+                <!-- Introduction -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-700">1. Strengths as a Non-Major and Motivation for Transition to AI</h3>
+                    <p class="mt-3 text-gray-600 leading-relaxed">
+                        Through my International Business major and 8 years of global BPO customer service experience on the Korean team, I have developed the ability to deeply understand the business needs of diverse cultures and communicate effectively. I am confident that my **proficiency in English, Japanese, and Chinese** will be a significant asset in introducing and applying AI solutions in multinational environments like [Malaysia/Singapore]. Witnessing AI technology drive business innovation in the rapidly changing digital age, I committed to the NVIDIA AI Academy program to integrate my business acumen and problem-solving skills into the field of AI.
+                    </p>
+                </div>
+
+                <!-- Body - Learning Outcomes -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-700">2. NVIDIA AI Academy Curriculum and Learning Outcomes (6 Months)</h3>
+                    <ul class="space-y-4 mt-4 list-none pl-0">
+                        <li class="p-4 bg-gray-50 rounded-lg border-l-4 border-blue-400">
+                            <span class="font-bold text-gray-800 block mb-1">Overcoming the Steep Learning Curve as a Non-Major:</span>
+                            Although I had little prior coding experience, I quickly overcame the steep learning curve by building a foundation in AI coding and programming (Python, Jupyter Notebook) during the 6-month NVIDIA AI Academy course, gaining an understanding of high-performance AI pipeline construction principles.
+                        </li>
+                        <li class="p-4 bg-gray-50 rounded-lg border-l-4 border-blue-400">
+                            <span class="font-bold text-gray-800 block mb-1">Emphasis on NVIDIA Morpheus Framework Practical Experience:</span>
+                            I gained practical skills by directly implementing a **GPU-accelerated real-time streaming data processing pipeline** using the NVIDIA Morpheus framework (utilizing nodes like Router, Zip, and Broadcast), enabling efficient large-scale data management and integration with AI/ML models.
+                        </li>
+                        <li class="p-4 bg-gray-50 rounded-lg border-l-4 border-blue-400">
+                            <span class="font-bold text-gray-800 block mb-1">Positive Reinforcement through Equipment and Environment Constraints:</span>
+                            Limitations on dev kit access and personal environment experimentation proved to be opportunities to **maximize project documentation and explanation skills**. I enhanced my ability to clearly convey the structure and value of AI solutions—beyond mere code—by reinterpreting core concepts and principles into an HTML-based portfolio.
+                        </li>
+                        <li class="p-4 bg-gray-50 rounded-lg border-l-4 border-blue-400">
+                            <span class="font-bold text-gray-800 block mb-1">Further Learning and Future Plans:</span>
+                            Learning focused on images/photos contributed to a basic understanding of **computer vision and unstructured data analysis**. I proactively sought information via online research to develop strong problem-solving skills. I plan to participate in upcoming AI competitions to apply the knowledge and skills acquired to real-world problems.
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Conclusion -->
+                <div class="mb-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg">
+                    <h3 class="text-xl font-bold text-green-800">3. Overseas Employment Goal and Contribution Plan</h3>
+                    <p class="mt-2 text-gray-700 leading-relaxed">
+                        My multilingual communication skills and global business understanding will be a distinct advantage in multinational AI environments. My goal is to leverage my technical knowledge to accurately grasp business requirements and effectively communicate with overseas teams, contributing to the successful localization and application of AI solutions. As a [AI related job title] at your company, I am eager to contribute to innovative AI solution development and global market expansion, relying on the flexible thinking unique to non-majors, rapid learning ability, and the foundation in **real-time data processing** established at the NVIDIA AI Academy.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- 1. COMPETITION DATA (English Translation) ---
+        const ICON_AI = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM8.25 7.5a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75Zm.75 7.5a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5H9Zm-1.5-3a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 0 1.5H7.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" /></svg>`;
+        const ICON_CREATIVE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path fill-rule="evenodd" d="M3 6a3 3 0 0 1 3-3h.211c.074 0 .148.016.22.049 1.168.536 2.457.95 3.78 1.18.283.05.568.077.854.077h1.67c.285 0 .57-.027.854-.077 1.323-.23 2.612-.644 3.78-1.18a.5.5 0 0 1 .22-.049H18a3 3 0 0 1 3 3v2.25h-18V6Zm18 4.5H3v10.5a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V10.5Zm-7.5-3a.75.75 0 0 0 0 1.5h.007a.75.75 0 0 0 0-1.5h-.007Z" clip-rule="evenodd" /></svg>`;
+
+        const competitions = [
+            // AI / Data Science Category
+            {
+                id: 1,
+                title: "Paju Citizen AI Innovation Idea Contest",
+                platform: "DACON",
+                category: "AI / Data Science",
+                status: "Idea Submission & Participating",
+                details: "Proposal of AI-based innovative ideas to enhance the quality of life for Paju citizens.",
+                link: "https://dacon.io/en/competitions/official/236612/codeshare"
+            },
+            {
+                id: 2,
+                title: "2025 Saessak Hackathon",
+                platform: "DACON",
+                category: "AI / Data Science",
+                status: "Application Complete (Team Waiting)",
+                details: "Hackathon application complete. Waiting for team contact after registration deadline on Nov 19th.",
+                link: "https://dacon.io/en/competitions/official/236624/data"
+            },
+            {
+                id: 5,
+                title: "LLM Classification Finetuning",
+                platform: "Kaggle",
+                category: "AI / Data Science",
+                status: "In Progress",
+                details: "Fine-tuning Large Language Models (LLM) for text classification tasks.",
+                link: "https://www.kaggle.com/competitions/llm-classification-finetuning"
+            },
+            {
+                id: 6,
+                title: "Titanic - Machine Learning from Disaster",
+                platform: "Kaggle",
+                category: "AI / Data Science",
+                status: "Completed or Practice",
+                details: "Predicting survival on the Titanic (classic data science entry level project).",
+                link: "https://www.kaggle.com/competitions/titanic"
+            },
+            {
+                id: 7,
+                title: "House Prices - Advanced Regression Techniques",
+                platform: "Kaggle",
+                category: "AI / Data Science",
+                status: "In Progress",
+                details: "Predicting house prices using advanced regression techniques (regression analysis practice).",
+                link: "https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques"
+            },
+            // Creative / Local Contest Category
+            {
+                id: 3,
+                title: "K-Food X AI Video",
+                platform: "2025 AI Contest",
+                category: "Creative / Local Contests",
+                status: "Planning/Preparing",
+                details: "Creation of original video content integrating K-Food and AI technology.",
+                link: "https://2025aicontest.com/eng/main/"
+            },
+            {
+                id: 4,
+                title: "Regional Language Preservation (Busan Dialect Webtoon)",
+                platform: "Contest Korea",
+                category: "Creative / Local Contests",
+                status: "Webtoon Submission Preparation",
+                details: "Submitting a webtoon promoting the Busan dialect to preserve regional language.",
+                link: "https://contestkorea.com/sub/view.php?int_gbn=1&Txt_bcode=030610001&str_no=202510210048"
+            }
+        ];
+
+        // --- 2. COMPETITION RENDERING LOGIC ---
+
+        function getStatusColor(status) {
+            if (status.includes("Completed") || status.includes("Practice")) {
+                return { text: "text-blue-700", bg: "bg-blue-100" };
+            } else if (status.includes("Waiting") || status.includes("Application Complete")) {
+                return { text: "text-yellow-700", bg: "bg-yellow-100" };
+            } else if (status.includes("Progress") || status.includes("Participating") || status.includes("Preparing")) {
+                return { text: "text-pink-700", bg: "bg-pink-100" };
+            } else {
+                return { text: "text-gray-700", bg: "bg-gray-100" };
+            }
+        }
+
+        function renderCard(comp, isAICategory) {
+            const baseColor = isAICategory ? "indigo" : "green";
+            const statusColor = getStatusColor(comp.status);
+
+            return `
+                <div class="bg-white p-6 rounded-xl card-shadow flex flex-col h-full border-t-4 border-${baseColor}-500">
+                    <div class="flex-grow">
+                        <span class="inline-block text-xs font-medium px-3 py-1 rounded-full ${statusColor.bg} ${statusColor.text} mb-3">
+                            ${comp.status}
+                        </span>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">${comp.title}</h3>
+                        <p class="text-gray-500 text-sm mb-4">${comp.platform}</p>
+                        <p class="text-gray-600 mb-6 text-sm">${comp.details}</p>
+                    </div>
+                    <a href="${comp.link}" target="_blank" rel="noopener noreferrer"
+                       class="mt-4 inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-${baseColor}-600 hover:bg-${baseColor}-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${baseColor}-500 transition duration-150 ease-in-out">
+                        Go to Competition Page
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 ml-2">
+                            <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 17.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+            `;
+        }
+
+        function renderCompetitions() {
+            const listContainer = document.getElementById('competitions-list');
+            listContainer.innerHTML = ''; 
+
+            const grouped = competitions.reduce((acc, comp) => {
+                const key = comp.category.includes("AI / Data Science") ? "AI / Data Science" : "Creative / Local Contests";
+                if (!acc[key]) {
+                    acc[key] = [];
+                }
+                acc[key].push(comp);
+                return acc;
+            }, {});
+
+            for (const category in grouped) {
+                const isAICategory = category.includes("AI / Data Science");
+                const icon = isAICategory ? ICON_AI : ICON_CREATIVE;
+                const color = isAICategory ? "text-indigo-600 border-indigo-200 bg-indigo-50" : "text-green-600 border-green-200 bg-green-50";
+
+                const categorySection = document.createElement('section');
+                categorySection.className = "mb-10";
+                categorySection.innerHTML = `
+                    <h2 class="text-2xl font-bold text-gray-700 mb-5 flex items-center p-3 rounded-lg ${color} border">
+                        ${icon}
+                        <span class="ml-3">${category} (${grouped[category].length})</span>
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        ${grouped[category].map(comp => renderCard(comp, isAICategory)).join('')}
+                    </div>
+                `;
+                listContainer.appendChild(categorySection);
+            }
+        }
+
+        // --- 3. TAB SWITCHING LOGIC ---
+
+        function showTab(tabId) {
+            const compView = document.getElementById('competitions-view');
+            const introView = document.getElementById('introduction-view');
+            
+            const compBtn = document.getElementById('tab-comp-btn');
+            const introBtn = document.getElementById('tab-intro-btn');
+
+            // Reset classes
+            compView.classList.add('hidden');
+            introView.classList.add('hidden');
+            compBtn.classList.remove('tab-active');
+            introBtn.classList.remove('tab-active');
+
+            // Set active tab
+            if (tabId === 'competitions') {
+                compView.classList.remove('hidden');
+                compBtn.classList.add('tab-active');
+            } else if (tabId === 'introduction') {
+                introView.classList.remove('hidden');
+                introBtn.classList.add('tab-active');
+            }
+        }
+
+        // --- 4. INITIALIZATION ---
+        window.onload = function () {
+            // Set total count
+            document.getElementById('total-competitions').textContent = competitions.length;
+            // Render the competition cards
+            renderCompetitions();
+            // Show the default tab (competitions)
+            showTab('competitions');
+        };
+    </script>
+</body>
+</html>

@@ -260,4 +260,6 @@ elif feature_selection == "LSTM 성취도 예측 대시보드":
             fig, ax = plt.subplots(figsize=(10, 6))
             ax.plot(range(len(historical_scores)), historical_scores, label="과거 점수", marker='o')
             future_indices = range(len(historical_scores), len(historical_scores) + len(future_predictions))
-            ax.plot(future_indices, future_predictions, label="예측 성취도
+            ax.plot(future_indices, future_predictions, label="예측 성취도 (다음 5일)", marker='x', linestyle='--', color='red')
+
+

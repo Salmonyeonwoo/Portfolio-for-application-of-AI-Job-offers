@@ -1,10 +1,10 @@
 # ================================
-# Streamlit Cloud 전용 requirements
+# Streamlit Cloud + 호환 안정화
 # ================================
 
 streamlit==1.38.0
 
-# --- LangChain stack (Cloud 호환 버전)
+# --- LangChain stack (호환 버전 완전 일치) ---
 langchain==0.3.7
 langchain-community==0.3.7
 langchain-core==0.3.15
@@ -18,7 +18,7 @@ faiss-cpu==1.8.0
 unstructured==0.14.9
 PyPDF2==3.0.1
 
-# ML & Analytics (Cloud에서는 TensorFlow 제외)
+# ML & Analytics
 numpy==1.26.4
 pandas==2.2.2
 matplotlib==3.9.2
@@ -28,4 +28,8 @@ protobuf==4.25.3
 requests==2.32.3
 tqdm==4.66.5
 markdown-it-py==4.0.0
-rich==13.9.2  # ✅ Streamlit 1.38.0과 완벽 호환
+rich==13.9.2  # ✅ Streamlit 1.38.0 호환
+
+# --- 로컬 전용 설치 패키지 ---
+# tensorflow==2.13.0        # 로컬 환경에서만 필요
+# unstructured-inference==0.7.11  # 로컬 환경에서만 필요

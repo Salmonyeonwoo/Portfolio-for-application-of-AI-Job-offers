@@ -10,6 +10,12 @@ google-generativeai
 # Vector Store
 faiss-cpu==1.8.0
 
+#RAG documents
+unstructured
+PyPDF2
+faiss-cpu
+psutil
+
 # Docs / Parsing
 unstructured==0.14.9
 PyPDF2==3.0.1

@@ -1,12 +1,13 @@
 # ========================================
-# Streamlit AI 학습 코치 (RAG + LSTM + 맞춤형 콘텐츠)
-# Gemini + LangChain + NLTK 자동 설치
-# Streamlit Cloud & Local Dual Mode
+# 안정화 Streamlit AI 학습 코치 (RAG + LSTM + 콘텐츠 생성)
+# Gemini API 무료 티어 한도 및 임베딩 캐시 대응
 # ========================================
 
 import os
 import subprocess
 import tempfile
+import hashlib
+import pickle
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
@@ -99,8 +100,15 @@ def load_or_train_lstm():
     return model, data
 
 # ========================================
-# 3. RAG 구축
+# 3. RAG 구축 + 임베딩 캐시 대응
 # ========================================
+CACHE_DIR = ".rag_cache"
+os.makedirs(CACHE_DIR, exist_ok=True)
+
+def get_file_hash(file):
+    data = file.getvalue()
+    return hashlib.md5(data).hexdigest()
+
 def get_document_chunks(files):
     documents = []
     temp_dir = tempfile.mkdtemp()
@@ -118,9 +126,29 @@ def get_document_chunks(files):
     splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
     return splitter.split_documents(documents)
 
-def get_vector_store(text_chunks):
-    vector_store = FAISS.from_documents(text_chunks, embedding=st.session_state.embeddings)
-    return vector_store
+def get_vector_store_with_cache(files):
+    file_hash = hashlib.md5("".join([get_file_hash(f) for f in files]).encode()).hexdigest()
+    cache_path = os.path.join(CACHE_DIR, f"{file_hash}.pkl")
+
+    if os.path.exists(cache_path):
+        try:
+            with open(cache_path, "rb") as f:
+                vector_store = pickle.load(f)
+            st.info("⚡ 캐시된 임베딩 로드 완료")
+            return vector_store
+        except Exception:
+            st.warning("⚠️ 캐시 로드 실패, 새로 임베딩 시도")
+    
+    try:
+        chunks = get_document_chunks(files)
+        vector_store = FAISS.from_documents(chunks, embedding=st.session_state.embeddings)
+        with open(cache_path, "wb") as f:
+            pickle.dump(vector_store, f)
+        st.success(f"총 {len(chunks)} 청크 임베딩 완료")
+        return vector_store
+    except Exception as e:
+        st.error(f"RAG 구축 오류: {e}")
+        return None
 
 def get_rag_chain(vector_store):
     return ConversationalRetrievalChain.from_llm(
@@ -145,14 +173,11 @@ with st.sidebar:
     if uploaded_files and st.session_state.is_llm_ready:
         if st.button("자료 분석 시작 (RAG Indexing)"):
             with st.spinner("자료 분석 중..."):
-                try:
-                    text_chunks = get_document_chunks(uploaded_files)
-                    vector_store = get_vector_store(text_chunks)
+                vector_store = get_vector_store_with_cache(uploaded_files)
+                if vector_store:
                     st.session_state.conversation_chain = get_rag_chain(vector_store)
                     st.session_state.is_rag_ready = True
-                    st.success(f"총 {len(text_chunks)} 청크로 데이터베이스 구축 완료!")
-                except Exception as e:
-                    st.error(f"RAG 구축 오류: {e}")
+                else:
                     st.session_state.is_rag_ready = False
     else:
         st.session_state.is_rag_ready = False
@@ -237,28 +262,32 @@ elif feature_selection == "LSTM 성취도 예측 대시보드":
             for _ in range(5):
                 next_score = lstm_model.predict(current_input, verbose=0)[0]
                 future_predictions.append(next_score[0])
-                current_input = np.append(current_input[:,1:,:], next_score[0]).reshape(1,look_back,1)
+                # 다음 입력 시퀀스 갱신
+                current_input = np.append(current_input[:, 1:, :], next_score[0]).reshape(1, look_back, 1)
 
+            # 그래프 시각화
             fig, ax = plt.subplots(figsize=(10,6))
-            ax.plot(range(len(historical_scores)), historical_scores, label="과거 점수", marker='o', color='blue')
-            future_idx = range(len(historical_scores), len(historical_scores)+len(future_predictions))
-            ax.plot(future_idx, future_predictions, label="예측 성취도", marker='x', linestyle='--', color='red')
-            ax.set_title("LSTM 학습 성취도 예측")
+            ax.plot(range(len(historical_scores)), historical_scores, label="과거 점수", marker='o', linestyle='-', color='blue')
+            future_indices = range(len(historical_scores), len(historical_scores) + len(future_predictions))
+            ax.plot(future_indices, future_predictions, label="예측 성취도", marker='x', linestyle='--', color='red')
+            ax.set_title("LSTM 기반 학습 성취도 예측")
             ax.set_xlabel("주기")
-            ax.set_ylabel("점수")
+            ax.set_ylabel("성취도 점수 (0-100)")
             ax.legend()
             ax.grid(True)
             st.pyplot(fig)
 
+            # 최근 평균 vs 예측 평균 비교
             avg_recent = np.mean(historical_scores[-5:])
             avg_predict = np.mean(future_predictions)
             if avg_predict > avg_recent:
-                comment = "앞으로 성취도가 향상될 것으로 예측됩니다. 현재 학습 방식을 유지하세요."
-            elif avg_predict < avg_recent-5:
-                comment = "성취도가 다소 하락할 수 있습니다. RAG 챗봇 활용 추천."
+                comment = "앞으로 성취도가 긍정적으로 향상될 것으로 예측됩니다."
+            elif avg_predict < avg_recent - 5:
+                comment = "성취도가 다소 하락할 수 있습니다. RAG 챗봇으로 기초 개념 확인을 추천합니다."
             else:
-                comment = "성취도는 유지될 것으로 예상됩니다. 새로운 학습 콘텐츠 활용 고려."
+                comment = "성취도는 현재 수준 유지 예상. 새로운 콘텐츠로 학습 활력 추가 고려."
             st.info(comment)
 
         except Exception as e:
-            st.error(f"LSTM 처리 오류: {e}")
+            st.error(f"LSTM 처리 중 오류: {e}")
+

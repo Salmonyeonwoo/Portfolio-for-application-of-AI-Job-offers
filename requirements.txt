@@ -15,6 +15,8 @@ unstructured
 PyPDF2
 faiss-cpu
 psutil
+paddlepaddle
+paddlenlp
 
 # Docs / Parsing
 unstructured==0.14.9

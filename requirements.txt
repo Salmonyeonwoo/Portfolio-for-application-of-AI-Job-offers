@@ -1,5 +1,5 @@
 # ================================
-# Streamlit Cloud Stable Build
+# Streamlit Cloud Stable Build (Final Safe)
 # LangChain + Gemini (2025-11)
 # ================================
 
@@ -17,14 +17,14 @@ faiss-cpu==1.8.0
 
 # Docs / Parsing
 unstructured==0.14.9
-# unstructured-inference==0.7.11  # Streamlit Cloud에서는 생략 권장
+# ⚠️ unstructured-inference==0.7.11  # Cloud 빌드 시 torch 설치 문제로 생략
 PyPDF2==3.0.1
 
 # ML & Analytics
 numpy==1.26.4
 pandas==2.2.2
 matplotlib==3.9.2
-# tensorflow==2.13.0  # Streamlit Cloud 환경에서는 설치 불가 (AVX 문제)
+# ⚠️ tensorflow==2.13.0  # Cloud 환경에서는 설치 불가 (AVX 미지원 CPU)
 
 # Utilities
 protobuf==4.25.3

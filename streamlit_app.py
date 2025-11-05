@@ -175,6 +175,7 @@ if feature_selection == "RAG 지식 챗봇":
             with st.chat_message("assistant"):
                 with st.spinner("답변을 생성 중입니다..."):
                     try:
+                        # RAG 체인은 ConversationalRetrievalChain을 사용하므로 system_instruction 문제 없음
                         response = st.session_state.conversation_chain.invoke({"question": prompt})
                         answer = response.get('answer', '응답을 생성할 수 없습니다.')
                         st.markdown(answer)
@@ -198,12 +199,16 @@ elif feature_selection == "맞춤형 학습 콘텐츠 생성":
 
         if st.button("콘텐츠 생성"):
             if topic:
+                # 🛠️ 수정된 부분: system_instruction을 user_prompt에 통합합니다.
                 system_prompt = f"""당신은 {level} 수준의 전문 AI 코치입니다. 요청받은 주제에 대해 {content_type} 형식에 맞춰 명확하고 교육적인 콘텐츠를 생성해 주세요. 답변은 한국어로만 제공해야 합니다."""
-                user_prompt = f"주제: {topic}. 요청 형식: {content_type}."
+                
+                # 프롬프트 통합 (System + User)
+                full_prompt = f"{system_prompt}\n\n[사용자 요청]\n주제: {topic}. 요청 형식: {content_type}."
 
                 with st.spinner(f"{topic}에 대한 {content_type}을 생성 중입니다..."):
                     try:
-                        response = st.session_state.llm.invoke(user_prompt, system_instruction=system_prompt)
+                        # LLM에 요청: system_instruction 인수를 제거하고 통합된 프롬프트만 전달
+                        response = st.session_state.llm.invoke(full_prompt)
                         st.success(f"**{topic}** 에 대한 **{content_type}** 결과:")
                         st.markdown(response.content)
 

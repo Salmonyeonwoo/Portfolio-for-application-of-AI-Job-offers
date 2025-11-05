@@ -23,13 +23,12 @@ numpy==1.26.4
 pandas==2.2.2
 matplotlib==3.9.2
 
-# --- TensorFlow (Lightweight CPU Stable) ---
+# --- TensorFlow (LSTM Dashboard) ---
 tensorflow==2.13.0
 
-# --- Utilities & Misc ---
-# protobuf==4.25.3
-# requests==2.32.3
-# tqdm==4.66.5
-# markdown-it-py==3.0.0
-# rich==13.7.1
-
+# --- Utilities ---
+protobuf==4.25.3
+requests==2.32.3
+tqdm==4.66.5
+markdown-it-py==3.0.0
+rich==13.7.1

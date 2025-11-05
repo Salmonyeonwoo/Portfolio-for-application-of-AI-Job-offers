@@ -32,8 +32,8 @@ if not os.environ.get("STREAMLIT_RUNTIME"):
     except Exception as e:
         print("⚠️ Local install skipped:", e)
 else:
-    print("🌐 Streamlit Cloud detected: Skipping heavy installs")
-
+    print("🌐 Streamlit Cloud: Skipping heavy installs")
+    
 # ================================
 # 1. LLM 초기화
 # ================================
@@ -248,3 +248,4 @@ elif feature_selection == "LSTM 성취도 예측 대시보드":
 
         except Exception as e:
             st.error(f"LSTM 처리 오류: {e}")
+

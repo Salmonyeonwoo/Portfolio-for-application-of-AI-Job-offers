@@ -1,3 +1,5 @@
+import os
+import subprocess
 import streamlit as st
 import os
 import tempfile
@@ -15,6 +17,21 @@ from tensorflow.keras.layers import LSTM, Dense
 import pandas as pd
 import matplotlib.pyplot as plt
 from tensorflow.keras.applications import MobileNetV3Large
+
+# 🌐 환경에 따라 TensorFlow & unstructured-inference 자동 설치
+if not os.environ.get("STREAMLIT_RUNTIME"):
+    try:
+        subprocess.check_call([
+            "pip", "install",
+            "tensorflow==2.13.0",
+            "unstructured-inference==0.7.11"
+        ])
+        print("✅ Local mode detected: Installed TensorFlow & unstructured-inference")
+    except Exception as e:
+        print("⚠️ Local install skipped:", e)
+else:
+    print("🌐 Streamlit Cloud mode detected: Skipping heavy installs")
+
 
 # --- 1. 환경 설정 및 모델 초기화 ---
 
@@ -294,4 +311,5 @@ elif feature_selection == "LSTM 성취도 예측 대시보드":
             st.info(comment)
 
         except Exception as e:
+
             st.error(f"LSTM 모델 처리 중 오류가 발생했습니다: {e}")

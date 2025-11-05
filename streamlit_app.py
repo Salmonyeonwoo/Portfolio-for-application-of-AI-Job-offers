@@ -132,4 +132,46 @@ def get_vector_store(text_chunks):
 def get_rag_chain(vector_store):
     return ConversationalRetrievalChain.from_llm(
         llm=st.session_state.llm,
-        retriever=
+        retriever=vector_store.as_retriever(),
+        memory=st.session_state.memory
+    )
+
+# ================================
+# 4️⃣ Streamlit UI 구성
+# ================================
+st.set_page_config(page_title="개인 맞춤형 AI 학습 코치", layout="wide")
+
+with st.sidebar:
+    st.title("📚 AI Study Coach 설정")
+    st.markdown("---")
+    uploaded_files = st.file_uploader(
+        "학습 자료 업로드 (PDF, TXT, HTML)",
+        type=["pdf", "txt", "html"],
+        accept_multiple_files=True
+    )
+
+    if uploaded_files and st.session_state.is_llm_ready:
+        if st.button("자료 분석 시작 (RAG Indexing)", key="start_analysis"):
+            with st.spinner("자료를 분석하고 학습 데이터베이스를 구축 중입니다..."):
+                try:
+                    text_chunks = get_document_chunks(uploaded_files)
+                    vector_store = get_vector_store(text_chunks)
+                    st.session_state.conversation_chain = get_rag_chain(vector_store)
+                    st.session_state.is_rag_ready = True
+                    st.success(f"총 {len(text_chunks)}개 청크로 학습 데이터베이스 구축 완료!")
+                except Exception as e:
+                    st.error(f"RAG 구축 오류: {e}")
+                    st.session_state.is_rag_ready = False
+    else:
+        st.session_state.is_rag_ready = False
+        st.warning("먼저 학습 자료를 업로드하고 분석을 시작하세요.")
+
+    st.markdown("---")
+    feature_selection = st.radio(
+        "기능 선택",
+        ["RAG 지식 챗봇", "맞춤형 학습 콘텐츠 생성", "LSTM 성취도 예측 대시보드"]
+    )
+
+# ================================
+# 이후 기존 기능 구현 그대로 유지 (RAG 챗봇 / 콘텐츠 생성 / LSTM 대시보드)
+# ================================

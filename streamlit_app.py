@@ -22,7 +22,6 @@ from bs4 import BeautifulSoup # [⭐추가] HTML 파싱을 위해 BeautifulSoup4
 
 # ================================
 # 1. LLM 및 임베딩 초기화 + 임베딩 캐시
-# (이전 코드와 동일, LLM 초기화 로직 유지)
 # ================================
 API_KEY = os.environ.get("GEMINI_API_KEY")
 
@@ -43,6 +42,9 @@ if 'client' not in st.session_state:
 if "memory" not in st.session_state:
     st.session_state.memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
+# [⭐추가⭐] 세션 임베딩 캐시 초기화
+if "embedding_cache" not in st.session_state:
+    st.session_state.embedding_cache = {}
 
 # --- RAG 관련 함수 ---
 def get_document_chunks(files):
@@ -54,16 +56,15 @@ def get_document_chunks(files):
         temp_filepath = os.path.join(temp_dir, uploaded_file.name)
         file_extension = uploaded_file.name.split('.')[-1].lower()
         
-        # 파일 형식에 따른 로더 선택
+        # 파일 형식에 따른 로더 선택 (BeautifulSoup 사용 로직 유지)
         if file_extension == "pdf":
-            # PDF는 PyPDFLoader 사용
             with open(temp_filepath, "wb") as f:
                 f.write(uploaded_file.getvalue())
             loader = PyPDFLoader(temp_filepath)
             documents.extend(loader.load())
         
         elif file_extension == "html":
-            # [⭐핵심] BeautifulSoup을 사용하여 HTML 태그를 제거하고 텍스트만 추출합니다.
+            # BeautifulSoup을 사용하여 HTML 태그를 제거하고 텍스트만 추출합니다.
             raw_html = uploaded_file.getvalue().decode('utf-8')
             soup = BeautifulSoup(raw_html, 'html.parser')
             text_content = soup.get_text(separator=' ', strip=True)
@@ -72,7 +73,6 @@ def get_document_chunks(files):
             documents.append({"page_content": text_content, "metadata": {"source": uploaded_file.name}})
 
         else: # TXT 파일 처리
-            # TextLoader 사용
             with open(temp_filepath, "wb") as f:
                 f.write(uploaded_file.getvalue())
             loader = TextLoader(temp_filepath, encoding="utf-8")
@@ -83,9 +83,6 @@ def get_document_chunks(files):
         chunk_size=1000,
         chunk_overlap=100
     )
-    # [수정] HTML 처리 시 문서 형태가 다를 수 있으므로, List[Document] 형태로 명시적 변환이 필요할 수 있습니다.
-    # 안전하게 LangChain의 Document 객체 리스트로 변환하는 과정이 필요하지만, 
-    # 현재 코드 구조에서는 TextLoader와 PyPDFLoader의 결과를 그대로 사용합니다.
     
     # HTML 로드 결과가 Dict인 경우 Document 객체로 변환
     final_documents = []
@@ -100,16 +97,29 @@ def get_document_chunks(files):
 
 
 def get_vector_store(text_chunks):
-    # (이전 코드와 동일하게 유지)
+    """텍스트 청크를 임베딩하고 Vector Store를 생성합니다."""
+    
+    # [⭐핵심 수정⭐] 문서 내용의 해시값을 키로 사용하여 캐시를 확인합니다.
+    # 튜플은 hashable하여 딕셔너리 키로 사용 가능
+    cache_key = tuple(doc.page_content for doc in text_chunks)
+    if cache_key in st.session_state.embedding_cache:
+        st.info("✅ 임베딩 캐시가 발견되어 재사용합니다. (API 한도 절약)")
+        return st.session_state.embedding_cache[cache_key]
+    
     try:
         vector_store = FAISS.from_documents(text_chunks, embedding=st.session_state.embeddings)
+        # 성공적으로 임베딩했다면 캐시에 저장
+        st.session_state.embedding_cache[cache_key] = vector_store
         return vector_store
-    except ImportError:
-        st.error("FAISS 라이브러리를 찾을 수 없습니다. requirements.txt에 'faiss-cpu'가 포함되어 있는지 확인해 주세요.")
-        return None
+    
     except Exception as e:
-        st.error(f"Vector Store 생성 중 오류 발생: {e}")
+        # 429 오류가 발생하면 사용자에게 정확하게 안내
+        if "429" in str(e):
+             st.error("⚠️ **API 임베딩 한도 초과 (429 Error)**: Google Gemini API의 무료 임베딩 요청 한도를 초과했습니다. 내일 다시 시도하거나 API 사용량 대시보드를 확인하세요.")
+        else:
+            st.error(f"Vector Store 생성 중 오류 발생: {e}")
         return None
+
 
 def get_rag_chain(vector_store):
     # (이전 코드와 동일하게 유지)
@@ -225,6 +235,7 @@ elif feature_selection == "맞춤형 학습 콘텐츠 생성":
                         st.error(f"콘텐츠 생성 오류: {e}")
             else:
                 st.warning("학습 주제를 입력해 주세요.")
+
 
 
 

@@ -1,56 +1,55 @@
+# ================================
+# Streamlit Cloud + Local Dual Mode
+# LangChain + Gemini + LSTM 학습 코치 (2025-11)
+# ================================
+
 import os
 import subprocess
-import streamlit as st
+import sys
 import tempfile
 import time
+
+import streamlit as st
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense
+from tensorflow.keras.applications import MobileNetV3Large
+
 from langchain.chains import ConversationalRetrievalChain
 from langchain_community.document_loaders import PyPDFLoader, UnstructuredHTMLLoader, TextLoader
 from langchain_community.vectorstores import FAISS
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.memory import ConversationBufferMemory
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
 
-# ===============================
-# 🌐 환경에 따라 로컬 전용 패키지 설치
-# ===============================
-IS_CLOUD = os.environ.get("STREAMLIT_RUNTIME") is not None
-
-if not IS_CLOUD:
-    import importlib.util
-
-    def install_if_missing(package_name, pip_name=None):
-        pip_name = pip_name or package_name
-        if importlib.util.find_spec(package_name) is None:
-            subprocess.run(["pip", "install", pip_name], check=False)
-
-    st.write("🔧 로컬 환경 감지: 필요한 패키지 설치 중...")
-    install_if_missing("tensorflow", "tensorflow==2.13.0")
-    install_if_missing("unstructured_inference", "unstructured-inference==0.7.11")
+# ================================
+# 0. 환경 체크: pip 최신화 & 로컬 설치
+# ================================
+if not os.environ.get("STREAMLIT_RUNTIME"):
+    # 로컬 모드: pip 업데이트 + tensorflow / unstructured-inference 설치
+    try:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "pip"])
+        subprocess.check_call([
+            sys.executable, "-m", "pip", "install",
+            "tensorflow==2.13.0",
+            "unstructured-inference==0.7.11"
+        ])
+        print("✅ Local mode detected: pip updated & heavy packages installed")
+    except Exception as e:
+        print("⚠️ Local install skipped or failed:", e)
 else:
-    st.write("☁️ Streamlit Cloud 환경: 무거운 패키지 설치 생략")
+    # Streamlit Cloud 모드
+    print("🌐 Streamlit Cloud mode detected: Skipping heavy installs")
 
-# ===============================
-# Rich 버전 충돌 방지
-# ===============================
-try:
-    import pkg_resources
-    dist = pkg_resources.get_distribution("rich")
-    if IS_CLOUD and int(dist.version.split(".")[0]) >= 14:
-        subprocess.run(["pip", "install", "rich==13.9.2"], check=False)
-except pkg_resources.DistributionNotFound:
-    subprocess.run(["pip", "install", "rich==13.9.2"], check=False)
-
-import rich  # 이제 Cloud/Local 모두 호환
-
-# ===============================
-# 1. LLM & Embeddings 초기화
-# ===============================
+# ================================
+# 1. LLM & Embedding 초기화
+# ================================
 API_KEY = os.environ.get("GEMINI_API_KEY", "YOUR_GEMINI_API_KEY")
 
-if 'client' not in st.session_state:
+if "client" not in st.session_state:
     try:
         st.session_state.llm = ChatGoogleGenerativeAI(
             model="gemini-2.5-flash",
@@ -66,20 +65,17 @@ if 'client' not in st.session_state:
         st.error(f"LLM 초기화 오류: API 키 확인 필요. {e}")
         st.session_state.is_llm_ready = False
 
+# 메모리 초기화
 if "memory" not in st.session_state:
     st.session_state.memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
-# ===============================
-# 2. LSTM 모델 정의 (심화 기능)
-# ===============================
+# ================================
+# 2. LSTM 모델 정의
+# ================================
 @st.cache_resource
 def load_or_train_lstm():
-    import tensorflow as tf
-    from tensorflow.keras.models import Sequential
-    from tensorflow.keras.layers import LSTM, Dense
-
     np.random.seed(42)
-    data = np.cumsum(np.random.normal(5, 5, 50)) + 60
+    data = np.cumsum(np.random.normal(loc=5, scale=5, size=50)) + 60
     data = np.clip(data, 50, 95)
 
     def create_dataset(dataset, look_back=3):
@@ -101,9 +97,9 @@ def load_or_train_lstm():
     model.fit(X, Y, epochs=10, batch_size=1, verbose=0)
     return model, data
 
-# ===============================
+# ================================
 # 3. RAG 관련 함수
-# ===============================
+# ================================
 def get_document_chunks(files):
     documents = []
     temp_dir = tempfile.mkdtemp()
@@ -135,9 +131,9 @@ def get_rag_chain(vector_store):
         memory=st.session_state.memory
     )
 
-# ===============================
+# ================================
 # 4. Streamlit UI
-# ===============================
+# ================================
 st.set_page_config(page_title="개인 맞춤형 AI 학습 코치", layout="wide")
 
 with st.sidebar:
@@ -151,20 +147,20 @@ with st.sidebar:
     )
 
     if uploaded_files and st.session_state.is_llm_ready:
-        if st.button("자료 분석 시작 (RAG Indexing)"):
-            with st.spinner("자료를 분석하고 학습 DB 구축 중..."):
+        if st.button("자료 분석 시작 (RAG Indexing)", key="start_analysis"):
+            with st.spinner("자료 분석 및 RAG DB 구축 중..."):
                 try:
                     text_chunks = get_document_chunks(uploaded_files)
                     vector_store = get_vector_store(text_chunks)
                     st.session_state.conversation_chain = get_rag_chain(vector_store)
                     st.session_state.is_rag_ready = True
-                    st.success(f"총 {len(text_chunks)}개 청크로 학습 DB 구축 완료!")
+                    st.success(f"총 {len(text_chunks)}개 청크 구축 완료!")
                 except Exception as e:
                     st.error(f"RAG 구축 오류: {e}")
                     st.session_state.is_rag_ready = False
     else:
         st.session_state.is_rag_ready = False
-        st.warning("먼저 학습 자료 업로드 후 '자료 분석 시작' 클릭 필요")
+        st.warning("학습 자료를 업로드 후 '자료 분석 시작' 버튼 클릭")
 
     st.markdown("---")
     feature_selection = st.radio(
@@ -174,11 +170,13 @@ with st.sidebar:
 
 st.title("✨ 개인 맞춤형 AI 학습 코치")
 
-# ===============================
+# ================================
 # 5. 기능별 페이지
-# ===============================
+# ================================
 if feature_selection == "RAG 지식 챗봇":
-    st.header("RAG 지식 챗봇")
+    st.header("RAG 지식 챗봇 (문서 기반 Q&A)")
+    st.markdown("업로드된 문서를 기반으로 질문에 답변합니다.")
+
     if st.session_state.is_rag_ready:
         if "messages" not in st.session_state:
             st.session_state.messages = []
@@ -187,7 +185,7 @@ if feature_selection == "RAG 지식 챗봇":
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
 
-        if prompt := st.chat_input("질문 입력"):
+        if prompt := st.chat_input("학습 자료에 대해 질문해 보세요:"):
             st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("user"):
                 st.markdown(prompt)
@@ -196,17 +194,20 @@ if feature_selection == "RAG 지식 챗봇":
                 with st.spinner("답변 생성 중..."):
                     try:
                         response = st.session_state.conversation_chain.invoke({"question": prompt})
-                        answer = response.get('answer', '응답 생성 실패')
+                        answer = response.get('answer', '응답을 생성할 수 없습니다.')
                         st.markdown(answer)
                         st.session_state.messages.append({"role": "assistant", "content": answer})
                     except Exception as e:
                         st.error(f"챗봇 오류: {e}")
-                        st.session_state.messages.append({"role": "assistant", "content": "오류 발생"})
+                        st.session_state.messages.append({"role": "assistant", "content": "처리 중 오류 발생"})
+
     else:
-        st.info("사이드바에서 자료 업로드 후 RAG 분석 필요")
+        st.info("사이드바에서 자료 업로드 후 '자료 분석 시작' 버튼 클릭")
 
 elif feature_selection == "맞춤형 학습 콘텐츠 생성":
     st.header("맞춤형 학습 콘텐츠 생성")
+    st.markdown("주제, 난이도, 형식에 맞춰 맞춤형 학습 콘텐츠를 생성합니다.")
+
     if st.session_state.is_llm_ready:
         topic = st.text_input("학습 주제")
         level = st.selectbox("난이도", ["초급", "중급", "고급"])
@@ -214,55 +215,63 @@ elif feature_selection == "맞춤형 학습 콘텐츠 생성":
 
         if st.button("콘텐츠 생성"):
             if topic:
-                system_prompt = f"당신은 {level} 수준의 전문 AI 코치입니다. 요청 주제에 대해 {content_type} 형식으로 한국어로 제공."
+                system_prompt = f"당신은 {level} 수준의 전문 AI 코치입니다. 요청된 주제를 {content_type} 형식으로 명확히 교육 콘텐츠 생성. 한국어로만."
                 user_prompt = f"주제: {topic}. 요청 형식: {content_type}."
-                with st.spinner(f"{content_type} 생성 중..."):
+
+                with st.spinner(f"{topic}에 대한 {content_type} 생성 중..."):
                     try:
                         response = st.session_state.llm.invoke(user_prompt, system_instruction=system_prompt)
+                        st.success(f"**{topic}** - **{content_type}** 결과:")
                         st.markdown(response.content)
                     except Exception as e:
                         st.error(f"콘텐츠 생성 오류: {e}")
             else:
-                st.warning("주제를 입력해주세요.")
+                st.warning("학습 주제 입력 필요")
     else:
         st.error("LLM 초기화 실패. API 키 확인 필요")
 
 elif feature_selection == "LSTM 성취도 예측 대시보드":
     st.header("LSTM 기반 학습 성취도 예측")
-    with st.spinner("LSTM 모델 로드/학습 중..."):
+    st.markdown("가상의 퀴즈 점수 데이터를 기반으로 미래 성취도를 예측합니다.")
+
+    with st.spinner("LSTM 모델 준비 중..."):
         try:
             lstm_model, historical_scores = load_or_train_lstm()
-            st.success("LSTM 모델 준비 완료")
+            st.success("LSTM 모델 준비 완료!")
 
             look_back = 5
-            input_seq = np.reshape(historical_scores[-look_back:], (1, look_back, 1))
-            future_preds = []
+            last_sequence = historical_scores[-look_back:]
+            input_sequence = np.reshape(last_sequence, (1, look_back, 1))
 
-            current_input = input_seq
-            for _ in range(5):
+            future_predictions = []
+            current_input = input_sequence
+            for i in range(5):
                 next_score = lstm_model.predict(current_input, verbose=0)[0]
-                future_preds.append(next_score[0])
+                future_predictions.append(next_score[0])
                 current_input = np.append(current_input[:, 1:, :], next_score[0]).reshape(1, look_back, 1)
 
             fig, ax = plt.subplots(figsize=(10, 6))
-            ax.plot(range(len(historical_scores)), historical_scores, label="과거 점수", marker='o', color='blue')
-            ax.plot(range(len(historical_scores), len(historical_scores)+5), future_preds, label="예측 점수", marker='x', linestyle='--', color='red')
-            ax.set_title("LSTM 성취도 예측")
+            ax.plot(range(len(historical_scores)), historical_scores, label="과거 점수", marker='o', linestyle='-', color='blue')
+            future_indices = range(len(historical_scores), len(historical_scores) + len(future_predictions))
+            ax.plot(future_indices, future_predictions, label="예측 점수", marker='x', linestyle='--', color='red')
+            ax.set_title("LSTM 학습 성취도 예측")
             ax.set_xlabel("Day/Week")
-            ax.set_ylabel("점수")
+            ax.set_ylabel("점수 (0-100)")
             ax.legend()
             ax.grid(True)
             st.pyplot(fig)
 
+            st.markdown("---")
             avg_recent = np.mean(historical_scores[-5:])
-            avg_future = np.mean(future_preds)
-            if avg_future > avg_recent:
-                comment = "성취도 향상 예상. 현재 학습 유지 또는 난이도 상승 추천"
-            elif avg_future < avg_recent - 5:
-                comment = "성취도 다소 하락 가능. 기초 개념 점검 권장"
+            avg_predict = np.mean(future_predictions)
+            if avg_predict > avg_recent:
+                comment = "앞으로 학습 성취도가 긍정적으로 향상될 것으로 예상됩니다. 현재 학습 유지 또는 난이도 상승 도전 가능!"
+            elif avg_predict < avg_recent - 5:
+                comment = "성취도가 다소 하락할 수 있습니다. 기초 개념 재점검 권장."
             else:
-                comment = "성취도 유지 예상. 새로운 학습 콘텐츠 활용 추천"
+                comment = "성취도 유지 예상. 새로운 학습 콘텐츠 생성으로 활력 추가 가능."
+
             st.info(comment)
 
         except Exception as e:
-            st.error(f"LSTM 처리 오류: {e}")
+            st.error(f"LSTM 모델 오류: {e}")

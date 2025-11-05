@@ -1,5 +1,6 @@
 # ========================================
-# Streamlit AI 학습 코치 (Full Version 2025-11)
+# Streamlit AI 학습 코치 (Full Stable Version 2025-11)
+# Gemini 무료 티어 & 임베딩 캐시 대응
 # ========================================
 
 import os
@@ -48,11 +49,11 @@ if "nltk_downloaded" not in st.session_state:
     st.session_state["nltk_downloaded"] = True
 
 # ================================
-# 1. 환경 설정 및 LLM 초기화
+# 1. LLM 및 임베딩 초기화 + 임베딩 캐시
 # ================================
 API_KEY = os.environ.get("GEMINI_API_KEY", "YOUR_GEMINI_API_KEY")
 
-if 'client' not in st.session_state:
+if "llm" not in st.session_state:
     try:
         st.session_state.llm = ChatGoogleGenerativeAI(
             model="gemini-2.5-flash",
@@ -65,18 +66,21 @@ if 'client' not in st.session_state:
         )
         st.session_state.is_llm_ready = True
     except Exception as e:
-        st.error(f"LLM 초기화 오류: API 키를 확인해 주세요. {e}")
+        st.error(f"LLM 초기화 오류: API 키를 확인하세요. {e}")
         st.session_state.is_llm_ready = False
 
 if "memory" not in st.session_state:
     st.session_state.memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+
+# 세션 임베딩 캐시
+if "embedding_cache" not in st.session_state:
+    st.session_state.embedding_cache = {}
 
 # ================================
 # 2. LSTM 모델 정의
 # ================================
 @st.cache_resource
 def load_or_train_lstm():
-    """가상의 학습 성취도 예측 LSTM 모델 생성 및 학습"""
     np.random.seed(42)
     data = np.cumsum(np.random.normal(loc=5, scale=5, size=50)) + 60
     data = np.clip(data, 50, 95)
@@ -101,7 +105,7 @@ def load_or_train_lstm():
     return model, data
 
 # ================================
-# 3. RAG 관련 함수
+# 3. RAG 관련 함수 (캐시 + 무료 티어 대응)
 # ================================
 def get_document_chunks(files):
     documents = []
@@ -110,20 +114,35 @@ def get_document_chunks(files):
         temp_filepath = os.path.join(temp_dir, uploaded_file.name)
         with open(temp_filepath, "wb") as f:
             f.write(uploaded_file.getvalue())
+
         if uploaded_file.name.endswith(".pdf"):
             loader = PyPDFLoader(temp_filepath)
         elif uploaded_file.name.endswith(".html"):
             loader = UnstructuredHTMLLoader(temp_filepath)
         else:
             loader = TextLoader(temp_filepath, encoding="utf-8")
+
         documents.extend(loader.load())
+
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
     return text_splitter.split_documents(documents)
 
 def get_vector_store(text_chunks):
-    return FAISS.from_documents(text_chunks, embedding=st.session_state.embeddings)
+    key = tuple(doc.page_content for doc in text_chunks)
+    if key in st.session_state.embedding_cache:
+        return st.session_state.embedding_cache[key]
+
+    try:
+        vector_store = FAISS.from_documents(text_chunks, embedding=st.session_state.embeddings)
+        st.session_state.embedding_cache[key] = vector_store
+        return vector_store
+    except Exception as e:
+        st.warning(f"임베딩 요청 실패 (무료 티어 한도 초과 가능): {e}")
+        return None
 
 def get_rag_chain(vector_store):
+    if vector_store is None:
+        return None
     return ConversationalRetrievalChain.from_llm(
         llm=st.session_state.llm,
         retriever=vector_store.as_retriever(),
@@ -148,15 +167,16 @@ with st.sidebar:
     if uploaded_files and st.session_state.is_llm_ready:
         if st.button("자료 분석 시작 (RAG Indexing)", key="start_analysis"):
             with st.spinner("자료 분석 및 학습 DB 구축 중..."):
-                try:
-                    text_chunks = get_document_chunks(uploaded_files)
-                    vector_store = get_vector_store(text_chunks)
+                text_chunks = get_document_chunks(uploaded_files)
+                vector_store = get_vector_store(text_chunks)
+                if vector_store:
                     st.session_state.conversation_chain = get_rag_chain(vector_store)
                     st.session_state.is_rag_ready = True
                     st.success(f"총 {len(text_chunks)}개 청크로 학습 DB 구축 완료!")
-                except Exception as e:
-                    st.error(f"RAG 구축 오류: {e}")
+                else:
                     st.session_state.is_rag_ready = False
+                    st.error("임베딩 실패: 무료 티어 한도 초과 또는 네트워크 문제.")
+
     else:
         st.session_state.is_rag_ready = False
         st.warning("먼저 학습 자료를 업로드하세요.")
@@ -175,8 +195,7 @@ st.title("✨ 개인 맞춤형 AI 학습 코치")
 if feature_selection == "RAG 지식 챗봇":
     st.header("RAG 지식 챗봇 (문서 기반 Q&A)")
     st.markdown("업로드된 문서 기반으로 질문에 답변합니다.")
-
-    if st.session_state.is_rag_ready:
+    if st.session_state.is_rag_ready and st.session_state.conversation_chain:
         if "messages" not in st.session_state:
             st.session_state.messages = []
 
@@ -198,7 +217,12 @@ if feature_selection == "RAG 지식 챗봇":
                     except Exception as e:
                         st.error(f"챗봇 오류: {e}")
                         st.session_state.messages.append({"role":"assistant","content":"오류 발생"})
+    else:
+        st.warning("RAG가 준비되지 않았습니다. 학습 자료를 업로드하고 분석하세요.")
 
+# ================================
+# 맞춤형 학습 콘텐츠 생성
+# ================================
 elif feature_selection == "맞춤형 학습 콘텐츠 생성":
     st.header("맞춤형 학습 콘텐츠 생성")
     st.markdown("학습 주제와 난이도에 맞춰 콘텐츠 생성")
@@ -213,11 +237,15 @@ elif feature_selection == "맞춤형 학습 콘텐츠 생성":
                 system_prompt = f"""당신은 {level} 수준의 전문 AI 코치입니다.
 요청받은 주제에 대해 {content_type} 형식에 맞춰 명확하고 교육적인 콘텐츠를 생성해 주세요.
 답변은 한국어로만 제공해야 합니다."""
+
                 user_prompt = f"주제: {topic}. 요청 형식: {content_type}."
 
                 with st.spinner(f"{topic}에 대한 {content_type} 생성 중..."):
                     try:
-                        response = st.session_state.llm.invoke(user_prompt, system_instruction=system_prompt)
+                        response = st.session_state.llm.invoke(
+                            user_prompt,
+                            system_instruction=system_prompt
+                        )
                         st.success(f"**{topic}** - **{content_type}** 결과:")
                         st.markdown(response.content)
                     except Exception as e:
@@ -225,47 +253,3 @@ elif feature_selection == "맞춤형 학습 콘텐츠 생성":
             else:
                 st.warning("학습 주제를 입력해 주세요.")
 
-elif feature_selection == "LSTM 성취도 예측 대시보드":
-    st.header("LSTM 기반 학습 성취도 예측 대시보드")
-    st.markdown("과거 점수 기반 예측")
-
-    with st.spinner("LSTM 모델 로드 및 학습 중..."):
-        try:
-            lstm_model, historical_scores = load_or_train_lstm()
-            st.success("LSTM 모델 준비 완료!")
-
-            look_back = 5
-            last_sequence = historical_scores[-look_back:]
-            input_sequence = np.reshape(last_sequence, (1, look_back, 1))
-
-            future_predictions = []
-            current_input = input_sequence
-
-            for _ in range(5):
-                next_score = lstm_model.predict(current_input, verbose=0)[0]
-                future_predictions.append(next_score[0])
-                current_input = np.append(current_input[:,1:,:], next_score[0]).reshape(1, look_back,1)
-
-            fig, ax = plt.subplots(figsize=(10,6))
-            ax.plot(range(len(historical_scores)), historical_scores, label="과거 점수", marker='o', linestyle='-', color='blue')
-            future_indices = range(len(historical_scores), len(historical_scores)+len(future_predictions))
-            ax.plot(future_indices, future_predictions, label="예측 성취도", marker='x', linestyle='--', color='red')
-            ax.set_title("LSTM 기반 학습 성취도 예측")
-            ax.set_xlabel("주기")
-            ax.set_ylabel("성취도 점수 (0-100)")
-            ax.legend()
-            ax.grid(True)
-            st.pyplot(fig)
-
-            avg_recent = np.mean(historical_scores[-5:])
-            avg_predict = np.mean(future_predictions)
-            if avg_predict > avg_recent:
-                comment = "앞으로 성취도가 긍정적으로 향상될 것으로 예측됩니다."
-            elif avg_predict < avg_recent - 5:
-                comment = "성취도가 다소 하락할 수 있습니다. RAG 챗봇으로 기초 개념 확인 추천."
-            else:
-                comment = "성취도는 현재 수준 유지 예상. 새로운 콘텐츠로 학습 활력 추가 고려."
-            st.info(comment)
-
-        except Exception as e:
-            st.error(f"LSTM 처리 중 오류: {e}")

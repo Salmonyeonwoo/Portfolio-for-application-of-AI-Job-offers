@@ -222,7 +222,7 @@ elif feature_selection == "LSTM 성취도 예측 대시보드":
     st.header("LSTM 기반 학습 성취도 예측")
     st.markdown("가상 퀴즈 점수 기반 미래 성취도 예측")
 
-    with st.spinner("LSTM 모델 로드 및 학습 중..."):
+with st.spinner("LSTM 모델 로드 및 학습 중..."):
     try:
         lstm_model, historical_scores = load_or_train_lstm()
         st.success("LSTM 모델 준비 완료!")
@@ -273,5 +273,6 @@ elif feature_selection == "LSTM 성취도 예측 대시보드":
 
     except Exception as e:
         st.error(f"LSTM 처리 중 오류 발생: {e}")
+
 
 

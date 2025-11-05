@@ -24,4 +24,4 @@ tensorflow==2.13.0
 protobuf==4.25.3
 requests==2.32.3
 tqdm==4.66.5
-markdown-it-py=
+markdown-it-py==3.0.0

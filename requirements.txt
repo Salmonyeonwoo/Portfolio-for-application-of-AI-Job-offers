@@ -20,8 +20,8 @@ pandas==2.2.2
 matplotlib==3.9.2
 
 # Utilities
-protobuf==4.25.3
-requests==2.32.3
+protobuf==4.25.8
+requests==2.32.4
 tqdm==4.66.5
 markdown-it-py==4.0.0
 rich==13.9.2

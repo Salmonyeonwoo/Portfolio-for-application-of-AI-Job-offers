@@ -1,0 +1,27 @@
+streamlit==1.38.0
+
+# LangChain (버전 제거, Cloud가 자동 설치)
+langchain
+langchain-community
+langchain-core
+langchain-google-genai
+google-generativeai
+
+# Vector Store
+faiss-cpu==1.8.0
+
+# Docs / Parsing
+unstructured==0.14.9
+PyPDF2==3.0.1
+
+# ML & Analytics
+numpy==1.26.4
+pandas==2.2.2
+matplotlib==3.9.2
+
+# Utilities
+protobuf==4.25.3
+requests==2.32.3
+tqdm==4.66.5
+markdown-it-py==4.0.0
+rich==13.9.2

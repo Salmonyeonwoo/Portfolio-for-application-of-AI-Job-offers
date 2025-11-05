@@ -12,17 +12,22 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# --- 4. Streamlit UI 구성 (최상단으로 이동) ---
+
+# [수정] st.set_page_config를 최상단에 호출하여 StreamlitAPIException을 방지합니다.
+st.set_page_config(page_title="개인 맞춤형 AI 학습 코치", layout="wide")
+
 # --- TensorFlow/LSTM 관련 코드 임시 제거 ---
 # Streamlit Cloud 배포 성공을 위해 관련 라이브러리 및 로직을 모두 비활성화합니다.
 
 # --- 1. 환경 설정 및 모델 초기화 ---
 
-# Gemini API 키 설정 (실제 환경에서는 secrets.toml 또는 환경 변수 사용)
-# NOTE: Streamlit Cloud Secrets에 GEMINI_API_KEY를 설정해야 합니다.
-API_KEY = os.environ.get("GEMINI_API_KEY", "YOUR_GEMINI_API_KEY")
+# Gemini API 키 설정 (secrets.toml에서 로드)
+# NOTE: API 키가 없을 경우 오류를 발생시키도록 설정합니다.
+API_KEY = os.environ.get("GEMINI_API_KEY")
 
 if 'client' not in st.session_state:
-    if API_KEY == "YOUR_GEMINI_API_KEY":
+    if not API_KEY: # API_KEY가 빈 문자열이거나 None인 경우
         st.error("⚠️ 경고: GEMINI API 키가 설정되지 않았습니다. Streamlit Secrets에 'GEMINI_API_KEY'를 설정해주세요.")
         st.session_state.is_llm_ready = False
     else:
@@ -57,6 +62,7 @@ def get_document_chunks(files):
         with open(temp_filepath, "wb") as f:
             f.write(uploaded_file.getvalue())
 
+        # 파일 형식에 따른 로더 선택
         if uploaded_file.name.endswith(".pdf"):
             loader = PyPDFLoader(temp_filepath)
         elif uploaded_file.name.endswith(".html"):
@@ -66,6 +72,7 @@ def get_document_chunks(files):
 
         documents.extend(loader.load())
 
+    # 텍스트 분할 (청킹)
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
         chunk_overlap=100
@@ -80,6 +87,7 @@ def get_vector_store(text_chunks):
         vector_store = FAISS.from_documents(text_chunks, embedding=st.session_state.embeddings)
         return vector_store
     except ImportError:
+        # FAISS 설치 오류 시 사용자에게 안내
         st.error("FAISS 라이브러리를 찾을 수 없습니다. requirements.txt에 'faiss-cpu'가 포함되어 있는지 확인해 주세요.")
         return None
     except Exception as e:
@@ -99,9 +107,7 @@ def get_rag_chain(vector_store):
     )
 
 
-# --- 4. Streamlit UI 구성 ---
-
-st.set_page_config(page_title="개인 맞춤형 AI 학습 코치", layout="wide")
+# --- 4. Streamlit UI (사이드바 및 기능 선택) ---
 
 # 사이드바: 설정 및 파일 업로드
 with st.sidebar:
@@ -149,7 +155,7 @@ st.title("✨ 개인 맞춤형 AI 학습 코치")
 # --- 5. 기능별 페이지 구현 ---
 
 if feature_selection == "RAG 지식 챗봇":
-    # RAG 챗봇 기능 (이전 코드와 동일)
+    # RAG 챗봇 기능 
     st.header("RAG 지식 챗봇 (문서 기반 Q&A)")
     st.markdown("업로드된 문서(포트폴리오, PDF 등)의 내용을 기반으로 질문에 답변합니다.")
 
@@ -181,7 +187,7 @@ if feature_selection == "RAG 지식 챗봇":
 
 
 elif feature_selection == "맞춤형 학습 콘텐츠 생성":
-    # 콘텐츠 생성 기능 (이전 코드와 동일)
+    # 콘텐츠 생성 기능
     st.header("맞춤형 학습 콘텐츠 생성")
     st.markdown("원하는 학습 주제, 난이도, 형식을 입력하시면 LLM이 맞춤형 콘텐츠(요약, 퀴즈)를 생성해 드립니다.")
 

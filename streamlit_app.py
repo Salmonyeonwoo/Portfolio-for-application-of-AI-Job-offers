@@ -234,23 +234,29 @@ elif feature_selection == "LSTM 성취도 예측 대시보드":
         future_predictions = []
         current_input = input_sequence
 
+        # 다음 5일 예측
         for i in range(5):
             next_score = lstm_model.predict(current_input, verbose=0)[0]
             future_predictions.append(next_score[0])
-            # 다음 예측 입력 갱신
-            current_input = np.append(current_input[:, 1:, :], next_score[0]).reshape(1, look_back, 1)
 
-        # 시각화
+            next_input = np.append(current_input[:, 1:, :], next_score[0]).reshape(1, look_back, 1)
+            current_input = next_input
+
+        # 시각화 코드도 try 안에서 들여쓰기 유지
         fig, ax = plt.subplots(figsize=(10, 6))
-        ax.plot(range(len(historical_scores)), historical_scores, label="과거 점수", marker='o', linestyle='-', color='blue')
+        ax.plot(range(len(historical_scores)), historical_scores, label="과거 퀴즈 점수 (가상)", marker='o', linestyle='-', color='blue')
         future_indices = range(len(historical_scores), len(historical_scores) + len(future_predictions))
         ax.plot(future_indices, future_predictions, label="예측 성취도 (다음 5일)", marker='x', linestyle='--', color='red')
+
         ax.set_title("LSTM 기반 학습 성취도 시계열 예측")
         ax.set_xlabel("주기 (Day/Week)")
-        ax.set_ylabel("점수 (0-100)")
+        ax.set_ylabel("성취도 점수 (0-100)")
         ax.legend()
         ax.grid(True)
         st.pyplot(fig)
+
+    except Exception as e:
+        st.error(f"LSTM 모델 처리 중 오류가 발생했습니다: {e}")
 
         # AI 코치 코멘트
         avg_recent = np.mean(historical_scores[-5:])
@@ -267,4 +273,5 @@ elif feature_selection == "LSTM 성취도 예측 대시보드":
 
     except Exception as e:
         st.error(f"LSTM 처리 중 오류 발생: {e}")
+
 

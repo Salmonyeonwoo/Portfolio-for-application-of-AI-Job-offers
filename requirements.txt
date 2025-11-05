@@ -26,7 +26,7 @@ pandas==2.2.2
 matplotlib==3.9.2
 
 # TensorFlow (optional)
-tensorflow==2.13.0
+# tensorflow==2.13.0  # Streamlit Cloud 환경에서는 설치 불가 (AVX 문제)
 
 # Utilities
 protobuf==4.25.3

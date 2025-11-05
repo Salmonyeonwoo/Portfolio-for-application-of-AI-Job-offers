@@ -12,22 +12,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# --- [수정된 부분] NLTK 리소스 다운로드 로직 (강제 전체 다운로드) ---
-try:
-    import nltk
-    # RAG 문서 로딩에 필요한 모든 리소스 다운로드 (punkt_tab 오류 해결 목적)
-    nltk.download('punkt', quiet=True) 
-    nltk.download('averaged_perceptron_tagger', quiet=True) # unstructured 종속성
-    nltk.download('maxent_treebank_tokenizer', quiet=True) # unstructured 종속성
-    nltk.download('wordnet', quiet=True) # unstructured 종속성
-
-    st.session_state.is_nltk_ready = True
-except Exception as e:
-    # NLTK 다운로드 실패 시에도 앱 실행은 되도록 하지만 RAG 기능은 오류를 띄웁니다.
-    st.session_state.is_nltk_ready = False
-    print(f"NLTK 다운로드 오류: {e}") 
-# --------------------------------------------------------
-
 # --- 4. Streamlit UI 구성 (최상단으로 이동) ---
 st.set_page_config(page_title="개인 맞춤형 AI 학습 코치", layout="wide")
 
@@ -77,9 +61,9 @@ def get_document_chunks(files):
 
         # 파일 형식에 따른 로더 선택
         if uploaded_file.name.endswith(".pdf"):
+            # PDF 로딩 시 unstructured가 NLTK 대신 PaddlePaddle을 사용하도록 기대합니다.
             loader = PyPDFLoader(temp_filepath)
         elif uploaded_file.name.endswith(".html"):
-            # NLTK 리소스가 필요합니다.
             loader = UnstructuredHTMLLoader(temp_filepath)
         else:
             loader = TextLoader(temp_filepath, encoding="utf-8")
@@ -135,8 +119,7 @@ with st.sidebar:
     )
 
     # LLM 및 RAG 상태 관리
-    # NLTK 준비 상태를 확인하여 RAG 인덱싱을 진행합니다.
-    if uploaded_files and st.session_state.is_llm_ready and st.session_state.is_nltk_ready:
+    if uploaded_files and st.session_state.is_llm_ready: # is_nltk_ready 체크 제거
         if st.button("자료 분석 시작 (RAG Indexing)", key="start_analysis"):
             with st.spinner("자료를 분석하고 학습 데이터베이스를 구축 중입니다..."):
                 try:
@@ -155,10 +138,7 @@ with st.sidebar:
                     st.session_state.is_rag_ready = False
     else:
         st.session_state.is_rag_ready = False
-        if not st.session_state.is_nltk_ready:
-             st.error("RAG 기능을 사용하려면 NLTK 리소스 다운로드가 필요합니다. 앱을 다시 시작해 주세요.")
-        else:
-            st.warning("먼저 학습 자료를 업로드하고 분석을 시작하세요.")
+        st.warning("먼저 학습 자료를 업로드하고 분석을 시작하세요.")
 
     # 기능 선택 라디오 버튼
     st.markdown("---")

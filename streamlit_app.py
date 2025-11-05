@@ -12,9 +12,20 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# --- 4. Streamlit UI 구성 (최상단으로 이동) ---
+# --- [수정된 부분] NLTK 리소스 다운로드 로직 추가 ---
+try:
+    import nltk
+    # 'punkt'는 가장 기본이 되는 토크나이저 리소스입니다.
+    # 오류 메시지에서 요구하는 'punkt_tab'은 'punkt'에 포함되어 있거나,
+    # 'punkt'만으로 해결되는 경우가 많습니다.
+    nltk.download('punkt', quiet=True) 
+    st.session_state.is_nltk_ready = True
+except Exception as e:
+    st.error(f"NLTK 다운로드 오류: {e}")
+    st.session_state.is_nltk_ready = False
+# --------------------------------------------------------
 
-# [수정] st.set_page_config를 최상단에 호출하여 StreamlitAPIException을 방지합니다.
+# --- 4. Streamlit UI 구성 (최상단으로 이동) ---
 st.set_page_config(page_title="개인 맞춤형 AI 학습 코치", layout="wide")
 
 # --- TensorFlow/LSTM 관련 코드 임시 제거 ---
@@ -66,6 +77,7 @@ def get_document_chunks(files):
         if uploaded_file.name.endswith(".pdf"):
             loader = PyPDFLoader(temp_filepath)
         elif uploaded_file.name.endswith(".html"):
+            # NLTK 리소스가 필요합니다.
             loader = UnstructuredHTMLLoader(temp_filepath)
         else:
             loader = TextLoader(temp_filepath, encoding="utf-8")
@@ -121,7 +133,8 @@ with st.sidebar:
     )
 
     # LLM 및 RAG 상태 관리
-    if uploaded_files and st.session_state.is_llm_ready:
+    # NLTK 준비 상태를 확인하여 RAG 인덱싱을 진행합니다.
+    if uploaded_files and st.session_state.is_llm_ready and st.session_state.is_nltk_ready:
         if st.button("자료 분석 시작 (RAG Indexing)", key="start_analysis"):
             with st.spinner("자료를 분석하고 학습 데이터베이스를 구축 중입니다..."):
                 try:
@@ -140,7 +153,10 @@ with st.sidebar:
                     st.session_state.is_rag_ready = False
     else:
         st.session_state.is_rag_ready = False
-        st.warning("먼저 학습 자료를 업로드하고 분석을 시작하세요.")
+        if not st.session_state.is_nltk_ready:
+             st.error("RAG 기능을 사용하려면 NLTK 리소스 다운로드가 필요합니다. 앱을 다시 시작해 주세요.")
+        else:
+            st.warning("먼저 학습 자료를 업로드하고 분석을 시작하세요.")
 
     # 기능 선택 라디오 버튼
     st.markdown("---")
@@ -153,6 +169,7 @@ with st.sidebar:
 st.title("✨ 개인 맞춤형 AI 학습 코치")
 
 # --- 5. 기능별 페이지 구현 ---
+# (이하 생략 - 이전 코드와 동일)
 
 if feature_selection == "RAG 지식 챗봇":
     # RAG 챗봇 기능 

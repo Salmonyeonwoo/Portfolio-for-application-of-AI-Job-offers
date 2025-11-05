@@ -1,34 +1,27 @@
-# ======================================
-# Streamlit Cloud Optimized Dependencies
-# ======================================
-
-# --- Core UI Framework ---
+# === Streamlit Cloud Optimized ===
 streamlit==1.38.0
 
-# --- LangChain + Vector DB Stack ---
+# === LangChain + Google GenAI Stack ===
 langchain==0.2.11
 langchain-community==0.2.10
 langchain-core==0.2.24
-langchain-google-genai==0.0.10
+langchain-google-genai==1.0.2
 google-generativeai==0.5.3
 faiss-cpu==1.8.0
 
-# --- Document & Text Processing ---
+# === Document Loaders ===
 unstructured==0.14.9
 unstructured-inference==0.7.11
 PyPDF2==3.0.1
 
-# --- ML & Analytics ---
+# === ML Stack ===
 numpy==1.26.4
 pandas==2.2.2
 matplotlib==3.9.2
-
-# --- TensorFlow (LSTM Dashboard) ---
 tensorflow==2.13.0
 
-# --- Utilities ---
+# === Utils ===
 protobuf==4.25.3
 requests==2.32.3
 tqdm==4.66.5
-markdown-it-py==3.0.0
-rich==13.7.1
+markdown-it-py=

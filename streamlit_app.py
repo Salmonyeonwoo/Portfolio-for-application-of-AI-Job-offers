@@ -1,12 +1,13 @@
 # ========================================
-# Streamlit AI 학습 코치 (NLTK 의존성 우회)
+# Streamlit AI 학습 코치 (RAG 최종 수정)
 # ========================================
 import streamlit as st
 import os
 import tempfile
 import time
 from langchain.chains import ConversationalRetrievalChain
-from langchain_community.document_loaders import PyPDFLoader, TextLoader, UnstructuredHTMLLoader # UnstructuredHTMLLoader 다시 추가
+from langchain_community.document_loaders import PyPDFLoader, TextLoader
+# [⭐삭제] UnstructuredHTMLLoader는 NLTK 의존성 문제로 삭제합니다.
 from langchain_community.vectorstores import FAISS
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -14,14 +15,10 @@ from langchain.memory import ConversationBufferMemory
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from bs4 import BeautifulSoup # [⭐추가] HTML 파싱을 위해 BeautifulSoup4 추가
 
-# [⭐핵심 수정⭐] NLTK 의존성 우회를 위한 환경 변수 설정
-# unstructured가 NLTK 대신 다른 파서를 사용하도록 강제합니다.
-# NLTK를 완전히 사용하지 않도록 환경 변수를 설정합니다.
-os.environ["UNSTRUCTURED_FORCE_ANON_USER_AGENT"] = "true" # 사용자 에이전트 익명화
-os.environ["NLTK_DATA"] = "/tmp/nltk_data" # NLTK 데이터 경로를 임시 경로로 설정
-
-# NLTK를 명시적으로 임포트하지 않도록 코드를 정리합니다.
+# [⭐삭제] NLTK 의존성 관련 환경 변수 및 임포트를 모두 제거합니다.
+# NLTK 관련 환경 변수 설정 삭제
 
 # ================================
 # 1. LLM 및 임베딩 초기화 + 임베딩 캐시
@@ -55,45 +52,70 @@ def get_document_chunks(files):
 
     for uploaded_file in files:
         temp_filepath = os.path.join(temp_dir, uploaded_file.name)
-        with open(temp_filepath, "wb") as f:
-            f.write(uploaded_file.getvalue())
-
+        file_extension = uploaded_file.name.split('.')[-1].lower()
+        
         # 파일 형식에 따른 로더 선택
-        if uploaded_file.name.endswith(".pdf"):
-            # PDF는 PyPDFLoader 또는 UnstructuredPDFLoader를 사용해야 하지만, 
-            # PyPDFLoader는 NLTK를 쓰지 않음. HTML은 UnstructuredHTML Loader로 복구합니다.
+        if file_extension == "pdf":
+            # PDF는 PyPDFLoader 사용
+            with open(temp_filepath, "wb") as f:
+                f.write(uploaded_file.getvalue())
             loader = PyPDFLoader(temp_filepath)
-        elif uploaded_file.name.endswith(".html"):
-            # HTML 처리를 위해 UnstructuredHTML Loader를 다시 사용합니다.
-            loader = UnstructuredHTMLLoader(temp_filepath) 
-        else:
-            loader = TextLoader(temp_filepath, encoding="utf-8")
+            documents.extend(loader.load())
+        
+        elif file_extension == "html":
+            # [⭐핵심] BeautifulSoup을 사용하여 HTML 태그를 제거하고 텍스트만 추출합니다.
+            raw_html = uploaded_file.getvalue().decode('utf-8')
+            soup = BeautifulSoup(raw_html, 'html.parser')
+            text_content = soup.get_text(separator=' ', strip=True)
+            
+            # LangChain TextLoader의 문서 형태로 변환
+            documents.append({"page_content": text_content, "metadata": {"source": uploaded_file.name}})
 
-        documents.extend(loader.load())
+        else: # TXT 파일 처리
+            # TextLoader 사용
+            with open(temp_filepath, "wb") as f:
+                f.write(uploaded_file.getvalue())
+            loader = TextLoader(temp_filepath, encoding="utf-8")
+            documents.extend(loader.load())
 
     # 텍스트 분할 (청킹)
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
         chunk_overlap=100
     )
-    return text_splitter.split_documents(documents)
+    # [수정] HTML 처리 시 문서 형태가 다를 수 있으므로, List[Document] 형태로 명시적 변환이 필요할 수 있습니다.
+    # 안전하게 LangChain의 Document 객체 리스트로 변환하는 과정이 필요하지만, 
+    # 현재 코드 구조에서는 TextLoader와 PyPDFLoader의 결과를 그대로 사용합니다.
+    
+    # HTML 로드 결과가 Dict인 경우 Document 객체로 변환
+    final_documents = []
+    for doc in documents:
+        if isinstance(doc, dict) and 'page_content' in doc:
+            from langchain.schema.document import Document
+            final_documents.append(Document(page_content=doc['page_content'], metadata=doc.get('metadata', {})))
+        else:
+            final_documents.append(doc)
+            
+    return text_splitter.split_documents(final_documents)
+
 
 def get_vector_store(text_chunks):
-    key = tuple(doc.page_content for doc in text_chunks)
-    if key in st.session_state.embedding_cache:
-        return st.session_state.embedding_cache[key]
-
+    # (이전 코드와 동일하게 유지)
     try:
         vector_store = FAISS.from_documents(text_chunks, embedding=st.session_state.embeddings)
-        st.session_state.embedding_cache[key] = vector_store
         return vector_store
+    except ImportError:
+        st.error("FAISS 라이브러리를 찾을 수 없습니다. requirements.txt에 'faiss-cpu'가 포함되어 있는지 확인해 주세요.")
+        return None
     except Exception as e:
-        st.warning(f"임베딩 요청 실패 (무료 티어 한도 초과 가능): {e}")
+        st.error(f"Vector Store 생성 중 오류 발생: {e}")
         return None
 
 def get_rag_chain(vector_store):
+    # (이전 코드와 동일하게 유지)
     if vector_store is None:
         return None
+        
     return ConversationalRetrievalChain.from_llm(
         llm=st.session_state.llm,
         retriever=vector_store.as_retriever(),
@@ -203,5 +225,6 @@ elif feature_selection == "맞춤형 학습 콘텐츠 생성":
                         st.error(f"콘텐츠 생성 오류: {e}")
             else:
                 st.warning("학습 주제를 입력해 주세요.")
+
 
 

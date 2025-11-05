@@ -1,10 +1,12 @@
 # ================================
-# Streamlit Cloud 최소화 요구사항
+# Streamlit Cloud + Local Dual Mode
+# LangChain + Gemini (2025-11)
 # ================================
 
 streamlit==1.38.0
+rich==13.9.2       # ✅ Streamlit 1.38.0과 호환
 
-# --- LangChain stack ---
+# --- LangChain stack (호환 버전 완전 일치) ---
 langchain==0.3.7
 langchain-community==0.3.7
 langchain-core==0.3.15
@@ -16,16 +18,17 @@ faiss-cpu==1.8.0
 
 # Docs / Parsing
 unstructured==0.14.9
+# ⚠️ unstructured-inference==0.7.11  # 로컬 전용, 앱 실행 시 설치
 PyPDF2==3.0.1
 
-# ML & Analytics (Cloud에서는 tensorflow 제외)
+# ML & Analytics
 numpy==1.26.4
 pandas==2.2.2
 matplotlib==3.9.2
+# ⚠️ tensorflow==2.13.0  # 로컬 전용, 앱 실행 시 설치
 
 # Utilities
 protobuf==4.25.3
 requests==2.32.3
 tqdm==4.66.5
 markdown-it-py==4.0.0
-rich==13.9.2   # Streamlit 1.38.0 호환

@@ -230,7 +230,7 @@ elif feature_selection == "맞춤형 학습 콘텐츠 생성":
         content_type = st.selectbox("콘텐츠 형식", ["핵심 요약 노트", "객관식 퀴즈 3문항", "실습 예제 아이디어"])
 
         if st.button("콘텐츠 생성"):
-                        if topic:
+            if topic:
                 system_prompt = f"""당신은 {level} 수준의 전문 AI 코치입니다. 요청받은 주제에 대해 {content_type} 형식에 맞춰 명확하고 교육적인 콘텐츠를 생성해 주세요. 답변은 한국어로만 제공해야 합니다."""
                 user_prompt = f"주제: {topic}. 요청 형식: {content_type}."
 
@@ -297,4 +297,5 @@ elif feature_selection == "LSTM 성취도 예측 대시보드":
 
         except Exception as e:
             st.error(f"LSTM 모델 처리 중 오류가 발생했습니다: {e}")
+
 

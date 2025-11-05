@@ -1,5 +1,5 @@
 # ================================
-# Streamlit Cloud + Local Dual Mode
+# Streamlit Cloud + Local Dual Mode (Fixed Rich Conflict)
 # LangChain + Gemini (2025-11)
 # ================================
 
@@ -31,4 +31,4 @@ protobuf==4.25.3
 requests==2.32.3
 tqdm==4.66.5
 markdown-it-py==4.0.0
-rich==14.2.0
+rich==13.9.2  # ✅ Streamlit 1.38.0과 완벽 호환

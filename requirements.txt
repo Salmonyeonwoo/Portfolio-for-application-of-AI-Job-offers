@@ -1,10 +1,16 @@
 # ================================
-# Streamlit Cloud 전용 (2025-11)
+# Streamlit + LangChain + Gemini + FAISS + LSTM 호환 패키지
+# Cloud/Local 자동 호환용 (2025-11)
 # ================================
 
+# Streamlit (Rich 13.9.2와 호환)
 streamlit==1.38.0
+rich==13.9.2
+markdown-it-py==4.0.0
+pygments==2.19.2
+mdurl==0.1.2
 
-# --- LangChain stack ---
+# LangChain stack (버전 고정)
 langchain==0.3.7
 langchain-community==0.3.7
 langchain-core==0.3.15
@@ -14,18 +20,19 @@ google-generativeai==0.8.3
 # Vector Store
 faiss-cpu==1.8.0
 
-# Docs / Parsing
+# Document parsing
 unstructured==0.14.9
 PyPDF2==3.0.1
 
-# ML & Analytics
+# ML / Analytics
 numpy==1.26.4
 pandas==2.2.2
 matplotlib==3.9.2
+
+# TensorFlow (로컬 모드에서만 설치, 앱 실행 시 자동 pip install)
+# tensorflow==2.13.0
 
 # Utilities
 protobuf==4.25.3
 requests==2.32.3
 tqdm==4.66.5
-markdown-it-py==4.0.0
-rich==13.9.2  # ✅ Streamlit 1.38.0 호환

@@ -12,17 +12,20 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# --- [수정된 부분] NLTK 리소스 다운로드 로직 추가 ---
+# --- [수정된 부분] NLTK 리소스 다운로드 로직 (강제 전체 다운로드) ---
 try:
     import nltk
-    # 'punkt'는 가장 기본이 되는 토크나이저 리소스입니다.
-    # 오류 메시지에서 요구하는 'punkt_tab'은 'punkt'에 포함되어 있거나,
-    # 'punkt'만으로 해결되는 경우가 많습니다.
+    # RAG 문서 로딩에 필요한 모든 리소스 다운로드 (punkt_tab 오류 해결 목적)
     nltk.download('punkt', quiet=True) 
+    nltk.download('averaged_perceptron_tagger', quiet=True) # unstructured 종속성
+    nltk.download('maxent_treebank_tokenizer', quiet=True) # unstructured 종속성
+    nltk.download('wordnet', quiet=True) # unstructured 종속성
+
     st.session_state.is_nltk_ready = True
 except Exception as e:
-    st.error(f"NLTK 다운로드 오류: {e}")
+    # NLTK 다운로드 실패 시에도 앱 실행은 되도록 하지만 RAG 기능은 오류를 띄웁니다.
     st.session_state.is_nltk_ready = False
+    print(f"NLTK 다운로드 오류: {e}") 
 # --------------------------------------------------------
 
 # --- 4. Streamlit UI 구성 (최상단으로 이동) ---
@@ -34,7 +37,6 @@ st.set_page_config(page_title="개인 맞춤형 AI 학습 코치", layout="wide"
 # --- 1. 환경 설정 및 모델 초기화 ---
 
 # Gemini API 키 설정 (secrets.toml에서 로드)
-# NOTE: API 키가 없을 경우 오류를 발생시키도록 설정합니다.
 API_KEY = os.environ.get("GEMINI_API_KEY")
 
 if 'client' not in st.session_state:

@@ -1,26 +1,29 @@
-# === Core Framework ===
+# === Streamlit Core ===
 streamlit==1.38.0
 
-# === Minimal ML / DL Stack ===
-numpy==1.26.4
-pandas==2.2.2
-matplotlib==3.9.2
-
-# === LangChain Ecosystem ===
+# === LangChain + RAG Stack ===
 langchain==0.2.11
 langchain-community==0.2.10
 langchain-google-genai==0.0.10
 google-generativeai==0.5.3
 faiss-cpu==1.8.0
 
-# === Document Loaders ===
+# === Text & PDF Loader ===
 unstructured==0.14.9
 unstructured-inference==0.7.11
 PyPDF2==3.0.1
 
-# === Utils ===
-tqdm==4.66.5
-requests==2.32.3
+# === ML Utilities ===
+numpy==1.26.4
+pandas==2.2.2
+matplotlib==3.9.2
+
+# === TensorFlow (lightweight) ===
+tensorflow==2.13.0
+
+# === Misc Utilities ===
 protobuf==4.25.3
+requests==2.32.3
+tqdm==4.66.5
 markdown-it-py==3.0.0
 rich==13.7.1

@@ -17,15 +17,13 @@ faiss-cpu==1.8.0
 
 # Docs / Parsing
 unstructured==0.14.9
-unstructured-inference==0.7.11
+# unstructured-inference==0.7.11  # Streamlit Cloud에서는 생략 권장
 PyPDF2==3.0.1
 
 # ML & Analytics
 numpy==1.26.4
 pandas==2.2.2
 matplotlib==3.9.2
-
-# TensorFlow (optional)
 # tensorflow==2.13.0  # Streamlit Cloud 환경에서는 설치 불가 (AVX 문제)
 
 # Utilities
@@ -33,4 +31,4 @@ protobuf==4.25.3
 requests==2.32.3
 tqdm==4.66.5
 markdown-it-py==4.0.0
-rich==13.9.2
+rich==14.2.0

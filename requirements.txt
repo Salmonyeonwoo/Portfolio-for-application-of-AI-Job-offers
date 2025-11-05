@@ -1,26 +1,35 @@
-# ==========================================
-# Streamlit Cloud Stable Requirements (2025-11 Verified)
-# ==========================================
+# ================================
+# Streamlit Cloud Stable Build
+# Compatible with LangChain + Gemini
+# ================================
 
-# --- Core Framework ---
+# --- Core UI Framework ---
 streamlit==1.38.0
 
-# --- LangChain family ---
+# --- LangChain + Vector DB Stack ---
 langchain==0.3.7
 langchain-community==0.3.5
 langchain-core==0.3.15
 langchain-google-genai==2.0.10
 google-generativeai==0.8.3
 
-# --- Other dependencies ---
+# Vector Store (optional)
 faiss-cpu==1.8.0
+
+# --- Document & Text Processing ---
 unstructured==0.14.9
 unstructured-inference==0.7.11
 PyPDF2==3.0.1
+
+# --- ML & Analytics ---
 numpy==1.26.4
 pandas==2.2.2
 matplotlib==3.9.2
+
+# --- TensorFlow (optional, for LSTM or deep learning) ---
 tensorflow==2.13.0
+
+# --- Utilities & Misc ---
 protobuf==4.25.3
 requests==2.32.3
 tqdm==4.66.5

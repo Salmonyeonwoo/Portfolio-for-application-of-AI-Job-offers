@@ -5,11 +5,11 @@
 
 streamlit==1.38.0
 
-# --- LangChain stack (호환 범위 맞춤) ---
-langchain==0.3.25
-langchain-community==0.3.25
-langchain-core>=0.3.37,<0.4.0
-langchain-google-genai==2.0.10
+# --- LangChain stack (호환 버전 완전 일치) ---
+langchain==0.3.7
+langchain-community==0.3.7
+langchain-core==0.3.15
+langchain-google-genai==2.0.9
 google-generativeai==0.8.3
 
 # Vector Store
@@ -25,12 +25,12 @@ numpy==1.26.4
 pandas==2.2.2
 matplotlib==3.9.2
 
-# (선택) 딥러닝
+# TensorFlow (optional)
 tensorflow==2.13.0
 
 # Utilities
 protobuf==4.25.3
 requests==2.32.3
 tqdm==4.66.5
-markdown-it-py==3.0.0
-rich==13.7.1
+markdown-it-py==4.0.0
+rich==14.2.0

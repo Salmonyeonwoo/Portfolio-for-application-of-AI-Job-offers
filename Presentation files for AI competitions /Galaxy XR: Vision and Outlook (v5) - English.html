@@ -1,0 +1,528 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galaxy XR: Vision and Outlook (v12)</title>
+    <!-- Removed Tailwind CSS script as custom styles are used -->
+    <style>
+        /* Noto Sans KR font load (retained for compatibility/Aesthetics) */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Inter:wght@300;400;500;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            background-color: #f8fafc; /* Light background */
+            margin: 0;
+            padding: 0;
+        }
+
+        .slide-container {
+            max-width: 1000px;
+            height: 600px;
+            margin: 2rem auto;
+            overflow: hidden;
+            border-radius: 1.25rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            position: relative;
+            background: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            /* v8 fix: Adjusted top padding and alignment */
+            padding: 2.5rem 4.5rem 3rem 4.5rem;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+            visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            /* v8 fix: Content displayed from the top */
+            justify-content: flex-start; 
+            box-sizing: border-box; /* Added for padding calculation */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+        
+        /* 1. Title Style (v8 fix: reduced bottom margin) */
+        .slide-title {
+            font-size: 2.25rem; /* text-4xl */
+            line-height: 2.5rem;
+            font-weight: 800; /* font-extrabold */
+            margin-bottom: 2rem; /* v7: 2.5rem -> v8: 2rem */
+            color: #1d4ed8; /* text-blue-700 */
+            text-align: center; /* text-center */
+            margin-left: auto; /* mx-auto */
+            margin-right: auto; /* mx-auto */
+            width: 100%; /* To occupy full width */
+            flex-shrink: 0; /* Prevent title from shrinking */
+        }
+        
+        /* 2. Navigation Button Style (Same as v7) */
+        .nav-button {
+            position: absolute;
+            bottom: 2rem; /* bottom-8 */
+            width: 3rem; /* w-12 */
+            height: 3rem; /* h-12 */
+            background-color: #1d4ed8; /* bg-blue-700 */
+            color: #ffffff; /* text-white */
+            border-radius: 9999px; /* rounded-full */
+            font-weight: 600; /* font-semibold */
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); /* shadow-lg */
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 300ms;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 30;
+            border: none; /* Remove default button border */
+            cursor: pointer; /* Change mouse cursor */
+        }
+
+        .nav-button:hover {
+            transform: scale(1.05); /* hover:scale-105 */
+            background-color: #1e40af; /* hover:bg-blue-800 */
+        }
+
+        .nav-button:focus {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 4px #93c5fd; /* focus:ring-4 focus:ring-blue-300 */
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.5; /* disabled:opacity-50 */
+            cursor: default;
+        }
+
+        .nav-prev {
+            left: 2rem; /* left-8 */
+        }
+
+        .nav-next {
+            right: 2rem; /* right-8 */
+        }
+
+        .slide-index {
+            position: absolute;
+            bottom: 2.75rem; /* bottom-11 */
+            left: 50%;
+            transform: translateX(-50%); /* left-1/2 -translate-x-1/2 */
+            font-size: 1rem; /* text-base */
+            line-height: 1.5rem;
+            font-weight: 500; /* font-medium */
+            color: #4b5563; /* text-gray-600 */
+            z-index: 30;
+        }
+
+        /* Slide 1: Title (v8 fix: changed justify-content) */
+        .slide.title-slide {
+            background-image: linear-gradient(to bottom right, #1d4ed8, #3730a3);
+            color: #ffffff;
+            align-items: center;
+            text-align: center;
+            justify-content: center; /* Title slide remains center-aligned */
+            padding-top: 3rem;
+        }
+        .title-slide h1 {
+            font-size: 3.75rem; /* text-6xl */
+            line-height: 1;
+            font-weight: 800; /* font-extrabold */
+            margin-bottom: 1.25rem; /* mb-5 */
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            50% { opacity: .5; }
+        }
+        .title-slide p {
+            font-size: 1.5rem; /* text-2xl */
+            line-height: 2rem;
+            opacity: 0.9;
+        }
+        .slide.title-slide img {
+            max-width: 60%;
+            height: auto;
+            margin-top: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Slides with Image/Text Grid (Same as v7) */
+        .slide-with-image {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            align-items: center;
+        }
+        .slide-with-image .text-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .slide-with-image .text-content ul {
+             list-style-type: disc;
+             list-style-position: inside;
+             /* v8 fix: Adjusted font size */
+             font-size: 1rem; /* text-base (v7: 1.125rem) */
+             line-height: 1.6; /* Line spacing */
+             color: #374151; /* text-gray-700 */
+        }
+        .slide-with-image .text-content ul li {
+             margin-bottom: 0.5rem; /* v7: 0.75rem */
+        }
+        .slide-with-image .text-content p {
+             font-size: 1rem; /* text-base (v7: 1.125rem) */
+             line-height: 1.6;
+             color: #374151;
+        }
+        .slide-with-image .text-content p.font-medium { font-weight: 500; }
+        .slide-with-image .text-content p.mb-4 { margin-bottom: 1rem; }
+        .slide-with-image .text-content p.mt-6 { margin-top: 1.5rem; }
+        .slide-with-image .text-content p.text-red-600 { color: #dc2626; }
+        .slide-with-image .text-content p.font-semibold { font-weight: 600; }
+        .slide-with-image .text-content li.mt-4 { margin-top: 1rem; }
+        .slide-with-image .text-content ul ul { margin-left: 1rem; }
+        
+        .slide-with-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            object-fit: cover;
+            max-height: 380px; /* v7: 400px -> v8: 380px */
+        }
+
+        /* Slide 3: Center-Aligned Content (v8 fix) */
+        .slide-3-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* v8: Top alignment */
+            flex-grow: 1; /* Fill remaining space */
+            overflow-y: auto; 
+        }
+        .slide-3-content img {
+            max-width: 100%;
+            /* v8 fix: Specified max height */
+            max-height: 280px; 
+            height: auto;
+            margin-bottom: 1rem; 
+        }
+        /* v8 fix: Adjusted text size */
+        .slide-3-content p.text-3xl { font-size: 1.75rem; line-height: 2.1rem; } 
+        .slide-3-content p.font-bold { font-weight: 700; }
+        .slide-3-content p.text-blue-700 { color: #1d4ed8; }
+        .slide-3-content p.mb-4 { margin-bottom: 1rem; }
+        .slide-3-content p.mt-2 { margin-top: 0.5rem; }
+        .slide-3-content p.text-xl { font-size: 1.125rem; line-height: 1.6rem; } 
+        .slide-3-content p.text-lg { font-size: 1rem; line-height: 1.5rem; } 
+        .slide-3-content p.text-gray-700 { color: #374151; }
+        .slide-3-content p.text-gray-500 { color: #6b7280; }
+        
+        /* Slide 9, 10 (Text Only) (v8 fix: font size adjustment) */
+        .slide-text-only ul {
+            list-style-type: disc;
+            list-style-position: inside;
+            font-size: 1rem; 
+            line-height: 1.6;
+            color: #374151; 
+        }
+        .slide-text-only ul li {
+            margin-bottom: 0.75rem; 
+        }
+        .slide-text-only ul li span.font-bold { font-weight: 700; }
+        .slide-text-only ul li span.text-red-600 { color: #dc2626; }
+        .slide-text-only ul li span.text-blue-600 { color: #2563eb; }
+        .slide-text-only ul li a { color: #2563eb; }
+        .slide-text-only ul li a:hover { text-decoration: underline; }
+        .slide-text-only ul li.mt-4 { margin-top: 1rem; }
+
+        /* Slide 11: Thank You (v8 fix: changed justify-content) */
+        .slide-thanks {
+             align-items: center;
+             text-align: center;
+             justify-content: center; /* v8: Keep center alignment */
+             background-image: linear-gradient(to bottom right, #1f2937, #111827);
+             color: #ffffff;
+             padding-top: 3rem;
+        }
+        .slide-thanks h1 {
+             font-size: 4.5rem; /* text-7xl */
+             line-height: 1;
+             font-weight: 800; /* font-extrabold */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+        <!-- Slide 1: Title and Main Image -->
+        <div class="slide active title-slide" data-index="1">
+            <h1>Galaxy XR: Vision and Outlook</h1>
+            <p>Analysis based on provided videos and industry forecasts</p>
+            <img src="https://images.samsung.com/kdp/static/mkt/moohan/feature/images/galaxy-xr-kv.jpg?imbypass=true" alt="Galaxy XR Concept Image">
+        </div>
+
+        <!-- Slide 2: Meaning of the Video (v12 restored) -->
+        <div class="slide slide-with-image" data-index="2">
+            <div class="text-content">
+                <h2 class="slide-title">Meaning of the Provided Video: 'Vision,' Not 'Product'</h2>
+                <p class="font-medium mb-4">The two videos provided do not disclose specific specs or pricing for 'Galaxy XR.'</p>
+                <ul>
+                    <li><strong>2023 Teaser (Unpacked):</strong>
+                        <ul>
+                            <li>A short teaser 'hinting' at the appearance of an XR device.</li>
+                            <li>Focused on building anticipation.</li>
+                        </ul>
+                    </li>
+                    <li class="mt-4"><strong>2024 Vision Video ('Spatial AI'):</strong>
+                        <ul>
+                            <li>Samsung's future XR/AI 'use case' concept.</li>
+                            <li>Examples: Real-time interpretation, AR navigation, virtual screens, etc.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p class="mt-6 font-semibold text-red-600">Conclusion: Lack of product information, emphasis on future vision.</p>
+            </div>
+            <img src="https://xpert.digital/wp-content/uploads/2025/10/galaxy-xr-png.png" alt="Spatial AI Vision Image" style="max-width: 100%;">
+        </div>
+
+        <!-- Slide 3: Current Release Status (v12 restored) -->
+        <div class="slide" data-index="3">
+            <div class="slide-3-content">
+                <h2 class="slide-title">Current Release and Sales Status</h2>
+                <img src="https://d2phebdq64jyfk.cloudfront.net/media/article/88dce3dce137474bbee1a12037448892.jpg" alt="No product released">
+                <p class="text-3xl font-bold text-blue-700 mb-4">
+                    The 'Galaxy XR' has NOT been officially released!
+                </p>
+                <p class="mt-2 text-xl text-gray-700">
+                    Therefore, it has not been officially introduced or sold in any country worldwide.
+                </p>
+                <p class="mt-2 text-lg text-gray-500">
+                    All information is based on industry 'expectations' and 'rumors.'
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 4: Expected Performance (v12 restored) -->
+        <div class="slide slide-with-image" data-index="4">
+            <div class="text-content">
+                <h2 class="slide-title">Expected Performance (Industry Outlook)</h2>
+                <p class="font-medium mb-4">High-performance device anticipated based on collaboration between Samsung, Google, and Qualcomm.</p>
+                <ul>
+                    <li><strong>Chipset:</strong> Qualcomm's latest XR-dedicated chipset (Snapdragon XR2+ Gen 2, etc.)</li>
+                    <li><strong>Display:</strong> Samsung Display's high-resolution Micro OLED/OLEDoS</li>
+                    <li><strong>OS:</strong> New 'Android XR' platform in collaboration with Google</li>
+                    <li><strong>Camera/Sensors:</strong> High-quality full-color passthrough, multiple MR support sensors</li>
+                    <li><strong>AI:</strong> Integration with Samsung 'Galaxy AI' (real-time interpretation, AI assistant)</li>
+                </ul>
+            </div>
+            <img src="https://www.thepanelstation.com/blog/wp-content/uploads/2025/10/Artboard-1-3.webp" alt="XR Technology Vision">
+        </div>
+
+        <!-- Slide 5: VR vs XR (v12 fixed: resolved text clipping, enlarged image) -->
+        <div class="slide slide-with-image" data-index="5">
+            <div class="text-content">
+                <h2 class="slide-title">VR vs XR: Commonalities and Differences</h2>
+                <!-- v12 fix: Resolved text clipping issue (reduced font/line spacing/margins) -->
+                <ul style="font-size: 0.95rem; line-height: 1.5;">
+                    <li>
+                        <strong>Commonality (VR & XR):</strong>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.4rem; list-style-type: disc;">
+                            <li>Head-Mounted Display (HMD) form factor.</li>
+                            <li>Motion tracking functionality to track user movement.</li>
+                            <li>Provides an immersive experience through virtual content.</li>
+                        </ul>
+                    </li>
+                    <li style="margin-top: 1rem;"> <!-- Item spacing -->
+                        <strong>Difference (VR vs 'Galaxy XR' (MR)):</strong>
+                         <ul style="margin-left: 1.5rem; margin-top: 0.4rem; list-style-type: disc;">
+                            <li><strong>VR (Virtual Reality):</strong>
+                                <ul style="margin-left: 1.5rem; margin-top: 0.25rem; list-style-type: circle;">
+                                    <li>Completely blocks vision and shows only a 100% virtual space.</li>
+                                </ul>
+                            </li>
+                            <li style="margin-top: 0.5rem;"> 
+                                <strong>XR/MR (Mixed Reality):</strong>
+                                <ul style="margin-left: 1.5rem; margin-top: 0.25rem; list-style-type: circle;">
+                                    <li>The direction 'Galaxy XR' aims for.</li>
+                                    <li>'Overlays' virtual information onto the real world.</li>
+                                    <li>Interacts while viewing reality through the camera (Passthrough).</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- v12 fix: Enlarged image size (max-height 470px) -->
+            <img src="https://img.global.news.samsung.com/global/wp-content/uploads/2025/10/22100225/Samsung-Mobile-Galaxy-XR-Multimodal-AI-Android-XR-Opening-New-Worlds_dl3.jpg" alt="Samsung XR Vision" style="max-height: 470px; object-fit: contain;">
+        </div>
+
+        <!-- Slide 6: Expected Advantages -->
+        <div class="slide slide-with-image" data-index="6">
+            <div class="text-content">
+                <h2 class="slide-title">Expected Advantages</h2>
+                <ul>
+                    <li><strong>Strong Ecosystem:</strong>
+                        <br>Excellent compatibility with Samsung devices like Galaxy smartphones and watches.</li>
+                    <li><strong>Android OS:</strong>
+                        <br>Based on Google Android, making it accessible for existing app developers.</li>
+                    <li><strong>High-Performance Hardware:</strong>
+                        <br>Combination of Samsung's display technology and Qualcomm's chipset.</li>
+                    <li><strong>AI Integration:</strong>
+                        <br>Potential for powerful AI features embedded directly into the device, as seen in the 'Spatial AI' vision.</li>
+                </ul>
+            </div>
+            <img src="https://image.zdnet.co.kr/2021/11/17/4cbbcc3fb6bde6bfcb499f7b550b356a.jpg" alt="Galaxy Ecosystem">
+        </div>
+
+        <!-- Slide 7: Expected Disadvantages -->
+        <div class="slide slide-with-image" data-index="7">
+            <div class="text-content">
+                <h2 class="slide-title">Expected Disadvantages (Common Challenges)</h2>
+                <ul>
+                    <li><strong>High Price:</strong>
+                        <br>Initial launch price may be very expensive (refer to Apple Vision Pro).</li>
+                    <li><strong>Battery Life:</strong>
+                        <br>Short battery usage time due to high-performance computing.</li>
+                    <li><strong>Lack of Content:</strong>
+                        <br>May lack 'killer content' or apps to utilize the device at launch.</li>
+                    <li><strong>Fit/Weight:</strong>
+                        <br>Discomfort or weight issues may arise with prolonged wear.</li>
+                </ul>
+            </div>
+            <img src="https://i.ytimg.com/vi/vC4khmuM8FI/maxresdefault.jpg" alt="XR user fatigue" style="object-fit: contain; max-height: 350px;">
+        </div>
+
+        <!-- Slide 8: Estimated Price -->
+        <div class="slide slide-with-image" data-index="8">
+            <div class="text-content">
+                <h2 class="slide-title">Estimated Price (Rumor)</h2>
+                <p class="text-xl font-medium mb-4">Official pricing has not been announced. Current industry speculation varies.</p>
+                <ul>
+                    <li><strong>Targeting Premium Market:</strong> Expected to compete with 'Apple Vision Pro' ($3,499).</li>
+                    <li><strong>Industry Speculation 1:</strong> Likely to be between $1,500 and $2,500.</li>
+                    <li><strong>Industry Speculation 2:</strong> Possibility of early $1,000 range to expand market share.</li>
+                </ul>
+                <p class="mt-6 text-2xl font-bold text-red-600">Conclusion: Highly likely to be a 'very expensive' premium device.</p>
+            </div>
+            <div>
+                <img src="https://static.scientificamerican.com/sciam/cache/file/1BFA6F21-D20F-4971-A89651EC2A466E84_source.jpg" alt="Apple Vision Pro in use">
+                <p style="font-size: 0.875rem; color: #6b7280; text-align: center; margin-top: 0.5rem;">Competitive model 'Apple Vision Pro' (for reference)</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Future Introduction and Growth Direction -->
+        <div class="slide slide-text-only" data-index="9">
+            <h2 class="slide-title">Future Introduction and Growth Direction</h2>
+            <ul>
+                <li><strong>Initial Launch Countries:</strong> Major markets such as South Korea and the United States will be the primary launch countries.</li>
+                <li><strong>Ecosystem Expansion:</strong> Building the 'Android XR' ecosystem and attracting developers through collaboration between Google (OS) and Samsung (Device).</li>
+                <li><strong>Focus on B2B Market:</strong> Aggressive targeting of B2B sectors such as remote collaboration, industrial design, and education, as seen in the 2024 vision video.</li>
+                <li><strong>Competitive Landscape:</strong> Anticipation of a full-scale XR market three-way battle: Apple (Vision Pro) vs. Samsung/Google vs. Meta (Quest).</li>
+                <li><strong>Mass Adoption Challenges:</strong> Price reduction, securing killer content, device lightweighting, and improving fit/comfort are long-term growth challenges.</li>
+            </ul>
+        </div>
+        
+        <!-- Slide 10: Conclusion Summary -->
+        <div class="slide slide-text-only" data-index="10">
+            <h2 class="slide-title">Conclusion Summary</h2>
+            <ul>
+                <li><strong>Current Status:</strong> 'Galaxy XR' is an <span class="font-bold text-red-600">unreleased product</span>, and all information is based on vision and rumors.</li>
+                <li><strong>Product Direction:</strong> Aims for a <span class="font-bold text-blue-600">high-performance MR/XR device</span>, not just simple VR, integrating reality and virtuality.</li>
+                <li><strong>Core Strategy:</strong> Based on a <span class="font-bold text-blue-600">strong alliance</span> of Samsung (Hardware) + Google (OS) + Qualcomm (Chipset).</li>
+                <li><strong>Key to Success:</strong> <span class="font-bold text-blue-600">Price competitiveness, killer content, and Galaxy ecosystem integration</span> are crucial amid competition with 'Apple' and 'Meta.'</li>
+                <li><strong>Future Outlook:</strong> This will be a significant first step in exploring the potential of the next-generation computing platform following the smartphone.</li>
+                <li class="mt-4"><strong>Reference Vision Video:</strong>
+                    <a href="https://youtube.com/watch?v=wVLBNVlxOb8&amp;si=Escn2r-N8KxChKDM" target="_blank">
+                        Watch Samsung 'Spatial AI' Vision Video
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Slide 11: Thank You -->
+        <div class="slide slide-thanks" data-index="11">
+            <h1>Thank You</h1>
+        </div>
+
+        <!-- Navigation Buttons (Same as v7) -->
+        <button id="prevBtn" class="nav-button nav-prev" disabled title="Previous Slide">
+            <svg xmlns="http://www.w3.org/2000/svg" style="width: 1.5rem; height: 1.5rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
+        <div id="slideIndex" class="slide-index">1 / 11</div>
+        <button id="nextBtn" class="nav-button nav-next" title="Next Slide">
+            <svg xmlns="http://www.w3.org/2000/svg" style="width: 1.5rem; height: 1.5rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
+
+    </div> <!-- .slide-container end -->
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Slide script (v12) loaded and running."); // Version 12 Load Check
+
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideIndexDisplay = document.getElementById('slideIndex');
+            let currentSlide = 0;
+            const totalSlides = slides.length; // 11
+
+            if (!slides.length || !prevBtn || !nextBtn || !slideIndexDisplay) {
+                console.error("Script Error: Cannot find essential elements.");
+                return;
+            }
+
+            function showSlide(index) {
+                console.log(`Showing slide: ${index + 1}`); // Log slide change
+                slides.forEach((slide, i) => {
+                    if (i === index) {
+                        slide.classList.add('active');
+                    } else {
+                        slide.classList.remove('active');
+                    }
+                });
+                currentSlide = index;
+                
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === totalSlides - 1;
+
+                slideIndexDisplay.textContent = `${currentSlide + 1} / ${totalSlides}`;
+            }
+
+            nextBtn.addEventListener('click', () => {
+                console.log("Next button clicked");
+                if (currentSlide < totalSlides - 1) {
+                    showSlide(currentSlide + 1);
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                console.log("Previous button clicked");
+                if (currentSlide > 0) {
+                    showSlide(currentSlide - 1); 
+                }
+            });
+
+            // Initial slide display
+            showSlide(0);
+        });
+    </script>
+
+</body>
+</html>

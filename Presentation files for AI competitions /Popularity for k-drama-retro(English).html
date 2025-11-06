@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Drama Retro Strategy Comprehensive Analysis</title>
+    <!-- Load Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Font settings and basic styles */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Dark background */
+            color: #e6edf3; /* Light text */
+            margin: 0;
+            overflow: hidden; 
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4vw;
+            transition: opacity 0.5s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translateX(100%);
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+            position: relative; 
+        }
+
+        .slide-content {
+            background-color: #161b22;
+            padding: 3rem 4rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            max-width: 1200px;
+            width: 100%;
+            min-height: 50vh;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #f7f7a7; /* Light yellow */
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ff99c8; /* Soft pink for retro feel */
+            margin-top: 1.5rem;
+            border-bottom: 2px solid #30363d;
+            padding-bottom: 0.5rem;
+        }
+
+        .table-custom {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            text-align: left;
+        }
+
+        .table-custom th, .table-custom td {
+            padding: 1rem;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .table-custom th {
+            background-color: #21262d;
+            font-weight: 600;
+            color: #f7f7a7; 
+        }
+        
+        .table-custom tbody tr:nth-child(even) {
+            background-color: #1f242a;
+        }
+
+        .nav-button {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(48, 54, 61, 0.8);
+            color: #e6edf3;
+            border: none;
+            padding: 1rem;
+            cursor: pointer;
+            z-index: 100;
+            font-size: 1.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #30363d;
+        }
+        
+        #prev-slide { left: 1rem; }
+        #next-slide { right: 1rem; }
+        
+        @media (max-width: 768px) {
+            .slide-content {
+                padding: 1.5rem 2rem;
+                min-height: 80vh;
+            }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            .nav-button { padding: 0.5rem; font-size: 1.2rem; }
+            .table-custom th, .table-custom td { padding: 0.75rem; font-size: 0.875rem; }
+        }
+
+        /* GEMINI FEATURE SPECIFIC STYLES */
+        .gemini-output-box {
+            min-height: 120px;
+            border: 1px solid #ff99c8;
+            background-color: #1f242a;
+        }
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #ff99c8;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* FLOW DIAGRAM SPECIFIC STYLES */
+        .flow-step {
+            background-color: #2a313c;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+        }
+        .flow-step:hover {
+            transform: translateY(-5px);
+        }
+        .arrow {
+            font-size: 2.5rem;
+            color: #ff99c8;
+            font-weight: bold;
+            line-height: 0;
+            margin: 0 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="presentation-container" class="flex flex-col items-center justify-center">
+
+        <!-- Slide 1: Introduction -->
+        <div class="slide" id="slide-1">
+            <div class="slide-content text-center">
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-[#f7f7a7]">K-Drama Retro Strategy Comprehensive Analysis</h1>
+                <h2 class="text-3xl sm:text-4xl text-[#ff99c8] mt-4">Timeless Success Formula and Production Secrets</h2>
+                <div class="mt-12 space-y-4 text-left text-lg">
+                    <p class="text-xl text-gray-300">**Analysis Target:** 'Reply Series', 'Twenty-Five Twenty-One', 'Typhoon Corp', **'You Have Done Well'** (폭싹 속았수다), etc.</p>
+                    <p class="text-xl font-bold text-pink-400">**Key Summary:** The combination of meticulous **period authenticity** and **universal emotion** satisfies viewer needs (nostalgia, comfort, empathy).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: General Success Factors & Production Secrets -->
+        <div class="slide" id="slide-2">
+            <div class="slide-content">
+                <h2 class="text-3xl">Secrets to Retro Drama Popularity & Production Process</h2>
+                <div class="mt-6 space-y-6">
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-green-400 mb-2">1. Universal Emotion Transcending Time</h3>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-lg">
+                            <li>**Growing Pains, Family Love, First Love:** The setting is the past, but the narrative focuses on core values that resonate across generations.</li>
+                            <li>**Temporal Message:** Conveying messages of overcoming historical hardships (like the **post-war 1950s** or the IMF crisis of 1997) with hope and fighting spirit.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-green-400 mb-2">2. Meticulous Authenticity and Prop Acquisition (Production Secrets)</h3>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-lg">
+                            <li>**Authenticity:** Maximizing realism through thorough research on contemporary news, trends, and language. Notably, 'You Have Done Well' focused heavily on **Jeju dialect authenticity**.</li>
+                            <li>**Props/Sets:** Rare props like 1G miniature phones and old appliances are sourced from **specialized prop rental companies**, utilizing large-scale **open sets** to reproduce the era.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 3: Twenty-Five Twenty-One Specific Gojung -->
+        <div class="slide" id="slide-3">
+            <div class="slide-content">
+                <h2 class="text-3xl">'Twenty-Five Twenty-One' In-Depth Authenticity Strategy (1)</h2>
+                <div class="mt-6 space-y-6">
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-yellow-300 mb-2">1. Comic/Media Authenticity (90s Fan Culture)</h3>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-lg">
+                            <li>**'Full House' Webtoon:** Na Hee-do's favorite, 'Full House', accurately reflects the **must-read romance manga** culture among late 90s teenagers.</li>
+                            <li>**1G Phone Craze:** Detailed recreation of the period's mobile phone trend, such as 1G Anycall small flip-phone couple sets.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-yellow-300 mb-2">2. Significance of Fencing (Minor Sport) Authenticity</h3>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-lg">
+                            <li>**Reality Reflection:** The drama reflects the reality of fencing in the 90s: **public indifference** and poor conditions.</li>
+                            <li>**Positive Feedback Loop:** The drama's success boosted fencing's appeal to the public, positively **raising the sport's recognition**.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: NEW - Go Yoo-rim's Naturalization Analysis -->
+        <div class="slide" id="slide-4">
+            <div class="slide-content">
+                <h2 class="text-3xl">'Twenty-Five Twenty-One' In-Depth Authenticity Strategy (2)</h2>
+                <h2 class="text-2xl text-[#f7f7a7] mt-4 mb-6">IMF and Go Yoo-rim's Change of Nationality: The Most Painful Aspect of the Era</h2>
+                <div class="mt-6 space-y-6">
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-red-400 mb-2">1. Reality Authenticity: The Desperation of Athlete Naturalization</h3>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-lg">
+                            <li>**Historical Context:** Severe **reduction in amateur sports funding** after team dissolution post-IMF.</li>
+                            <li>**Reason for Choice:** Changing nationality was not for 'glory' but the **last resort for survival** to continue their athletic career and support their family (especially for minor sports).</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-red-400 mb-2">2. Analysis of Public Opinion at the Time</h3>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-lg">
+                            <li>**Initial Sentiment:** Overwhelmingly **negative image and criticism**, labeling it as national team betrayal or 'eat and run'.</li>
+                            <li>**Deepened Conflict:** The clash between personal desperation vs. loyalty to the nation vividly exposed the **social tragedy born from the IMF crisis**.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Triple Retro Comparison (Summary Table) -->
+        <div class="slide" id="slide-5">
+            <div class="slide-content">
+                <h2 class="text-3xl">Retro Triple Comparison: Reply 1997 vs Twenty-Five Twenty-One vs Typhoon Corp</h2>
+                <table class="table-custom mt-6 border-collapse border border-[#30363d] rounded-lg overflow-hidden">
+                    <thead>
+                        <tr class="bg-[#21262d]">
+                            <th class="w-1/4 border-r border-[#30363d]">Category</th>
+                            <th class="w-1/3 border-r border-[#30363d]">Reply 1997</th>
+                            <th class="w-1/3 border-r border-[#30363d]">Twenty-Five Twenty-One</th>
+                            <th>Typhoon Corp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="font-semibold text-pink-300">Primary Age Group</td>
+                            <td>**Teens** (High School)</td>
+                            <td>**Late Teens ~ Early 20s**</td>
+                            <td>**Late 20s** (Young Entrepreneur)</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold text-pink-300">Role of IMF</td>
+                            <td>**Personal Background** (Indirect influence)</td>
+                            <td>**Barrier to Dreams** (Frustration and Rebirth)</td>
+                            <td>**Core Theme of the Plot** (Corporate survival struggle)</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold text-pink-300">Narrative/Genre Focus</td>
+                            <td>**Daily Life, Fandom, First Love Mystery**</td>
+                            <td>**Youth Melodrama, Dreams & Friendship**</td>
+                            <td>**Business, Corporate Survival Drama**</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 6: NEW - Focused Comparison: 2521 vs. Typhoon Family -->
+        <div class="slide" id="slide-6">
+            <div class="slide-content">
+                <h2 class="text-3xl">In-Depth Comparison: 'Twenty-Five Twenty-One' vs. 'Typhoon Corp'</h2>
+                <h3 class="text-2xl text-[#f7f7a7] mt-4 mb-6">Similarities (Channel/Era) & Differences in IMF Reflection</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <!-- Commonalities -->
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h4 class="text-xl font-bold text-pink-400 mb-2 border-b border-pink-400/30 pb-1">Similarities: Dual Pillars of Content Strategy</h4>
+                        <ul class="list-disc list-inside ml-4 space-y-2 text-lg">
+                            <li>**Channel Strategy:** Both works are **CJ ENM's tentpole content**, planned and aired through tvN.</li>
+                            <li>**Global Distribution:** Distributed via OTT platforms like Netflix, securing **global market capital** and raising recognition.</li>
+                            <li>**Historical Backdrop:** Both dramas use the **1997 IMF Asian Financial Crisis** as their setting, sharing the **"Pain of the Era"**.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Differences (IMF Focus) -->
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h4 class="text-xl font-bold text-pink-400 mb-2 border-b border-pink-400/30 pb-1">IMF Reflection Differences: Narrative Center</h4>
+                        <table class="table-custom w-full">
+                            <thead>
+                                <tr class="bg-[#30363d]">
+                                    <th class="p-2">Classification</th>
+                                    <th class="p-2">Twenty-Five Twenty-One</th>
+                                    <th class="p-2">Typhoon Corp</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="font-semibold text-yellow-300">Role of IMF</td>
+                                    <td>**An era-defining storm** that crushes personal dreams</td>
+                                    <td>**An economic war** determining the survival of the company/family</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-semibold text-yellow-300">Narrative Scope</td>
+                                    <td>**Individual** (Fencing team disbandment, nationalization)</td>
+                                    <td>**Society/Corporate** (Trading company operation, rebound)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Link to Overall Market Strategy (OTT) (Shifted from 6) -->
+        <div class="slide" id="slide-7">
+            <div class="slide-content text-center">
+                <h2 class="text-3xl">Strategic Significance of Retro Dramas (OTT Relevance)</h2>
+                
+                <div class="mt-8 space-y-6 text-left">
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-pink-400 mb-2">1. Enhancing Content Competitiveness</h3>
+                        <p class="ml-4 text-lg">Retro dramas offer **high buzz potential** and **solid domestic IP**, functioning as core content that supports the OTT competitiveness of **CJ ENM/Studio Dragon** (supplied to Tving, Netflix).</p>
+                    </div>
+
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-pink-400 mb-2">2. Global Appeal</h3>
+                        <p class="ml-4 text-lg">Retro content, imbued with unique Korean culture and history, is distributed globally via OTT, becoming crucial content that introduces the **diversity of K-Culture** to international audiences.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 8: You Have Done Well (폭싹 속았수다) Analysis (Shifted from 7) -->
+        <div class="slide" id="slide-8">
+            <div class="slide-content">
+                <h2 class="text-3xl">'You Have Done Well' (폭싹 속았수다) Era and Key Success Points</h2>
+                <p class="text-lg text-red-400 font-semibold mb-6">**🚨 Era Correction:** The drama's setting is not the 1990s but **Jeju Island immediately after the Korean War in the 1950s**. (Expansion of the Retro Genre)</p>
+                
+                <div class="mt-6 space-y-6">
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-yellow-300 mb-2">1. Significance of the 1950s Jeju Setting</h3>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-lg">
+                            <li>**Historical Depth:** Portraying the lives of youth during one of the hardest times (post-war), conveying both **historical pain and hope**.</li>
+                            <li>**Regional Authenticity:** Delicately recreating Jeju Island's unique **beautiful scenery** and **'Jeju dialect'**, creating a distinct atmosphere.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-[#21262d] p-4 rounded-lg">
+                        <h3 class="text-xl font-bold text-yellow-300 mb-2">2. Retro Genre Expansion Strategy</h3>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-lg">
+                            <li>**Bridging Generations:** Provides a **story of their grandparents' generation** for those in their 20s/30s, and offers **nostalgia and comfort** to the older generation, forming intergenerational empathy.</li>
+                            <li>**Purity:** Focuses on the **pure and resilient spirit** of the protagonists who persevere despite difficult circumstances.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 9: NEW - Retro Drama Success Formula Visualization -->
+        <div class="slide" id="slide-9">
+            <div class="slide-content text-center">
+                <h2 class="text-4xl font-extrabold text-[#f7f7a7] mb-12">K-Retro Drama Success Formula (3-Phase Strategic Structure)</h2>
+                
+                <div class="flex flex-col md:flex-row justify-center items-center w-full">
+                    
+                    <!-- Step 1: Fact (Period Authenticity) -->
+                    <div class="flow-step w-full md:w-1/3 text-center mb-6 md:mb-0">
+                        <svg class="w-12 h-12 text-yellow-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9h.01"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        <h3 class="text-2xl font-bold text-pink-300">1. Meticulous Period Authenticity (Fact)</h3>
+                        <p class="text-sm text-gray-400 mt-2">Perfectly recreating trends, props, and historical context to secure **'Realism'**</p>
+                    </div>
+
+                    <!-- Arrow -->
+                    <div class="arrow hidden md:block">→</div>
+                    <div class="arrow block md:hidden">↓</div>
+                    
+                    <!-- Step 2: Emotion (Universal Sentiment) -->
+                    <div class="flow-step w-full md:w-1/3 text-center mb-6 md:mb-0">
+                        <svg class="w-12 h-12 text-pink-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                        <h3 class="text-2xl font-bold text-pink-300">2. Universal Emotion (Sentiment)</h3>
+                        <p class="text-sm text-gray-400 mt-2">Injecting narrative values like growth pains and family love for **cross-generational empathy**</p>
+                    </div>
+
+                    <!-- Arrow -->
+                    <div class="arrow hidden md:block">→</div>
+                    <div class="arrow block md:hidden">↓</div>
+                    
+                    <!-- Step 3: Success (Distribution) -->
+                    <div class="flow-step w-full md:w-1/3 text-center">
+                        <svg class="w-12 h-12 text-red-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        <h3 class="text-2xl font-bold text-pink-300">3. Global Hit/Distribution (Success)</h3>
+                        <p class="text-sm text-gray-400 mt-2">**Global recognition boost** and expansion of K-Culture via OTT platforms</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Gemini LLM Feature (Shifted from 9) -->
+        <div class="slide" id="slide-10">
+            <div class="slide-content">
+                <h2 class="text-3xl">✨ Gemini AI: Generate Retro Vibe Copy</h2>
+                <p class="text-gray-400 mb-6">Generate catchy copy reflecting the sentiment of the analyzed era. (Utilizing Google Search Grounding)</p>
+                
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
+                    <div class="w-full sm:w-1/3">
+                        <label for="input-year" class="block text-sm font-medium text-gray-300 mb-1">Select Era (Year)</label>
+                        <select id="input-year" class="w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-pink-500 focus:border-pink-500">
+                            <option value="1955">1955 (You Have Done Well Background)</option>
+                            <option value="1997">1997 (IMF, H.O.T.)</option>
+                            <option value="1998">1998 (Post-IMF, Youth Frustration)</option>
+                            <option value="2002">2002 (World Cup, End of 20th Century)</option>
+                        </select>
+                    </div>
+                    <div class="w-full sm:w-1/3">
+                        <label for="input-theme" class="block text-sm font-medium text-gray-300 mb-1">Enter Theme</label>
+                        <input type="text" id="input-theme" placeholder="e.g. First Love, Pager, Trading Company CEO" value="First Love" class="w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-pink-500 focus:border-pink-500">
+                    </div>
+                    <div class="w-full sm:w-1/3 flex items-end">
+                        <button onclick="generateVibe()" class="w-full p-3 bg-[#ff99c8] hover:bg-[#ff7aa6] text-[#0d1117] font-bold rounded-lg transition duration-200">
+                            ✨ Generate Retro Vibe Copy
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Output Area -->
+                <div id="output-area" class="gemini-output-box p-4 rounded-lg overflow-y-auto">
+                    <p class="text-gray-400">Retro copy generated by Gemini AI will be displayed here.</p>
+                </div>
+
+                <!-- Sources Area -->
+                <div id="sources-area" class="mt-4 text-sm text-gray-500">
+                    <!-- Grounding sources will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <button id="prev-slide" class="nav-button opacity-50" disabled>&lt;</button>
+    <button id="next-slide" class="nav-button">&gt;</button>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentSlideIndex = 0;
+        const apiKey = ""; // API Key for Gemini
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        // Utility function for Exponential Backoff
+        async function fetchWithBackoff(url, options, maxRetries = 5) {
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.status !== 429) { // 429 is Too Many Requests
+                        return response;
+                    }
+                    // Handle rate limiting (429)
+                    const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                } catch (error) {
+                    // Log the error but continue retrying for network issues
+                    console.error("Fetch attempt failed:", error);
+                    const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+            throw new Error("API call failed after maximum retries.");
+        }
+
+        // Gemini API function
+        async function generateVibe() {
+            const year = document.getElementById('input-year').value;
+            const theme = document.getElementById('input-theme').value;
+            const outputArea = document.getElementById('output-area');
+            const sourcesArea = document.getElementById('sources-area');
+            
+            outputArea.innerHTML = '<div class="flex items-center justify-center h-full"><div class="loading-spinner"></div><span class="ml-4 text-pink-400">AI is searching for the era\'s sentiment... Please wait.</span></div>';
+            sourcesArea.innerHTML = '';
+
+            const systemPrompt = "You are a copywriter specializing in recreating the retro sentiment of Korea. Generate a punchy phrase (within 2 sentences) using the trendy language and sentiment of the selected year and theme. Actively use popular phrases or expressions from that time. Output should be text only.";
+            const userQuery = `${year}, Theme: ${theme}. Create a retro sentiment phrase that reflects these two elements. Be sure to include trendy language and expressions popular in ${year}.`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                tools: [{ "google_search": {} }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+            };
+
+            try {
+                const response = await fetchWithBackoff(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    const text = candidate.content.parts[0].text;
+                    let sources = [];
+                    const groundingMetadata = candidate.groundingMetadata;
+
+                    if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                        sources = groundingMetadata.groundingAttributions
+                            .map(attribution => ({
+                                uri: attribution.web?.uri,
+                                title: attribution.web?.title,
+                            }))
+                            .filter(source => source.uri && source.title);
+                    }
+
+                    // Display text
+                    outputArea.innerHTML = `<p class="text-xl font-medium text-white">${text}</p>`;
+
+                    // Display sources
+                    if (sources.length > 0) {
+                        const sourcesHtml = sources.map((s, i) => 
+                            `<a href="${s.uri}" target="_blank" class="text-blue-400 hover:text-blue-300 underline block">${i + 1}. ${s.title}</a>`
+                        ).join('');
+                        sourcesArea.innerHTML = `**References (Authenticity):**<br>${sourcesHtml}`;
+                    } else {
+                        sourcesArea.innerHTML = '';
+                    }
+
+                } else {
+                    outputArea.innerHTML = '<p class="text-red-400">Failed to generate response. Please try again.</p>';
+                }
+
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                outputArea.innerHTML = `<p class="text-red-400">A fatal error occurred during the API call: ${error.message}</p>`;
+            }
+        }
+
+
+        // Presentation logic
+        function updateSlideVisibility() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                slide.style.position = 'absolute';
+                slide.style.transform = 'translateX(100%)';
+                slide.style.opacity = '0';
+                slide.style.visibility = 'hidden';
+
+                if (index === currentSlideIndex) {
+                    slide.classList.add('active');
+                    slide.style.position = 'relative'; 
+                    slide.style.transform = 'translateX(0)';
+                    slide.style.opacity = '1';
+                    slide.style.visibility = 'visible';
+                }
+            });
+            
+            // Update button states
+            document.getElementById('prev-slide').disabled = currentSlideIndex === 0;
+            document.getElementById('prev-slide').style.opacity = currentSlideIndex === 0 ? 0.5 : 1;
+            
+            document.getElementById('next-slide').disabled = currentSlideIndex === slides.length - 1;
+            document.getElementById('next-slide').style.opacity = currentSlideIndex === slides.length - 1 ? 0.5 : 1;
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < slides.length - 1) {
+                currentSlideIndex++;
+                updateSlideVisibility();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                updateSlideVisibility();
+            }
+        }
+
+        document.getElementById('next-slide').addEventListener('click', nextSlide);
+        document.getElementById('prev-slide').addEventListener('click', prevSlide);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Initialize the presentation
+        window.onload = () => {
+             // Ensure all slides are loaded before setting the initial state
+             updateSlideVisibility(); 
+        };
+    </script>
+</body>
+</html>

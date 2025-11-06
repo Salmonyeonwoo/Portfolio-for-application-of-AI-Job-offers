@@ -9,7 +9,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+KR:wght@100..900&display=swap');
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Noto Sans KR', 'Inter', sans-serif;
             background-color: #0d1117;
             color: #e5e7eb;
             overflow: hidden; /* Prevent scrolling */
@@ -137,49 +137,95 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
         }
+        /* DX Dual Pillar Styles */
+        .dx-pillar {
+            position: relative;
+            background-color: rgba(30, 41, 59, 0.6); /* Slate 800 */
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .pillar-icon {
+            margin-bottom: 1rem;
+        }
+        .pillar-icon-svg {
+            width: 4rem;
+            height: 4rem;
+        }
+        .core-goal {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+        .connecting-arrow {
+            font-size: 3rem;
+            color: #fcd34d;
+            font-weight: 900;
+            margin: 1rem 0;
+            display: block;
+        }
     </style>
 </head>
 <body>
 
     <div class="slide-container" id="slideContainer">
         
-        <!-- Slide 1: Core Goals of DX -->
+        <!-- Slide 1: Core Goals of DX (Updated with Visualization) -->
         <div class="slide">
-            <h1 class="text-4xl lg:text-5xl mb-4">Core Goals of DX: Experience Enhancement & Efficiency Innovation</h1>
-            <p class="text-xl text-gray-400 mb-8">Tourism DX fundamentally transforms business models through technology integration.</p>
+            <h1 class="text-4xl lg:text-5xl mb-4 text-center">Core Goals of DX: Experience Enhancement & Efficiency Innovation (Dual-Pillar)</h1>
+            <p class="text-xl text-gray-400 mb-8 text-center">Tourism DX simultaneously pursues Demand-side and Supply-side Innovation.</p>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10 w-full max-w-4xl">
-                <!-- Hyper-personalized Experience -->
-                <div class="bg-blue-900/50 p-6 rounded-xl shadow-lg border border-blue-700/50 text-left">
-                    <h2 class="text-2xl text-blue-300 mb-3 flex items-center justify-center">
-                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                        Demand-side Innovation: Hyper-personalized Experience
-                    </h2>
-                    <ul class="list-disc ml-5 text-lg space-y-2 text-gray-300">
+            <div class="flex flex-col lg:flex-row items-center justify-center gap-12 mt-10 w-full max-w-6xl">
+                
+                <!-- Pillar 1: Demand-side Innovation (Experience Enhancement) -->
+                <div class="dx-pillar border-b-4 border-blue-400 w-full lg:w-1/2">
+                    <div class="pillar-icon">
+                        <svg class="pillar-icon-svg mx-auto text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    </div>
+                    <h2 class="core-goal text-blue-300">Demand-side Innovation: Hyper-personalized Experience Enhancement</h2>
+                    <ul class="list-disc ml-5 text-base space-y-2 text-gray-300 text-left">
                         <li>AI-driven analysis of customer behavior and preferences</li>
                         <li>Real-time customized product curation and recommendations</li>
                         <li>Support for quality control across diversified travel itineraries</li>
                     </ul>
                 </div>
-                <!-- Operational Efficiency -->
-                <div class="bg-green-900/50 p-6 rounded-xl shadow-lg border border-green-700/50 text-left">
-                    <h2 class="text-2xl text-green-300 mb-3 flex items-center justify-center">
-                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a1.5 1.5 0 00.867 1.342l12 3a1.5 1.5 0 001.342-.867l3-9-3-1m-3 10a1.5 1.5 0 01-1.342-.867l-3-9m3 9l3-9m3 9l-3-9"></path></svg>
-                        Supply-side Innovation: Operational Efficiency and Automation
-                    </h2>
-                    <ul class="list-disc ml-5 text-lg space-y-2 text-gray-300">
+
+                <!-- Connecting Element (Optional: Text or Icon) -->
+                <div class="hidden lg:block">
+                    <span class="connecting-arrow">&</span>
+                </div>
+                <div class="lg:hidden">
+                    <span class="connecting-arrow">↓</span>
+                </div>
+
+                <!-- Pillar 2: Supply-side Innovation (Operational Efficiency Innovation) -->
+                <div class="dx-pillar border-b-4 border-green-400 w-full lg:w-1/2">
+                    <div class="pillar-icon">
+                        <svg class="pillar-icon-svg mx-auto text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a1.5 1.5 0 00.867 1.342l12 3a1.5 1.5 0 001.342-.867l3-9-3-1m-3 10a1.5 1.5 0 01-1.342-.867l-3-9m3 9l3-9m3 9l-3-9"></path></svg>
+                    </div>
+                    <h2 class="core-goal text-green-300">Supply-side Innovation: Operational Efficiency and Automation</h2>
+                    <ul class="list-disc ml-5 text-base space-y-2 text-gray-300 text-left">
                         <li>Data integration and flow management via Cloud and 5G</li>
                         <li>Automated facility operations using Robotics and IoT</li>
                         <li>Intelligent management technologies like AI Dynamic Pricing</li>
                     </ul>
                 </div>
             </div>
+            
+            <p class="text-xl font-bold text-yellow-300 mt-12">➡️ The ultimate goal of DX is to maximize **customer satisfaction** and **corporate profitability** by combining both innovations.</p>
         </div>
 
         <!-- Slide 2: Agentic AI vs. Vertical AI -->
         <div class="slide">
-            <h1 class="text-4xl lg:text-5xl mb-4">AI Evolution: Agentic vs. Vertical AI</h1>
-            <p class="text-xl text-gray-400 mb-8">AI advances beyond simple information provision to attain expertise and execution capability.</p>
+            <h1 class="text-4xl lg:text-5xl mb-4 text-center">AI Evolution: Agentic vs. Vertical AI</h1>
+            <p class="text-xl text-gray-400 mb-8 text-center">AI advances beyond simple information provision to attain expertise and execution capability.</p>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-10 w-full max-w-6xl">
                 
@@ -187,7 +233,7 @@
                 <div class="bg-indigo-900/50 p-6 rounded-xl shadow-lg border-b-4 border-indigo-500 text-left">
                     <h2 class="text-xl text-indigo-300 mb-3 flex items-center justify-center">
                         <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z"></path></svg>
-                        Vertical AI
+                        Vertical AI (버티컬 AI)
                     </h2>
                     <p class="text-gray-200 font-semibold text-center">Role: Domain-Specific Expert</p>
                     <ul class="list-disc ml-5 text-sm space-y-1 mt-2 text-gray-300">
@@ -201,7 +247,7 @@
                 <div class="bg-red-900/50 p-6 rounded-xl shadow-lg border-b-4 border-red-500 col-span-2 text-left">
                     <h2 class="text-xl text-red-300 mb-3 flex items-center justify-center">
                         <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9h.01"></path></svg>
-                        Agentic AI
+                        Agentic AI (에이전틱 AI)
                     </h2>
                     <p class="text-gray-200 font-semibold text-center">Role: Autonomous Personal Assistant</p>
                     <ul class="list-disc ml-5 text-sm space-y-1 mt-2 text-gray-300 grid grid-cols-1 lg:grid-cols-2">
@@ -216,8 +262,8 @@
 
         <!-- Slide 3: Agentic AI Workflow (Visualization) -->
         <div class="slide">
-            <h1 class="text-4xl lg:text-5xl mb-4">Visualization: Agentic AI Task Execution Flow</h1>
-            <p class="text-xl text-gray-400 mb-8">Agentic AI combines Vertical AI and RAG to autonomously perform complex travel tasks.</p>
+            <h1 class="text-4xl lg:text-5xl mb-4 text-center">Visualization: Agentic AI Task Execution Flow</h1>
+            <p class="text-xl text-gray-400 mb-8 text-center">Agentic AI combines Vertical AI and RAG to autonomously perform complex travel tasks.</p>
 
             <div class="flex flex-col items-center mt-10 space-y-4 w-full max-w-4xl">
                 
@@ -274,8 +320,8 @@
 
         <!-- Slide 4: Vicker AI Case Study (Text + Image Integration) -->
         <div class="slide">
-            <h1 class="text-4xl lg:text-5xl mb-4">Vicker AI Case Study: Generative AI Marketing Innovation</h1>
-            <p class="text-xl text-gray-400 mb-8">AI-driven, time-of-year tailored accommodation images to reduce marketing costs.</p>
+            <h1 class="text-4xl lg:text-5xl mb-4 text-center">Vicker AI Case Study: Generative AI Marketing Innovation</h1>
+            <p class="text-xl text-gray-400 mb-8 text-center">AI-driven, time-of-year tailored accommodation images to reduce marketing costs.</p>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10 w-full max-w-6xl">
                 <!-- Left: Vicker AI Explanation -->
@@ -306,8 +352,8 @@
 
         <!-- Slide 5: Klook Experience and Problem Recognition (Comment Slide 1) -->
         <div class="slide">
-            <h1 class="text-4xl lg:text-5xl mb-4 text-orange-400">Tourism Industry Status: Structural Inconveniences Felt at Klook</h1>
-            <p class="text-xl text-gray-400 mb-8 font-semibold">"Language barriers and information asymmetry" are key issues degrading the quality of the travel experience.</p>
+            <h1 class="text-4xl lg:text-5xl mb-4 text-orange-400 text-center">Tourism Industry Status: Structural Inconveniences Felt at Klook</h1>
+            <p class="text-xl text-gray-400 mb-8 font-semibold text-center">"Language barriers and information asymmetry" are key issues degrading the quality of the travel experience.</p>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10 w-full max-w-4xl">
                 <div class="bg-orange-900/50 p-6 rounded-xl shadow-lg border border-orange-700/50 text-left">
@@ -336,8 +382,8 @@
 
         <!-- Slide 6: AI Contribution Plan (Comment Slide 2) -->
         <div class="slide">
-            <h1 class="text-4xl lg:text-5xl mb-4 text-green-400">AI Contribution Plan: Achieving 'Zero Friction' Travel</h1>
-            <p class="text-xl text-gray-400 mb-8 font-semibold">I will combine deep understanding of the travel industry with cutting-edge AI skills to lead technological contribution.</p>
+            <h1 class="text-4xl lg:text-5xl mb-4 text-green-400 text-center">AI Contribution Plan: Achieving 'Zero Friction' Travel</h1>
+            <p class="text-xl text-gray-400 mb-8 font-semibold text-center">I will combine deep understanding of the travel industry with cutting-edge AI skills to lead technological contribution.</p>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10 w-full max-w-4xl">
                 
@@ -365,7 +411,7 @@
             </div>
 
             <div class="mt-8 text-center w-full">
-                <p class="text-2xl font-bold text-green-300">Ultimate Vision: Achieving 'Zero Friction' for Travelers</p>
+                <p class="text-2xl font-bold text-green-300 text-center">Ultimate Vision: Achieving 'Zero Friction' for Travelers</p>
             </div>
         </div>
 

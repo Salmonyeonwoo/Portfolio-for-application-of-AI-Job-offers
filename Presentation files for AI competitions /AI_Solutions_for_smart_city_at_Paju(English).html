@@ -33,9 +33,63 @@
         .slide.active {
             opacity: 1;
             visibility: visible;
+            position: relative; /* Active slide should be visible and participate in layout */
         }
         .break-keep {
             word-break: keep-all;
+        }
+        /* Fix for Slide 2: Ensure grid items take up reasonable space */
+        #slide-2 .grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-auto-rows: minmax(min-content, max-content); /* Ensure rows adjust to content */
+            gap: 1.5rem; /* 6 */
+        }
+        #slide-2 .grid > div:nth-child(1) { /* Step 1 */
+            grid-column: 1 / 2;
+            grid-row: 1 / 2;
+        }
+        #slide-2 .grid > div:nth-child(2) { /* Arrow */
+            grid-column: 2 / 3;
+            grid-row: 1 / 2;
+        }
+        #slide-2 .grid > div:nth-child(3) { /* Step 2 */
+            grid-column: 3 / 4;
+            grid-row: 1 / 2;
+        }
+        /* Adjusting Step 3 positioning for visual flow (Original KR placement) */
+        #slide-2 .grid > div:nth-child(4) { /* Mobile Arrow */
+             grid-column: 1 / 4;
+             grid-row: 2 / 3;
+        }
+        /* Step 3 positioning */
+        #slide-2 .grid > div:nth-child(5) { /* Step 3 */
+            grid-column: 1 / 4;
+            grid-row: 3 / 4;
+        }
+        @media (min-width: 768px) {
+            #slide-2 .grid {
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+            }
+            #slide-2 .grid > div:nth-child(1) { /* Step 1 */
+                grid-column: 1 / 2;
+                grid-row: 1 / 2;
+            }
+            #slide-2 .grid > div:nth-child(2) { /* Arrow 1 */
+                grid-column: 2 / 3;
+                grid-row: 1 / 2;
+            }
+            #slide-2 .grid > div:nth-child(3) { /* Step 2 */
+                grid-column: 3 / 4;
+                grid-row: 1 / 2;
+            }
+            #slide-2 .grid > div:nth-child(4) { /* Arrow 2 */
+                grid-column: 4 / 5;
+                grid-row: 1 / 2;
+            }
+            #slide-2 .grid > div:nth-child(5) { /* Step 3 */
+                grid-column: 5 / 6;
+                grid-row: 1 / 2;
+            }
         }
     </style>
 </head>
@@ -58,43 +112,52 @@
 <!-- Slide 2: Summary (Image Updated) -->
 <div class="slide" id="slide-2">
 <h3 class="text-3xl font-bold text-cyan-400 mb-8 text-center">Idea Summary: AI Road Management Process</h3>
-<div class="flex flex-col gap-8 items-center">
-    <!-- 3-Phase Process Diagram -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-center">
+<div class="flex flex-col gap-8 items-center w-full">
+    <!-- 3-Phase Process Diagram - **FIXED GRID** -->
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 w-full text-center max-w-full">
+        
         <!-- Step 1: Data Collection -->
-        <div class="bg-blue-700/50 p-6 rounded-xl shadow-lg transform hover:scale-105 transition duration-300">
-            <svg class="w-12 h-12 mx-auto mb-3 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.218A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.218A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-            <h4 class="text-xl font-bold text-blue-300 mb-2">Phase 1: Real-time Data Collection</h4>
-            <p class="text-sm break-keep text-gray-200">Cameras on buses, taxis, etc., film road conditions in real-time and record GPS logging.</p>
+        <div class="bg-blue-700/50 p-4 md:p-6 rounded-xl shadow-lg transform hover:scale-105 transition duration-300 col-span-1">
+            <svg class="w-10 h-10 mx-auto mb-2 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.218A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.218A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <h4 class="text-lg font-bold text-blue-300 mb-1">Phase 1: Data Collection</h4>
+            <p class="text-xs break-keep text-gray-200">Cameras on vehicles film road conditions and record GPS location.</p>
         </div>
         
-        <!-- Arrow / Connector -->
-        <div class="hidden md:flex items-center justify-center">
-            <svg class="w-10 h-10 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        <!-- Arrow 1 (Desktop) -->
+        <div class="hidden md:flex items-center justify-center col-span-1">
+            <svg class="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        </div>
+        <!-- Arrow (Mobile) -->
+        <div class="md:hidden flex items-center justify-center col-span-1">
+            <svg class="w-8 h-8 text-cyan-400 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
         </div>
         
         <!-- Step 2: AI Analysis & Prediction -->
-        <div class="bg-cyan-700/50 p-6 rounded-xl shadow-lg transform hover:scale-105 transition duration-300">
-            <svg class="w-12 h-12 mx-auto mb-3 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l2.3-3.1C12.3 2 13.8 2 15 3.3l4 4.5 1.5-1.7c.3-.3.8-.5 1.3-.5H22c.6 0 1 .4 1 1v12c0 .6-.4 1-1 1h-6c-.6 0-1-.4-1-1v-2c0-.6-.4-1-1-1h-6c-.6 0-1-.4-1-1z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11h.01"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14h.01"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 17h.01"></path></svg>
-            <h4 class="text-xl font-bold text-cyan-300 mb-2">Phase 2: AI Detection & Prediction</h4>
-            <p class="text-sm break-keep text-gray-200">AI video analysis automatically detects hazards like potholes/cracks and predicts high-risk areas.</p>
+        <div class="bg-cyan-700/50 p-4 md:p-6 rounded-xl shadow-lg transform hover:scale-105 transition duration-300 col-span-1">
+            <svg class="w-10 h-10 mx-auto mb-2 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l2.3-3.1C12.3 2 13.8 2 15 3.3l4 4.5 1.5-1.7c.3-.3.8-.5 1.3-.5H22c.6 0 1 .4 1 1v12c0 .6-.4 1-1 1h-6c-.6 0-1-.4-1-1v-2c0-.6-.4-1-1-1h-6c-.6 0-1-.4-1-1z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11h.01"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14h.01"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 17h.01"></path></svg>
+            <h4 class="text-lg font-bold text-cyan-300 mb-1">Phase 2: AI Detection & Prediction</h4>
+            <p class="text-xs break-keep text-gray-200">AI detects hazards like potholes/cracks and predicts high-risk areas.</p>
         </div>
 
-        <!-- Mobile Arrow -->
-        <div class="md:hidden flex items-center justify-center py-2">
-            <svg class="w-10 h-10 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        <!-- Arrow 2 (Desktop) -->
+        <div class="hidden md:flex items-center justify-center col-span-1">
+            <svg class="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
         </div>
-
+        <!-- Arrow (Mobile) -->
+        <div class="md:hidden flex items-center justify-center col-span-1">
+            <svg class="w-8 h-8 text-cyan-400 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        </div>
+        
         <!-- Step 3: Management Action -->
-        <div class="bg-teal-700/50 p-6 rounded-xl shadow-lg transform hover:scale-105 transition duration-300 md:col-start-3 md:row-start-1">
-            <svg class="w-12 h-12 mx-auto mb-3 text-teal-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7L4 7m12 4l-4 4-4-4m12-4H4v12a2 2 0 002 2h12a2 2 0 002-2V7z"></path></svg>
-            <h4 class="text-xl font-bold text-teal-300 mb-2">Phase 3: Proactive Maintenance</h4>
-            <p class="text-sm break-keep text-gray-200">Real-time hazard info sent to admin dashboard, enabling quick and proactive repair action.</p>
+        <div class="bg-teal-700/50 p-4 md:p-6 rounded-xl shadow-lg transform hover:scale-105 transition duration-300 col-span-1">
+            <svg class="w-10 h-10 mx-auto mb-2 text-teal-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7L4 7m12 4l-4 4-4-4m12-4H4v12a2 2 0 002 2h12a2 2 0 002-2V7z"></path></svg>
+            <h4 class="text-lg font-bold text-teal-300 mb-1">Phase 3: Proactive Maintenance</h4>
+            <p class="text-xs break-keep text-gray-200">Real-time info sent to admin dashboard, enabling quick and proactive repair action.</p>
         </div>
     </div>
     
     <div class="w-full mt-8 flex items-center justify-center">
-        <!-- Image of the system flowchart -->
+        <!-- Image of the system flowchart - Size adjusted to h-64 for better fit based on original structure -->
         <img alt="Road AI System Flowchart" class="rounded-lg shadow-lg h-64 object-contain transform hover:scale-105 transition-transform duration-300" src="https://cdn.pajuminbo.com/news/photo/202307/4056_5556_1110.jpg"/>
     </div>
 </div>
@@ -145,7 +208,7 @@
 </ul>
 </div>
 <div class="w-full md:w-1/2 flex items-center justify-center">
-<img alt="Data Collection" class="rounded-lg shadow-lg h-80 object-cover" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:AN_dGcT05islqQZ1rFa66Wuli1nOkc6k1O6zP2WJiw&amp;s"/>
+<img alt="Data Collection" class="rounded-lg shadow-lg h-80 object-cover" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT05islqQZ1rFa66Wuli1nOkc6k1O6zP2WJiw&amp;s"/>
 </div>
 </div>
 </div>
@@ -291,9 +354,9 @@
 <!-- *** LINK FIXED HERE *** -->
 <div class="mt-8">
     <a href="./파주_스마트시티_AI문제해결.csv" download="" class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg transition-all duration-300">
-       📥 CSV 다운로드
+       📥 Download CSV
     </a>
-    <p class="text-gray-400 mt-3 text-sm">* Dacon 제출용 CSV 파일을 바로 다운로드할 수 있습니다.</p>
+    <p class="text-gray-400 mt-3 text-sm">* Download the Dacon submission CSV file directly.</p>
 </div>
 <!-- *** End of FIX *** -->
 </div>
@@ -305,8 +368,8 @@
 <div class="flex items-center space-x-2" id="progress-dots"></div>
 <!-- Navigation Buttons -->
 <div>
-<button class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed" id="prev-btn">이전</button>
-<button class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg" id="next-btn">다음</button>
+<button class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed" id="prev-btn">Previous</button>
+<button class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg" id="next-btn">Next</button>
 </div>
 </div>
 </footer>

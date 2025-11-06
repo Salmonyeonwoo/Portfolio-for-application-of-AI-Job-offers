@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice of AI Features</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8fafc; /* Light Blue/Gray Background */
+        }
+        .slide {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        .slide-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #10b981;
+            border-bottom: 2px solid #d1fae5;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .audio-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Evolution Flow Chart Styles */
+        .flow-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap; /* 모바일 대응 */
+        }
+        .flow-step {
+            flex: 1 1 200px; /* 유연성 확보 */
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            position: relative;
+            background-color: #d1fae5;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .flow-step h3 {
+            font-weight: 700;
+            color: #047857; /* Emerald 700 */
+            margin-bottom: 0.25rem;
+        }
+        .flow-step p {
+            font-size: 0.875rem;
+            color: #065f46; /* Emerald 800 */
+        }
+        .arrow-icon {
+            color: #10b981;
+            font-size: 2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .flow-container {
+                flex-direction: column;
+            }
+            .flow-step {
+                width: 100%;
+                flex: none;
+            }
+            .arrow-icon {
+                transform: rotate(90deg);
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-gray-800">AI 언어 모델 발전 과정 및 TTS 기능 예시</h1>
+            <p class="text-lg text-gray-600 mt-2">Seq2Seq부터 LLM까지의 발전사와 음성 합성(TTS) 기능 시연</p>
+        </header>
+
+        <!-- Slide 1: AI 언어 모델 발전 과정 (Visualization) -->
+        <div class="slide">
+            <h2 class="slide-title"><i class="fas fa-history mr-2"></i> 1. AI 언어 모델 발전 흐름도</h2>
+            
+            <div class="flow-container">
+                
+                <!-- Step 1: Seq2Seq (2014) -->
+                <div class="flow-step">
+                    <h3 class="text-xl">Seq2Seq (2014)</h3>
+                    <p>RNN 기반의 인코더-디코더 구조.</p>
+                    <p class="font-bold">한계: 장거리 문맥 이해 어려움.</p>
+                </div>
+
+                <!-- Arrow 1 -->
+                <div class="arrow-icon">→</div>
+
+                <!-- Step 2: Attention (2015) -->
+                <div class="flow-step bg-green-200">
+                    <h3 class="text-xl">Attention Mechanism (2015)</h3>
+                    <p>입력의 특정 부분에 집중하여 정확도 개선.</p>
+                    <p class="font-bold">개선: 장거리 의존성 문제 일부 해소.</p>
+                </div>
+
+                <!-- Arrow 2 -->
+                <div class="arrow-icon">→</div>
+                
+                <!-- Step 3: Transformer (2017) -->
+                <div class="flow-step bg-green-300">
+                    <h3 class="text-xl">Transformer (2017)</h3>
+                    <p>Attention만 사용하여 병렬 처리 극대화.</p>
+                    <p class="font-bold text-red-700">핵심: AI 모델 발전의 분수령.</p>
+                </div>
+
+                <!-- Arrow 3 -->
+                <div class="arrow-icon">→</div>
+
+                <!-- Step 4: GPT & LLM (현재) -->
+                <div class="flow-step bg-green-400">
+                    <h3 class="text-xl">GPT & LLM (현재)</h3>
+                    <p>Transformer 기반의 대규모 언어 모델.</p>
+                    <p class="font-bold">결과: 범용적인 언어 능력 확보.</p>
+                </div>
+
+            </div>
+
+            <div class="mt-8 text-sm text-gray-700">
+                <p>💡 **Transformer의 중요성:** RNN/CNN을 제거하고 Attention을 사용함으로써 학습 속도를 혁신적으로 높이고 대규모 모델(LLM) 개발의 기반을 마련했습니다.</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: TTS (Text-to-Speech) 기능 시연 -->
+        <div class="slide">
+            <h2 class="slide-title"><i class="fas fa-volume-up mr-2"></i> 2. 음성 합성(TTS) 기능 시연</h2>
+            <p class="text-gray-700 mb-4">Gemini API의 TTS 기능을 활용하여 다양한 상황과 목소리로 텍스트를 음성으로 변환하는 예시입니다.</p>
+
+            <div id="error-message" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative hidden mb-4" role="alert">
+                <strong class="font-bold">Error!</strong>
+                <span class="block sm:inline"> 오디오 생성 중 오류가 발생했습니다. (API 키 확인 필요)</span>
+            </div>
+
+            <div class="space-y-6">
+                <!-- TTS Example 1: Informative (Charon) -->
+                <div class="p-4 border rounded-lg bg-gray-50">
+                    <p class="font-semibold text-gray-800">예시 1: 정보 전달 (Informative)</p>
+                    <p class="text-sm text-gray-600 italic">"Charon" 목소리로, 정보를 전달하는 톤으로 발화.</p>
+                    <div class="audio-container">
+                        <button data-text="Charon 목소리로, 정보를 전달하는 톤으로 발화: 저희 AI 모델은 현재 시장 상황을 분석하여 3가지 핵심 투자 기회를 식별했습니다." data-voice="Charon" class="play-button bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full inline-flex items-center transition duration-300">
+                            <i class="fas fa-play mr-2"></i> 음성 듣기 (KR)
+                        </button>
+                        <div class="download-container hidden"></div>
+                    </div>
+                </div>
+
+                <!-- TTS Example 2: Cheerful (Puck) -->
+                <div class="p-4 border rounded-lg bg-gray-50">
+                    <p class="font-semibold text-gray-800">예시 2: 활기찬 안내 (Upbeat)</p>
+                    <p class="text-sm text-gray-600 italic">"Puck" 목소리로, 활기찬 톤으로 발화.</p>
+                    <div class="audio-container">
+                        <button data-text="Puck 목소리로, 활기찬 톤으로 발화: 새로운 AI 기능이 업데이트되었습니다! 지금 바로 접속해서 더 빠르고 스마트해진 서비스를 경험해 보세요!" data-voice="Puck" class="play-button bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full inline-flex items-center transition duration-300">
+                            <i class="fas fa-play mr-2"></i> 음성 듣기 (KR)
+                        </button>
+                        <div class="download-container hidden"></div>
+                    </div>
+                </div>
+
+                <!-- TTS Example 3: Multi-Speaker Conversation (KR) -->
+                <div class="p-4 border rounded-lg bg-gray-50">
+                    <p class="font-semibold text-gray-800">예시 3: 다중 화자 대화 (Multi-Speaker)</p>
+                    <p class="text-sm text-gray-600 italic">"Joe"와 "Jane" 목소리로 대화 발화.</p>
+                    <div class="audio-container">
+                        <button data-text="TTS the following conversation between Joe and Jane in Korean:\nJoe: 이번 주 AI 프로젝트의 QA 검토는 잘 진행되고 있나요?\nJane: 네, 핵심 버그는 모두 수정되었고, 사용자 시나리오 테스트만 남았습니다. 내일 최종 보고 드릴게요." data-voice-config='{"speakerVoiceConfigs": [{"speaker": "Joe", "voiceConfig": {"prebuiltVoiceConfig": {"voiceName": "Kore"}}}, {"speaker": "Jane", "voiceConfig": {"prebuiltVoiceConfig": {"voiceName": "Leda"}}}]}' class="play-button bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full inline-flex items-center transition duration-300">
+                            <i class="fas fa-play mr-2"></i> 음성 듣기 (대화)
+                        </button>
+                        <div class="download-container hidden"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const playButtons = document.querySelectorAll('.play-button');
+            const errorMessage = document.getElementById('error-message');
+            const apiKey = ""; // Canvas 환경에서 자동 주입됩니다.
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+
+            // Base64 to ArrayBuffer helper function
+            const base64ToArrayBuffer = (base64) => {
+                const binaryString = atob(base64);
+                const len = binaryString.length;
+                const bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                return bytes.buffer;
+            };
+
+            // PCM to WAV conversion helper function
+            const pcmToWav = (pcm16, sampleRate = 24000) => {
+                const numChannels = 1;
+                const pcmData = pcm16.buffer;
+                const buffer = new ArrayBuffer(44 + pcmData.byteLength);
+                const view = new DataView(buffer);
+                let offset = 0;
+
+                // Write string to view
+                const writeString = (view, offset, str) => {
+                    for (let i = 0; i < str.length; i++) {
+                        view.setUint8(offset + i, str.charCodeAt(i));
+                    }
+                };
+
+                // RIFF chunk
+                writeString(view, offset, 'RIFF'); offset += 4;
+                view.setUint32(offset, 36 + pcmData.byteLength, true); offset += 4;
+                writeString(view, offset, 'WAVE'); offset += 4;
+
+                // FMT chunk
+                writeString(view, offset, 'fmt '); offset += 4;
+                view.setUint32(offset, 16, true); offset += 4; // Sub-chunk size
+                view.setUint16(offset, 1, true); offset += 2; // Audio format (1 for PCM)
+                view.setUint16(offset, numChannels, true); offset += 2; // Number of channels
+                view.setUint32(offset, sampleRate, true); offset += 4; // Sample rate
+                view.setUint32(offset, sampleRate * numChannels * 2, true); offset += 4; // Byte rate
+                view.setUint16(offset, numChannels * 2, true); offset += 2; // Block align
+                view.setUint16(offset, 16, true); offset += 2; // Bits per sample
+
+                // Data chunk
+                writeString(view, offset, 'data'); offset += 4;
+                view.setUint32(offset, pcmData.byteLength, true); offset += 4; // Data size
+
+                // Write PCM data
+                const pcmBytes = new Uint8Array(pcmData);
+                for (let i = 0; i < pcmData.byteLength; i++) {
+                    view.setUint8(offset + i, pcmBytes[i]);
+                }
+
+                return new Blob([view], { type: 'audio/wav' });
+            };
+
+            const generateAndPlayAudio = async (button) => {
+                const originalContent = button.innerHTML;
+                button.disabled = true;
+                button.innerHTML = '<span class="loader"></span><span class="ml-2">생성 중...</span>';
+                errorMessage.classList.add('hidden');
+
+                const text = button.getAttribute('data-text');
+                const voiceName = button.getAttribute('data-voice');
+                const voiceConfigJson = button.getAttribute('data-voice-config');
+                const downloadContainer = button.parentNode.querySelector('.download-container');
+
+                // Clear previous download link
+                downloadContainer.innerHTML = '';
+                downloadContainer.style.display = 'none';
+
+                let speechConfig = {};
+                if (voiceConfigJson) {
+                    // Multi-speaker configuration
+                    speechConfig = JSON.parse(voiceConfigJson);
+                } else if (voiceName) {
+                    // Single-speaker configuration
+                    speechConfig = {
+                        speechConfig: {
+                            voiceConfig: {
+                                prebuiltVoiceConfig: { voiceName: voiceName }
+                            }
+                        }
+                    };
+                }
+
+                const payload = {
+                    contents: [{ parts: [{ text: text }] }],
+                    generationConfig: {
+                        responseModalities: ["AUDIO"],
+                        ...speechConfig
+                    },
+                    model: "gemini-2.5-flash-preview-tts"
+                };
+
+                try {
+                    // Implement exponential backoff for API call
+                    let response;
+                    for (let attempt = 0; attempt < 3; attempt++) {
+                        response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (response.status !== 429) {
+                            break; // Success or non-rate-limit error
+                        }
+
+                        // Exponential backoff
+                        const delay = Math.pow(2, attempt) * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                    
+                    if (!response.ok) {
+                         // Throw detailed error for non-rate-limit failures
+                         const errorBody = await response.json();
+                         throw new Error(`API Error: ${response.status} - ${errorBody.error?.message || 'Unknown error'}`);
+                    }
+
+                    const result = await response.json();
+                    const part = result?.candidates?.[0]?.content?.parts?.[0];
+                    const audioData = part?.inlineData?.data;
+                    const mimeType = part?.inlineData?.mimeType;
+
+                    if (audioData && mimeType && mimeType.startsWith("audio/L16")) {
+                        // API returns raw signed PCM 16 bit audio data (L16)
+                        const pcmDataBuffer = base64ToArrayBuffer(audioData);
+                        const pcm16 = new Int16Array(pcmDataBuffer);
+                        
+                        // Extract sample rate (defaults to 24000 if not explicitly in mimetype)
+                        let sampleRate = 24000;
+                        const rateMatch = mimeType.match(/rate=(\d+)/);
+                        if (rateMatch && rateMatch[1]) {
+                            sampleRate = parseInt(rateMatch[1], 10);
+                        }
+                        
+                        // Convert PCM to WAV Blob
+                        const wavBlob = pcmToWav(pcm16, sampleRate);
+                        const audioUrl = URL.createObjectURL(wavBlob);
+
+                        // Play audio
+                        const audio = new Audio(audioUrl);
+                        audio.play();
+
+                        // Add download button
+                        const filename = 'tts_audio.wav';
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = audioUrl;
+                        downloadLink.download = filename;
+                        downloadLink.className = 'bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full inline-flex items-center transition duration-300';
+                        downloadLink.innerHTML = `<i class="fas fa-download mr-2"></i> Download .wav`;
+                        downloadContainer.appendChild(downloadLink);
+                        downloadContainer.style.display = 'block';
+
+                    } else {
+                        throw new Error("Invalid audio data in response or missing data.");
+                    }
+
+                } catch (error) {
+                    console.error('Error generating audio:', error);
+                    errorMessage.querySelector('span').textContent = ` 오디오 생성 중 오류가 발생했습니다: ${error.message}`;
+                    errorMessage.classList.remove('hidden');
+                } finally {
+                    button.disabled = false;
+                    button.innerHTML = originalContent;
+                }
+            };
+
+            playButtons.forEach(button => {
+                button.addEventListener('click', () => generateAndPlayAudio(button));
+            });
+        });
+    </script>
+</body>
+</html>

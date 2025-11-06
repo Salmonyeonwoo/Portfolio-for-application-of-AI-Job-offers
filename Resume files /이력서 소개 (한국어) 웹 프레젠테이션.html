@@ -3,147 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>박연우 경력 요약 및 핵심 역량 (통합본)</title>
+    <title>박연우 이력서 소개 (한국어) - 웹 프레젠테이션</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f7f7f7; line-height: 1.6; }
-        .container { max-width: 1000px; padding: 1.5rem; }
-        .slide { background-color: white; border-bottom: 5px solid #3b82f6; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-bottom: 1.5rem; border-radius: 0.75rem; padding: 2rem; }
-        .section-header { font-weight: 700; color: #1e40af; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px dashed #bfdbfe; display: flex; align-items: center; }
-        .section-header i { margin-right: 0.75rem; color: #3b82f6; }
-        .highlight { font-weight: 500; color: #059669; }
-        .scenario-card { background-color: #f0f9ff; border-left: 4px solid #3b82f6; padding: 1rem; margin-top: 0.75rem; border-radius: 0.5rem; }
-        .job-title { font-weight: 700; color: #065f46; font-size: 1.125rem; }
-        .sub-header { font-weight: 600; color: #1f2937; margin-top: 1rem; }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f7f7f7; }
+        .slide { min-height: 100vh; padding: 4rem 2rem; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: left; background-color: white; border-bottom: 8px solid #3b82f6; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 2rem; border-radius: 1rem; }
+        .slide-content { max-width: 800px; width: 100%; }
+        h1, h2 { font-weight: 700; color: #1e40af; }
+        .section-header { border-left: 5px solid #3b82f6; padding-left: 1rem; margin-top: 1.5rem; }
+        ul { list-style: disc; margin-left: 1.5rem; }
+        li { margin-bottom: 0.5rem; }
     </style>
 </head>
-<body class="p-4">
-    <div class="container mx-auto">
-        <header class="text-center mb-6">
-            <h1 class="text-3xl font-bold text-gray-900">박연우 경력 소개 웹 프레젠테이션 (통합 시나리오)</h1>
-            <p class="text-gray-600 mt-1">여백 최소화 및 핵심 역량(AI/기술 지원) 시나리오 상세화</p>
-        </header>
+<body>
 
-        <!-- Slide 1: 개인정보 + 커리어 목표 + 글로벌 역량 (합치기) -->
-        <div id="slide-1-merged" class="slide">
-            <h2 class="text-2xl section-header"><i class="fas fa-user-circle"></i> 인적 사항, 커리어 비전 및 글로벌 역량</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-                <!-- 인적 사항 (좌측) -->
-                <div class="col-span-1 border-r pr-4 border-gray-200">
-                    <h3 class="sub-header text-lg mb-2">기본 정보</h3>
-                    <ul class="text-sm space-y-1 text-gray-700">
-                        <li><span class="highlight">이름:</span> 박연우</li>
-                        <li><span class="highlight">국적:</span> 대 한민국</li>
-                        <li><span class="highlight">연락처:</span> +6010-968-1392 (말레이시아 번호)</li>
-                        <li><span class="highlight">거주지:</span> Bayan Indah, Pulau Pinang (현재) / 용인시 (본가)</li>
-                    </ul>
-                </div>
-                
-                <!-- 커리어 비전 (중앙) -->
-                <div class="col-span-1 border-r pr-4 border-gray-200">
-                    <h3 class="sub-header text-lg mb-2"><i class="fas fa-lightbulb"></i> 커리어 비전: AI 기술 번역가</h3>
-                    <p class="text-sm text-gray-700">
-                        단순 지원을 넘어 **기술 팀**과 **최종 사용자** 사이의 간극을 좁히는 다리 역할(Bridge)을 수행하는 것이 목표입니다. AI 도구가 견고하게 작동(QA)하고 실질적인 비즈니스 문제를 해결(Application)하는 데 기여하고자 합니다.
-                    </p>
-                </div>
-                
-                <!-- 다국어 및 글로벌 역량 (우측) -->
-                <div class="col-span-1">
-                    <h3 class="sub-header text-lg mb-2"><i class="fas fa-globe-asia"></i> 다국어 및 글로벌 경험</h3>
-                    <ul class="text-sm space-y-1 text-gray-700">
-                        <li><span class="highlight">주요 언어:</span> 한국어, 영어 (비즈니스 레벨), 일본어 (능통)</li>
-                        <li><span class="highlight">지역 경험:</span> 일본(대학교 학위), 말레이시아(Motorola, Klook), 싱가포르, 중국, 서유럽, 미국 등 다수 여행 경험.</li>
-                        <li><span class="highlight">리더십:</span> 일본 대학교 한인 학생 모임 팀장 경험.</li>
-                    </ul>
-                </div>
+    <!-- Slide 1: 표지 -->
+    <div id="slide-1" class="slide bg-blue-50">
+        <div class="slide-content text-center">
+            <h1 class="text-5xl mb-4 text-blue-800">박연우 이력서 및 경력 소개</h1>
+            <p class="text-xl text-gray-600">AI Application & QA Specialist</p>
+            <p class="mt-8 text-sm text-gray-500">2025년 10월 21일 업데이트</p>
+            <div class="mt-10">
+                <!--  -->
+                <img src="https://placehold.co/150x150/e0e7ff/1e40af?text=Yeonwoo+Park" alt="박연우 프로필 이미지" class="mx-auto rounded-full shadow-lg">
             </div>
         </div>
-
-        <!-- Slide 2: AI 기반 주요 성과 + 기술 지원 및 보안 역량 (합치기) - 시나리오 상세화 -->
-        <div id="slide-2-merged" class="slide">
-            <h2 class="text-2xl section-header"><i class="fas fa-tools"></i> 핵심 경력: AI 기반 성과 & 기술 지원 및 문제 해결 (시나리오)</h2>
-            
-            <!-- 1. Klook - AI 기반 성과 및 분석 시나리오 -->
-            <h3 class="sub-header text-xl mt-4 border-b pb-1">1. Klook: AI 기반 문의 패턴 분석 및 프로세스 개선</h3>
-            <p class="job-title">(여행 액티비티 플랫폼, **2024.09 ~ 2025.03**) <span class="text-sm text-gray-500 font-normal">AI 도입/활용 시점</span></p>
-            <div class="scenario-card">
-                <p class="font-bold text-blue-700 mb-1">성과 사례: 사용자 문의 패턴 분석 (10가지 중 주요 3가지 패턴)</p>
-                <p class="text-sm text-gray-700 mb-2">**역할:** AI 자동 요약/해결 시스템의 최종 검토 및 QA 담당자. 문의/메일의 자동 요약 내용을 검토하고, 오류가 발견된 경우 직접 수정하며 AI 시스템의 잠재적 실패 패턴을 식별했습니다.</p>
-                
-                <p class="font-semibold text-gray-800">주요 3가지 패턴 및 해결 방법:</p>
-                <ul class="text-sm list-disc list-inside ml-4 space-y-1">
-                    <li><span class="highlight">패턴 1. 복잡한 정책 해석 오류:</span> AI가 '프로모션 예약 + 부분 사용'과 같은 복합 건의 취소 정책을 '환불 불가'로 오분류하는 문제. <span class="text-red-600">→ 해결:</span> 복합 정책 키워드 감지 시, 반드시 Human Review가 필요하도록 시스템에 예외 태그를 설정 요청.</li>
-                    <li><span class="highlight">패턴 2. 외부 증빙 자료 미반영:</span> '비행기 결항', '병원 진단서' 등 불가피한 사유의 외부 증빙이 AI 요약 시 Klook 표준 정책보다 낮게 처리되는 문제. <span class="text-red-600">→ 해결:</span> 특정 외부 증빙 키워드 감지 시, 자동 환불 대신 슈퍼바이저에게 즉시 **Special Case**로 에스컬레이션되도록 프로세스 개선.</li>
-                    <li><span class="highlight">패턴 3. 감정적/모호한 언어 오해:</span> 고객의 감정적이고 모호한 한국어 표현을 AI가 단순 문의로 오해하여 부적절한 답변을 자동 전송하는 문제. <span class="text-red-600">→ 해결:</span> 'High-Emotion Keyword Library'를 구축하여, 해당 단어 감지 시 CS팀이 직접 요약 및 응대하도록 QA 프로세스 강화.</li>
-                </ul>
-            </div>
-            <p class="text-sm text-gray-500 mt-2">※ 기타: 취소 불가 상품 정책 상세 안내, 취소 가능한 상품에 한해 취소 지원 후 동일 조건으로 재예약 안내.</p>
-
-            <!-- 2. Roblox - 기술 지원 및 문제 해결 시나리오 (AI 배제) -->
-            <h3 class="sub-header text-xl mt-6 border-b pb-1">2. Roblox: 보안 및 기술 이슈 해결 프로세스</h3>
-            <p class="job-title">(글로벌 게임 플랫폼, **2020.05 ~ 2024.06**)</p>
-            <div class="scenario-card">
-                <p class="font-bold text-blue-700 mb-1">성과 사례: 의심스러운 계정 해킹 및 사기 방지</p>
-                <p class="text-sm text-gray-700 mb-2">**역할:** 1차 보안 인증 담당자 및 에스컬레이션 게이트키퍼. 계정 복구 요청 시 소유권 확인 프로세스를 엄격하게 적용하여 잠재적 사기를 방지했습니다.</p>
-                <ul class="text-sm list-disc list-inside ml-4 space-y-1">
-                    <li>**문제 발생:** 한 유저가 계정 해킹을 주장했으나, 제시한 복구 정보(연락 이메일, 결제 내역)가 기존 등록 정보와 지속적으로 불일치하여 수상하다고 판단됨.</li>
-                    <li>**해결 방법:** <span class="highlight">1단계 (규정 준수):</span> 결제 내역/연락 이메일로 소유권 인증(규칙 B)을 요구했으나 실패. <span class="highlight">2단계 (에스컬레이션):</span> 일반적이지 않은 문의로 판단하여 **Supervisors(규칙 A)**에게 즉시 에스컬레이션 요청. <span class="highlight">3단계 (완료):</span> 상위 팀원이 2차 보안 데이터를 통해 진정한 소유자의 신원을 확인, 계정 복구 사기를 미연에 방지함.</li>
-                </ul>
-            </div>
-            <p class="text-sm text-gray-500 mt-2">※ 기타: 기술 문제 발생 시 각 기종별 오류 원인 파악을 위해 스크린샷/Youtube 링크 요청 후, 해당 Specialists 팀에 정확한 정보와 함께 지원 의뢰 (규칙 E)를 통해 신속한 솔루션 제공.</p>
-
-            <!-- 3. Facebook/Microsoft - 전문 기술 지원 (트레이닝 기간) (NEW ENTRY) -->
-            <h3 class="sub-header text-xl mt-6 border-b pb-1">3. Facebook/Microsoft: 전문 기술 지원 (트레이닝 기간)</h3>
-            <p class="job-title">(Concentrix Malaysia, **2020.01 ~ 2020.03**)</p>
-            <div class="scenario-card">
-                <p class="font-bold text-blue-700 mb-1">주요 업무: 단기간 내 기술 지식 및 PII 규정 습득</p>
-                <ul class="text-sm list-disc list-inside ml-4 space-y-1">
-                    <li>**Facebook:** 광고 승인 상태 확인 및 결제 정보 관리, 전문 팀으로의 에스컬레이션 프로세스 습득.</li>
-                    <li>**Microsoft VLSC:** Volume Licensing Service Center 계정 관리, 프로그램 설치 지원, PII(개인 식별 정보) 규정 준수 관리.</li>
-                </ul>
-            </div>
-            
-            <!-- 4. Motorola - 규제 준수 및 프로세스 관리 시나리오 (AI 배제) -->
-            <h3 class="sub-header text-xl mt-6 border-b pb-1">4. Motorola: 규제 준수 및 파트너 관계 관리</h3>
-            <p class="job-title">(글로벌 무전기 제조, **2017.03 ~ 2019.11**)</p>
-            <div class="scenario-card">
-                <p class="font-bold text-blue-700 mb-1">성과 사례: 미신고 무전기 사용 고객 응대 및 규제 준수 확보</p>
-                <p class="text-sm text-gray-700 mb-2">**역할:** 고객 응대 및 규제 준수 안내 담당자. 무전기 사용 허가 신고 의무를 지키지 않은 고객들의 문의를 명확하게 처리했습니다.</p>
-                <ul class="text-sm list-disc list-inside ml-4 space-y-1">
-                    <li>**문제 발생:** 무전기 구매 후, 사용 허가 신고(규칙 D)를 하지 않아 무전기 사용이 갑자기 제한된 고객으로부터 항의성 문의 접수.</li>
-                    <li>**해결 방법:** <span class="highlight">1단계 (명확한 안내):</span> 고객에게 무조건 **각 지역별 구청 방문**을 통해 무전기 사용 허가 및 신고를 완료해야 하는 규제 의무(규칙 D)를 명확하게 설명. <span class="highlight">2단계 (규정 준수):</span> 규제 위반 사항을 해소하기 위한 필수 절차임을 강조하고, 필요 양식 및 담당 연락처를 제공하여 고객의 문제 해결을 위한 명확한 가이드라인을 제시.</li>
-                </ul>
-            </div>
-            <p class="text-sm text-gray-500 mt-2">※ 기타: 파트너 거래 문의는 항상 본사 Supervisors 확인 후 승인/거절 응답 요청 (규칙 C)하여 거래 투명성을 확보.</p>
-
-            <!-- 5. Alexander&sun - 국제 판매 및 정산 경험 -->
-            <h3 class="sub-header text-xl mt-6 border-b pb-1">5. Alexander&sun: 국제 판매 및 정산 경험</h3>
-            <p class="job-title">(면세점, **2016.08 ~ 2016.10**)</p>
-            <div class="scenario-card">
-                <p class="font-bold text-blue-700 mb-1">주요 업무: 다국적 고객 대응 및 다중 통화 정산</p>
-                <ul class="text-sm list-disc list-inside ml-4 space-y-1">
-                    <li>**다국적 고객 응대:** 한국, 중국, 외국인 고객 대상 상품 설명 및 판매 지원.</li>
-                    <li>**다중 통화 결제 처리:** KRW, CNY, USD 현금 결제를 JPY(일본 엔)으로 거스름돈을 제공하는 정산 프로세스 처리.</li>
-                    <li>**세금 면제 프로세스 관리:** 여권을 통한 세금 면제 혜택(Tax Exemption) 프로세스 안내 및 처리.</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Slide 3: AI 기술 역량 및 교육 (간단하게) -->
-        <div id="slide-3-ai" class="slide">
-            <h2 class="text-2xl section-header"><i class="fas fa-laptop-code"></i> AI 기술 교육 및 기초 역량</h2>
-            <div class="mt-4 space-y-4">
-                <h3 class="sub-header text-lg">NVIDIA AI 프로그래밍 교육 수료 (2025.07~2025.12)</h3>
-                <ul class="mt-2 text-sm list-disc list-inside space-y-1 text-gray-700">
-                    <li><span class="highlight">기초 프로그래밍:</span> C언어, Python 기초 문법 및 Jupyter Notebook 활용 실습.</li>
-                    <li><span class="highlight">머신러닝 라이브러리:</span> TensorFlow, Keras를 활용한 신경망 모델 구축 및 가중치 조정 원리 (경사 하강법) 학습.</li>
-                    <li><span class="highlight">알고리즘 이해:</span> 조건/반복문(if, for)을 통한 로직 구현 및 AI 알고리즘의 수학적 개념 이해.</li>
-                </ul>
-            </div>
-        </div>
-
     </div>
+
+    <!-- Slide 2: 개인 정보 및 목표 -->
+    <div id="slide-2" class="slide">
+        <div class="slide-content">
+            <h2 class="text-3xl section-header">개인 정보 및 경력 목표</h2>
+            <div class="mt-6 space-y-4 text-lg">
+                <p><span class="font-semibold text-gray-700">이름:</span> 박연우 (Yeonwoo Park)</p>
+                <p><span class="font-semibold text-gray-700">현재 거주지:</span> 말레이시아 페낭 (쿠알라룸푸르 이직 희망)</p>
+                <p><span class="font-semibold text-gray-700">핵심 목표:</span> <span class="font-semibold">글로벌 커뮤니케이션 능력과 데이터 분석 경험을 활용</span>하여 AI 기술의 품질 보증(QA) 및 서비스 기획 분야로 전환</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: 언어 및 글로벌 역량 -->
+    <div id="slide-3" class="slide bg-gray-50">
+        <div class="slide-content">
+            <h2 class="text-3xl section-header"><i class="fas fa-globe"></i> 다국어 및 글로벌 역량</h2>
+            <ul class="mt-6 text-lg space-y-2">
+                <li><span class="font-semibold">영어/일본어 고급 유창성:</span> 국제 비즈니스 전공 및 다년간의 글로벌 기업 CS 경험을 통해 확보.</li>
+                <li><span class="font-semibold">국제적 배경:</span> 일본 다쿠쇼쿠 대학(국제 비즈니스) 졸업 및 다수 해외 거주/여행 경험 (싱가포르, 일본, 중국, 유럽, 미국 등).</li>
+                <li><span class="font-semibold">리더십 경험:</span> 일본 대학 한국 학생회 팀 리더 활동 및 다문화 교류 위원회 참여.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 4: 주요 경력 - AI 및 데이터 기반 성과 -->
+    <div id="slide-4" class="slide">
+        <div class="slide-content">
+            <h2 class="text-3xl section-header"><i class="fas fa-chart-line"></i> AI/데이터 기반 주요 성과</h2>
+            <div class="mt-6 space-y-6">
+                <!-- Klook 섹션 수정 -->
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-800">Daythree / Klook (2024~2025)</h3>
+                    <ul class="mt-2 text-base" style="list-style-type: none; margin-left: 0; padding-left: 0;">
+                        <li><span class="font-semibold">역할 :</span> AI 챗봇 QA 및 효율성 증대</li>
+                        <li class="mt-2"><span class="font-semibold">∙ 주요 사례 :</span> 월평균 15% 증가하던 상담원 전환율 안정화.</li>
+                        <li class="mt-2"><span class="font-semibold">∙ 해결 방법 :</span>
+                            <ul style="list-style-type: none; margin-left: 1rem; padding-left: 0; margin-top: 0.5rem;">
+                                <li><span class="font-semibold">  1단계 : </span> AI 챗봇 초기 도입 시 사용자 문의 패턴 및 실패 데이터를 분석하여 10가지 이상 주요 패턴 식별.</li>
+                                <li class="mt-1"><span class="font-semibold">  2단계 : </span> 분석 결과를 개발팀에 전달하여 FAQ 및 시나리오를 개선, 전환율 안정화에 기여.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Motorola 섹션 수정 (강조 제거) -->
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-800">Motorola Solutions (2017~2019) - AI 지식 관리 시스템 기반 구축</h3>
+                    <ul class="mt-2 text-base">
+                        <li>2년간 1,000건 이상의 기술 문의를 분류/축적하여 AI 기반 지식 관리 시스템의 기초 데이터베이스를 구축.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: 기술 및 보안 전문성 -->
+    <div id="slide-5" class="slide bg-gray-50">
+        <div class="slide-content">
+            <h2 class="text-3xl section-header"><i class="fas fa-shield-alt"></i> 기술 지원 및 보안 역량</h2>
+            <div class="mt-6 space-y-6">
+                <!-- Roblox 섹션 수정 -->
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-800">Roblox (2020~2024) - 계정 보안 및 프로세스 개선</h3>
+                    <ul class="mt-2 text-base" style="list-style-type: none; margin-left: 0; padding-left: 0;">
+                        <li><span class="font-semibold">역할 :</span> 계정 보안 및 프로세스 개선</li>
+                        <li class="mt-2"><span class="font-semibold">∙ 주요 사례 :</span> 월 100건 이상 발생하는 해킹 계정 복구 문제.</li>
+                        <li class="mt-2"><span class="font-semibold">∙ 해결 방법 :</span>
+                            <ul style="list-style-type: none; margin-left: 1rem; padding-left: 0; margin-top: 0.5rem;">
+                                <li><span class="font-semibold">  1단계 : </span> 해킹 계정 복구 사례를 분석하여 공통적인 취약점 패턴을 식별.</li>
+                                <li class="mt-1"><span class="font-semibold">  2단계 : </span> 2단계 인증(2FA) 설정 캠페인을 제안하고 실행하여 해킹 인시던트 감소에 기여.</li>
+                            </ul>
+                        </li>
+                        <li class="mt-4">결제 오류 및 환불 데이터를 분석하여 특정 결제 수단의 문제점을 보고, 근본 원인 해결 지원.</li>
+                    </ul>
+                </div>
+                <!-- Microsoft 섹션 수정 (강조 제거) -->
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-800">Microsoft VLSC / Facebook (2020) - 전문 기술 지원</h3>
+                    <ul class="mt-2 text-base">
+                        <li>Microsoft 볼륨 라이선스 계정 관리 및 프로그램 설치 지원, PII(개인 식별 정보) 규정 준수 관리.</li>
+                        <li>Facebook/Instagram 광고 승인 상태 확인 및 결제 정보 관리.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: AI 역량 및 향후 목표 -->
+    <div id="slide-6" class="slide">
+        <div class="slide-content">
+            <h2 class="text-3xl section-header"><i class="fas fa-laptop-code"></i> AI 학습 및 커리어 비전</h2>
+            <div class="mt-6 space-y-4 text-lg">
+                <p>최근 <span class="font-semibold">NVIDIA AI 프로그래밍 교육</span>을 수료하며 Python, TensorFlow, Keras, 경사 하강법 등 AI 알고리즘의 기초를 다졌습니다.</p>
+                <p>저의 목표는 단순한 지원을 넘어, <span class="font-semibold">기술(Technical Team)과 사용자(End-User) 사이의 격차를 해소</span>하는 브릿지 역할입니다. AI 툴이 견고하게 작동하고(QA), 실질적인 비즈니스 문제(Application)를 해결하도록 기여하겠습니다.</p>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

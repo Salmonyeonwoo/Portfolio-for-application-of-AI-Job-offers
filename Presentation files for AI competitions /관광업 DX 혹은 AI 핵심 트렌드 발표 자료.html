@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2025 관광업 DX·AI 핵심 트렌드</title>
-    <!-- Tailwind CSS 로드 -->
+    <title>2025 Tourism DX·AI Core Trends</title>
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+KR:wght@100..900&display=swap');
@@ -12,32 +12,35 @@
             font-family: 'Noto Sans KR', 'Inter', sans-serif;
             background-color: #0d1117;
             color: #e5e7eb;
-            overflow: hidden; /* 스크롤 방지 */
+            overflow: hidden; /* Prevent scrolling */
             margin: 0;
             padding: 0;
         }
-        /* [최종 수정] CSS를 이용해 슬라이드 컨테이너의 너비를 강제하고 float으로 나열 */
+        /* [Critical Fix] Force slide container width and use float for stable arrangement */
         .slide-container {
-            width: 600vw; /* 슬라이드 6개 x 100vw */
+            width: 600vw; /* 6 slides x 100vw */
             height: 100vh;
             position: relative; 
-            /* transition은 JS에서 제어 */
+            overflow: hidden;
+            /* Transition controlled by JS */
         }
         .slide {
             width: 100vw;
-            float: left; /* 슬라이드를 옆으로 나란히 배치 */
+            float: left; /* Arrange slides side by side */
             padding: 4rem 8rem;
             box-sizing: border-box;
             background: linear-gradient(135deg, #1f2937 0%, #0d1117 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center; /* **[수정 1]** 수직 중앙 정렬 및 가로 중앙 정렬을 위한 기본 설정 */
+            align-items: center; /* ALIGNMENT FIX: Center alignment for slide content */
             min-height: 100vh; 
         }
         .slide h1, .slide h2, .slide p {
-            text-align: center; /* **[수정 1]** 텍스트 중앙 정렬 */
+            text-align: center; /* ALIGNMENT FIX: Center text alignment */
         }
+
+        /* Subsequent CSS and content are maintained */
         .slide h1 {
             font-weight: 800;
             color: #93c5fd; /* Blue 300 */
@@ -134,46 +137,92 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
         }
+        /* DX Dual Pillar Styles */
+        .dx-pillar {
+            position: relative;
+            background-color: rgba(30, 41, 59, 0.6); /* Slate 800 */
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .pillar-icon {
+            margin-bottom: 1rem;
+        }
+        .pillar-icon-svg {
+            width: 4rem;
+            height: 4rem;
+        }
+        .core-goal {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+        .connecting-arrow {
+            font-size: 3rem;
+            color: #fcd34d;
+            font-weight: 900;
+            margin: 1rem 0;
+            display: block;
+        }
     </style>
 </head>
 <body>
 
     <div class="slide-container" id="slideContainer">
         
-        <!-- 슬라이드 1: DX의 핵심 목표 -->
+        <!-- Slide 1: Core Goals of DX (Updated with Visualization) -->
         <div class="slide">
-            <h1 class="text-4xl lg:text-5xl mb-4 text-center">DX의 핵심 목표: 경험 고도화와 효율 혁신</h1>
-            <p class="text-xl text-gray-400 mb-8 text-center">관광업 DX는 기술 통합을 통해 비즈니스 모델을 근본적으로 변화시킵니다.</p>
+            <h1 class="text-4xl lg:text-5xl mb-4 text-center">DX의 핵심 목표: 경험 고도화와 효율 혁신 (Dual-Pillar)</h1>
+            <p class="text-xl text-gray-400 mb-8 text-center">관광업 DX는 수요자 혁신과 공급자 혁신을 동시에 추구합니다.</p>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10 w-full max-w-4xl">
-                <!-- 초개인화된 경험 -->
-                <div class="bg-blue-900/50 p-6 rounded-xl shadow-lg border border-blue-700/50 text-left">
-                    <h2 class="text-2xl text-blue-300 mb-3 flex items-center justify-center">
-                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                        수요자 혁신: 초개인화된 경험
-                    </h2>
-                    <ul class="list-disc ml-5 text-lg space-y-2 text-gray-300">
+            <div class="flex flex-col lg:flex-row items-center justify-center gap-12 mt-10 w-full max-w-6xl">
+                
+                <!-- Pillar 1: Demand-side Innovation (경험 고도화) -->
+                <div class="dx-pillar border-b-4 border-blue-400 w-full lg:w-1/2">
+                    <div class="pillar-icon">
+                        <svg class="pillar-icon-svg mx-auto text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    </div>
+                    <h2 class="core-goal text-blue-300">수요자 혁신: 초개인화된 경험 고도화</h2>
+                    <ul class="list-disc ml-5 text-base space-y-2 text-gray-300 text-left">
                         <li>AI를 통한 고객 행동 및 취향 분석</li>
                         <li>실시간 맞춤형 상품 큐레이션 및 추천</li>
                         <li>다변화된 여행 여정의 품질 관리 지원</li>
                     </ul>
                 </div>
-                <!-- 운영 효율화 -->
-                <div class="bg-green-900/50 p-6 rounded-xl shadow-lg border border-green-700/50 text-left">
-                    <h2 class="text-2xl text-green-300 mb-3 flex items-center justify-center">
-                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a1.5 1.5 0 00.867 1.342l12 3a1.5 1.5 0 001.342-.867l3-9-3-1m-3 10a1.5 1.5 0 01-1.342-.867l-3-9m3 9l3-9m3 9l-3-9"></path></svg>
-                        공급자 혁신: 운영 효율성 및 자동화
-                    </h2>
-                    <ul class="list-disc ml-5 text-lg space-y-2 text-gray-300">
+
+                <!-- Connecting Element (Optional: Text or Icon) -->
+                <div class="hidden lg:block">
+                    <span class="connecting-arrow">&</span>
+                </div>
+                <div class="lg:hidden">
+                    <span class="connecting-arrow">↓</span>
+                </div>
+
+                <!-- Pillar 2: Supply-side Innovation (운영 효율 혁신) -->
+                <div class="dx-pillar border-b-4 border-green-400 w-full lg:w-1/2">
+                    <div class="pillar-icon">
+                        <svg class="pillar-icon-svg mx-auto text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a1.5 1.5 0 00.867 1.342l12 3a1.5 1.5 0 001.342-.867l3-9-3-1m-3 10a1.5 1.5 0 01-1.342-.867l-3-9m3 9l3-9m3 9l-3-9"></path></svg>
+                    </div>
+                    <h2 class="core-goal text-green-300">공급자 혁신: 운영 효율성 및 자동화</h2>
+                    <ul class="list-disc ml-5 text-base space-y-2 text-gray-300 text-left">
                         <li>클라우드와 5G 기반 데이터 통합 및 흐름 관리</li>
                         <li>로보틱스, IoT를 활용한 시설 운영 자동화</li>
                         <li>AI 다이내믹 프라이싱 등 경영 기술의 지능화</li>
                     </ul>
                 </div>
             </div>
+            
+            <p class="text-xl font-bold text-yellow-300 mt-12">➡️ DX의 궁극적 목표는 두 혁신을 결합하여 **고객 만족도**와 **기업 수익성**을 극대화하는 것입니다.</p>
         </div>
 
-        <!-- 슬라이드 2: Agentic AI vs. Vertical AI -->
+        <!-- Slide 2: Agentic AI vs. Vertical AI -->
         <div class="slide">
             <h1 class="text-4xl lg:text-5xl mb-4 text-center">AI 진화: Agentic vs. Vertical AI</h1>
             <p class="text-xl text-gray-400 mb-8 text-center">단순 정보 제공을 넘어, 전문성과 행동 수행 능력을 확보하는 AI의 발전</p>
@@ -211,7 +260,7 @@
             </div>
         </div>
 
-        <!-- 슬라이드 3: Agentic AI의 작동 원리 (시각화) -->
+        <!-- Slide 3: Agentic AI Workflow (Visualization) -->
         <div class="slide">
             <h1 class="text-4xl lg:text-5xl mb-4 text-center">시각화: Agentic AI의 업무 수행 흐름</h1>
             <p class="text-xl text-gray-400 mb-8 text-center">Agentic AI는 Vertical AI와 RAG를 결합하여 복잡한 여행 업무를 자동 수행합니다.</p>
@@ -239,7 +288,7 @@
                     <div class="flex lg:hidden"><div class="agentic-arrow">▼</div></div>
                     <svg class="w-8 h-8 text-yellow-500 hidden lg:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                     
-                    <!-- 3. 외부 시스템 (실행) -->
+                    <!-- 3. External System (실행) -->
                     <div class="agentic-flow-box bg-green-600 w-full lg:w-1/4">
                         <p class="text-lg font-bold">3. 외부 시스템 연동</p>
                         <p class="text-xs text-gray-100">항공/호텔 GDS/PMS API 호출</p>
@@ -269,7 +318,7 @@
             </div>
         </div>
 
-        <!-- 슬라이드 4: Vicker AI 사례 (설명 + 이미지 통합) -->
+        <!-- Slide 4: Vicker AI Case Study (Text + Image Integration) -->
         <div class="slide">
             <h1 class="text-4xl lg:text-5xl mb-4 text-center">Vicker AI 사례: 생성형 AI 마케팅 혁신</h1>
             <p class="text-xl text-gray-400 mb-8 text-center">AI를 통한 시점 맞춤형 숙소 이미지 구현으로 마케팅 비용 절감</p>
@@ -301,7 +350,7 @@
             </div>
         </div>
 
-        <!-- 슬라이드 5: Klook 경력 및 문제 인식 (커멘트 슬라이드 1) -->
+        <!-- Slide 5: Klook Experience and Problem Recognition (Comment Slide 1) -->
         <div class="slide">
             <h1 class="text-4xl lg:text-5xl mb-4 text-orange-400 text-center">여행업계 현황: 제가 Klook에서 체감한 구조적 불편함</h1>
             <p class="text-xl text-gray-400 mb-8 font-semibold text-center">"언어 장벽과 정보 비대칭성"은 관광 경험의 질을 떨어뜨리는 핵심 문제입니다.</p>
@@ -331,7 +380,7 @@
             </div>
         </div>
 
-        <!-- 슬라이드 6: AI 활용 기여 방안 (커멘트 슬라이드 2) -->
+        <!-- Slide 6: AI Contribution Plan (Comment Slide 2) -->
         <div class="slide">
             <h1 class="text-4xl lg:text-5xl mb-4 text-green-400 text-center">AI 도입 기여 방안: '불편함 제로(Zero Friction)' 여행 실현</h1>
             <p class="text-xl text-gray-400 mb-8 font-semibold text-center">여행업계에 대한 깊은 이해와 첨단 AI 기술 역량을 결합하여 선두적으로 기여하겠습니다.</p>
@@ -395,103 +444,97 @@
         let currentSlide = 0;
         
         let slideWidth = 0; 
-        let isSetupComplete = false;
-
-        // 슬라이드 위치 업데이트 함수 (transform: translateX 사용)
-        function updateSlide(smooth = true) {
-            if (!isSetupComplete) return; 
-
-            // 1. 너비 계산 (clientWidth 사용)
-            slideWidth = slides[0].clientWidth;
-
-            // 2. 애니메이션 부드러움 설정 (transition: transform)
-            if (smooth) {
-                slideContainer.style.transition = 'transform 0.5s ease-in-out';
-            } else {
-                slideContainer.style.transition = 'none';
-            }
+        
+        // Function to update slide position (using transform: translateX)
+        function updateSlide() {
+            // 1. Calculate width (using window.innerWidth as slides are 100vw)
+            slideWidth = window.innerWidth;
             
-            // 3. transform: translateX를 사용하여 위치 설정
+            // 2. Disable transition for immediate positioning
+            slideContainer.style.transition = 'none'; 
+            
+            // 3. Set position using transform: translateX
             slideContainer.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
             
+            // 4. Update pagination dots
             dots.forEach((dot, index) => {
                 dot.classList.toggle('active', index === currentSlide);
             });
             
-            // 버튼 활성화/비활성화
+            // 5. Enable/Disable buttons
             prevBtn.disabled = (currentSlide === 0);
             nextBtn.disabled = (currentSlide === slides.length - 1);
             prevBtn.style.opacity = prevBtn.disabled ? '0.3' : '0.7';
             nextBtn.style.opacity = nextBtn.disabled ? '0.3' : '0.7';
+
+            // 6. Re-enable transition in the next rendering cycle
+            requestAnimationFrame(() => {
+                slideContainer.style.transition = 'transform 0.5s ease-in-out';
+            });
         }
 
-        // 특정 슬라이드로 이동 (페이지네이션 클릭 시)
+        // Navigate to a specific slide
         window.goToSlide = (index) => {
             currentSlide = index;
-            updateSlide(true); // 클릭 시 부드럽게 이동
+            updateSlide(); 
         }
 
-        // 버튼 이벤트 리스너
+        // Button event listeners
         prevBtn.addEventListener('click', () => {
             if (currentSlide > 0) {
                 currentSlide--;
-                updateSlide(true);
+                updateSlide();
             }
         });
 
         nextBtn.addEventListener('click', () => {
             if (currentSlide < slides.length - 1) {
                 currentSlide++;
-                updateSlide(true);
+                updateSlide();
             }
         });
 
-        // 키보드 이벤트 핸들러 (좌우 화살표)
+        // Keyboard event handler
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') {
                 if (currentSlide < slides.length - 1) {
                     currentSlide++;
-                    updateSlide(true);
+                    updateSlide();
                 }
             } else if (e.key === 'ArrowLeft') {
                 if (currentSlide > 0) {
                     currentSlide--;
-                    updateSlide(true);
+                    updateSlide();
                 }
             }
         });
 
-        // **[최종 안정화 로직]** 초기 렌더링 후 슬라이드 구성 및 위치 재설정
-        function initialSetup() {
-            // 초기 위치 설정 (첫 슬라이드) - 애니메이션 없이
-            slideWidth = slides[0].clientWidth;
-            updateSlide(false);
-            isSetupComplete = true; // 설정 완료 플래그 활성화
-            
-            // 렌더링이 완료된 후 애니메이션 효과를 다시 활성화 
-            setTimeout(() => {
-                slideContainer.style.transition = 'transform 0.5s ease-in-out';
-            }, 300); 
-        }
-
-        // Window Load 시점 (모든 리소스 로드 후)에 초기화 시작
+        // [Final Initialization Logic]
+        // Use window.onload to ensure all resources are loaded before calculating dimensions
         window.addEventListener('load', () => {
-            setTimeout(initialSetup, 100); // 안전 마진 100ms 추가
+             // Delay initialization slightly (0.3s) for maximum stability in Canvas environment
+            setTimeout(() => {
+                if (slides.length > 0) {
+                    // Calculate slide width and set initial position
+                    slideWidth = slides[0].clientWidth; 
+                    updateSlide(); 
+                }
+            }, 300); 
         });
         
-        // 터치/스와이프 이벤트 처리 (모바일 반응형)
+        // Touch/Swipe event handling for mobile
         let touchstartX = 0;
         let touchendX = 0;
 
         slideContainer.addEventListener('touchstart', e => {
-            slideContainer.style.transition = 'none'; // 터치 시작 시 애니메이션 일시 중단
+            slideContainer.style.transition = 'none'; // Pause animation on touch start
             touchstartX = e.changedTouches[0].screenX;
         });
 
         slideContainer.addEventListener('touchend', e => {
             touchendX = e.changedTouches[0].screenX;
             handleGesture();
-             // 터치 끝난 후 updateSlide에서 transition 재활성화
+             // Transition is re-enabled in updateSlide()
         });
 
         slideContainer.addEventListener('touchmove', e => {
@@ -516,7 +559,7 @@
             updateSlide(); 
         }
         
-        // 추가: 리사이즈 시 초기화가 안 되는 문제 해결을 위해 리사이즈 시 updateSlide 호출 보장
+        // Recalculate and update on window resize
         window.addEventListener('resize', () => {
             updateSlide();
         });

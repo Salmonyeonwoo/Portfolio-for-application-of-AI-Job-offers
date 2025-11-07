@@ -1,5 +1,5 @@
 # ========================================
-# Streamlit AI 학습 코치 (다국어 전환 오류 수정)
+# Streamlit AI 학습 코치 (RAG/다국어 버그 최종 수정)
 # ========================================
 import streamlit as st
 import os
@@ -33,10 +33,10 @@ LANG = {
         "content_tab": "맞춤형 학습 콘텐츠 생성",
         "lstm_tab": "LSTM 성취도 예측 대시보드",
         "rag_header": "RAG 지식 챗봇 (문서 기반 Q&A)",
-        "rag_desc": "업로드된 문서 기반으로 질문에 답변합니다.",
+        "rag_desc": "업로드된 문서 기반으로 질문에 답변합니다。",
         "rag_input_placeholder": "학습 자료에 대해 질문해 보세요",
-        "llm_error_key": "⚠️ 경고: GEMINI API 키가 설정되지 않았습니다. Streamlit Secrets에 'GEMINI_API_KEY'를 설정해주세요.",
-        "llm_error_init": "LLM 초기화 오류: API 키를 확인해 주세요.",
+        "llm_error_key": "⚠️ 경고: GEMINI API 키가 설정되지 않았습니다. Streamlit Secrets에 'GEMINI_API_KEY'를 설정해주세요。",
+        "llm_error_init": "LLM 초기화 오류: API 키를 확인해 주세요。",
         "content_header": "맞춤형 학습 콘텐츠 생성",
         "content_desc": "학습 주제와 난이도에 맞춰 콘텐츠 생성",
         "topic_label": "학습 주제",
@@ -468,3 +468,4 @@ elif feature_selection == L["lstm_tab"]:
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
             st.info(L["lstm_disabled_error"])
+

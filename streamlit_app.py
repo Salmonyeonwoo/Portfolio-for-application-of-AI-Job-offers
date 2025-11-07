@@ -3,7 +3,7 @@
 # ========================================
 import streamlit as st
 import os
-import tempfile # ⭐⭐⭐ [핵심 수정: tempfile 임포트 추가] ⭐⭐⭐
+import tempfile 
 import time
 from langchain.chains import ConversationalRetrievalChain
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
@@ -21,7 +21,6 @@ from tensorflow.keras.layers import LSTM, Dense
 
 # ================================
 # 0. 다국어 지원 딕셔너리 (Language Dictionary)
-# (이전 코드와 동일)
 # ================================
 LANG = {
     "ko": {
@@ -118,25 +117,167 @@ LANG = {
         "warning_rag_not_ready": "RAGの準備ができていません。資料をアップロードし、分析開始ボタンを押してください。"
     }
 }
+
 if 'language' not in st.session_state:
     st.session_state.language = 'ko'
 # NameError 해결 및 현재 언어 설정
 L = LANG[st.session_state.language] 
 if 'uploaded_files_state' not in st.session_state:
     st.session_state.uploaded_files_state = None
+if 'is_llm_ready' not in st.session_state:
+    st.session_state.is_llm_ready = False
+if 'is_rag_ready' not in st.session_state:
+    st.session_state.is_rag_ready = False
 
 # ================================
-# 1. LLM 및 임베딩 초기화 + 임베딩 캐시 (이전 코드와 동일)
-# (중략 - LLM 및 Embedding 초기화 로직)
+# 2. RAG 핵심 함수 정의 (새 위치: 최상단) ⭐⭐⭐
 # ================================
+from langchain.schema.document import Document # Document 임포트를 함수 밖으로 뺍니다.
 
-# [⭐삭제⭐] update_language 함수 제거 (NameError 방지)
-# def update_language():
-#     ... (삭제)
+def get_document_chunks(files):
+    """업로드된 파일에서 텍스트를 로드하고 청킹합니다."""
+    documents = []
+    temp_dir = tempfile.mkdtemp()
 
-# (중략 - LSTM 모델 정의)
+    for uploaded_file in files:
+        temp_filepath = os.path.join(temp_dir, uploaded_file.name)
+        file_extension = uploaded_file.name.split('.')[-1].lower()
+        
+        # 파일 형식에 따른 로더 선택 (BeautifulSoup 사용 로직 유지)
+        if file_extension == "pdf":
+            with open(temp_filepath, "wb") as f:
+                f.write(uploaded_file.getvalue())
+            loader = PyPDFLoader(temp_filepath)
+            documents.extend(loader.load())
+        
+        elif file_extension == "html":
+            # BeautifulSoup을 사용하여 HTML 태그를 제거하고 텍스트만 추출합니다.
+            raw_html = uploaded_file.getvalue().decode('utf-8')
+            soup = BeautifulSoup(raw_html, 'html.parser')
+            text_content = soup.get_text(separator=' ', strip=True)
+            
+            # LangChain Document 객체로 변환
+            documents.append(Document(page_content=text_content, metadata={"source": uploaded_file.name}))
 
-# (중략 - RAG 관련 함수)
+
+        elif file_extension == "txt": # TXT 파일 처리
+            with open(temp_filepath, "wb") as f:
+                f.write(uploaded_file.getvalue())
+            loader = TextLoader(temp_filepath, encoding="utf-8")
+            documents.extend(loader.load())
+            
+        else:
+            st.warning(f"'{uploaded_file.name}' 파일은 현재 PDF, TXT, HTML만 지원하여 로딩할 수 없습니다.")
+            continue
+
+    # 텍스트 분할 (청킹)
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=100
+    )
+    
+    # TextLoader/PyPDFLoader의 결과는 이미 Document 객체이므로 바로 split
+    return text_splitter.split_documents(documents)
+
+
+def get_vector_store(text_chunks):
+    """텍스트 청크를 임베딩하고 Vector Store를 생성합니다."""
+    
+    # [⭐핵심 수정⭐] 문서 내용의 해시값을 키로 사용하여 캐시를 확인합니다.
+    cache_key = tuple(doc.page_content for doc in text_chunks)
+    if cache_key in st.session_state.embedding_cache:
+        st.info("✅ 임베딩 캐시가 발견되어 재사용합니다. (API 한도 절약)")
+        return st.session_state.embedding_cache[cache_key]
+    
+    if not st.session_state.is_llm_ready:
+        return None
+
+    try:
+        vector_store = FAISS.from_documents(text_chunks, embedding=st.session_state.embeddings)
+        st.session_state.embedding_cache[cache_key] = vector_store
+        return vector_store
+    
+    except Exception as e:
+        # 429 오류가 발생하면 사용자에게 정확하게 안내
+        if "429" in str(e):
+             st.error("⚠️ **API 임베딩 한도 초과 (429 Error)**: Google Gemini API의 무료 임베딩 요청 한도를 초과했습니다. 내일 다시 시도하거나 API 사용량 대시보드를 확인하세요.")
+        else:
+            st.error(f"Vector Store 생성 중 오류 발생: {e}")
+        return None
+
+
+def get_rag_chain(vector_store):
+    """검색 체인(ConversationalRetrievalChain)을 생성합니다."""
+    if vector_store is None:
+        return None
+        
+    return ConversationalRetrievalChain.from_llm(
+        llm=st.session_state.llm,
+        retriever=vector_store.as_retriever(),
+        memory=st.session_state.memory
+    )
+
+
+# ================================
+# 3. LSTM 모델 정의 (새 위치: 최상단)
+# ================================
+@st.cache_resource
+def load_or_train_lstm():
+    """가상의 학습 성취도 예측을 위한 LSTM 모델을 생성하고 학습합니다."""
+    # 1. 가상 데이터 생성: 10주간의 퀴즈 점수 (0-100)
+    np.random.seed(42)
+    data = np.cumsum(np.random.normal(loc=5, scale=5, size=50)) + 60
+    data = np.clip(data, 50, 95)  # 점수 범위 제한
+
+    # 2. 시계열 데이터 전처리
+    def create_dataset(dataset, look_back=3):
+        X, Y = [], []
+        for i in range(len(dataset) - look_back):
+            X.append(dataset[i:(i + look_back)])
+            Y.append(dataset[i + look_back])
+        return np.array(X), np.array(Y)
+
+    look_back = 5
+    X, Y = create_dataset(data, look_back)
+
+    # LSTM 입력 형태 맞추기: [samples, time steps, features]
+    X = np.reshape(X, (X.shape[0], X.shape[1], 1))
+
+    # 3. LSTM 모델 정의
+    model = Sequential([
+        LSTM(50, activation='relu', input_shape=(look_back, 1)),
+        Dense(1)
+    ])
+
+    # 4. 모델 학습 (빠른 시연을 위해 최소한의 epoch만 설정)
+    model.compile(optimizer='adam', loss='mse')
+    model.fit(X, Y, epochs=10, batch_size=1, verbose=0)
+
+    return model, data
+
+# ================================
+# 1. LLM 및 임베딩 초기화 + 세션 상태 초기화 (이전 코드와 동일)
+# ================================
+API_KEY = os.environ.get("GEMINI_API_KEY")
+
+if 'llm' not in st.session_state: 
+    if not API_KEY:
+        st.error(L["llm_error_key"])
+        st.session_state.is_llm_ready = False
+    else:
+        try:
+            st.session_state.llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.7, google_api_key=API_KEY)
+            st.session_state.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=API_KEY)
+            st.session_state.is_llm_ready = True
+        except Exception as e:
+            st.error(f"{L['llm_error_init']} {e}")
+            st.session_state.is_llm_ready = False
+
+if "memory" not in st.session_state:
+    st.session_state.memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+
+if "embedding_cache" not in st.session_state:
+    st.session_state.embedding_cache = {}
 
 
 # ================================
@@ -234,7 +375,7 @@ if feature_selection == L["rag_tab"]:
                         st.error(f"챗봇 오류: {e}")
                         st.session_state.messages.append({"role":"assistant","content":"오류 발생" if st.session_state.language == 'ko' else "An error occurred"})
     else:
-        st.warning(L["rag_desc"])
+        st.warning(L["warning_rag_not_ready"])
 
 elif feature_selection == L["content_tab"]:
     st.header(L["content_header"])
@@ -342,7 +483,4 @@ elif feature_selection == L["lstm_tab"]:
 
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
-            # st.info(L["lstm_disabled_error"]) # 이 코드는 tensorflow 오류를 띄웁니다.
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
-
-

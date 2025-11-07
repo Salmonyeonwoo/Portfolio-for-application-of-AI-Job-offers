@@ -51,7 +51,8 @@ LANG = {
         "lstm_disabled_error": "현재 빌드 환경 문제로 인해 LSTM 기능은 잠정적으로 비활성화되었습니다. '맞춤형 학습 콘텐츠 생성' 기능을 먼저 사용해 주세요。",
         "lang_select": "언어 선택",
         "embed_success": "총 {count}개 청크로 학습 DB 구축 완료!",
-        "embed_fail": "임베딩 실패: 무료 티어 한도 초과 또는 네트워크 문제。"
+        "embed_fail": "임베딩 실패: 무료 티어 한도 초과 또는 네트워크 문제。",
+        "warning_no_files": "먼저 학습 자료를 업로드하세요。"
     },
     "en": {
         "title": "Personalized AI Study Coach",
@@ -80,7 +81,8 @@ LANG = {
         "lstm_disabled_error": "The LSTM feature is temporarily disabled due to build environment issues. Please use the 'Custom Content Generation' feature first.",
         "lang_select": "Select Language",
         "embed_success": "Learning DB built with {count} chunks!",
-        "embed_fail": "Embedding failed: Free tier quota exceeded or network issue."
+        "embed_fail": "Embedding failed: Free tier quota exceeded or network issue.",
+        "warning_no_files": "Please upload study materials first."
     },
     "ja": {
         "title": "パーソナライズAI学習コーチ",
@@ -109,28 +111,26 @@ LANG = {
         "lstm_disabled_error": "現在、ビルド環境の問題によりLSTM機能は一時的に無効化されています。「カスタムコンテンツ生成」機能を先にご利用ください。",
         "lang_select": "言語選択",
         "embed_success": "全{count}チャンクで学習DB構築完了!",
-        "embed_fail": "埋め込み失敗: フリーティアのクォータ超過またはネットワークの問題。"
+        "embed_fail": "埋め込み失敗: フリーティアのクォータ超過またはネットワークの問題。",
+        "warning_no_files": "まず学習資料をアップロードしてください。"
     }
 }
 if 'language' not in st.session_state:
     st.session_state.language = 'ko'
-# ⭐⭐ NameError 해결을 위해 L 변수 할당을 st.set_page_config 전에 위치시킵니다. ⭐⭐
+# NameError 해결 및 현재 언어 설정
 L = LANG[st.session_state.language] 
-# ⭐⭐ 세션 상태에 파일 업로드 목록을 저장하기 위한 초기화 ⭐⭐
 if 'uploaded_files_state' not in st.session_state:
     st.session_state.uploaded_files_state = None
 
 # 언어 전환 시 호출될 콜백 함수 정의
 def update_language():
-    # selectbox의 현재 값을 세션 상태에 저장하고 재실행
-    # 콜백 함수 내에서는 L 변수가 필요 없지만, 재실행을 위해 상태만 업데이트합니다.
+    # ⭐⭐ [수정] st.experimental_rerun() 대신 st.rerun()을 사용합니다. ⭐⭐
     st.session_state.language = st.session_state.lang_selector_key
-    st.experimental_rerun()
+    st.rerun()
 
 
 # ================================
-# 1. LLM 및 임베딩 초기화 + 임베딩 캐시
-# (이전 코드와 동일)
+# 1. LLM 및 임베딩 초기화 + 임베딩 캐시 (이전 코드와 동일)
 # ================================
 API_KEY = os.environ.get("GEMINI_API_KEY")
 
@@ -266,28 +266,24 @@ def get_rag_chain(vector_store):
 
 
 # ================================
-# 4. Streamlit UI (⭐제목과 사이드바 수정⭐)
+# 4. Streamlit UI (NameError 해결)
 # ================================
-st.set_page_config(page_title=L["title"], layout="wide") # NameError 해결
+st.set_page_config(page_title=L["title"], layout="wide") 
 
 with st.sidebar:
-    # 언어 선택 드롭다운 추가 (⭐콜백 함수와 키 사용으로 버그 해결⭐)
-    selected_lang = st.selectbox(
+    # ⭐⭐⭐ [핵심 수정 부분] selected_lang을 key에 저장하여 st.session_state.language에 연결 ⭐⭐⭐
+    st.selectbox(
         L["lang_select"],
         options=['ko', 'en', 'ja'],
+        index=['ko', 'en', 'ja'].index(st.session_state.language), # 현재 언어 유지
         format_func=lambda x: {"ko": "한국어", "en": "English", "ja": "日本語"}[x],
-        key="lang_selector_key", # 콜백 함수를 위한 고유 키
-        on_change=update_language # 값이 변경되면 콜백 함수 실행
+        key="lang_selector_key", 
+        on_change=update_language # 콜백 함수 호출
     )
-
-    # 언어 변경 시 UI 텍스트 업데이트 (L 재할당)
-    # L은 스크립트 시작 시 이미 할당되었으므로, 여기서는 UI 갱신만 진행
-    # L = LANG[st.session_state.language] # 이 할당은 이제 불필요하며 update_language가 재실행 시 처리함
 
     st.title(L["sidebar_title"])
     st.markdown("---")
     
-    # ⭐⭐ 오류 해결 로직: 파일 업로드 결과를 세션 상태에 저장 ⭐⭐
     uploaded_files_widget = st.file_uploader(
         L["file_uploader"],
         type=["pdf","txt","html"],
@@ -296,13 +292,11 @@ with st.sidebar:
     
     # 세션 상태 업데이트: 언어 전환 시에도 파일 목록을 유지하기 위함
     if uploaded_files_widget:
-        # 파일이 새로 업로드되거나 앱이 재실행될 때, 위젯의 현재 값을 상태에 저장
         st.session_state.uploaded_files_state = uploaded_files_widget
     elif 'uploaded_files_state' not in st.session_state:
         st.session_state.uploaded_files_state = None
     
-    # RAG 버튼을 띄울지 결정하는 조건: LLM 준비 + 세션 상태에 파일 목록이 있을 때
-    # files_to_process는 파일이 실제로 존재하는지 확인하는 데 사용
+    # RAG 버튼을 띄울지 결정하는 조건
     files_to_process = st.session_state.uploaded_files_state if st.session_state.uploaded_files_state else []
     
     if files_to_process and st.session_state.is_llm_ready:
@@ -321,7 +315,6 @@ with st.sidebar:
 
     else:
         st.session_state.is_rag_ready = False
-        # 파일이 없을 경우 경고 메시지 출력 (UI 업데이트는 L 변수만 사용)
         st.warning(L.get("warning_no_files", "먼저 학습 자료를 업로드하세요.")) 
 
     st.markdown("---")
@@ -425,13 +418,13 @@ elif feature_selection == L["lstm_tab"]:
             # 3. 시각화
             fig, ax = plt.subplots(figsize=(10, 6))
 
-            ax.plot(range(len(historical_scores)), historical_scores, label=L.get("past_scores_label", "Past Quiz Scores (Hypothetical)"), marker='o', linestyle='-', color='blue')
+            ax.plot(range(len(historical_scores)), historical_scores, label="Past Quiz Scores (Hypothetical)", marker='o', linestyle='-', color='blue')
             future_indices = range(len(historical_scores), len(historical_scores) + len(future_predictions))
-            ax.plot(future_indices, future_predictions, label=L.get("predicted_scores_label", "Predicted Achievement (Next 5 Days)"), marker='x', linestyle='--', color='red')
+            ax.plot(future_indices, future_predictions, label="Predicted Achievement (Next 5 Days)", marker='x', linestyle='--', color='red')
 
             ax.set_title(L["lstm_header"])
             ax.set_xlabel(L["topic_label"])
-            ax.set_ylabel(L.get("achievement_score_label", "Achievement Score (0-100)"))
+            ax.set_ylabel("Achievement Score (0-100)")
             ax.legend()
             st.pyplot(fig)
 

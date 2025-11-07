@@ -114,9 +114,17 @@ LANG = {
 }
 if 'language' not in st.session_state:
     st.session_state.language = 'ko'
+# ⭐⭐ 세션 상태에 파일 업로드 목록을 저장하기 위한 초기화 ⭐⭐
+if 'uploaded_files_state' not in st.session_state:
+    st.session_state.uploaded_files_state = None
 
-# 현재 언어 딕셔너리 로드
-L = LANG[st.session_state.language]
+# 언어 전환 시 호출될 콜백 함수 정의
+def update_language():
+    # selectbox의 현재 값을 세션 상태에 저장하고 재실행
+    if st.session_state.lang_selector_key != st.session_state.language:
+        st.session_state.language = st.session_state.lang_selector_key
+        st.experimental_rerun()
+
 
 # ================================
 # 1. LLM 및 임베딩 초기화 + 임베딩 캐시
@@ -261,23 +269,14 @@ def get_rag_chain(vector_store):
 st.set_page_config(page_title=L["title"], layout="wide")
 
 with st.sidebar:
-    # 언어 선택 드롭다운 추가
+    # 언어 선택 드롭다운 추가 (⭐콜백 함수와 키 사용으로 버그 해결⭐)
     selected_lang = st.selectbox(
         L["lang_select"],
         options=['ko', 'en', 'ja'],
-        format_func=lambda x: {"ko": "한국어", "en": "English", "ja": "日本語"}[x]
+        format_func=lambda x: {"ko": "한국어", "en": "English", "ja": "日本語"}[x],
+        key="lang_selector_key", # 콜백 함수를 위한 고유 키
+        on_change=update_language # 값이 변경되면 콜백 함수 실행
     )
-    # ⭐⭐ 오류 해결 로직: 언어 변경 시 st.rerun() 대신 세션 상태만 업데이트합니다.
-    # st.rerun()은 파일 업로드 정보를 지우기 때문에,
-    # 여기서는 언어 변경만 처리하고, UI 렌더링은 Streamlit에 맡깁니다.
-    if selected_lang != st.session_state.language:
-        st.session_state.language = selected_lang
-        # st.rerun() 대신 파일 업로드 세션 상태를 초기화하여 버튼을 다시 표시합니다.
-        # 파일 업로드 위젯 자체는 St.rerun()이 없으면 상태가 유지됩니다.
-        # 그러나 안전을 위해 언어 전환 시 RAG 관련 상태를 리셋합니다.
-        if 'is_rag_ready' in st.session_state:
-             st.session_state.is_rag_ready = False
-        # st.experimental_rerun() # 전체 재실행이 아닌, 파일 업로드 버튼의 재생성을 유도해야 합니다.
 
     # 언어 변경 시 UI 텍스트 업데이트 (L 재할당)
     L = LANG[st.session_state.language] 
@@ -285,23 +284,27 @@ with st.sidebar:
     st.title(L["sidebar_title"])
     st.markdown("---")
     
-    # ⭐⭐ 오류 해결 로직: 파일 업로더를 변수에 저장 후, 버튼을 조건부로 만듭니다.
-    uploaded_files = st.file_uploader(
+    # ⭐⭐ 오류 해결 로직: 파일 업로드 결과를 세션 상태에 저장 ⭐⭐
+    # on_change=set_uploaded_files는 st.file_uploader에 허용되지 않으므로,
+    # file_uploader 결과를 변수에 받아 세션 상태에 수동 저장합니다.
+    uploaded_files_widget = st.file_uploader(
         L["file_uploader"],
         type=["pdf","txt","html"],
         accept_multiple_files=True
     )
     
-    # 세션 상태에 파일 목록을 유지합니다. (st.rerun()이 없으므로 필요 없을 수 있으나 안전을 위해 유지)
-    if uploaded_files:
-        st.session_state.uploaded_files = uploaded_files
+    # 세션 상태 업데이트: 이전에 업로드된 파일이 있는지 확인하여 상태 유지
+    if uploaded_files_widget:
+        # st.rerun()이 없으므로, 위젯에 새 파일이 들어오면 자동으로 uploaded_files_state가 업데이트됨
+        st.session_state.uploaded_files_state = uploaded_files_widget
     
-    # **핵심 오류 해결:** 파일 업로드 후, RAG 인덱싱 버튼을 표시할지 결정
-    # 언어 변경 시 st.rerun()을 쓰지 않으므로, 이 로직이 항상 실행됩니다.
-    if uploaded_files and st.session_state.is_llm_ready:
+    # RAG 버튼을 띄울지 결정하는 조건: LLM 준비 + 세션 상태에 파일 목록이 있을 때
+    files_to_process = st.session_state.uploaded_files_state if st.session_state.uploaded_files_state else []
+    
+    if files_to_process and st.session_state.is_llm_ready:
         if st.button(L["button_start_analysis"], key="start_analysis"):
             with st.spinner(f"자료 분석 및 학습 DB 구축 중..."):
-                text_chunks = get_document_chunks(uploaded_files)
+                text_chunks = get_document_chunks(files_to_process)
                 vector_store = get_vector_store(text_chunks)
                 
                 if vector_store:
@@ -314,12 +317,8 @@ with st.sidebar:
 
     else:
         st.session_state.is_rag_ready = False
-        if st.session_state.language == 'ko':
-             st.warning("먼저 학습 자료를 업로드하세요.")
-        elif st.session_state.language == 'en':
-             st.warning("Please upload study materials first.")
-        elif st.session_state.language == 'ja':
-             st.warning("まず学習資料をアップロードしてください。")
+        # 파일이 없을 경우 경고 메시지 출력
+        st.warning(L.get("warning_no_files", "먼저 학습 자료를 업로드하세요.")) 
 
     st.markdown("---")
     feature_selection = st.radio(
@@ -331,6 +330,7 @@ st.title(L["title"])
 
 # ================================
 # 5. 기능별 페이지 구현 (⭐텍스트 요소 모두 L[]로 변경⭐)
+# (이하 RAG/콘텐츠/LSTM 탭 로직은 동일)
 # ================================
 if feature_selection == L["rag_tab"]:
     st.header(L["rag_header"])
@@ -429,7 +429,6 @@ elif feature_selection == L["lstm_tab"]:
             ax.set_xlabel(L["topic_label"])
             ax.set_ylabel(L.get("achievement_score_label", "Achievement Score (0-100)"))
             ax.legend()
-            ax.grid(True)
             st.pyplot(fig)
 
             # 4. LLM 분석 코멘트
@@ -446,7 +445,7 @@ elif feature_selection == L["lstm_tab"]:
                 elif avg_predict < avg_recent - 5:
                     comment = "LSTM 예측 결과, **성취도가 다소 하락할 수 있다는 신호**가 보입니다. 학습에 사용된 자료나 방법론에 대한 깊은 이해가 부족할 수 있습니다. RAG 챗봇 기능을 활용하여 기초 개념을 다시 확인해 보는 것을 추천합니다."
                 else:
-                    comment = "성취도는 현재 수준을 유지할 것으로 예측됩니다. 정체기가 될 수 있으니, **새로운 학습 콘텐츠 형식(예: 실습 예제 아이디어)을 생성**하여 학습에 활력을 더하는 것을 고려해 보세요."
+                    comment = "성취도는 현재 수준을 유지할 것으로 예측됩니다. 정체기가 될 수 있으니, **새로운 학습 콘텐츠 형식(예: 실습 예제 아이디어)을 생성**하여 학습에 활력을 더하는 것을 고려해 보세요。"
             elif st.session_state.language == 'en': # English
                 if avg_predict > avg_recent:
                     comment = "Based on recent learning data and LSTM prediction, **your achievement is projected to improve positively**. Maintain your current study methods or consider increasing the difficulty level."
@@ -467,5 +466,5 @@ elif feature_selection == L["lstm_tab"]:
 
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
-            st.info(L["lstm_disabled_error"])
-
+            # st.info(L["lstm_disabled_error"]) # 이 코드는 tensorflow 오류를 띄웁니다.
+            st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)

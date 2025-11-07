@@ -1,5 +1,5 @@
 # ========================================
-# Streamlit AI 학습 코치 (NameError 및 다국어 최종 수정)
+# Streamlit AI 학습 코치 (최종 다국어/RAG 안정화)
 # ========================================
 import streamlit as st
 import os
@@ -52,7 +52,8 @@ LANG = {
         "lang_select": "언어 선택",
         "embed_success": "총 {count}개 청크로 학습 DB 구축 완료!",
         "embed_fail": "임베딩 실패: 무료 티어 한도 초과 또는 네트워크 문제。",
-        "warning_no_files": "먼저 학습 자료를 업로드하세요。"
+        "warning_no_files": "먼저 학습 자료를 업로드하세요。",
+        "warning_rag_not_ready": "RAG가 준비되지 않았습니다. 학습 자료를 업로드하고 분석하세요。"
     },
     "en": {
         "title": "Personalized AI Study Coach",
@@ -82,7 +83,8 @@ LANG = {
         "lang_select": "Select Language",
         "embed_success": "Learning DB built with {count} chunks!",
         "embed_fail": "Embedding failed: Free tier quota exceeded or network issue.",
-        "warning_no_files": "Please upload study materials first."
+        "warning_no_files": "Please upload study materials first.",
+        "warning_rag_not_ready": "RAG is not ready. Upload materials and click Start Analysis."
     },
     "ja": {
         "title": "パーソナライズAI学習コーチ",
@@ -112,7 +114,8 @@ LANG = {
         "lang_select": "言語選択",
         "embed_success": "全{count}チャンクで学習DB構築完了!",
         "embed_fail": "埋め込み失敗: フリーティアのクォータ超過またはネットワークの問題。",
-        "warning_no_files": "まず学習資料をアップロードしてください。"
+        "warning_no_files": "まず学習資料をアップロードしてください。",
+        "warning_rag_not_ready": "RAGの準備ができていません。資料をアップロードし、分析開始ボタンを押してください。"
     }
 }
 if 'language' not in st.session_state:
@@ -121,13 +124,6 @@ if 'language' not in st.session_state:
 L = LANG[st.session_state.language] 
 if 'uploaded_files_state' not in st.session_state:
     st.session_state.uploaded_files_state = None
-
-# 언어 전환 시 호출될 콜백 함수 정의
-def update_language():
-    # ⭐⭐ [수정] st.experimental_rerun() 대신 st.rerun()을 사용합니다. ⭐⭐
-    st.session_state.language = st.session_state.lang_selector_key
-    st.rerun()
-
 
 # ================================
 # 1. LLM 및 임베딩 초기화 + 임베딩 캐시 (이전 코드와 동일)
@@ -271,7 +267,7 @@ def get_rag_chain(vector_store):
 st.set_page_config(page_title=L["title"], layout="wide") 
 
 with st.sidebar:
-    # ⭐⭐⭐ [핵심 수정 부분] selected_lang을 key에 저장하여 st.session_state.language에 연결 ⭐⭐⭐
+    # ⭐⭐⭐ [핵심 수정 부분] on_change를 사용하여 st.rerun() 호출 ⭐⭐⭐
     st.selectbox(
         L["lang_select"],
         options=['ko', 'en', 'ja'],

@@ -22,6 +22,7 @@ tensorflow
 # Docs / Parsing
 unstructured==0.14.9
 PyPDF2
+beautifulsoup4
 
 # ML & Analytics
 numpy

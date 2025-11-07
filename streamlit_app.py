@@ -1,5 +1,6 @@
 # ========================================
 # Streamlit AI 학습 코치 (최종 다국어/RAG 안정화)
+# NameError 해결: 모든 함수 정의를 최상단으로 이동
 # ========================================
 import streamlit as st
 import os
@@ -11,6 +12,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.memory import ConversationBufferMemory
+from langchain.schema.document import Document
 import numpy as np
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -19,8 +21,134 @@ import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
 
+
 # ================================
-# 0. 다국어 지원 딕셔너리 (Language Dictionary)
+# 1. RAG 핵심 함수 정의 (최상단)
+# ================================
+
+def get_document_chunks(files):
+    """업로드된 파일에서 텍스트를 로드하고 청킹합니다."""
+    documents = []
+    temp_dir = tempfile.mkdtemp()
+
+    for uploaded_file in files:
+        temp_filepath = os.path.join(temp_dir, uploaded_file.name)
+        file_extension = uploaded_file.name.split('.')[-1].lower()
+        
+        # 파일 형식에 따른 로더 선택 (BeautifulSoup 사용 로직 유지)
+        if file_extension == "pdf":
+            with open(temp_filepath, "wb") as f:
+                f.write(uploaded_file.getvalue())
+            loader = PyPDFLoader(temp_filepath)
+            documents.extend(loader.load())
+        
+        elif file_extension == "html":
+            # BeautifulSoup을 사용하여 HTML 태그를 제거하고 텍스트만 추출합니다.
+            raw_html = uploaded_file.getvalue().decode('utf-8')
+            soup = BeautifulSoup(raw_html, 'html.parser')
+            text_content = soup.get_text(separator=' ', strip=True)
+            
+            # LangChain Document 객체로 변환
+            documents.append(Document(page_content=text_content, metadata={"source": uploaded_file.name}))
+
+
+        elif file_extension == "txt": # TXT 파일 처리
+            with open(temp_filepath, "wb") as f:
+                f.write(uploaded_file.getvalue())
+            loader = TextLoader(temp_filepath, encoding="utf-8")
+            documents.extend(loader.load())
+            
+        else:
+            st.warning(f"'{uploaded_file.name}' 파일은 현재 PDF, TXT, HTML만 지원하여 로딩할 수 없습니다.")
+            continue
+
+    # 텍스트 분할 (청킹)
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=100
+    )
+    
+    return text_splitter.split_documents(documents)
+
+
+def get_vector_store(text_chunks):
+    """텍스트 청크를 임베딩하고 Vector Store를 생성합니다."""
+    
+    # [캐시 로직]
+    cache_key = tuple(doc.page_content for doc in text_chunks)
+    if cache_key in st.session_state.embedding_cache:
+        st.info("✅ 임베딩 캐시가 발견되어 재사용합니다. (API 한도 절약)")
+        return st.session_state.embedding_cache[cache_key]
+    
+    if not st.session_state.is_llm_ready:
+        return None
+
+    try:
+        vector_store = FAISS.from_documents(text_chunks, embedding=st.session_state.embeddings)
+        st.session_state.embedding_cache[cache_key] = vector_store
+        return vector_store
+    
+    except Exception as e:
+        # 429 오류 처리
+        if "429" in str(e):
+             st.error("⚠️ **API 임베딩 한도 초과 (429 Error)**: Google Gemini API의 무료 임베딩 요청 한도를 초과했습니다. 내일 다시 시도하거나 API 사용량 대시보드를 확인하세요.")
+        else:
+            st.error(f"Vector Store 생성 중 오류 발생: {e}")
+        return None
+
+
+def get_rag_chain(vector_store):
+    """검색 체인(ConversationalRetrievalChain)을 생성합니다."""
+    if vector_store is None:
+        return None
+        
+    return ConversationalRetrievalChain.from_llm(
+        llm=st.session_state.llm,
+        retriever=vector_store.as_retriever(),
+        memory=st.session_state.memory
+    )
+
+
+# ================================
+# 2. LSTM 모델 정의 (최상단)
+# ================================
+@st.cache_resource
+def load_or_train_lstm():
+    """가상의 학습 성취도 예측을 위한 LSTM 모델을 생성하고 학습합니다."""
+    # 1. 가상 데이터 생성: 10주간의 퀴즈 점수 (0-100)
+    np.random.seed(42)
+    data = np.cumsum(np.random.normal(loc=5, scale=5, size=50)) + 60
+    data = np.clip(data, 50, 95)  # 점수 범위 제한
+
+    # 2. 시계열 데이터 전처리
+    def create_dataset(dataset, look_back=3):
+        X, Y = [], []
+        for i in range(len(dataset) - look_back):
+            X.append(dataset[i:(i + look_back)])
+            Y.append(dataset[i + look_back])
+        return np.array(X), np.array(Y)
+
+    look_back = 5
+    X, Y = create_dataset(data, look_back)
+
+    # LSTM 입력 형태 맞추기: [samples, time steps, features]
+    X = np.reshape(X, (X.shape[0], X.shape[1], 1))
+
+    # 3. LSTM 모델 정의
+    model = Sequential([
+        LSTM(50, activation='relu', input_shape=(look_back, 1)),
+        Dense(1)
+    ])
+
+    # 4. 모델 학습 (빠른 시연을 위해 최소한의 epoch만 설정)
+    model.compile(optimizer='adam', loss='mse')
+    model.fit(X, Y, epochs=10, batch_size=1, verbose=0)
+
+    return model, data
+
+# ================================
+# 3. 다국어 지원 딕셔너리 (Language Dictionary)
+# (NameError 방지: 모든 함수 정의 후 딕셔너리 정의)
 # ================================
 LANG = {
     "ko": {
@@ -118,9 +246,12 @@ LANG = {
     }
 }
 
+# ================================
+# 4. 세션 상태 및 LLM 초기화 로직
+# ================================
+# 초기 세션 상태 설정
 if 'language' not in st.session_state:
     st.session_state.language = 'ko'
-# NameError 해결 및 현재 언어 설정
 L = LANG[st.session_state.language] 
 if 'uploaded_files_state' not in st.session_state:
     st.session_state.uploaded_files_state = None
@@ -129,141 +260,12 @@ if 'is_llm_ready' not in st.session_state:
 if 'is_rag_ready' not in st.session_state:
     st.session_state.is_rag_ready = False
 
-# ================================
-# 2. RAG 핵심 함수 정의 (새 위치: 최상단) ⭐⭐⭐
-# ================================
-from langchain.schema.document import Document # Document 임포트를 함수 밖으로 뺍니다.
-
-def get_document_chunks(files):
-    """업로드된 파일에서 텍스트를 로드하고 청킹합니다."""
-    documents = []
-    temp_dir = tempfile.mkdtemp()
-
-    for uploaded_file in files:
-        temp_filepath = os.path.join(temp_dir, uploaded_file.name)
-        file_extension = uploaded_file.name.split('.')[-1].lower()
-        
-        # 파일 형식에 따른 로더 선택 (BeautifulSoup 사용 로직 유지)
-        if file_extension == "pdf":
-            with open(temp_filepath, "wb") as f:
-                f.write(uploaded_file.getvalue())
-            loader = PyPDFLoader(temp_filepath)
-            documents.extend(loader.load())
-        
-        elif file_extension == "html":
-            # BeautifulSoup을 사용하여 HTML 태그를 제거하고 텍스트만 추출합니다.
-            raw_html = uploaded_file.getvalue().decode('utf-8')
-            soup = BeautifulSoup(raw_html, 'html.parser')
-            text_content = soup.get_text(separator=' ', strip=True)
-            
-            # LangChain Document 객체로 변환
-            documents.append(Document(page_content=text_content, metadata={"source": uploaded_file.name}))
-
-
-        elif file_extension == "txt": # TXT 파일 처리
-            with open(temp_filepath, "wb") as f:
-                f.write(uploaded_file.getvalue())
-            loader = TextLoader(temp_filepath, encoding="utf-8")
-            documents.extend(loader.load())
-            
-        else:
-            st.warning(f"'{uploaded_file.name}' 파일은 현재 PDF, TXT, HTML만 지원하여 로딩할 수 없습니다.")
-            continue
-
-    # 텍스트 분할 (청킹)
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
-        chunk_overlap=100
-    )
-    
-    # TextLoader/PyPDFLoader의 결과는 이미 Document 객체이므로 바로 split
-    return text_splitter.split_documents(documents)
-
-
-def get_vector_store(text_chunks):
-    """텍스트 청크를 임베딩하고 Vector Store를 생성합니다."""
-    
-    # [⭐핵심 수정⭐] 문서 내용의 해시값을 키로 사용하여 캐시를 확인합니다.
-    cache_key = tuple(doc.page_content for doc in text_chunks)
-    if cache_key in st.session_state.embedding_cache:
-        st.info("✅ 임베딩 캐시가 발견되어 재사용합니다. (API 한도 절약)")
-        return st.session_state.embedding_cache[cache_key]
-    
-    if not st.session_state.is_llm_ready:
-        return None
-
-    try:
-        vector_store = FAISS.from_documents(text_chunks, embedding=st.session_state.embeddings)
-        st.session_state.embedding_cache[cache_key] = vector_store
-        return vector_store
-    
-    except Exception as e:
-        # 429 오류가 발생하면 사용자에게 정확하게 안내
-        if "429" in str(e):
-             st.error("⚠️ **API 임베딩 한도 초과 (429 Error)**: Google Gemini API의 무료 임베딩 요청 한도를 초과했습니다. 내일 다시 시도하거나 API 사용량 대시보드를 확인하세요.")
-        else:
-            st.error(f"Vector Store 생성 중 오류 발생: {e}")
-        return None
-
-
-def get_rag_chain(vector_store):
-    """검색 체인(ConversationalRetrievalChain)을 생성합니다."""
-    if vector_store is None:
-        return None
-        
-    return ConversationalRetrievalChain.from_llm(
-        llm=st.session_state.llm,
-        retriever=vector_store.as_retriever(),
-        memory=st.session_state.memory
-    )
-
-
-# ================================
-# 3. LSTM 모델 정의 (새 위치: 최상단)
-# ================================
-@st.cache_resource
-def load_or_train_lstm():
-    """가상의 학습 성취도 예측을 위한 LSTM 모델을 생성하고 학습합니다."""
-    # 1. 가상 데이터 생성: 10주간의 퀴즈 점수 (0-100)
-    np.random.seed(42)
-    data = np.cumsum(np.random.normal(loc=5, scale=5, size=50)) + 60
-    data = np.clip(data, 50, 95)  # 점수 범위 제한
-
-    # 2. 시계열 데이터 전처리
-    def create_dataset(dataset, look_back=3):
-        X, Y = [], []
-        for i in range(len(dataset) - look_back):
-            X.append(dataset[i:(i + look_back)])
-            Y.append(dataset[i + look_back])
-        return np.array(X), np.array(Y)
-
-    look_back = 5
-    X, Y = create_dataset(data, look_back)
-
-    # LSTM 입력 형태 맞추기: [samples, time steps, features]
-    X = np.reshape(X, (X.shape[0], X.shape[1], 1))
-
-    # 3. LSTM 모델 정의
-    model = Sequential([
-        LSTM(50, activation='relu', input_shape=(look_back, 1)),
-        Dense(1)
-    ])
-
-    # 4. 모델 학습 (빠른 시연을 위해 최소한의 epoch만 설정)
-    model.compile(optimizer='adam', loss='mse')
-    model.fit(X, Y, epochs=10, batch_size=1, verbose=0)
-
-    return model, data
-
-# ================================
-# 1. LLM 및 임베딩 초기화 + 세션 상태 초기화 (이전 코드와 동일)
-# ================================
+# LLM 및 임베딩 초기화
 API_KEY = os.environ.get("GEMINI_API_KEY")
 
 if 'llm' not in st.session_state: 
     if not API_KEY:
         st.error(L["llm_error_key"])
-        st.session_state.is_llm_ready = False
     else:
         try:
             st.session_state.llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.7, google_api_key=API_KEY)
@@ -281,25 +283,23 @@ if "embedding_cache" not in st.session_state:
 
 
 # ================================
-# 4. Streamlit UI (NameError 해결)
+# 5. Streamlit UI (최종 NameError 해결)
 # ================================
 st.set_page_config(page_title=L["title"], layout="wide") 
 
 with st.sidebar:
-    # ⭐⭐ [핵심 수정 부분] on_change 및 key를 제거하고, 결과를 직접 st.session_state에 할당 ⭐⭐
     selected_lang_key = st.selectbox(
         L["lang_select"],
         options=['ko', 'en', 'ja'],
-        index=['ko', 'en', 'ja'].index(st.session_state.language), # 현재 언어 유지
+        index=['ko', 'en', 'ja'].index(st.session_state.language), 
         format_func=lambda x: {"ko": "한국어", "en": "English", "ja": "日本語"}[x],
-        # on_change=update_language # 💥 이 속성과 콜백 함수를 제거했습니다!
     )
-    # 🌟 언어가 바뀌면 session_state에 반영하고 st.rerun()을 호출합니다.
+    
     if selected_lang_key != st.session_state.language:
         st.session_state.language = selected_lang_key
         st.rerun() 
     
-    # L 변수 재설정 (NameError 방지)
+    # L 변수 재설정 (언어 선택 후 UI 업데이트)
     L = LANG[st.session_state.language] 
     
     st.title(L["sidebar_title"])
@@ -311,7 +311,7 @@ with st.sidebar:
         accept_multiple_files=True
     )
     
-    # 세션 상태 업데이트: 언어 전환 시에도 파일 목록을 유지하기 위함
+    # 세션 상태 업데이트
     if uploaded_files_widget:
         st.session_state.uploaded_files_state = uploaded_files_widget
     elif 'uploaded_files_state' not in st.session_state:
@@ -322,6 +322,7 @@ with st.sidebar:
     if files_to_process and st.session_state.is_llm_ready:
         if st.button(L["button_start_analysis"], key="start_analysis"):
             with st.spinner(f"자료 분석 및 학습 DB 구축 중..."):
+                # ⭐ NameError 해결: 함수 정의가 최상단에 있어 이제 안전함 ⭐
                 text_chunks = get_document_chunks(files_to_process)
                 vector_store = get_vector_store(text_chunks)
                 
@@ -346,8 +347,7 @@ with st.sidebar:
 st.title(L["title"])
 
 # ================================
-# 5. 기능별 페이지 구현 (⭐텍스트 요소 모두 L[]로 변경⭐)
-# (이하 RAG/콘텐츠/LSTM 탭 로직은 동일)
+# 6. 기능별 페이지 구현 (⭐텍스트 요소 모두 L[]로 변경⭐)
 # ================================
 if feature_selection == L["rag_tab"]:
     st.header(L["rag_header"])

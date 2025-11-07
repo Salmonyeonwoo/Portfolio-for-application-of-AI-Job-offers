@@ -127,138 +127,16 @@ if 'uploaded_files_state' not in st.session_state:
 
 # ================================
 # 1. LLM 및 임베딩 초기화 + 임베딩 캐시 (이전 코드와 동일)
+# (중략 - LLM 및 Embedding 초기화 로직)
 # ================================
-API_KEY = os.environ.get("GEMINI_API_KEY")
 
-if 'llm' not in st.session_state:
-    if not API_KEY:
-        st.error(L["llm_error_key"])
-        st.session_state.is_llm_ready = False
-    else:
-        try:
-            st.session_state.llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.7, google_api_key=API_KEY)
-            st.session_state.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=API_KEY)
-            st.session_state.is_llm_ready = True
-        except Exception as e:
-            st.error(f"{L['llm_error_init']} {e}")
-            st.session_state.is_llm_ready = False
+# [⭐삭제⭐] update_language 함수 제거 (NameError 방지)
+# def update_language():
+#     ... (삭제)
 
-if "memory" not in st.session_state:
-    st.session_state.memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+# (중략 - LSTM 모델 정의)
 
-if "embedding_cache" not in st.session_state:
-    st.session_state.embedding_cache = {}
-
-# ================================
-# 2. LSTM 모델 정의 (복구된 영역)
-# (이전 코드와 동일)
-# ================================
-@st.cache_resource
-def load_or_train_lstm():
-    """가상의 학습 성취도 예측을 위한 LSTM 모델을 생성하고 학습합니다."""
-    # 1. 가상 데이터 생성: 10주간의 퀴즈 점수 (0-100)
-    np.random.seed(42)
-    data = np.cumsum(np.random.normal(loc=5, scale=5, size=50)) + 60
-    data = np.clip(data, 50, 95)  # 점수 범위 제한
-
-    # 2. 시계열 데이터 전처리
-    def create_dataset(dataset, look_back=3):
-        X, Y = [], []
-        for i in range(len(dataset) - look_back):
-            X.append(dataset[i:(i + look_back)])
-            Y.append(dataset[i + look_back])
-        return np.array(X), np.array(Y)
-
-    look_back = 5
-    X, Y = create_dataset(data, look_back)
-
-    # LSTM 입력 형태 맞추기: [samples, time steps, features]
-    X = np.reshape(X, (X.shape[0], X.shape[1], 1))
-
-    # 3. LSTM 모델 정의
-    model = Sequential([
-        LSTM(50, activation='relu', input_shape=(look_back, 1)),
-        Dense(1)
-    ])
-
-    # 4. 모델 학습 (빠른 시연을 위해 최소한의 epoch만 설정)
-    model.compile(optimizer='adam', loss='mse')
-    model.fit(X, Y, epochs=10, batch_size=1, verbose=0)
-
-    return model, data
-
-# --- RAG 관련 함수 (이전 코드와 동일) ---
-def get_document_chunks(files):
-    documents = []
-    temp_dir = tempfile.mkdtemp()
-
-    for uploaded_file in files:
-        temp_filepath = os.path.join(temp_dir, uploaded_file.name)
-        file_extension = uploaded_file.name.split('.')[-1].lower()
-        
-        if file_extension == "pdf":
-            with open(temp_filepath, "wb") as f:
-                f.write(uploaded_file.getvalue())
-            loader = PyPDFLoader(temp_filepath)
-            documents.extend(loader.load())
-        
-        elif file_extension == "html":
-            raw_html = uploaded_file.getvalue().decode('utf-8')
-            soup = BeautifulSoup(raw_html, 'html.parser')
-            text_content = soup.get_text(separator=' ', strip=True)
-            
-            from langchain.schema.document import Document
-            documents.append(Document(page_content=text_content, metadata={"source": uploaded_file.name}))
-
-
-        elif file_extension == "txt":
-            with open(temp_filepath, "wb") as f:
-                f.write(uploaded_file.getvalue())
-            loader = TextLoader(temp_filepath, encoding="utf-8")
-            documents.extend(loader.load())
-            
-        else:
-            st.warning(f"'{uploaded_file.name}' 파일은 현재 PDF, TXT, HTML만 지원하여 로딩할 수 없습니다.")
-            continue
-
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
-        chunk_overlap=100
-    )
-    return text_splitter.split_documents(documents)
-
-
-def get_vector_store(text_chunks):
-    cache_key = tuple(doc.page_content for doc in text_chunks)
-    if cache_key in st.session_state.embedding_cache:
-        st.info("✅ 임베딩 캐시가 발견되어 재사용합니다. (API 한도 절약)")
-        return st.session_state.embedding_cache[cache_key]
-    
-    if not st.session_state.is_llm_ready:
-        return None
-
-    try:
-        vector_store = FAISS.from_documents(text_chunks, embedding=st.session_state.embeddings)
-        st.session_state.embedding_cache[cache_key] = vector_store
-        return vector_store
-    
-    except Exception as e:
-        if "429" in str(e):
-             st.error("⚠️ **API 임베딩 한도 초과 (429 Error)**: Google Gemini API의 무료 임베딩 요청 한도를 초과했습니다. 내일 다시 시도하거나 API 사용량 대시보드를 확인하세요.")
-        else:
-            st.error(f"Vector Store 생성 중 오류 발생: {e}")
-        return None
-
-
-def get_rag_chain(vector_store):
-    if vector_store is None:
-        return None
-        
-    return ConversationalRetrievalChain.from_llm(
-        llm=st.session_state.llm,
-        retriever=vector_store.as_retriever(),
-        memory=st.session_state.memory
-    )
+# (중략 - RAG 관련 함수)
 
 
 # ================================
@@ -267,16 +145,22 @@ def get_rag_chain(vector_store):
 st.set_page_config(page_title=L["title"], layout="wide") 
 
 with st.sidebar:
-    # ⭐⭐⭐ [핵심 수정 부분] on_change를 사용하여 st.rerun() 호출 ⭐⭐⭐
-    st.selectbox(
+    # ⭐⭐ [핵심 수정 부분] on_change 및 key를 제거하고, 결과를 직접 st.session_state에 할당 ⭐⭐
+    selected_lang_key = st.selectbox(
         L["lang_select"],
         options=['ko', 'en', 'ja'],
         index=['ko', 'en', 'ja'].index(st.session_state.language), # 현재 언어 유지
         format_func=lambda x: {"ko": "한국어", "en": "English", "ja": "日本語"}[x],
-        key="lang_selector_key", 
-        on_change=update_language # 콜백 함수 호출
+        # on_change=update_language # 💥 이 속성과 콜백 함수를 제거했습니다!
     )
-
+    # 🌟 언어가 바뀌면 session_state에 반영하고 st.rerun()을 호출합니다.
+    if selected_lang_key != st.session_state.language:
+        st.session_state.language = selected_lang_key
+        st.rerun() 
+    
+    # L 변수 재설정 (NameError 방지)
+    L = LANG[st.session_state.language] 
+    
     st.title(L["sidebar_title"])
     st.markdown("---")
     
@@ -292,7 +176,6 @@ with st.sidebar:
     elif 'uploaded_files_state' not in st.session_state:
         st.session_state.uploaded_files_state = None
     
-    # RAG 버튼을 띄울지 결정하는 조건
     files_to_process = st.session_state.uploaded_files_state if st.session_state.uploaded_files_state else []
     
     if files_to_process and st.session_state.is_llm_ready:
@@ -461,3 +344,4 @@ elif feature_selection == L["lstm_tab"]:
             st.error(f"LSTM Model Processing Error: {e}")
             # st.info(L["lstm_disabled_error"]) # 이 코드는 tensorflow 오류를 띄웁니다.
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
+

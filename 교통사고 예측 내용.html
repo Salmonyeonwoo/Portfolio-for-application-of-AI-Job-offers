@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dacon A/B 분류 모델 프로젝트 요약</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+        }
+        .slide-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 3rem 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            visibility: hidden;
+        }
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .break-keep {
+            word-break: keep-all;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen p-4 overflow-hidden">
+
+    <div class="w-full max-w-5xl aspect-[16/9] bg-gray-800 rounded-2xl shadow-2xl flex flex-col relative overflow-hidden">
+        <header class="absolute top-0 left-0 right-0 p-6 z-10">
+            <h1 class="text-xl font-bold text-cyan-400">Dacon A/B 분류 모델 프로젝트</h1>
+        </header>
+
+        <main id="slides-container" class="flex-grow slide-container">
+            
+            <div id="slide-1" class="slide active items-center text-center bg-cover bg-center" style="background-image: url('https://placehold.co/1280x720/1a202c/ffffff?text=A/B%20Classification%20Model');">
+                <div class="bg-black bg-opacity-60 p-10 rounded-xl">
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight break-keep">Dacon A/B 타입 데이터 분류</h2>
+                    <p class="mt-4 text-3xl md:text-4xl font-bold text-cyan-300">모델 학습 및 추론 파이프라인 구축</p>
+                    <p class="mt-12 text-lg text-gray-300">박연우</p>
+                </div>
+            </div>
+
+            <div id="slide-2" class="slide">
+                <h3 class="text-3xl font-bold text-cyan-400 mb-8 text-center">프로젝트 개요</h3>
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="w-full md:w-2/3 text-lg lg:text-xl leading-relaxed bg-gray-700/50 p-8 rounded-lg space-y-4">
+                        <p class="break-keep">✓ **대회 목표:** 제공된 `A.csv`와 `B.csv` 데이터를 학습하여, `test.csv`의 `Label` (0 또는 1)을 예측하는 **분류(Classification)** 문제입니다.</p>
+                        <p class="break-keep">✓ **핵심 과제:** A 타입과 B 타입 데이터는 서로 다른 특징(컬럼)을 가집니다. 따라서 **각 타입에 맞는 별도의 전처리 파이프라인과 모델**을 구축해야 합니다.</p>
+                        <p class="break-keep">✓ **제출 방식:** Dacon 서버에서 `main.py` (학습)를 실행해 모델(`*.pkl`)을 생성하고, `script.py` (추론)가 이 모델을 불러와 예측을 수행합니다.</p>
+                    </div>
+                    <div class="w-full md:w-1/3 flex items-center justify-center">
+                         <img src="https://placehold.co/400x400/1f2937/38bdf8?text=A/B%20Model%20Split" alt="A/B 모델 분리" class="rounded-lg shadow-lg">
+                    </div>
+                </div>
+            </div>
+
+            <div id="slide-3" class="slide">
+                <h3 class="text-3xl font-bold text-cyan-400 mb-8 text-center">데이터 구조 및 전처리</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center">
+                    <div class="bg-gray-700 p-6 rounded-lg">
+                        <h4 class="text-xl font-semibold mb-3">A 타입 데이터 (`A.csv`)</h4>
+                        <p class="text-gray-300 break-keep text-left">`A1-1` ~ `A6-1` 등 쉼표(,)로 구분된 **문자열 시퀀스** 데이터가 다수 포함되어 있습니다.</p>
+                        <p class="text-gray-300 break-keep text-left mt-2">**→ 전처리:** `seq_mean`, `seq_std` 함수를 사용해 각 시퀀스의 **평균값**과 **표준편차**를 추출하여 숫자형 특징(Feature)으로 변환했습니다.</p>
+                    </div>
+                    <div class="bg-gray-700 p-6 rounded-lg">
+                        <h4 class="text-xl font-semibold mb-3">B 타입 데이터 (`B.csv`)</h4>
+                        <p class="text-gray-300 break-keep text-left">`B1-1` (값), `B1-2` (조건)처럼 **두 컬럼이 쌍으로** 이루어진 복잡한 시퀀스 데이터가 포함됩니다.</p>
+                        <p class="text-gray-300 break-keep text-left mt-2">**→ 전처리:** `masked_mean`, `seq_rate` 함수를 사용해 **조건(예: '1')에 맞는 값들만 필터링**하여 평균/비율을 계산하는 등 고급 특징을 추출했습니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="slide-4" class="slide">
+                <h3 class="text-3xl font-bold text-cyan-400 mb-8 text-center">핵심 전처리 및 특징 공학</h3>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                    <div class="bg-gray-700/50 p-6 rounded-lg">
+                        <h4 class="text-2xl font-semibold mb-4 text-cyan-300">공통 전처리</h4>
+                        <ul class="list-disc list-inside text-lg space-y-2">
+                            <li class="break-keep">**Age (나이):** '10a', '15a' 같은 문자열을 `convert_age` 함수로 숫자 (10, 15)로 변환했습니다.</li>
+                            <li class="break-keep">**TestDate (날짜):** '202201' 같은 값을 `split_testdate` 함수로 '연도(2022)'와 '월(01)'로 분리했습니다.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-gray-700/50 p-6 rounded-lg">
+                        <h4 class="text-2xl font-semibold mb-4 text-cyan-300">데이터 타입 오류 해결</h4>
+                        <ul class="list-disc list-inside text-lg space-y-2">
+                            <li class="break-keep">**TypeError 해결:** `seq_mean` 처리 시, 일부 숫자(int)가 포함되어 `np.fromstring` 오류가 발생. `str(x)`로 강제 변환하여 해결했습니다.</li>
+                            <li class="break-keep">**ValueError 해결:** 전처리 후 남은 `object` (문자열) 컬럼들을 `drop_columns` 리스트로 명시하여 학습 전 모두 제거했습니다.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="slide-5" class="slide">
+                 <h3 class="text-3xl font-bold text-cyan-400 mb-8 text-center">모델 학습 및 저장 (`main.py`)</h3>
+                 <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="w-full md:w-1/2 bg-gray-700/50 p-6 rounded-lg">
+                        <h4 class="text-2xl font-semibold mb-3">Model A (LGBMClassifier)</h4>
+                        <p class="break-keep">1. `A.csv`와 `train.csv`를 `Test_id` 기준으로 병합.</p>
+                        <p class="break-keep">2. `preprocess_A`, `add_features_A` 함수로 전처리.</p>
+                        <p class="break-keep">3. LightGBM 분류 모델로 `Label` 학습.</p>
+                        <p class="break-keep mt-2 font-bold text-yellow-300">→ `model/lgbm_A.pkl` 파일로 저장.</p>
+                    </div>
+                    <div class="w-full md:w-1/2 bg-gray-700/50 p-6 rounded-lg">
+                        <h4 class="text-2xl font-semibold mb-3">Model B (LGBMClassifier)</h4>
+                        <p class="break-keep">1. `B.csv`와 `train.csv`를 `Test_id` 기준으로 병합.</p>
+                        <p class="break-keep">2. `preprocess_B`, `add_features_B` 함수로 전처리.</p>
+                        <p class="break-keep">3. LightGBM 분류 모델로 `Label` 학습.</p>
+                        <p class="break-keep mt-2 font-bold text-yellow-300">→ `model/lgbm_B.pkl` 파일로 저장.</p>
+                    </div>
+                 </div>
+            </div>
+
+            <div id="slide-6" class="slide">
+                <h3 class="text-3xl font-bold text-cyan-400 mb-8 text-center">추론 파이프라인 (`script.py`)</h3>
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="w-full md:w-1/2 text-lg lg:text-xl leading-relaxed bg-gray-700/50 p-8 rounded-lg space-y-4">
+                        <p class="break-keep">1. Dacon 서버가 `script.py`를 실행.</p>
+                        <p class="break-keep">2. `main.py`가 생성한 `lgbm_A.pkl`, `lgbm_B.pkl` 모델 로드.</p>
+                        <p class="break-keep">3. 숨겨진 테스트 데이터(`A_test.pkl`, `B_test.pkl`)에 대해 학습과 동일한 전처리 수행.</p>
+                        <p class="break-keep">4. 각 모델로 예측 수행 후, `submission.csv` 파일 생성 및 제출.</p>
+                    </div>
+                    <div class="w-full md:w-1/2 flex items-center justify-center">
+                         <img src="https://placehold.co/500x350/1f2937/38bdf8?text=Inference%20Pipeline" alt="추론 파이프라인" class="rounded-lg shadow-lg">
+                    </div>
+                </div>
+            </div>
+
+            <div id="slide-7" class="slide items-center text-center">
+                <h2 class="text-5xl font-bold text-cyan-400">감사합니다</h2>
+                <p class="mt-4 text-2xl">Q&A</p>
+            </div>
+
+        </main>
+
+        <footer class="absolute bottom-0 left-0 right-0 p-6 z-10">
+            <div class="flex items-center justify-between">
+                <div id="progress-dots" class="flex items-center space-x-2"></div>
+                <div>
+                    <button id="prev-btn" class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">이전</button>
+                    <button id="next-btn" class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg">다음</button>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const nextBtn = document.getElementById('next-btn');
+            const prevBtn = document.getElementById('prev-btn');
+            const progressDotsContainer = document.getElementById('progress-dots');
+            let currentSlide = 0;
+
+            // Create progress dots
+            slides.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.classList.add('w-3', 'h-3', 'rounded-full', 'transition-colors');
+                dot.addEventListener('click', () => goToSlide(i));
+                progressDotsContainer.appendChild(dot);
+            });
+            const progressDots = progressDotsContainer.querySelectorAll('button');
+
+            function goToSlide(slideIndex) {
+                if (slideIndex < 0 || slideIndex >= slides.length) return;
+
+                slides[currentSlide].classList.remove('active');
+                currentSlide = slideIndex;
+                slides[currentSlide].classList.add('active');
+                
+                updateNav();
+            }
+
+            function updateNav() {
+                // Update dots
+                progressDots.forEach((dot, i) => {
+                    dot.classList.toggle('bg-cyan-400', i === currentSlide);
+                    dot.classList.toggle('bg-gray-600', i !== currentSlide);
+                });
+
+                // Update buttons
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === slides.length - 1;
+            }
+
+            nextBtn.addEventListener('click', () => {
+                goToSlide(currentSlide + 1);
+            });
+
+            prevBtn.addEventListener('click', () => {
+                goToSlide(currentSlide - 1);
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    nextBtn.click();
+                } else if (e.key === 'ArrowLeft') {
+                    prevBtn.click();
+                }
+            });
+
+            // Initial setup
+            goToSlide(0);
+        });
+    </script>
+</body>
+</html>

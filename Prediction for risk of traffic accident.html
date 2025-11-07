@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dacon A/B Classification Model Project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+        }
+        .slide-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 3rem 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            visibility: hidden;
+        }
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen p-4 overflow-hidden">
+
+    <div class="w-full max-w-5xl aspect-[16/9] bg-gray-800 rounded-2xl shadow-2xl flex flex-col relative overflow-hidden">
+        <header class="absolute top-0 left-0 right-0 p-6 z-10">
+            <h1 class="text-xl font-bold text-cyan-400">Dacon A/B Classification Project</h1>
+        </header>
+
+        <main id="slides-container" class="flex-grow slide-container">
+            
+            <div id="slide-1" class="slide active items-center text-center bg-cover bg-center" style="background-image: url('https://placehold.co/1280x720/1a202c/ffffff?text=A/B%20Classification%20Model');">
+                <div class="bg-black bg-opacity-60 p-10 rounded-xl">
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight">Dacon A/B Type Data Classification</h2>
+                    <p class="mt-4 text-3xl md:text-4xl font-bold text-cyan-300">Building the Training & Inference Pipeline</p>
+                    <p class="mt-12 text-lg text-gray-300">Yeonwoo Park</p>
+                </div>
+            </div>
+
+            <div id="slide-2" class="slide">
+                <h3 class="text-3xl font-bold text-cyan-400 mb-8 text-center">Project Overview</h3>
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="w-full md:w-2/3 text-lg lg:text-xl leading-relaxed bg-gray-700/50 p-8 rounded-lg space-y-4">
+                        <p>✓ **Goal:** A **classification** problem to predict the `Label` (0 or 1) for `test.csv`, using data from `A.csv` and `B.csv`.</p>
+                        <p>✓ **Core Challenge:** Type A and Type B data have different features (columns). This requires building **separate preprocessing pipelines and models** for each type.</p>
+                        <p>✓ **Submission:** Run `main.py` (training) on the Dacon server to create models (`*.pkl`), which are then used by `script.py` (inference) for prediction.</p>
+                    </div>
+                    <div class="w-full md:w-1/3 flex items-center justify-center">
+                         <img src="https://placehold.co/400x400/1f2937/38bdf8?text=A/B%20Model%20Split" alt="A/B Model Split" class="rounded-lg shadow-lg">
+                    </div>
+                </div>
+            </div>
+
+            <div id="slide-3" class="slide">
+                <h3 class="text-3xl font-bold text-cyan-400 mb-8 text-center">Data Structure & Preprocessing</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center">
+                    <div class="bg-gray-700 p-6 rounded-lg">
+                        <h4 class="text-xl font-semibold mb-3">Type A Data (`A.csv`)</h4>
+                        <p class="text-gray-300 text-left">Contains many **string sequence** data (comma-separated) like `A1-1` to `A6-1`.</p>
+                        <p class="text-gray-300 text-left mt-2">**→ Preprocessing:** Used `seq_mean` and `seq_std` functions to extract the **mean** and **standard deviation** from each sequence, converting them into numeric features.</p>
+                    </div>
+                    <div class="bg-gray-700 p-6 rounded-lg">
+                        <h4 class="text-xl font-semibold mb-3">Type B Data (`B.csv`)</h4>
+                        <p class="text-gray-300 text-left">Contains complex paired sequences, like `B1-1` (value) and `B1-2` (condition).</p>
+                        <p class="text-gray-300 text-left mt-2">**→ Preprocessing:** Used `masked_mean` and `seq_rate` to **filter values based on a condition** (e.g., '1') and calculate their mean/ratio, creating advanced features.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="slide-4" class="slide">
+                <h3 class="text-3xl font-bold text-cyan-400 mb-8 text-center">Core Preprocessing & Feature Engineering</h3>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                    <div class="bg-gray-700/50 p-6 rounded-lg">
+                        <h4 class="text-2xl font-semibold mb-4 text-cyan-300">Common Preprocessing</h4>
+                        <ul class="list-disc list-inside text-lg space-y-2">
+                            <li>**Age:** Converted string values like '10a', '15a' into numbers (10, 15) using the `convert_age` function.</li>
+                            <li>**TestDate:** Split values like '202201' into 'Year (2022)' and 'Month (01)' using the `split_testdate` function.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-gray-700/50 p-6 rounded-lg">
+                        <h4 class="text-2xl font-semibold mb-4 text-cyan-300">Data Type Error Resolution</h4>
+                        <ul class="list-disc list-inside text-lg space-y-2">
+                            <li>**TypeError Fix:** `np.fromstring` failed when raw integers were present. Solved by explicitly casting inputs to strings using `str(x)`.</li>
+                            <li>**ValueError Fix:** Resolved `object` dtype errors in LightGBM by explicitly adding all remaining string columns to a `drop_columns` list before training.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="slide-5" class="slide">
+                 <h3 class="text-3xl font-bold text-cyan-400 mb-8 text-center">Model Training & Saving (`main.py`)</h3>
+                 <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="w-full md:w-1/2 bg-gray-700/50 p-6 rounded-lg">
+                        <h4 class="text-2xl font-semibold mb-3">Model A (LGBMClassifier)</h4>
+                        <p>1. Merged `A.csv` with `train.csv` on `Test_id`.</p>
+                        <p>2. Preprocessed data using `preprocess_A` & `add_features_A`.</p>
+                        <p>3. Trained LightGBM Classifier on the `Label`.</p>
+                        <p class="mt-2 font-bold text-yellow-300">→ Saved as `model/lgbm_A.pkl`.</p>
+                    </div>
+                    <div class="w-full md:w-1/2 bg-gray-700/50 p-6 rounded-lg">
+                        <h4 class="text-2xl font-semibold mb-3">Model B (LGBMClassifier)</h4>
+                        <p>1. Merged `B.csv` with `train.csv` on `Test_id`.</p>
+                        <p>2. Preprocessed data using `preprocess_B` & `add_features_B`.</p>
+                        <p>3. Trained LightGBM Classifier on the `Label`.</p>
+                        <p class="mt-2 font-bold text-yellow-300">→ Saved as `model/lgbm_B.pkl`.</p>
+                    </div>
+                 </div>
+            </div>
+
+            <div id="slide-6" class="slide">
+                <h3 class="text-3xl font-bold text-cyan-400 mb-8 text-center">Inference Pipeline (`script.py`)</h3>
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="w-full md:w-1/2 text-lg lg:text-xl leading-relaxed bg-gray-700/50 p-8 rounded-lg space-y-4">
+                        <p>1. Dacon server executes `script.py`.</p>
+                        <p>2. Loads the `lgbm_A.pkl` & `lgbm_B.pkl` models created by `main.py`.</p>
+                        <p>3. Applies identical preprocessing to the hidden test data (`A_test.pkl`, `B_test.pkl`).</p>
+                        <p>4. Predicts with each model and generates the final `submission.csv`.</p>
+                    </div>
+                    <div class="w-full md:w-1/2 flex items-center justify-center">
+                         <img src="https://placehold.co/500x350/1f2937/38bdf8?text=Inference%20Pipeline" alt="Inference Pipeline" class="rounded-lg shadow-lg">
+                    </div>
+                </div>
+            </div>
+
+            <div id="slide-7" class="slide items-center text-center">
+                <h2 class="text-5xl font-bold text-cyan-400">Thank You</h2>
+                <p class="mt-4 text-2xl">Q&A</p>
+            </div>
+
+        </main>
+
+        <footer class="absolute bottom-0 left-0 right-0 p-6 z-10">
+            <div class="flex items-center justify-between">
+                <div id="progress-dots" class="flex items-center space-x-2"></div>
+                <div>
+                    <button id="prev-btn" class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">이전</button>
+                    <button id="next-btn" class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg">다음</button>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const nextBtn = document.getElementById('next-btn');
+            const prevBtn = document.getElementById('prev-btn');
+            const progressDotsContainer = document.getElementById('progress-dots');
+            let currentSlide = 0;
+
+            // Create progress dots
+            slides.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.classList.add('w-3', 'h-3', 'rounded-full', 'transition-colors');
+                dot.addEventListener('click', () => goToSlide(i));
+                progressDotsContainer.appendChild(dot);
+            });
+            const progressDots = progressDotsContainer.querySelectorAll('button');
+
+            function goToSlide(slideIndex) {
+                if (slideIndex < 0 || slideIndex >= slides.length) return;
+
+                slides[currentSlide].classList.remove('active');
+                currentSlide = slideIndex;
+                slides[currentSlide].classList.add('active');
+                
+                updateNav();
+            }
+
+            function updateNav() {
+                // Update dots
+                progressDots.forEach((dot, i) => {
+                    dot.classList.toggle('bg-cyan-400', i === currentSlide);
+                    dot.classList.toggle('bg-gray-600', i !== currentSlide);
+                });
+
+                // Update buttons
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === slides.length - 1;
+            }
+
+            nextBtn.addEventListener('click', () => {
+                goToSlide(currentSlide + 1);
+            });
+
+            prevBtn.addEventListener('click', () => {
+                goToSlide(currentSlide - 1);
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    nextBtn.click();
+                } else if (e.key === 'ArrowLeft') {
+                    prevBtn.click();
+                }
+            });
+
+            // Initial setup
+            goToSlide(0);
+        });
+    </script>
+</body>
+</html>

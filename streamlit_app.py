@@ -1,5 +1,5 @@
 # ========================================
-# Streamlit AI 학습 코치 (3개국어 지원 추가: ko, en, ja)
+# Streamlit AI 학습 코치 (다국어 전환 오류 수정)
 # ========================================
 import streamlit as st
 import os
@@ -21,6 +21,7 @@ from tensorflow.keras.layers import LSTM, Dense
 
 # ================================
 # 0. 다국어 지원 딕셔너리 (Language Dictionary)
+# (이전 코드와 동일)
 # ================================
 LANG = {
     "ko": {
@@ -44,13 +45,13 @@ LANG = {
         "level_options": ["초급", "중급", "고급"],
         "content_options": ["핵심 요약 노트", "객관식 퀴즈 3문항", "실습 예제 아이디어"],
         "button_generate": "콘텐츠 생성",
-        "warning_topic": "학습 주제를 입력해 주세요.",
+        "warning_topic": "학습 주제를 입력해 주세요。",
         "lstm_header": "LSTM 기반 학습 성취도 예측 대시보드",
-        "lstm_desc": "가상의 과거 퀴즈 점수 데이터를 바탕으로 LSTM 모델을 훈련하고 미래 성취도를 예측하여 보여줍니다.",
-        "lstm_disabled_error": "현재 빌드 환경 문제로 인해 LSTM 기능은 잠정적으로 비활성화되었습니다. '맞춤형 학습 콘텐츠 생성' 기능을 먼저 사용해 주세요.",
+        "lstm_desc": "가상의 과거 퀴즈 점수 데이터를 바탕으로 LSTM 모델을 훈련하고 미래 성취도를 예측하여 보여줍니다。",
+        "lstm_disabled_error": "현재 빌드 환경 문제로 인해 LSTM 기능은 잠정적으로 비활성화되었습니다. '맞춤형 학습 콘텐츠 생성' 기능을 먼저 사용해 주세요。",
         "lang_select": "언어 선택",
         "embed_success": "총 {count}개 청크로 학습 DB 구축 완료!",
-        "embed_fail": "임베딩 실패: 무료 티어 한도 초과 또는 네트워크 문제."
+        "embed_fail": "임베딩 실패: 무료 티어 한도 초과 또는 네트워크 문제。"
     },
     "en": {
         "title": "Personalized AI Study Coach",
@@ -81,7 +82,6 @@ LANG = {
         "embed_success": "Learning DB built with {count} chunks!",
         "embed_fail": "Embedding failed: Free tier quota exceeded or network issue."
     },
-    # ⭐⭐⭐ 일본어 언어 팩 추가 ⭐⭐⭐
     "ja": {
         "title": "パーソナライズAI学習コーチ",
         "sidebar_title": "📚 AI学習コーチ設定",
@@ -267,22 +267,37 @@ with st.sidebar:
         options=['ko', 'en', 'ja'],
         format_func=lambda x: {"ko": "한국어", "en": "English", "ja": "日本語"}[x]
     )
+    # ⭐⭐ 오류 해결 로직: 언어 변경 시 st.rerun() 대신 세션 상태만 업데이트합니다.
+    # st.rerun()은 파일 업로드 정보를 지우기 때문에,
+    # 여기서는 언어 변경만 처리하고, UI 렌더링은 Streamlit에 맡깁니다.
     if selected_lang != st.session_state.language:
         st.session_state.language = selected_lang
-        st.rerun() # 언어 변경 시 UI 전체를 다시 로드
+        # st.rerun() 대신 파일 업로드 세션 상태를 초기화하여 버튼을 다시 표시합니다.
+        # 파일 업로드 위젯 자체는 St.rerun()이 없으면 상태가 유지됩니다.
+        # 그러나 안전을 위해 언어 전환 시 RAG 관련 상태를 리셋합니다.
+        if 'is_rag_ready' in st.session_state:
+             st.session_state.is_rag_ready = False
+        # st.experimental_rerun() # 전체 재실행이 아닌, 파일 업로드 버튼의 재생성을 유도해야 합니다.
 
     # 언어 변경 시 UI 텍스트 업데이트 (L 재할당)
     L = LANG[st.session_state.language] 
 
     st.title(L["sidebar_title"])
     st.markdown("---")
-
+    
+    # ⭐⭐ 오류 해결 로직: 파일 업로더를 변수에 저장 후, 버튼을 조건부로 만듭니다.
     uploaded_files = st.file_uploader(
         L["file_uploader"],
         type=["pdf","txt","html"],
         accept_multiple_files=True
     )
-
+    
+    # 세션 상태에 파일 목록을 유지합니다. (st.rerun()이 없으므로 필요 없을 수 있으나 안전을 위해 유지)
+    if uploaded_files:
+        st.session_state.uploaded_files = uploaded_files
+    
+    # **핵심 오류 해결:** 파일 업로드 후, RAG 인덱싱 버튼을 표시할지 결정
+    # 언어 변경 시 st.rerun()을 쓰지 않으므로, 이 로직이 항상 실행됩니다.
     if uploaded_files and st.session_state.is_llm_ready:
         if st.button(L["button_start_analysis"], key="start_analysis"):
             with st.spinner(f"자료 분석 및 학습 DB 구축 중..."):
@@ -299,8 +314,6 @@ with st.sidebar:
 
     else:
         st.session_state.is_rag_ready = False
-        st.warning(L["warning_topic"]) # 이전에 경고였던 부분을 warning_topic으로 대체. 적절한 텍스트로 변경해야 함.
-        # 기존: "먼저 학습 자료를 업로드하세요." 에 해당하는 경고 텍스트가 필요함.
         if st.session_state.language == 'ko':
              st.warning("먼저 학습 자료를 업로드하세요.")
         elif st.session_state.language == 'en':
@@ -345,7 +358,7 @@ if feature_selection == L["rag_tab"]:
                         st.error(f"챗봇 오류: {e}")
                         st.session_state.messages.append({"role":"assistant","content":"오류 발생" if st.session_state.language == 'ko' else "An error occurred"})
     else:
-        st.warning(L["rag_desc"]) # RAG가 준비되지 않았습니다. 학습 자료를 업로드하고 분석하세요.
+        st.warning(L["rag_desc"])
 
 elif feature_selection == L["content_tab"]:
     st.header(L["content_header"])

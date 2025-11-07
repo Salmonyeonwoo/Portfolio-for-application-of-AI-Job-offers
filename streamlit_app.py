@@ -3,7 +3,7 @@
 # ========================================
 import streamlit as st
 import os
-import tempfile
+import tempfile # ⭐⭐⭐ [핵심 수정: tempfile 임포트 추가] ⭐⭐⭐
 import time
 from langchain.chains import ConversationalRetrievalChain
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
@@ -344,4 +344,5 @@ elif feature_selection == L["lstm_tab"]:
             st.error(f"LSTM Model Processing Error: {e}")
             # st.info(L["lstm_disabled_error"]) # 이 코드는 tensorflow 오류를 띄웁니다.
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
+
 

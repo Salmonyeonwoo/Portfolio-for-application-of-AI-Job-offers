@@ -12,20 +12,17 @@ from langchain_community.vectorstores import FAISS
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.memory import ConversationBufferMemory
+# [⭐추가] 필요한 모듈 임포트 누락 수정
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from bs4 import BeautifulSoup # [⭐추가] HTML 파싱을 위해 BeautifulSoup4 추가
-
-# [⭐삭제] NLTK 의존성 관련 환경 변수 및 임포트를 모두 제거합니다.
-# NLTK 관련 환경 변수 설정 삭제
+from bs4 import BeautifulSoup 
 
 # ================================
 # 1. LLM 및 임베딩 초기화 + 임베딩 캐시
 # ================================
 API_KEY = os.environ.get("GEMINI_API_KEY")
 
-if 'client' not in st.session_state:
+if 'llm' not in st.session_state: # 'client' 대신 'llm' 상태를 확인합니다.
     if not API_KEY: # API_KEY가 빈 문자열이거나 None인 경우
         st.error("⚠️ 경고: GEMINI API 키가 설정되지 않았습니다. Streamlit Secrets에 'GEMINI_API_KEY'를 설정해주세요.")
         st.session_state.is_llm_ready = False
@@ -69,14 +66,20 @@ def get_document_chunks(files):
             soup = BeautifulSoup(raw_html, 'html.parser')
             text_content = soup.get_text(separator=' ', strip=True)
             
-            # LangChain TextLoader의 문서 형태로 변환
-            documents.append({"page_content": text_content, "metadata": {"source": uploaded_file.name}})
+            # LangChain Document 객체로 변환
+            from langchain.schema.document import Document
+            documents.append(Document(page_content=text_content, metadata={"source": uploaded_file.name}))
 
-        else: # TXT 파일 처리
+
+        elif file_extension == "txt": # TXT 파일 처리
             with open(temp_filepath, "wb") as f:
                 f.write(uploaded_file.getvalue())
             loader = TextLoader(temp_filepath, encoding="utf-8")
             documents.extend(loader.load())
+            
+        else:
+            st.warning(f"'{uploaded_file.name}' 파일은 현재 PDF, TXT, HTML만 지원하여 로딩할 수 없습니다.")
+            continue
 
     # 텍스트 분할 (청킹)
     text_splitter = RecursiveCharacterTextSplitter(
@@ -84,31 +87,24 @@ def get_document_chunks(files):
         chunk_overlap=100
     )
     
-    # HTML 로드 결과가 Dict인 경우 Document 객체로 변환
-    final_documents = []
-    for doc in documents:
-        if isinstance(doc, dict) and 'page_content' in doc:
-            from langchain.schema.document import Document
-            final_documents.append(Document(page_content=doc['page_content'], metadata=doc.get('metadata', {})))
-        else:
-            final_documents.append(doc)
-            
-    return text_splitter.split_documents(final_documents)
+    # TextLoader/PyPDFLoader의 결과는 이미 Document 객체이므로 바로 split
+    return text_splitter.split_documents(documents)
 
 
 def get_vector_store(text_chunks):
     """텍스트 청크를 임베딩하고 Vector Store를 생성합니다."""
     
     # [⭐핵심 수정⭐] 문서 내용의 해시값을 키로 사용하여 캐시를 확인합니다.
-    # 튜플은 hashable하여 딕셔너리 키로 사용 가능
     cache_key = tuple(doc.page_content for doc in text_chunks)
     if cache_key in st.session_state.embedding_cache:
         st.info("✅ 임베딩 캐시가 발견되어 재사용합니다. (API 한도 절약)")
         return st.session_state.embedding_cache[cache_key]
     
+    if not st.session_state.is_llm_ready:
+        return None
+
     try:
         vector_store = FAISS.from_documents(text_chunks, embedding=st.session_state.embeddings)
-        # 성공적으로 임베딩했다면 캐시에 저장
         st.session_state.embedding_cache[cache_key] = vector_store
         return vector_store
     
@@ -122,7 +118,6 @@ def get_vector_store(text_chunks):
 
 
 def get_rag_chain(vector_store):
-    # (이전 코드와 동일하게 유지)
     if vector_store is None:
         return None
         
@@ -152,6 +147,7 @@ with st.sidebar:
             with st.spinner("자료 분석 및 학습 DB 구축 중..."):
                 text_chunks = get_document_chunks(uploaded_files)
                 vector_store = get_vector_store(text_chunks)
+                
                 if vector_store:
                     st.session_state.conversation_chain = get_rag_chain(vector_store)
                     st.session_state.is_rag_ready = True
@@ -217,25 +213,29 @@ elif feature_selection == "맞춤형 학습 콘텐츠 생성":
 
         if st.button("콘텐츠 생성"):
             if topic:
-                system_prompt = f"""당신은 {level} 수준의 전문 AI 코치입니다.
-요청받은 주제에 대해 {content_type} 형식에 맞춰 명확하고 교육적인 콘텐츠를 생성해 주세요.
-답변은 한국어로만 제공해야 합니다."""
+                # [⭐수정 로직⭐] system_instruction 대신 프롬프트를 통합하여 LLM에 전달
+                full_prompt = f"""당신은 {level} 수준의 전문 AI 코치입니다.
+요청받은 주제에 대해 {content_type} 형식에 맞춰 명확하고 교육적인 콘텐츠를 생성해 주세요. 답변은 한국어로만 제공해야 합니다.
 
-                user_prompt = f"주제: {topic}. 요청 형식: {content_type}."
+주제: {topic}
+요청 형식: {content_type}"""
 
                 with st.spinner(f"{topic}에 대한 {content_type} 생성 중..."):
                     try:
-                        response = st.session_state.llm.invoke(
-                            user_prompt,
-                            system_instruction=system_prompt
-                        )
+                        response = st.session_state.llm.invoke(full_prompt) # system_instruction 인수를 제거
                         st.success(f"**{topic}** - **{content_type}** 결과:")
                         st.markdown(response.content)
                     except Exception as e:
                         st.error(f"콘텐츠 생성 오류: {e}")
             else:
                 st.warning("학습 주제를 입력해 주세요.")
+    else:
+        st.error("LLM이 초기화되지 않았습니다. API 키를 확인해 주세요.")
 
-
-
-
+# ================================
+# LSTM 성취도 예측 대시보드 (비활성화)
+# ================================
+elif feature_selection == "LSTM 성취도 예측 대시보드":
+    st.header("LSTM 기반 학습 성취도 예측 대시보드")
+    st.markdown("LSTM 기능을 사용하려면 TensorFlow 및 관련 라이브러리의 설치가 선행되어야 합니다.")
+    st.error("현재 빌드 환경 문제로 인해 LSTM 기능은 잠정적으로 비활성화되었습니다. '맞춤형 학습 콘텐츠 생성' 기능을 먼저 사용해 주세요.")

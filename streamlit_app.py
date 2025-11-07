@@ -1,5 +1,5 @@
 # ========================================
-# Streamlit AI 학습 코치 (RAG/다국어 버그 최종 수정)
+# Streamlit AI 학습 코치 (NameError 및 다국어 최종 수정)
 # ========================================
 import streamlit as st
 import os
@@ -114,6 +114,8 @@ LANG = {
 }
 if 'language' not in st.session_state:
     st.session_state.language = 'ko'
+# ⭐⭐ NameError 해결을 위해 L 변수 할당을 st.set_page_config 전에 위치시킵니다. ⭐⭐
+L = LANG[st.session_state.language] 
 # ⭐⭐ 세션 상태에 파일 업로드 목록을 저장하기 위한 초기화 ⭐⭐
 if 'uploaded_files_state' not in st.session_state:
     st.session_state.uploaded_files_state = None
@@ -121,9 +123,9 @@ if 'uploaded_files_state' not in st.session_state:
 # 언어 전환 시 호출될 콜백 함수 정의
 def update_language():
     # selectbox의 현재 값을 세션 상태에 저장하고 재실행
-    if st.session_state.lang_selector_key != st.session_state.language:
-        st.session_state.language = st.session_state.lang_selector_key
-        st.experimental_rerun()
+    # 콜백 함수 내에서는 L 변수가 필요 없지만, 재실행을 위해 상태만 업데이트합니다.
+    st.session_state.language = st.session_state.lang_selector_key
+    st.experimental_rerun()
 
 
 # ================================
@@ -266,7 +268,7 @@ def get_rag_chain(vector_store):
 # ================================
 # 4. Streamlit UI (⭐제목과 사이드바 수정⭐)
 # ================================
-st.set_page_config(page_title=L["title"], layout="wide")
+st.set_page_config(page_title=L["title"], layout="wide") # NameError 해결
 
 with st.sidebar:
     # 언어 선택 드롭다운 추가 (⭐콜백 함수와 키 사용으로 버그 해결⭐)
@@ -279,26 +281,28 @@ with st.sidebar:
     )
 
     # 언어 변경 시 UI 텍스트 업데이트 (L 재할당)
-    L = LANG[st.session_state.language] 
+    # L은 스크립트 시작 시 이미 할당되었으므로, 여기서는 UI 갱신만 진행
+    # L = LANG[st.session_state.language] # 이 할당은 이제 불필요하며 update_language가 재실행 시 처리함
 
     st.title(L["sidebar_title"])
     st.markdown("---")
     
     # ⭐⭐ 오류 해결 로직: 파일 업로드 결과를 세션 상태에 저장 ⭐⭐
-    # on_change=set_uploaded_files는 st.file_uploader에 허용되지 않으므로,
-    # file_uploader 결과를 변수에 받아 세션 상태에 수동 저장합니다.
     uploaded_files_widget = st.file_uploader(
         L["file_uploader"],
         type=["pdf","txt","html"],
         accept_multiple_files=True
     )
     
-    # 세션 상태 업데이트: 이전에 업로드된 파일이 있는지 확인하여 상태 유지
+    # 세션 상태 업데이트: 언어 전환 시에도 파일 목록을 유지하기 위함
     if uploaded_files_widget:
-        # st.rerun()이 없으므로, 위젯에 새 파일이 들어오면 자동으로 uploaded_files_state가 업데이트됨
+        # 파일이 새로 업로드되거나 앱이 재실행될 때, 위젯의 현재 값을 상태에 저장
         st.session_state.uploaded_files_state = uploaded_files_widget
+    elif 'uploaded_files_state' not in st.session_state:
+        st.session_state.uploaded_files_state = None
     
     # RAG 버튼을 띄울지 결정하는 조건: LLM 준비 + 세션 상태에 파일 목록이 있을 때
+    # files_to_process는 파일이 실제로 존재하는지 확인하는 데 사용
     files_to_process = st.session_state.uploaded_files_state if st.session_state.uploaded_files_state else []
     
     if files_to_process and st.session_state.is_llm_ready:
@@ -317,7 +321,7 @@ with st.sidebar:
 
     else:
         st.session_state.is_rag_ready = False
-        # 파일이 없을 경우 경고 메시지 출력
+        # 파일이 없을 경우 경고 메시지 출력 (UI 업데이트는 L 변수만 사용)
         st.warning(L.get("warning_no_files", "먼저 학습 자료를 업로드하세요.")) 
 
     st.markdown("---")

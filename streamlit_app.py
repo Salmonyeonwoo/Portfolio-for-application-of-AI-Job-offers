@@ -29,6 +29,8 @@ import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
 
+# 0. **Streamlit 설정 (가장 먼저 실행)**
+st.set_page_config(page_title=L["title"], layout="wide")
 
 # ================================
 # 1. Firebase 연동 및 직렬화/역직렬화 함수 (최상단)
@@ -495,7 +497,7 @@ if "embedding_cache" not in st.session_state:
 # ================================
 # 8. Streamlit UI
 # ================================
-st.set_page_config(page_title=L["title"], layout="wide") # 라인 498 (이제 첫 Streamlit 명령임)
+# st.set_page_config(page_title=L["title"], layout="wide") # 라인 498 (이제 첫 Streamlit 명령임)
 
 # ⭐⭐ 초기화 오류 메시지 출력 (st.set_page_config 이후) ⭐⭐
 if st.session_state.llm_init_error_msg:
@@ -760,5 +762,6 @@ elif feature_selection == L["lstm_tab"]:
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
+
 
 

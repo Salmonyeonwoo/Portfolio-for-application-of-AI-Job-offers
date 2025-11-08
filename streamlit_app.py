@@ -266,7 +266,7 @@ LANG = {
         "embed_fail": "埋め込み失敗: フリーティアのクォータ超過またはネットワークの問題。",
         "warning_no_files": "まず学習資料をアップロードしてください。",
         "warning_rag_not_ready": "RAGの準備ができていません。資料をアップロードし、分析開始ボタンを押してください。"
-        "quiz_fail_structure": "Loops for quiz datas are not correct",
+        "quiz_fail_structure": "クイズのデーターの構造が正しくありません。",
         "select_answer": "正解を選んでください",
         "check_answer": "正解を確認する",
         "next_question": "次のクイズ",
@@ -518,4 +518,5 @@ elif feature_selection == L["lstm_tab"]:
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
+
 

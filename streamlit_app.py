@@ -224,7 +224,7 @@ LANG = {
         "embed_fail": "Embedding failed: Free tier quota exceeded or network issue.",
         "warning_no_files": "Please upload study materials first.",
         "warning_rag_not_ready": "RAG is not ready. Upload materials and click Start Analysis."
-        "quiz_fail_structure": "Loops for quiz datas are not correct",
+        "quiz_fail_structure": "Loops for quiz datas are not correct.",
         "select_answer": "Select answer",
         "check_answer": "Confirm answer",
         "next_question": "Next Quiz",
@@ -518,5 +518,6 @@ elif feature_selection == L["lstm_tab"]:
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
+
 
 

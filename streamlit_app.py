@@ -11,7 +11,6 @@ import base64 # Base64 인코딩/디코딩을 위해 추가
 import io # 바이트 스트림 처리를 위해 추가
 
 # Firestore 라이브러리 임포트 (requirements.txt에 google-cloud-firestore 추가 필수)
-# NOTE: Streamlit Cloud에서 Firebase를 사용하려면 Secrets에 서비스 계정 키 등록이 필수입니다.
 from google.cloud import firestore
 from google.oauth2 import service_account 
 
@@ -32,12 +31,11 @@ from tensorflow.keras.layers import LSTM, Dense
 
 
 # ================================
-# 1. Firebase 연동 및 직렬화/역직렬화 함수 (최상단) ⭐⭐⭐
+# 1. Firebase 연동 및 직렬화/역직렬화 함수 (최상단)
 # ================================
 @st.cache_resource(ttl=None)
 def initialize_firestore():
     """Firestore 클라이언트를 초기화하고 캐시합니다."""
-    # Streamlit Secrets에서 Firebase 설정 로드 (Service Account 기반)
     firestore_credentials = {
         "type": "service_account",
         "project_id": os.environ.get("FIREBASE_PROJECT_ID"),
@@ -51,10 +49,10 @@ def initialize_firestore():
         "client_x509_cert_url": os.environ.get("FIREBASE_CLIENT_X509_CERT_URL"),
     }
     
-    # 필수 환경 변수 누락 시 오류 방지
     required_keys = ["FIREBASE_PROJECT_ID", "FIREBASE_PRIVATE_KEY", "FIREBASE_CLIENT_EMAIL"]
     if not all(os.environ.get(k) for k in required_keys):
-        return None, "Firebase Secrets are missing. Check keys like FIREBASE_PROJECT_ID."
+        print("Firebase Secrets are missing. Check FIREBASE_PROJECT_ID, FIREBASE_PRIVATE_KEY, FIREBASE_CLIENT_EMAIL.")
+        return None, "Firebase Secrets are missing."
 
     try:
         creds = service_account.Credentials.from_service_account_info(firestore_credentials)
@@ -113,11 +111,13 @@ def load_index_from_firestore(db, embeddings, index_id="user_portfolio_rag"):
         return None
 
 # ================================
-# 4. JSON/RAG/LSTM 함수 정의 (최상단)
+# 2. JSON/RAG/LSTM 함수 정의 (최상단)
 # ================================
+
 def clean_and_load_json(text):
     """LLM 응답 텍스트에서 JSON 객체만 정규표현식으로 추출하여 로드"""
     match = re.search(r'\{.*\}', text, re.DOTALL)
+    
     if match:
         json_str = match.group(0)
         try:
@@ -129,7 +129,7 @@ def clean_and_load_json(text):
 def render_interactive_quiz(quiz_data, current_lang):
     """생성된 퀴즈 데이터를 Streamlit UI로 렌더링하고 피드백을 제공합니다."""
     L = LANG[current_lang]
-    # (퀴즈 렌더링 로직은 그대로 유지)
+    
     if not quiz_data or 'quiz_questions' not in quiz_data:
         st.error(L.get("quiz_fail_structure", "퀴즈 데이터 구조가 올바르지 않습니다."))
         return
@@ -137,6 +137,7 @@ def render_interactive_quiz(quiz_data, current_lang):
     questions = quiz_data['quiz_questions']
     num_questions = len(questions)
 
+    # 퀴즈 풀이 상태 초기화 (DuplicateWidgetID 방지)
     if "current_question" not in st.session_state or st.session_state.current_question >= num_questions:
         st.session_state.current_question = 0
         st.session_state.quiz_results = [None] * num_questions
@@ -193,7 +194,7 @@ def render_interactive_quiz(quiz_data, current_lang):
 
 
 def get_document_chunks(files):
-    # (이전 RAG 함수 로직 유지)
+    """업로드된 파일에서 텍스트를 로드하고 청킹합니다."""
     documents = []
     temp_dir = tempfile.mkdtemp()
 
@@ -233,7 +234,7 @@ def get_document_chunks(files):
 
 
 def get_vector_store(text_chunks):
-    # (이전 RAG 함수 로직 유지)
+    """텍스트 청크를 임베딩하고 Vector Store를 생성합니다."""
     cache_key = tuple(doc.page_content for doc in text_chunks)
     if cache_key in st.session_state.embedding_cache:
         st.info("✅ 임베딩 캐시가 발견되어 재사용합니다. (API 한도 절약)")
@@ -256,7 +257,7 @@ def get_vector_store(text_chunks):
 
 
 def get_rag_chain(vector_store):
-    # (이전 RAG 함수 로직 유지)
+    """검색 체인(ConversationalRetrievalChain)을 생성합니다."""
     if vector_store is None:
         return None
         
@@ -267,9 +268,6 @@ def get_rag_chain(vector_store):
     )
 
 
-# ================================
-# 5. LSTM 모델 정의 (최상단)
-# ================================
 @st.cache_resource
 def load_or_train_lstm():
     """가상의 학습 성취도 예측을 위한 LSTM 모델을 생성하고 학습합니다."""
@@ -301,264 +299,140 @@ def load_or_train_lstm():
 # 6. 다국어 지원 딕셔너리 (Language Dictionary)
 # ================================
 LANG = {
-
     "ko": {
-
         "title": "개인 맞춤형 AI 학습 코치",
-
         "sidebar_title": "📚 AI Study Coach 설정",
-
         "file_uploader": "학습 자료 업로드 (PDF, TXT, HTML)",
-
         "button_start_analysis": "자료 분석 시작 (RAG Indexing)",
-
         "rag_tab": "RAG 지식 챗봇",
-
         "content_tab": "맞춤형 학습 콘텐츠 생성",
-
         "lstm_tab": "LSTM 성취도 예측 대시보드",
-
         "rag_header": "RAG 지식 챗봇 (문서 기반 Q&A)",
-
         "rag_desc": "업로드된 문서 기반으로 질문에 답변합니다。",
-
         "rag_input_placeholder": "학습 자료에 대해 질문해 보세요",
-
         "llm_error_key": "⚠️ 경고: GEMINI API 키가 설정되지 않았습니다. Streamlit Secrets에 'GEMINI_API_KEY'를 설정해주세요。",
-
         "llm_error_init": "LLM 초기화 오류: API 키를 확인해 주세요。",
-
         "content_header": "맞춤형 학습 콘텐츠 생성",
-
         "content_desc": "학습 주제와 난이도에 맞춰 콘텐츠 생성",
-
         "topic_label": "학습 주제",
-
         "level_label": "난이도",
-
         "content_type_label": "콘텐츠 형식",
-
         "level_options": ["초급", "중급", "고급"],
-
         "content_options": ["핵심 요약 노트", "객관식 퀴즈 3문항", "실습 예제 아이디어"],
-
         "button_generate": "콘텐츠 생성",
-
         "warning_topic": "학습 주제를 입력해 주세요。",
-
         "lstm_header": "LSTM 기반 학습 성취도 예측 대시보드",
-
         "lstm_desc": "가상의 과거 퀴즈 점수 데이터를 바탕으로 LSTM 모델을 훈련하고 미래 성취도를 예측하여 보여줍니다。",
-
-        "lstm_disabled_error": "현재 빌드 환경 문제로 인해 LSTM 기능은 잠정적으로 비활성화되었습니다. '맞춤형 학습 콘텐츠 생성' 기능을 먼저 사용해 주세요。",
-
-        "lang_select": "언어 선택",
-
-        "embed_success": "총 {count}개 청크로 학습 DB 구축 완료!",
-
-        "embed_fail": "임베딩 실패: 무료 티어 한도 초과 또는 네트워크 문제。",
-
-        "warning_no_files": "먼저 학습 자료를 업로드하세요。",
-
-        "warning_rag_not_ready": "RAG가 준비되지 않았습니다. 학습 자료를 업로드하고 분석하세요。",
-
-        "quiz_fail_structure": "퀴즈 데이터 구조가 올바르지 않습니다.",
-
-        "select_answer": "정답을 선택하세요",
-
-        "check_answer": "정답 확인",
-
-        "next_question": "다음 문항",
-
-        "correct_answer": "정답입니다! 🎉",
-
-        "incorrect_answer": "오답입니다. 😞",
-
-        "correct_is": "정답",
-
-        "explanation": "해설",
-
-        "quiz_complete": "퀴즈 완료!",
-
-        "score": "점수",
-
-        "retake_quiz": "퀴즈 다시 풀기"
-
-    },
-
-
-
-    
-
-    "en": {
-
-        "title": "Personalized AI Study Coach",
-
-        "sidebar_title": "📚 AI Study Coach Settings",
-
-        "file_uploader": "Upload Study Materials (PDF, TXT, HTML)",
-
-        "button_start_analysis": "Start Analysis (RAG Indexing)",
-
-        "rag_tab": "RAG Knowledge Chatbot",
-
-        "content_tab": "Custom Content Generation",
-
-        "lstm_tab": "LSTM Achievement Prediction",
-
-        "rag_header": "RAG Knowledge Chatbot (Document Q&A)",
-
-        "rag_desc": "Answers questions based on the uploaded documents.",
-
-        "rag_input_placeholder": "Ask a question about your study materials",
-
-        "llm_error_key": "⚠️ Warning: GEMINI API Key is not set. Please set 'GEMINI_API_KEY' in Streamlit Secrets.",
-
-        "llm_error_init": "LLM initialization error: Please check your API key.",
-
-        "content_header": "Custom Learning Content Generation",
-
-        "content_desc": "Generate content tailored to your topic and difficulty.",
-
-        "topic_label": "Learning Topic",
-
-        "level_label": "Difficulty",
-
-        "content_type_label": "Content Type",
-
-        "level_options": ["Beginner", "Intermediate", "Advanced"],
-
-        "content_options": ["Key Summary Note", "3 Multiple-Choice Questions", "Practical Example Idea"],
-
-        "button_generate": "Generate Content",
-
-        "warning_topic": "Please enter a learning topic.",
-
-        "lstm_header": "LSTM Based Achievement Prediction",
-
-        "lstm_desc": "Trains an LSTM model on hypothetical past quiz scores to predict future achievement.",
-
         "lstm_disabled_error": "The LSTM feature is temporarily disabled due to build environment issues. Please use the 'Custom Content Generation' feature first.",
-
-        "lang_select": "Select Language",
-
-        "embed_success": "Learning DB built with {count} chunks!",
-
-        "embed_fail": "Embedding failed: Free tier quota exceeded or network issue.",
-
-        "warning_no_files": "Please upload study materials first.",
-
-        "warning_rag_not_ready": "RAG is not ready. Upload materials and click Start Analysis.",
-
-        "quiz_fail_structure": "Loops for quiz datas are not correct.",
-
-        "select_answer": "Select answer",
-
-        "check_answer": "Confirm answer",
-
-        "next_question": "Next Quiz",
-
-        "correct_answer": "Correct! 🎉",
-
-        "incorrect_answer": "Incorrect. 😞",
-
-        "correct_is": "Correct answer",
-
-        "explanation": "Details",
-
-        "quiz_complete": "Quiz completed!",
-
-        "score": "Scores",
-
-        "retake_quiz": "Retake quiz"
-
+        "lang_select": "언어 선택",
+        "embed_success": "총 {count}개 청크로 학습 DB 구축 완료!",
+        "embed_fail": "임베딩 실패: 무료 티어 한도 초과 또는 네트워크 문제。",
+        "warning_no_files": "먼저 학습 자료를 업로드하세요。",
+        "warning_rag_not_ready": "RAG가 준비되지 않았습니다. 학습 자료를 업로드하고 분석하세요。",
+        "quiz_fail_structure": "퀴즈 데이터 구조가 올바르지 않습니다.",
+        "select_answer": "정답을 선택하세요",
+        "check_answer": "정답 확인",
+        "next_question": "다음 문항",
+        "correct_answer": "정답입니다! 🎉",
+        "incorrect_answer": "오답입니다. 😞",
+        "correct_is": "정답",
+        "explanation": "해설",
+        "quiz_complete": "퀴즈 완료!",
+        "score": "점수",
+        "retake_quiz": "퀴즈 다시 풀기",
+        "quiz_error_llm": "퀴즈 생성 실패: LLM이 올바른 JSON 형식을 반환하지 않았습니다. LLM 응답 원본을 확인하세요.",
+        "quiz_original_response": "LLM 원본 응답"
     },
-
+    "en": {
+        "title": "Personalized AI Study Coach",
+        "sidebar_title": "📚 AI Study Coach Settings",
+        "file_uploader": "Upload Study Materials (PDF, TXT, HTML)",
+        "button_start_analysis": "Start Analysis (RAG Indexing)",
+        "rag_tab": "RAG Knowledge Chatbot",
+        "content_tab": "Custom Content Generation",
+        "lstm_tab": "LSTM Achievement Prediction",
+        "rag_header": "RAG Knowledge Chatbot (Document Q&A)",
+        "rag_desc": "Answers questions based on the uploaded documents.",
+        "rag_input_placeholder": "Ask a question about your study materials",
+        "llm_error_key": "⚠️ Warning: GEMINI API Key is not set. Please set 'GEMINI_API_KEY' in Streamlit Secrets.",
+        "llm_error_init": "LLM initialization error: Please check your API key.",
+        "content_header": "Custom Learning Content Generation",
+        "content_desc": "Generate content tailored to your topic and difficulty.",
+        "topic_label": "Learning Topic",
+        "level_label": "Difficulty",
+        "content_type_label": "Content Type",
+        "level_options": ["Beginner", "Intermediate", "Advanced"],
+        "content_options": ["Key Summary Note", "3 Multiple-Choice Questions", "Practical Example Idea"],
+        "button_generate": "Generate Content",
+        "warning_topic": "Please enter a learning topic.",
+        "lstm_header": "LSTM Based Achievement Prediction",
+        "lstm_desc": "Trains an LSTM model on hypothetical past quiz scores to predict future achievement.",
+        "lstm_disabled_error": "The LSTM feature is temporarily disabled due to build environment issues. Please use the 'Custom Content Generation' feature first.",
+        "lang_select": "Select Language",
+        "embed_success": "Learning DB built with {count} chunks!",
+        "embed_fail": "Embedding failed: Free tier quota exceeded or network issue.",
+        "warning_no_files": "Please upload study materials first.",
+        "warning_rag_not_ready": "RAG is not ready. Upload materials and click Start Analysis.",
+        "quiz_fail_structure": "Quiz data structure is incorrect.",
+        "select_answer": "Select answer",
+        "check_answer": "Confirm answer",
+        "next_question": "Next Question",
+        "correct_answer": "Correct! 🎉",
+        "incorrect_answer": "Incorrect. 😞",
+        "correct_is": "Correct answer",
+        "explanation": "Explanation",
+        "quiz_complete": "Quiz completed!",
+        "score": "Score",
+        "retake_quiz": "Retake Quiz",
+        "quiz_error_llm": "Quiz generation failed: LLM did not return a valid JSON format. Check the original LLM response.",
+        "quiz_original_response": "Original LLM Response"
+    },
     "ja": {
-
         "title": "パーソナライズAI学習コーチ",
-
         "sidebar_title": "📚 AI学習コーチ設定",
-
         "file_uploader": "学習資料をアップロード (PDF, TXT, HTML)",
-
         "button_start_analysis": "資料分析開始 (RAGインデックス作成)",
-
         "rag_tab": "RAG知識チャットボット",
-
         "content_tab": "カスタムコンテンツ生成",
-
         "lstm_tab": "LSTM達成度予測ダッシュボード",
-
         "rag_header": "RAG知識チャットボット (ドキュメントQ&A)",
-
         "rag_desc": "アップロードされたドキュメントに基づいて質問に回答します。",
-
         "rag_input_placeholder": "学習資料について質問してください",
-
         "llm_error_key": "⚠️ 警告: GEMINI APIキーが設定されていません。Streamlit Secretsに'GEMINI_API_KEY'を設定してください。",
-
         "llm_error_init": "LLM初期化エラー：APIキーを確認してください。",
-
         "content_header": "カスタム学習コンテンツ生成",
-
         "content_desc": "学習テーマと難易度に合わせてコンテンツを生成します。",
-
         "topic_label": "学習テーマ",
-
         "level_label": "難易度",
-
         "content_type_label": "コンテンツ形式",
-
         "level_options": ["初級", "中級", "上級"],
-
         "content_options": ["核心要約ノート", "選択式クイズ3問", "実践例のアイデア"],
-
         "button_generate": "コンテンツ生成",
-
         "warning_topic": "学習テーマを入力してください。",
-
         "lstm_header": "LSTMベース達成度予測ダッシュボード",
-
         "lstm_desc": "仮想の過去クイズスコアデータに基づき、LSTMモデルを訓練して将来の達成度を予測し表示します。",
-
         "lstm_disabled_error": "現在、ビルド環境の問題によりLSTM機能は一時的に無効化されています。「カスタムコンテンツ生成」機能を先にご利用ください。",
-
         "lang_select": "言語選択",
-
         "embed_success": "全{count}チャンクで学習DB構築完了!",
-
         "embed_fail": "埋め込み失敗: フリーティアのクォータ超過またはネットワークの問題。",
-
         "warning_no_files": "まず学習資料をアップロードしてください。",
-
         "warning_rag_not_ready": "RAGの準備ができていません。資料をアップロードし、分析開始ボタンを押してください。",
-
         "quiz_fail_structure": "クイズのデーターの構造が正しくありません。",
-
         "select_answer": "正解を選んでください",
-
         "check_answer": "正解を確認する",
-
         "next_question": "次のクイズ",
-
         "correct_answer": "正解です! 🎉",
-
         "incorrect_answer": "不正解です。 😞",
-
         "correct_is": "正解は。。",
-
         "explanation": "解説",
-
         "quiz_complete": "すべてのクイズを完了しました!",
-
         "score": "点数",
-
-        "retake_quiz": "クイズを再挑戦する"
-
+        "retake_quiz": "クイズを再挑戦する",
+        "quiz_error_llm": "クイズ生成に失敗しました: LLMが有効なJSON形式を返しませんでした。LLMのオリジナル応答を確認してください。",
+        "quiz_original_response": "LLMオリジナル応答"
     }
-
 }
+
 
 # ================================
 # 7. 세션 상태 및 LLM 초기화 로직
@@ -573,7 +447,9 @@ if 'is_llm_ready' not in st.session_state:
     st.session_state.is_llm_ready = False
 if 'is_rag_ready' not in st.session_state:
     st.session_state.is_rag_ready = False
-
+if 'firestore_db' not in st.session_state:
+    st.session_state.firestore_db = None
+    
 # LLM 및 임베딩 초기화
 API_KEY = os.environ.get("GEMINI_API_KEY")
 
@@ -585,6 +461,23 @@ if 'llm' not in st.session_state:
             st.session_state.llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.7, google_api_key=API_KEY)
             st.session_state.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=API_KEY)
             st.session_state.is_llm_ready = True
+            
+            # Firebase 초기화 및 RAG 인덱스 로드 시도
+            db, error_message = initialize_firestore()
+            st.session_state.firestore_db = db
+            
+            if db and 'conversation_chain' not in st.session_state:
+                with st.spinner(L.get("firestore_loading", "데이터베이스에서 RAG 인덱스 로드 중...")):
+                    loaded_index = load_index_from_firestore(db, st.session_state.embeddings)
+                    
+                    if loaded_index:
+                        st.session_state.conversation_chain = get_rag_chain(loaded_index)
+                        st.session_state.is_rag_ready = True
+                        st.success("✅ RAG 인덱스가 데이터베이스에서 성공적으로 로드되었습니다!")
+                    else:
+                        st.info("데이터베이스에서 기존 RAG 인덱스를 찾을 수 없습니다. 파일을 업로드하여 새로 만드세요.")
+                        st.session_state.is_rag_ready = False
+
         except Exception as e:
             st.error(f"{L['llm_error_init']} {e}")
             st.session_state.is_llm_ready = False
@@ -638,9 +531,15 @@ with st.sidebar:
                 vector_store = get_vector_store(text_chunks)
                 
                 if vector_store:
+                    # RAG 인덱스가 성공적으로 생성되면 Firestore에 저장 시도
+                    db = st.session_state.firestore_db
+                    if db and save_index_to_firestore(db, vector_store):
+                        st.success(L["embed_success"].format(count=len(text_chunks)) + " (DB 저장 완료)")
+                    else:
+                        st.success(L["embed_success"].format(count=len(text_chunks)) + " (DB 저장 실패)")
+
                     st.session_state.conversation_chain = get_rag_chain(vector_store)
                     st.session_state.is_rag_ready = True
-                    st.success(L["embed_success"].format(count=len(text_chunks)))
                 else:
                     st.session_state.is_rag_ready = False
                     st.error(L["embed_fail"])
@@ -663,7 +562,7 @@ st.title(L["title"])
 if feature_selection == L["rag_tab"]:
     st.header(L["rag_header"])
     st.markdown(L["rag_desc"])
-    if st.session_state.is_rag_ready and st.session_state.conversation_chain:
+    if st.session_state.get('is_rag_ready', False) and st.session_state.get('conversation_chain'):
         if "messages" not in st.session_state:
             st.session_state.messages = []
 
@@ -708,7 +607,6 @@ elif feature_selection == L["content_tab"]:
             if topic:
                 target_lang = {"ko": "Korean", "en": "English", "ja": "Japanese"}[st.session_state.language]
                 
-                # LLM 프롬프트 (JSON 반환 요청 강화)
                 if content_type == 'quiz':
                     display_type_text = L["content_options"][L["content_options"].index(content_type_display)]
                     full_prompt = f"""You are a professional AI coach at the {level} level.
@@ -736,21 +634,19 @@ Requested Format: {display_type_text}"""
                         quiz_data_raw = response.content
                         
                         if content_type == 'quiz':
-                            # 1. 정규표현식으로 JSON 문자열 추출 및 로드
                             quiz_data = clean_and_load_json(quiz_data_raw)
                             
                             if quiz_data:
                                 st.session_state.quiz_data = quiz_data
-                                # 퀴즈 풀이 시작을 위해 상태 초기화
                                 st.session_state.current_question = 0
                                 st.session_state.quiz_submitted = False
-                                st.session_state.quiz_results = [None] * 3
+                                st.session_state.quiz_results = [None] * len(quiz_data.get('quiz_questions',[]))
                                 
                                 st.success(f"**{topic}** - **{content_type_display}** Result:")
-                                # 퀴즈 렌더링 시작
-                                render_interactive_quiz(quiz_data, st.session_state.language)
+                                # render_interactive_quiz는 메인 루프에서 호출되도록 제거
                             else:
                                 st.error(L["quiz_error_llm"])
+                                st.markdown(f"**{L['quiz_original_response']}**:")
                                 st.code(quiz_data_raw, language="json")
 
                         else: # 일반 콘텐츠 (요약, 예제)
@@ -767,11 +663,10 @@ Requested Format: {display_type_text}"""
     else:
         st.error(L["llm_error_init"])
         
-    # 퀴즈 풀이 중일 때만 렌더링 유지 (이전에 생성된 퀴즈가 있을 경우)
-    if content_type == 'quiz' and 'quiz_data' in st.session_state and st.session_state.quiz_data:
-        # 이전에 퀴즈를 생성했고, 아직 퀴즈 풀이가 완료되지 않았다면 렌더링
-        if st.session_state.get('quiz_submitted', False) or st.session_state.get('current_question', 0) < len(st.session_state.quiz_data.get('quiz_questions', [])):
-            render_interactive_quiz(st.session_state.quiz_data, st.session_state.language)
+    # ⭐⭐ [핵심 수정] 퀴즈 풀이 렌더링을 메인 루프에서 조건부로 단 한 번 호출 ⭐⭐
+    is_quiz_ready = content_type == 'quiz' and 'quiz_data' in st.session_state and st.session_state.quiz_data
+    if is_quiz_ready and st.session_state.get('current_question', 0) < len(st.session_state.quiz_data.get('quiz_questions', [])):
+        render_interactive_quiz(st.session_state.quiz_data, st.session_state.language)
 
 
 elif feature_selection == L["lstm_tab"]:
@@ -819,7 +714,6 @@ elif feature_selection == L["lstm_tab"]:
             avg_recent = np.mean(historical_scores[-5:])
             avg_predict = np.mean(future_predictions)
             
-            # (이 로직은 언어 딕셔너리로 대체하기가 복잡하여 임시로 영어/한국어/일본어 분기로 처리)
             if st.session_state.language == 'ko':
                 if avg_predict > avg_recent:
                     comment = "최근 학습 데이터와 LSTM 예측 결과에 따르면, **앞으로의 학습 성취도가 긍정적으로 향상될 것으로 예측**됩니다. 현재 학습 방식을 유지하시거나, 난이도를 한 단계 높여 도전해 보세요!"

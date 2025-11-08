@@ -1,5 +1,3 @@
-<!-- ===================== 👨‍💻 포트폴리오 헤더 ===================== -->
-
 # **💡 AI 전문가 포트폴리오 및 성장 전략 (Park Yeonwoo)**
 
 지원자: 박연우  
@@ -9,10 +7,14 @@
 
 ## **📌 핵심 프로젝트: 기술 장벽을 허무는 AI 커뮤니케이션 전략 (PREP 구조)**
 
-NVIDIA 교육 과정 중, 복잡한 AI 기술 정보가 비기술 배경 팀원들에게 전달되지 못하는 \*\*'소통의 장벽'\*\*을 해결한 경험입니다.
+NVIDIA 교육 과정 중, 복잡한 AI 기술 정보가 비기술 배경 팀원들에게 전달되지 못하는 **'소통의 장벽'**을 해결한 경험입니다.
+
+**[![AI 숏폼 영상 릴스 보기](images/reel_thumbnail.jpg)](https://www.instagram.com/reel/DQypzUZiZkv/?utm_source=ig_web_copy_link)**
 
 자세한 내용은 해당 링크를 참고해 주세요. 
 AI 포트폴리오 핵심 프로젝트 요약 (PREP 구조).xlsx
+
+---
 
 ## **🚀 비전: 3개년 성장 로드맵 (Roadmap)**
 
@@ -23,44 +25,51 @@ AI 포트폴리오 핵심 프로젝트 요약 (PREP 구조).xlsx
 * **Phase 3 (3년차):** AI 엔지니어 역량 완성 (모델 설계 및 배포에 참여하는 엔지니어로 자리매김)
 
 코딩 교육 중 일부 해결 과정 내용 :
-Project Code Summary and Contribution (NVIDIA Morpheus).pdf 
+Project Code Summary and Contribution (NVIDIA Morpheus).pdf  
 
 [**3개년 AI 전문가 성장 로드맵**](Roadmap (Korean)) **파일에서 상세 계획을 확인하실 수 있습니다.**
 
-추가로 제가 AI Gemini Pro 버전을 적극 활용하면서 만든 프레젠테이션 하기의 파일들을 좌측 메뉴 바와 같이 공유해 드리니 다운로드하셔서, 참고 바랍니다.
+---
 
-1. K-드라마 시장 재편 프레젠테이션 (HTML).html
-2. K-복고_드라마_종합_전략_분석.html
-3. 중국 AI 강국 전략.html
-4. AI advanced skill and globalized strategy at China.html
-5. Voice_of_AI_features.html
-6. Final movie for announcements of portfolios.mp4
-7. K-Drama Retro Strategy Analysis (Another).pptx.pdf
-8. K-Food_Globalization_Strategy_Analysis.pptx의 사본.pdf
-9. AI_&_Customer_Support_Presentation.pdf
-10. AI's_Global_Impact_&_Job_Displacement_Presentation-1.pdf
-11. 250921_박연우_정책제안서.pdf
+## 📁 **포트폴리오 첨부 파일 및 활용 전략**
 
-html 파일의 경우는 정확한 내용 확인을 위해서 다음 절차를 실행해 주시기 바랍니다.
+추가로 제가 AI Gemini Pro 버전을 적극 활용하면서 만든 프레젠테이션 및 영상 파일입니다. 다운로드하여 참고해 주십시오.
+
+| 번호 | 파일명 | 종류 | 내용 |
+| :--- | :--- | :--- | :--- |
+| 1 | K-드라마 시장 재편 프레젠테이션 (HTML).html | HTML | K-드라마 시장 재편 전략 |
+| 2 | K-복고_드라마_종합_전략_분석.html | HTML | K-복고 드라마 전략 분석 |
+| 3 | 중국 AI 강국 전략.html | HTML | 중국 AI 강국 전략 분석 |
+| 4 | AI advanced skill and globalized strategy at China.html | HTML | 중국 AI 고급 기술 및 글로벌 전략 |
+| 5 | Voice_of_AI_features.html | HTML | AI 음성 기능 분석 및 시연 |
+| 6 | Final movie for announcements of portfolios.mp4 | MP4 | 포트폴리오 발표 최종 영상 |
+| 7 | K-Drama Retro Strategy Analysis (Another).pptx.pdf | PDF | K-드라마 복고 전략 분석 (PPT 변환) |
+| 8 | K-Food_Globalization_Strategy_Analysis.pptx의 사본.pdf | PDF | K-푸드 글로벌화 전략 분석 (PPT 변환) |
+| 9 | AI_&_Customer_Support_Presentation.pdf | PDF | AI 및 고객 지원 프레젠테이션 |
+| 10 | AI's_Global_Impact_&_Job_Displacement_Presentation-1.pdf | PDF | AI의 글로벌 영향 및 일자리 대체 발표 |
+| 11 | 250921_박연우_정책제안서.pdf | PDF | 정책 제안서 |
+
+**HTML 파일 실행 방법:**
+
 ㄱ. 파일을 다운로드하신 후에 메모장으로 파일을 엽니다.
-ㄴ. 메모장으로 파일이 열리면, '다른 이름으로 파일 저장' 혹은 'Ctrl + S'키로, 해당 파일명들 뒤에 '.html' 혹은 대문자 HTML 파일 이름으로 저장합니다.
-ㄷ. 만약에 저장 후에도 실행이 안 되면, '이름 바꾸기' 메뉴를 통해서 저장하시기 바라며, 파일에 따라 스페이스 바가 인식이 안 되면, '_(언더 바)'기호를 덧붙여 주시기 바랍니다.
-ㄹ. 그 후에 각 해당 인터넷 브라우저 아이콘으로 파일이 바뀌었는지 확인 부탁드리며, 확인되었으면 그대로 열어 주시면 됩니다.
+ㄴ. '다른 이름으로 파일 저장' 또는 'Ctrl + S'로 파일명을 **'.html' 확장자로 저장**합니다.
+ㄷ. 저장 후에도 실행이 안 되면 '이름 바꾸기' 메뉴를 사용하고, 파일명에 스페이스 바가 있다면 **'_'(언더바) 기호로 대체**하여 저장합니다.
+ㄹ. 파일 아이콘이 인터넷 브라우저 아이콘으로 변경되었는지 확인 후 열어 주십시오.
 
+---
 
-🚀 실행 방법 (Setup)
+## 🚀 실행 방법 (Setup)
 
 이 프로젝트는 Gemini API를 사용하므로, 실행을 위해 API 키 설정이 필요합니다.
 
-1. config.example.js 파일의 이름을 **config.js**로 변경해 주세요.
-
-2. config.js 파일을 열어 apiKey 변수에 자신의 Gemini API 키를 입력합니다.
-
-3. Voice_of_AI_features.html 파일을 브라우저에서 열면 프로젝트가 정상적으로 실행됩니다.
+1.  config.example.js 파일의 이름을 **config.js**로 변경해 주세요.
+2.  config.js 파일을 열어 apiKey 변수에 자신의 Gemini API 키를 입력합니다.
+3.  Voice\_of\_AI\_features.html 파일을 브라우저에서 열면 프로젝트가 정상적으로 실행됩니다.
 
 참고: config.js 파일은 .gitignore에 의해 관리되므로 GitHub에 업로드되지 않습니다.
 
-<!-- ===================== 📫 연락처 ===================== -->
+---
+
 <h3 align="center">📫 Contact</h3>
 
 <p align="center">

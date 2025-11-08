@@ -223,7 +223,7 @@ LANG = {
         "embed_success": "Learning DB built with {count} chunks!",
         "embed_fail": "Embedding failed: Free tier quota exceeded or network issue.",
         "warning_no_files": "Please upload study materials first.",
-        "warning_rag_not_ready": "RAG is not ready. Upload materials and click Start Analysis."
+        "warning_rag_not_ready": "RAG is not ready. Upload materials and click Start Analysis.",
         "quiz_fail_structure": "Loops for quiz datas are not correct.",
         "select_answer": "Select answer",
         "check_answer": "Confirm answer",
@@ -265,7 +265,7 @@ LANG = {
         "embed_success": "全{count}チャンクで学習DB構築完了!",
         "embed_fail": "埋め込み失敗: フリーティアのクォータ超過またはネットワークの問題。",
         "warning_no_files": "まず学習資料をアップロードしてください。",
-        "warning_rag_not_ready": "RAGの準備ができていません。資料をアップロードし、分析開始ボタンを押してください。"
+        "warning_rag_not_ready": "RAGの準備ができていません。資料をアップロードし、分析開始ボタンを押してください。",
         "quiz_fail_structure": "クイズのデーターの構造が正しくありません。",
         "select_answer": "正解を選んでください",
         "check_answer": "正解を確認する",
@@ -518,6 +518,7 @@ elif feature_selection == L["lstm_tab"]:
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
+
 
 
 

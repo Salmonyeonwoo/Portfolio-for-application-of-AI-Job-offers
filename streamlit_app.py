@@ -59,6 +59,7 @@ def initialize_firestore():
         db = firestore.Client(credentials=creds, project=firestore_credentials["project_id"])
         return db, None
     except Exception as e:
+        print(f"Firebase Initialization Error: {e}")
         return None, f"Firebase Initialization Error: {e}"
 
 def save_index_to_firestore(db, vector_store, index_id="user_portfolio_rag"):
@@ -131,13 +132,11 @@ def render_interactive_quiz(quiz_data, current_lang):
     L = LANG[current_lang]
     
     if not quiz_data or 'quiz_questions' not in quiz_data:
-        st.error(L.get("quiz_fail_structure", "퀴즈 데이터 구조가 올바르지 않습니다."))
         return
 
     questions = quiz_data['quiz_questions']
     num_questions = len(questions)
 
-    # 퀴즈 풀이 상태 초기화 (DuplicateWidgetID 방지)
     if "current_question" not in st.session_state or st.session_state.current_question >= num_questions:
         st.session_state.current_question = 0
         st.session_state.quiz_results = [None] * num_questions
@@ -223,7 +222,7 @@ def get_document_chunks(files):
             documents.extend(loader.load())
             
         else:
-            st.warning(f"'{uploaded_file.name}' 파일은 현재 PDF, TXT, HTML만 지원하여 로딩할 수 없습니다.")
+            print(f"File '{uploaded_file.name}' not supported.")
             continue
 
     text_splitter = RecursiveCharacterTextSplitter(
@@ -237,7 +236,6 @@ def get_vector_store(text_chunks):
     """텍스트 청크를 임베딩하고 Vector Store를 생성합니다."""
     cache_key = tuple(doc.page_content for doc in text_chunks)
     if cache_key in st.session_state.embedding_cache:
-        st.info("✅ 임베딩 캐시가 발견되어 재사용합니다. (API 한도 절약)")
         return st.session_state.embedding_cache[cache_key]
     
     if not st.session_state.is_llm_ready:
@@ -250,10 +248,11 @@ def get_vector_store(text_chunks):
     
     except Exception as e:
         if "429" in str(e):
-             st.error("⚠️ **API 임베딩 한도 초과 (429 Error)**: Google Gemini API의 무료 임베딩 요청 한도를 초과했습니다. 내일 다시 시도하거나 API 사용량 대시보드를 확인하세요.")
+             # 429 오류는 여기서만 잡고, st.error는 UI 로직에서 출력하도록 수정
+             return None
         else:
-            st.error(f"Vector Store 생성 중 오류 발생: {e}")
-        return None
+            print(f"Vector Store creation failed: {e}") 
+            return None
 
 
 def get_rag_chain(vector_store):
@@ -296,7 +295,7 @@ def load_or_train_lstm():
     return model, data
 
 # ================================
-# 6. 다국어 지원 딕셔너리 (Language Dictionary)
+# 3. 다국어 지원 딕셔너리 (Language Dictionary)
 # ================================
 LANG = {
     "ko": {
@@ -340,8 +339,9 @@ LANG = {
         "quiz_complete": "퀴즈 완료!",
         "score": "점수",
         "retake_quiz": "퀴즈 다시 풀기",
-        "quiz_error_llm": "퀴즈 생성 실패: LLM이 올바른 JSON 형식을 반환하지 않았습니다. LLM 응답 원본을 확인하세요.",
-        "quiz_original_response": "LLM 원본 응답"
+        "quiz_error_llm": "퀴즈 생성 실패: LLM이 올바른 JSON 형식을 반환하지 않았습니다. LLM 응답 원본을 확인하세요。",
+        "quiz_original_response": "LLM 원본 응답",
+        "firestore_loading": "데이터베이스에서 RAG 인덱스 로드 중...",
     },
     "en": {
         "title": "Personalized AI Study Coach",
@@ -385,7 +385,8 @@ LANG = {
         "score": "Score",
         "retake_quiz": "Retake Quiz",
         "quiz_error_llm": "Quiz generation failed: LLM did not return a valid JSON format. Check the original LLM response.",
-        "quiz_original_response": "Original LLM Response"
+        "quiz_original_response": "Original LLM Response",
+        "firestore_loading": "Loading RAG index from database...",
     },
     "ja": {
         "title": "パーソナライズAI学習コーチ",
@@ -417,17 +418,17 @@ LANG = {
         "embed_fail": "埋め込み失敗: フリーティアのクォータ超過またはネットワークの問題。",
         "warning_no_files": "まず学習資料をアップロードしてください。",
         "warning_rag_not_ready": "RAGの準備ができていません。資料をアップロードし、分析開始ボタンを押してください。",
-        "quiz_fail_structure": "クイズのデーターの構造が正しくありません。",
-        "select_answer": "正解を選んでください",
-        "check_answer": "正解を確認する",
-        "next_question": "次のクイズ",
+        "quiz_fail_structure": "クイズのデータ構造が正しくありません。",
+        "select_answer": "答えを選択してください",
+        "check_answer": "答えを確認",
+        "next_question": "次の質問",
         "correct_answer": "正解です! 🎉",
-        "incorrect_answer": "不正解です。 😞",
-        "correct_is": "正解は。。",
+        "incorrect_answer": "不正解です。😞",
+        "correct_is": "正解",
         "explanation": "解説",
-        "quiz_complete": "すべてのクイズを完了しました!",
-        "score": "点数",
-        "retake_quiz": "クイズを再挑戦する",
+        "quiz_complete": "クイズ完了!",
+        "score": "スコア",
+        "retake_quiz": "クイズを再試行",
         "quiz_error_llm": "クイズ生成に失敗しました: LLMが有効なJSON形式を返しませんでした。LLMのオリジナル応答を確認してください。",
         "quiz_original_response": "LLMオリジナル応答"
     }
@@ -454,8 +455,10 @@ if 'firestore_db' not in st.session_state:
 API_KEY = os.environ.get("GEMINI_API_KEY")
 
 if 'llm' not in st.session_state: 
+    # LLM 초기화 시도 (st.set_page_config 이전에 st.error 호출하지 않도록 주의)
+    llm_init_error = None
     if not API_KEY:
-        st.error(L["llm_error_key"])
+        llm_init_error = L["llm_error_key"]
     else:
         try:
             st.session_state.llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.7, google_api_key=API_KEY)
@@ -466,21 +469,29 @@ if 'llm' not in st.session_state:
             db, error_message = initialize_firestore()
             st.session_state.firestore_db = db
             
+            # RAG 초기 로드 시도 (UI 업데이트는 st.set_page_config 이후에 진행)
             if db and 'conversation_chain' not in st.session_state:
-                with st.spinner(L.get("firestore_loading", "데이터베이스에서 RAG 인덱스 로드 중...")):
-                    loaded_index = load_index_from_firestore(db, st.session_state.embeddings)
-                    
-                    if loaded_index:
-                        st.session_state.conversation_chain = get_rag_chain(loaded_index)
-                        st.session_state.is_rag_ready = True
-                        st.success("✅ RAG 인덱스가 데이터베이스에서 성공적으로 로드되었습니다!")
-                    else:
-                        st.info("데이터베이스에서 기존 RAG 인덱스를 찾을 수 없습니다. 파일을 업로드하여 새로 만드세요.")
-                        st.session_state.is_rag_ready = False
-
+                print("Attempting to load RAG index from Firestore...") # Debugging
+                loaded_index = load_index_from_firestore(db, st.session_state.embeddings)
+                
+                if loaded_index:
+                    st.session_state.conversation_chain = get_rag_chain(loaded_index)
+                    st.session_state.is_rag_ready = True
+                    st.session_state.firestore_load_success = True
+                else:
+                    st.session_state.firestore_load_success = False
+        
         except Exception as e:
-            st.error(f"{L['llm_error_init']} {e}")
+            llm_init_error = f"{L['llm_error_init']} {e}"
             st.session_state.is_llm_ready = False
+    
+    if llm_init_error:
+        st.session_state.is_llm_ready = False
+        st.session_state.llm_init_error_msg = llm_init_error # 메시지를 세션에 저장
+        
+    if 'llm_init_error_msg' not in st.session_state:
+        st.session_state.llm_init_error_msg = None
+
 
 if "memory" not in st.session_state:
     st.session_state.memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
@@ -488,14 +499,21 @@ if "memory" not in st.session_state:
 if "embedding_cache" not in st.session_state:
     st.session_state.embedding_cache = {}
 
-if 'llm' not in st.session_state: 
-    if not API_KEY:
-        st.error(L["llm_error_key"]) # 💥 여기서 Streamlit 명령이 이미 호출됨!
 
 # ================================
 # 8. Streamlit UI
 # ================================
 st.set_page_config(page_title=L["title"], layout="wide") 
+
+# ⭐⭐ 초기화 오류 메시지 출력 (st.set_page_config 이후) ⭐⭐
+if st.session_state.llm_init_error_msg:
+    st.error(st.session_state.llm_init_error_msg)
+    
+if st.session_state.get('firestore_db') and st.session_state.get('firestore_load_success', False):
+    st.success("✅ RAG 인덱스가 데이터베이스에서 성공적으로 로드되었습니다!")
+elif st.session_state.get('firestore_db') and not st.session_state.get('firestore_load_success', False) and not st.session_state.get('is_rag_ready', False):
+    st.info("데이터베이스에서 기존 RAG 인덱스를 찾을 수 없습니다. 파일을 업로드하여 새로 만드세요.")
+
 
 with st.sidebar:
     selected_lang_key = st.selectbox(
@@ -611,7 +629,6 @@ elif feature_selection == L["content_tab"]:
                 target_lang = {"ko": "Korean", "en": "English", "ja": "Japanese"}[st.session_state.language]
                 
                 if content_type == 'quiz':
-                    display_type_text = L["content_options"][L["content_options"].index(content_type_display)]
                     full_prompt = f"""You are a professional AI coach at the {level} level.
 Please generate exactly 3 multiple-choice questions about the topic in {target_lang}.
 Your entire response MUST be a valid JSON object wrapped in ```json tags.
@@ -646,7 +663,6 @@ Requested Format: {display_type_text}"""
                                 st.session_state.quiz_results = [None] * len(quiz_data.get('quiz_questions',[]))
                                 
                                 st.success(f"**{topic}** - **{content_type_display}** Result:")
-                                # render_interactive_quiz는 메인 루프에서 호출되도록 제거
                             else:
                                 st.error(L["quiz_error_llm"])
                                 st.markdown(f"**{L['quiz_original_response']}**:")
@@ -666,7 +682,7 @@ Requested Format: {display_type_text}"""
     else:
         st.error(L["llm_error_init"])
         
-    # ⭐⭐ [핵심 수정] 퀴즈 풀이 렌더링을 메인 루프에서 조건부로 단 한 번 호출 ⭐⭐
+    # 퀴즈 풀이 렌더링을 메인 루프에서 조건부로 단 한 번 호출
     is_quiz_ready = content_type == 'quiz' and 'quiz_data' in st.session_state and st.session_state.quiz_data
     if is_quiz_ready and st.session_state.get('current_question', 0) < len(st.session_state.quiz_data.get('quiz_questions', [])):
         render_interactive_quiz(st.session_state.quiz_data, st.session_state.language)
@@ -745,4 +761,3 @@ elif feature_selection == L["lstm_tab"]:
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
-

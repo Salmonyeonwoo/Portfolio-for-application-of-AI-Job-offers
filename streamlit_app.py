@@ -488,6 +488,9 @@ if "memory" not in st.session_state:
 if "embedding_cache" not in st.session_state:
     st.session_state.embedding_cache = {}
 
+if 'llm' not in st.session_state: 
+    if not API_KEY:
+        st.error(L["llm_error_key"]) # 💥 여기서 Streamlit 명령이 이미 호출됨!
 
 # ================================
 # 8. Streamlit UI
@@ -742,3 +745,4 @@ elif feature_selection == L["lstm_tab"]:
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
+

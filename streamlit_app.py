@@ -1,5 +1,5 @@
 # ========================================
-# Streamlit AI 학습 코치 (최종 다국어/RAG/JSON 안정화)
+# Streamlit AI 학습 코치 (최종 Firebase 영구 저장소 통합)
 # ========================================
 import streamlit as st
 import os
@@ -7,6 +7,13 @@ import tempfile
 import time
 import json # JSON 처리를 위해 추가
 import re # 정규표현식(Regex)을 위해 추가
+import base64 # Base64 인코딩/디코딩을 위해 추가
+import io # 바이트 스트림 처리를 위해 추가
+
+# Firestore 라이브러리 임포트 (requirements.txt에 google-cloud-firestore 추가 필수)
+# NOTE: Streamlit Cloud에서 Firebase를 사용하려면 Secrets에 서비스 계정 키 등록이 필수입니다.
+from google.cloud import firestore
+from google.oauth2 import service_account 
 
 from langchain.chains import ConversationalRetrievalChain
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
@@ -25,27 +32,104 @@ from tensorflow.keras.layers import LSTM, Dense
 
 
 # ================================
-# 1. JSON 안정화 함수 정의 (최상단) ⭐⭐⭐
+# 1. Firebase 연동 및 직렬화/역직렬화 함수 (최상단) ⭐⭐⭐
+# ================================
+@st.cache_resource(ttl=None)
+def initialize_firestore():
+    """Firestore 클라이언트를 초기화하고 캐시합니다."""
+    # Streamlit Secrets에서 Firebase 설정 로드 (Service Account 기반)
+    firestore_credentials = {
+        "type": "service_account",
+        "project_id": os.environ.get("FIREBASE_PROJECT_ID"),
+        "private_key_id": os.environ.get("FIREBASE_PRIVATE_KEY_ID"),
+        "private_key": os.environ.get("FIREBASE_PRIVATE_KEY").replace('\\n', '\n') if os.environ.get("FIREBASE_PRIVATE_KEY") else None,
+        "client_email": os.environ.get("FIREBASE_CLIENT_EMAIL"),
+        "client_id": os.environ.get("FIREBASE_CLIENT_ID"),
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_x509_cert_url": os.environ.get("FIREBASE_CLIENT_X509_CERT_URL"),
+    }
+    
+    # 필수 환경 변수 누락 시 오류 방지
+    required_keys = ["FIREBASE_PROJECT_ID", "FIREBASE_PRIVATE_KEY", "FIREBASE_CLIENT_EMAIL"]
+    if not all(os.environ.get(k) for k in required_keys):
+        return None, "Firebase Secrets are missing. Check keys like FIREBASE_PROJECT_ID."
+
+    try:
+        creds = service_account.Credentials.from_service_account_info(firestore_credentials)
+        db = firestore.Client(credentials=creds, project=firestore_credentials["project_id"])
+        return db, None
+    except Exception as e:
+        return None, f"Firebase Initialization Error: {e}"
+
+def save_index_to_firestore(db, vector_store, index_id="user_portfolio_rag"):
+    """FAISS 인덱스를 Firestore에 Base64 형태로 직렬화하여 저장합니다."""
+    if not db: return False
+    temp_dir = tempfile.mkdtemp()
+    
+    try:
+        vector_store.save_local(folder_path=temp_dir, index_name="index")
+        
+        with open(f"{temp_dir}/index.faiss", "rb") as f: faiss_bytes = f.read()
+        with open(f"{temp_dir}/index.pkl", "rb") as f: metadata_bytes = f.read()
+        
+        encoded_data = {
+            "faiss_data": base64.b64encode(faiss_bytes).decode('utf-8'),
+            "metadata_data": base64.b64encode(metadata_bytes).decode('utf-8'),
+            "timestamp": firestore.SERVER_TIMESTAMP
+        }
+        
+        db.collection("rag_indices").document(index_id).set(encoded_data)
+        return True
+    
+    except Exception as e:
+        print(f"Error saving index to Firestore: {e}")
+        return False
+
+def load_index_from_firestore(db, embeddings, index_id="user_portfolio_rag"):
+    """Firestore에서 Base64 문자열을 로드하여 FAISS 인덱스로 역직렬화합니다."""
+    if not db: return None
+
+    try:
+        doc = db.collection("rag_indices").document(index_id).get()
+        if not doc.exists:
+            return None 
+
+        encoded_data = doc.to_dict()
+        
+        faiss_bytes = base64.b64decode(encoded_data["faiss_data"])
+        metadata_bytes = base64.b64decode(encoded_data["metadata_data"])
+        
+        temp_dir = tempfile.mkdtemp()
+        with open(f"{temp_dir}/index.faiss", "wb") as f: f.write(faiss_bytes)
+        with open(f"{temp_dir}/index.pkl", "wb") as f: f.write(metadata_bytes)
+            
+        vector_store = FAISS.load_local(folder_path=temp_dir, embeddings=embeddings, index_name="index")
+        return vector_store
+        
+    except Exception as e:
+        print(f"Error loading index from Firestore: {e}")
+        return None
+
+# ================================
+# 4. JSON/RAG/LSTM 함수 정의 (최상단)
 # ================================
 def clean_and_load_json(text):
     """LLM 응답 텍스트에서 JSON 객체만 정규표현식으로 추출하여 로드"""
-    # 응답 텍스트에서 첫 '{'부터 마지막 '}'까지를 찾습니다.
     match = re.search(r'\{.*\}', text, re.DOTALL)
-    
     if match:
         json_str = match.group(0)
         try:
-            # 추출된 문자열을 파싱 시도
             return json.loads(json_str)
         except json.JSONDecodeError:
-            # 추출된 문자열도 유효하지 않으면 None 반환
             return None
     return None
 
 def render_interactive_quiz(quiz_data, current_lang):
     """생성된 퀴즈 데이터를 Streamlit UI로 렌더링하고 피드백을 제공합니다."""
     L = LANG[current_lang]
-    
+    # (퀴즈 렌더링 로직은 그대로 유지)
     if not quiz_data or 'quiz_questions' not in quiz_data:
         st.error(L.get("quiz_fail_structure", "퀴즈 데이터 구조가 올바르지 않습니다."))
         return
@@ -58,17 +142,14 @@ def render_interactive_quiz(quiz_data, current_lang):
         st.session_state.quiz_results = [None] * num_questions
         st.session_state.quiz_submitted = False
         
-    
     q_index = st.session_state.current_question
     q_data = questions[q_index]
     
     st.subheader(f"{q_index + 1}. {q_data['question']}")
     
-    # 옵션 생성 (옵션 A, B, C, D)
     options_dict = {f"{opt['option']}": f"{opt['option']}) {opt['text']}" for opt in q_data['options']}
     options_list = list(options_dict.values())
     
-    # 사용자가 선택한 답변
     selected_answer = st.radio(
         L.get("select_answer", "정답을 선택하세요"),
         options=options_list,
@@ -77,9 +158,7 @@ def render_interactive_quiz(quiz_data, current_lang):
 
     col1, col2 = st.columns(2)
 
-    # 제출 버튼
     if col1.button(L.get("check_answer", "정답 확인"), key=f"check_btn_{q_index}", disabled=st.session_state.quiz_submitted):
-        # 선택된 옵션 문자(A, B, C...) 추출
         user_choice_letter = selected_answer.split(')')[0] if selected_answer else None
         correct_answer_letter = q_data['correct_answer']
 
@@ -89,15 +168,13 @@ def render_interactive_quiz(quiz_data, current_lang):
         st.session_state.quiz_submitted = True
         
         if is_correct:
-            st.success(L.get("correct_answer", "정답입니다!"))
+            st.success(L.get("correct_answer", "정답입니다! 🎉"))
         else:
-            st.error(L.get("incorrect_answer", "오답입니다."))
+            st.error(L.get("incorrect_answer", "오답입니다. 😞"))
         
-        # 해설 표시
         st.markdown(f"**{L.get('correct_is', '정답')}: {correct_answer_letter}**")
         st.info(f"**{L.get('explanation', '해설')}:** {q_data['explanation']}")
 
-    # 다음/결과 버튼
     if st.session_state.quiz_submitted:
         if q_index < num_questions - 1:
             if col2.button(L.get("next_question", "다음 문항"), key=f"next_btn_{q_index}"):
@@ -105,7 +182,6 @@ def render_interactive_quiz(quiz_data, current_lang):
                 st.session_state.quiz_submitted = False
                 st.rerun()
         else:
-            # 최종 결과 표시
             total_correct = st.session_state.quiz_results.count(True)
             total_questions = len(st.session_state.quiz_results)
             st.success(f"**{L.get('quiz_complete', '퀴즈 완료!')}** {L.get('score', '점수')}: {total_correct}/{total_questions}")
@@ -116,174 +192,378 @@ def render_interactive_quiz(quiz_data, current_lang):
                 st.rerun()
 
 
-# ================================
-# 1. RAG 핵심 함수 정의 (최상단)
-# (이전 코드와 동일)
-# ================================
-
 def get_document_chunks(files):
-    """업로드된 파일에서 텍스트를 로드하고 청킹합니다."""
+    # (이전 RAG 함수 로직 유지)
     documents = []
     temp_dir = tempfile.mkdtemp()
-    # (함수 로직 중략) ...
+
+    for uploaded_file in files:
+        temp_filepath = os.path.join(temp_dir, uploaded_file.name)
+        file_extension = uploaded_file.name.split('.')[-1].lower()
+        
+        if file_extension == "pdf":
+            with open(temp_filepath, "wb") as f:
+                f.write(uploaded_file.getvalue())
+            loader = PyPDFLoader(temp_filepath)
+            documents.extend(loader.load())
+        
+        elif file_extension == "html":
+            raw_html = uploaded_file.getvalue().decode('utf-8')
+            soup = BeautifulSoup(raw_html, 'html.parser')
+            text_content = soup.get_text(separator=' ', strip=True)
+            
+            documents.append(Document(page_content=text_content, metadata={"source": uploaded_file.name}))
+
+
+        elif file_extension == "txt":
+            with open(temp_filepath, "wb") as f:
+                f.write(uploaded_file.getvalue())
+            loader = TextLoader(temp_filepath, encoding="utf-8")
+            documents.extend(loader.load())
+            
+        else:
+            st.warning(f"'{uploaded_file.name}' 파일은 현재 PDF, TXT, HTML만 지원하여 로딩할 수 없습니다.")
+            continue
+
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=100
+    )
+    return text_splitter.split_documents(documents)
+
 
 def get_vector_store(text_chunks):
-    """텍스트 청크를 임베딩하고 Vector Store를 생성합니다."""
-    # (함수 로직 중략) ...
+    # (이전 RAG 함수 로직 유지)
+    cache_key = tuple(doc.page_content for doc in text_chunks)
+    if cache_key in st.session_state.embedding_cache:
+        st.info("✅ 임베딩 캐시가 발견되어 재사용합니다. (API 한도 절약)")
+        return st.session_state.embedding_cache[cache_key]
+    
+    if not st.session_state.is_llm_ready:
+        return None
+
+    try:
+        vector_store = FAISS.from_documents(text_chunks, embedding=st.session_state.embeddings)
+        st.session_state.embedding_cache[cache_key] = vector_store
+        return vector_store
+    
+    except Exception as e:
+        if "429" in str(e):
+             st.error("⚠️ **API 임베딩 한도 초과 (429 Error)**: Google Gemini API의 무료 임베딩 요청 한도를 초과했습니다. 내일 다시 시도하거나 API 사용량 대시보드를 확인하세요.")
+        else:
+            st.error(f"Vector Store 생성 중 오류 발생: {e}")
+        return None
+
 
 def get_rag_chain(vector_store):
-    """검색 체인(ConversationalRetrievalChain)을 생성합니다."""
-    # (함수 로직 중략) ...
+    # (이전 RAG 함수 로직 유지)
+    if vector_store is None:
+        return None
+        
+    return ConversationalRetrievalChain.from_llm(
+        llm=st.session_state.llm,
+        retriever=vector_store.as_retriever(),
+        memory=st.session_state.memory
+    )
+
 
 # ================================
-# 2. LSTM 모델 정의 (최상단)
-# (이전 코드와 동일)
+# 5. LSTM 모델 정의 (최상단)
 # ================================
 @st.cache_resource
 def load_or_train_lstm():
     """가상의 학습 성취도 예측을 위한 LSTM 모델을 생성하고 학습합니다."""
-    # (함수 로직 중략) ...
-    pass # 실제 함수 로직은 여기에 위치
+    np.random.seed(42)
+    data = np.cumsum(np.random.normal(loc=5, scale=5, size=50)) + 60
+    data = np.clip(data, 50, 95)
+
+    def create_dataset(dataset, look_back=3):
+        X, Y = [], []
+        for i in range(len(dataset) - look_back):
+            X.append(dataset[i:(i + look_back)])
+            Y.append(dataset[i + look_back])
+        return np.array(X), np.array(Y)
+
+    look_back = 5
+    X, Y = create_dataset(data, look_back)
+    X = np.reshape(X, (X.shape[0], X.shape[1], 1))
+
+    model = Sequential([
+        LSTM(50, activation='relu', input_shape=(look_back, 1)),
+        Dense(1)
+    ])
+    model.compile(optimizer='adam', loss='mse')
+    model.fit(X, Y, epochs=10, batch_size=1, verbose=0)
+
+    return model, data
 
 # ================================
-# 3. 다국어 지원 딕셔너리 (Language Dictionary)
-# (NameError 방지: 모든 함수 정의 후 딕셔너리 정의)
+# 6. 다국어 지원 딕셔너리 (Language Dictionary)
 # ================================
 LANG = {
+
     "ko": {
+
         "title": "개인 맞춤형 AI 학습 코치",
+
         "sidebar_title": "📚 AI Study Coach 설정",
+
         "file_uploader": "학습 자료 업로드 (PDF, TXT, HTML)",
+
         "button_start_analysis": "자료 분석 시작 (RAG Indexing)",
+
         "rag_tab": "RAG 지식 챗봇",
+
         "content_tab": "맞춤형 학습 콘텐츠 생성",
+
         "lstm_tab": "LSTM 성취도 예측 대시보드",
+
         "rag_header": "RAG 지식 챗봇 (문서 기반 Q&A)",
+
         "rag_desc": "업로드된 문서 기반으로 질문에 답변합니다。",
+
         "rag_input_placeholder": "학습 자료에 대해 질문해 보세요",
+
         "llm_error_key": "⚠️ 경고: GEMINI API 키가 설정되지 않았습니다. Streamlit Secrets에 'GEMINI_API_KEY'를 설정해주세요。",
+
         "llm_error_init": "LLM 초기화 오류: API 키를 확인해 주세요。",
+
         "content_header": "맞춤형 학습 콘텐츠 생성",
+
         "content_desc": "학습 주제와 난이도에 맞춰 콘텐츠 생성",
+
         "topic_label": "학습 주제",
+
         "level_label": "난이도",
+
         "content_type_label": "콘텐츠 형식",
+
         "level_options": ["초급", "중급", "고급"],
+
         "content_options": ["핵심 요약 노트", "객관식 퀴즈 3문항", "실습 예제 아이디어"],
+
         "button_generate": "콘텐츠 생성",
+
         "warning_topic": "학습 주제를 입력해 주세요。",
+
         "lstm_header": "LSTM 기반 학습 성취도 예측 대시보드",
+
         "lstm_desc": "가상의 과거 퀴즈 점수 데이터를 바탕으로 LSTM 모델을 훈련하고 미래 성취도를 예측하여 보여줍니다。",
+
         "lstm_disabled_error": "현재 빌드 환경 문제로 인해 LSTM 기능은 잠정적으로 비활성화되었습니다. '맞춤형 학습 콘텐츠 생성' 기능을 먼저 사용해 주세요。",
+
         "lang_select": "언어 선택",
+
         "embed_success": "총 {count}개 청크로 학습 DB 구축 완료!",
+
         "embed_fail": "임베딩 실패: 무료 티어 한도 초과 또는 네트워크 문제。",
+
         "warning_no_files": "먼저 학습 자료를 업로드하세요。",
+
         "warning_rag_not_ready": "RAG가 준비되지 않았습니다. 학습 자료를 업로드하고 분석하세요。",
+
         "quiz_fail_structure": "퀴즈 데이터 구조가 올바르지 않습니다.",
+
         "select_answer": "정답을 선택하세요",
+
         "check_answer": "정답 확인",
+
         "next_question": "다음 문항",
+
         "correct_answer": "정답입니다! 🎉",
+
         "incorrect_answer": "오답입니다. 😞",
+
         "correct_is": "정답",
+
         "explanation": "해설",
+
         "quiz_complete": "퀴즈 완료!",
+
         "score": "점수",
+
         "retake_quiz": "퀴즈 다시 풀기"
+
     },
 
+
+
     
+
     "en": {
+
         "title": "Personalized AI Study Coach",
+
         "sidebar_title": "📚 AI Study Coach Settings",
+
         "file_uploader": "Upload Study Materials (PDF, TXT, HTML)",
+
         "button_start_analysis": "Start Analysis (RAG Indexing)",
+
         "rag_tab": "RAG Knowledge Chatbot",
+
         "content_tab": "Custom Content Generation",
+
         "lstm_tab": "LSTM Achievement Prediction",
+
         "rag_header": "RAG Knowledge Chatbot (Document Q&A)",
+
         "rag_desc": "Answers questions based on the uploaded documents.",
+
         "rag_input_placeholder": "Ask a question about your study materials",
+
         "llm_error_key": "⚠️ Warning: GEMINI API Key is not set. Please set 'GEMINI_API_KEY' in Streamlit Secrets.",
+
         "llm_error_init": "LLM initialization error: Please check your API key.",
+
         "content_header": "Custom Learning Content Generation",
+
         "content_desc": "Generate content tailored to your topic and difficulty.",
+
         "topic_label": "Learning Topic",
+
         "level_label": "Difficulty",
+
         "content_type_label": "Content Type",
+
         "level_options": ["Beginner", "Intermediate", "Advanced"],
+
         "content_options": ["Key Summary Note", "3 Multiple-Choice Questions", "Practical Example Idea"],
+
         "button_generate": "Generate Content",
+
         "warning_topic": "Please enter a learning topic.",
+
         "lstm_header": "LSTM Based Achievement Prediction",
+
         "lstm_desc": "Trains an LSTM model on hypothetical past quiz scores to predict future achievement.",
+
         "lstm_disabled_error": "The LSTM feature is temporarily disabled due to build environment issues. Please use the 'Custom Content Generation' feature first.",
+
         "lang_select": "Select Language",
+
         "embed_success": "Learning DB built with {count} chunks!",
+
         "embed_fail": "Embedding failed: Free tier quota exceeded or network issue.",
+
         "warning_no_files": "Please upload study materials first.",
+
         "warning_rag_not_ready": "RAG is not ready. Upload materials and click Start Analysis.",
+
         "quiz_fail_structure": "Loops for quiz datas are not correct.",
+
         "select_answer": "Select answer",
+
         "check_answer": "Confirm answer",
+
         "next_question": "Next Quiz",
+
         "correct_answer": "Correct! 🎉",
+
         "incorrect_answer": "Incorrect. 😞",
+
         "correct_is": "Correct answer",
+
         "explanation": "Details",
+
         "quiz_complete": "Quiz completed!",
+
         "score": "Scores",
-        "retake_quiz": "Retake quize"
+
+        "retake_quiz": "Retake quiz"
+
     },
+
     "ja": {
+
         "title": "パーソナライズAI学習コーチ",
+
         "sidebar_title": "📚 AI学習コーチ設定",
+
         "file_uploader": "学習資料をアップロード (PDF, TXT, HTML)",
+
         "button_start_analysis": "資料分析開始 (RAGインデックス作成)",
+
         "rag_tab": "RAG知識チャットボット",
+
         "content_tab": "カスタムコンテンツ生成",
+
         "lstm_tab": "LSTM達成度予測ダッシュボード",
+
         "rag_header": "RAG知識チャットボット (ドキュメントQ&A)",
+
         "rag_desc": "アップロードされたドキュメントに基づいて質問に回答します。",
+
         "rag_input_placeholder": "学習資料について質問してください",
+
         "llm_error_key": "⚠️ 警告: GEMINI APIキーが設定されていません。Streamlit Secretsに'GEMINI_API_KEY'を設定してください。",
+
         "llm_error_init": "LLM初期化エラー：APIキーを確認してください。",
+
         "content_header": "カスタム学習コンテンツ生成",
+
         "content_desc": "学習テーマと難易度に合わせてコンテンツを生成します。",
+
         "topic_label": "学習テーマ",
+
         "level_label": "難易度",
+
         "content_type_label": "コンテンツ形式",
+
         "level_options": ["初級", "中級", "上級"],
+
         "content_options": ["核心要約ノート", "選択式クイズ3問", "実践例のアイデア"],
+
         "button_generate": "コンテンツ生成",
+
         "warning_topic": "学習テーマを入力してください。",
+
         "lstm_header": "LSTMベース達成度予測ダッシュボード",
+
         "lstm_desc": "仮想の過去クイズスコアデータに基づき、LSTMモデルを訓練して将来の達成度を予測し表示します。",
+
         "lstm_disabled_error": "現在、ビルド環境の問題によりLSTM機能は一時的に無効化されています。「カスタムコンテンツ生成」機能を先にご利用ください。",
+
         "lang_select": "言語選択",
+
         "embed_success": "全{count}チャンクで学習DB構築完了!",
+
         "embed_fail": "埋め込み失敗: フリーティアのクォータ超過またはネットワークの問題。",
+
         "warning_no_files": "まず学習資料をアップロードしてください。",
+
         "warning_rag_not_ready": "RAGの準備ができていません。資料をアップロードし、分析開始ボタンを押してください。",
+
         "quiz_fail_structure": "クイズのデーターの構造が正しくありません。",
+
         "select_answer": "正解を選んでください",
+
         "check_answer": "正解を確認する",
+
         "next_question": "次のクイズ",
+
         "correct_answer": "正解です! 🎉",
+
         "incorrect_answer": "不正解です。 😞",
+
         "correct_is": "正解は。。",
+
         "explanation": "解説",
+
         "quiz_complete": "すべてのクイズを完了しました!",
+
         "score": "点数",
+
         "retake_quiz": "クイズを再挑戦する"
+
     }
+
 }
 
 # ================================
-# 4. 세션 상태 및 LLM 초기화 로직
+# 7. 세션 상태 및 LLM 초기화 로직
 # ================================
-# 초기 세션 상태 설정
+# 초기 세션 상태 설정 (NameError 방지)
 if 'language' not in st.session_state:
     st.session_state.language = 'ko'
 L = LANG[st.session_state.language] 
@@ -317,7 +597,7 @@ if "embedding_cache" not in st.session_state:
 
 
 # ================================
-# 5. Streamlit UI (최종 NameError 해결)
+# 8. Streamlit UI
 # ================================
 st.set_page_config(page_title=L["title"], layout="wide") 
 
@@ -325,7 +605,7 @@ with st.sidebar:
     selected_lang_key = st.selectbox(
         L["lang_select"],
         options=['ko', 'en', 'ja'],
-        index=['ko', 'en', 'ja'].index(st.session_state.language), 
+        index=['ko', 'en', 'ja'].index(st.session_state.language),
         format_func=lambda x: {"ko": "한국어", "en": "English", "ja": "日本語"}[x],
     )
     
@@ -333,7 +613,6 @@ with st.sidebar:
         st.session_state.language = selected_lang_key
         st.rerun() 
     
-    # L 변수 재설정 (언어 선택 후 UI 업데이트)
     L = LANG[st.session_state.language] 
     
     st.title(L["sidebar_title"])
@@ -345,7 +624,6 @@ with st.sidebar:
         accept_multiple_files=True
     )
     
-    # 세션 상태 업데이트
     if uploaded_files_widget:
         st.session_state.uploaded_files_state = uploaded_files_widget
     elif 'uploaded_files_state' not in st.session_state:
@@ -356,7 +634,6 @@ with st.sidebar:
     if files_to_process and st.session_state.is_llm_ready:
         if st.button(L["button_start_analysis"], key="start_analysis"):
             with st.spinner(f"자료 분석 및 학습 DB 구축 중..."):
-                # ⭐ NameError 해결: 함수 정의가 최상단에 있어 이제 안전함 ⭐
                 text_chunks = get_document_chunks(files_to_process)
                 vector_store = get_vector_store(text_chunks)
                 
@@ -381,7 +658,7 @@ with st.sidebar:
 st.title(L["title"])
 
 # ================================
-# 6. 기능별 페이지 구현 (⭐텍스트 요소 모두 L[]로 변경⭐)
+# 9. 기능별 페이지 구현
 # ================================
 if feature_selection == L["rag_tab"]:
     st.header(L["rag_header"])
@@ -418,31 +695,84 @@ elif feature_selection == L["content_tab"]:
     if st.session_state.is_llm_ready:
         topic = st.text_input(L["topic_label"])
         
-        level = st.selectbox(L["level_label"], L["level_options"])
-        content_type = st.selectbox(L["content_type_label"], L["content_options"])
+        level_map = dict(zip(L["level_options"], ["Beginner", "Intermediate", "Advanced"]))
+        content_map = dict(zip(L["content_options"], ["summary", "quiz", "example"]))
+        
+        level_display = st.selectbox(L["level_label"], L["level_options"])
+        content_type_display = st.selectbox(L["content_type_label"], L["content_options"])
+
+        level = level_map[level_display]
+        content_type = content_map[content_type_display]
 
         if st.button(L["button_generate"]):
             if topic:
                 target_lang = {"ko": "Korean", "en": "English", "ja": "Japanese"}[st.session_state.language]
                 
-                full_prompt = f"""You are a professional AI coach at the {level} level.
-Please generate clear and educational content in the requested {content_type} format based on the topic.
+                # LLM 프롬프트 (JSON 반환 요청 강화)
+                if content_type == 'quiz':
+                    display_type_text = L["content_options"][L["content_options"].index(content_type_display)]
+                    full_prompt = f"""You are a professional AI coach at the {level} level.
+Please generate exactly 3 multiple-choice questions about the topic in {target_lang}.
+Your entire response MUST be a valid JSON object wrapped in ```json tags.
+The JSON must have a single key named 'quiz_questions', which is an array of objects.
+Each question object must contain: 'question' (string), 'options' (array of objects with 'option' (A,B,C,D) and 'text' (string)), 'correct_answer' (A,B,C, or D), and 'explanation' (string).
+
+Topic: {topic}"""
+                else:
+                    display_type_text = L["content_options"][L["content_options"].index(content_type_display)]
+                    full_prompt = f"""You are a professional AI coach at the {level} level.
+Please generate clear and educational content in the requested {display_type_text} format based on the topic.
 The response MUST be strictly in {target_lang}.
 
 Topic: {topic}
-Requested Format: {content_type}"""
-
-                with st.spinner(f"Generating {content_type} for {topic}..."):
+Requested Format: {display_type_text}"""
+                
+                
+                with st.spinner(f"Generating {content_type_display} for {topic}..."):
+                    
+                    quiz_data_raw = None
                     try:
                         response = st.session_state.llm.invoke(full_prompt)
-                        st.success(f"**{topic}** - **{content_type}** Result:")
-                        st.markdown(response.content)
+                        quiz_data_raw = response.content
+                        
+                        if content_type == 'quiz':
+                            # 1. 정규표현식으로 JSON 문자열 추출 및 로드
+                            quiz_data = clean_and_load_json(quiz_data_raw)
+                            
+                            if quiz_data:
+                                st.session_state.quiz_data = quiz_data
+                                # 퀴즈 풀이 시작을 위해 상태 초기화
+                                st.session_state.current_question = 0
+                                st.session_state.quiz_submitted = False
+                                st.session_state.quiz_results = [None] * 3
+                                
+                                st.success(f"**{topic}** - **{content_type_display}** Result:")
+                                # 퀴즈 렌더링 시작
+                                render_interactive_quiz(quiz_data, st.session_state.language)
+                            else:
+                                st.error(L["quiz_error_llm"])
+                                st.code(quiz_data_raw, language="json")
+
+                        else: # 일반 콘텐츠 (요약, 예제)
+                            st.success(f"**{topic}** - **{content_type_display}** Result:")
+                            st.markdown(response.content)
+
                     except Exception as e:
                         st.error(f"Content Generation Error: {e}")
+                        if quiz_data_raw:
+                            st.markdown(f"**{L['quiz_original_response']}**: {quiz_data_raw}")
+
             else:
                 st.warning(L["warning_topic"])
     else:
         st.error(L["llm_error_init"])
+        
+    # 퀴즈 풀이 중일 때만 렌더링 유지 (이전에 생성된 퀴즈가 있을 경우)
+    if content_type == 'quiz' and 'quiz_data' in st.session_state and st.session_state.quiz_data:
+        # 이전에 퀴즈를 생성했고, 아직 퀴즈 풀이가 완료되지 않았다면 렌더링
+        if st.session_state.get('quiz_submitted', False) or st.session_state.get('current_question', 0) < len(st.session_state.quiz_data.get('quiz_questions', [])):
+            render_interactive_quiz(st.session_state.quiz_data, st.session_state.language)
+
 
 elif feature_selection == L["lstm_tab"]:
     st.header(L["lstm_header"])
@@ -484,7 +814,7 @@ elif feature_selection == L["lstm_tab"]:
 
             # 4. LLM 분석 코멘트
             st.markdown("---")
-            st.markdown("#### AI Coach Analysis Comment")
+            st.markdown(f"#### {L.get('coach_analysis', 'AI Coach Analysis Comment')}")
             
             avg_recent = np.mean(historical_scores[-5:])
             avg_predict = np.mean(future_predictions)
@@ -518,7 +848,3 @@ elif feature_selection == L["lstm_tab"]:
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
-
-
-
-

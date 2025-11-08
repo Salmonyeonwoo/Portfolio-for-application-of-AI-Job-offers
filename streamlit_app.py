@@ -439,7 +439,7 @@ LANG = {
 # ================================
 # 4. 세션 상태 및 LLM 초기화 로직
 # ================================
-# ⭐⭐⭐ 세션 상태 변수 초기화 (AttributeError 방지) ⭐⭐⭐
+# ⭐⭐ 세션 상태 변수 초기화 (AttributeError 방지) ⭐⭐
 if 'language' not in st.session_state: st.session_state.language = 'ko'
 if 'uploaded_files_state' not in st.session_state: st.session_state.uploaded_files_state = None
 if 'is_llm_ready' not in st.session_state: st.session_state.is_llm_ready = False
@@ -448,7 +448,7 @@ if 'firestore_db' not in st.session_state: st.session_state.firestore_db = None
 if 'llm_init_error_msg' not in st.session_state: st.session_state.llm_init_error_msg = None
 if 'firestore_load_success' not in st.session_state: st.session_state.firestore_load_success = False
 
-
+# LLM 및 임베딩 초기화
 L = LANG[st.session_state.language] 
 API_KEY = os.environ.get("GEMINI_API_KEY")
 
@@ -462,11 +462,12 @@ if 'llm' not in st.session_state:
             st.session_state.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=API_KEY)
             st.session_state.is_llm_ready = True
             
+            # Firebase 초기화 및 RAG 인덱스 로드 시도
             db, error_message = initialize_firestore()
             st.session_state.firestore_db = db
             
             if db and 'conversation_chain' not in st.session_state:
-                print("Attempting to load RAG index from Firestore...") 
+                # ⭐⭐ DB 로딩 상태 메시지를 UI 출력 대신 세션에 저장 ⭐⭐
                 loaded_index = load_index_from_firestore(db, st.session_state.embeddings)
                 
                 if loaded_index:
@@ -474,7 +475,7 @@ if 'llm' not in st.session_state:
                     st.session_state.is_rag_ready = True
                     st.session_state.firestore_load_success = True
                 else:
-                    st.session_state.firestore_load_success = False
+                    st.session_state.firestore_load_success = False # 로드 실패
         
         except Exception as e:
             llm_init_error = f"{L['llm_error_init']} {e}"
@@ -482,7 +483,7 @@ if 'llm' not in st.session_state:
     
     if llm_init_error:
         st.session_state.is_llm_ready = False
-        st.session_state.llm_init_error_msg = llm_init_error
+        st.session_state.llm_init_error_msg = llm_init_error # 메시지를 세션에 저장
 
 
 if "memory" not in st.session_state:
@@ -493,18 +494,19 @@ if "embedding_cache" not in st.session_state:
 
 
 # ================================
-# 8. Streamlit UI
+# 8. Streamlit UI (st.set_page_config 호출)
 # ================================
-st.set_page_config(page_title=L["title"], layout="wide") 
+st.set_page_config(page_title=L["title"], layout="wide") # 라인 498 (이제 첫 Streamlit 명령임)
 
-# ⭐⭐ 초기화 오류 메시지 출력 (st.set_page_config 이후) ⭐⭐
+# ⭐⭐ 초기화 오류/성공 메시지 출력 (st.set_page_config 이후) ⭐⭐
 if st.session_state.llm_init_error_msg:
     st.error(st.session_state.llm_init_error_msg)
     
-if st.session_state.get('firestore_db') and st.session_state.get('firestore_load_success', False):
-    st.success("✅ RAG 인덱스가 데이터베이스에서 성공적으로 로드되었습니다!")
-elif st.session_state.get('firestore_db') and not st.session_state.get('firestore_load_success', False) and not st.session_state.get('is_rag_ready', False):
-    st.info("데이터베이스에서 기존 RAG 인덱스를 찾을 수 없습니다. 파일을 업로드하여 새로 만드세요.")
+if st.session_state.get('firestore_db'):
+    if st.session_state.get('firestore_load_success', False):
+        st.success("✅ RAG 인덱스가 데이터베이스에서 성공적으로 로드되었습니다!")
+    elif not st.session_state.get('is_rag_ready', False):
+        st.info("데이터베이스에서 기존 RAG 인덱스를 찾을 수 없습니다. 파일을 업로드하여 새로 만드세요.")
 
 
 with st.sidebar:
@@ -757,3 +759,4 @@ elif feature_selection == L["lstm_tab"]:
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
+

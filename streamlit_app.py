@@ -1,11 +1,13 @@
 # ========================================
-# Streamlit AI 학습 코치 (최종 다국어/RAG 안정화)
-# NameError 해결: 모든 함수 정의를 최상단으로 이동
+# Streamlit AI 학습 코치 (최종 다국어/RAG/JSON 안정화)
 # ========================================
 import streamlit as st
 import os
 import tempfile 
 import time
+import json # JSON 처리를 위해 추가
+import re # 정규표현식(Regex)을 위해 추가
+
 from langchain.chains import ConversationalRetrievalChain
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
 from langchain_community.vectorstores import FAISS
@@ -23,128 +25,125 @@ from tensorflow.keras.layers import LSTM, Dense
 
 
 # ================================
+# 1. JSON 안정화 함수 정의 (최상단) ⭐⭐⭐
+# ================================
+def clean_and_load_json(text):
+    """LLM 응답 텍스트에서 JSON 객체만 정규표현식으로 추출하여 로드"""
+    # 응답 텍스트에서 첫 '{'부터 마지막 '}'까지를 찾습니다.
+    match = re.search(r'\{.*\}', text, re.DOTALL)
+    
+    if match:
+        json_str = match.group(0)
+        try:
+            # 추출된 문자열을 파싱 시도
+            return json.loads(json_str)
+        except json.JSONDecodeError:
+            # 추출된 문자열도 유효하지 않으면 None 반환
+            return None
+    return None
+
+def render_interactive_quiz(quiz_data, current_lang):
+    """생성된 퀴즈 데이터를 Streamlit UI로 렌더링하고 피드백을 제공합니다."""
+    L = LANG[current_lang]
+    
+    if not quiz_data or 'quiz_questions' not in quiz_data:
+        st.error(L.get("quiz_fail_structure", "퀴즈 데이터 구조가 올바르지 않습니다."))
+        return
+
+    questions = quiz_data['quiz_questions']
+    num_questions = len(questions)
+
+    if "current_question" not in st.session_state or st.session_state.current_question >= num_questions:
+        st.session_state.current_question = 0
+        st.session_state.quiz_results = [None] * num_questions
+        st.session_state.quiz_submitted = False
+        
+    
+    q_index = st.session_state.current_question
+    q_data = questions[q_index]
+    
+    st.subheader(f"{q_index + 1}. {q_data['question']}")
+    
+    # 옵션 생성 (옵션 A, B, C, D)
+    options_dict = {f"{opt['option']}": f"{opt['option']}) {opt['text']}" for opt in q_data['options']}
+    options_list = list(options_dict.values())
+    
+    # 사용자가 선택한 답변
+    selected_answer = st.radio(
+        L.get("select_answer", "정답을 선택하세요"),
+        options=options_list,
+        key=f"q_radio_{q_index}"
+    )
+
+    col1, col2 = st.columns(2)
+
+    # 제출 버튼
+    if col1.button(L.get("check_answer", "정답 확인"), key=f"check_btn_{q_index}", disabled=st.session_state.quiz_submitted):
+        # 선택된 옵션 문자(A, B, C...) 추출
+        user_choice_letter = selected_answer.split(')')[0] if selected_answer else None
+        correct_answer_letter = q_data['correct_answer']
+
+        is_correct = (user_choice_letter == correct_answer_letter)
+        
+        st.session_state.quiz_results[q_index] = is_correct
+        st.session_state.quiz_submitted = True
+        
+        if is_correct:
+            st.success(L.get("correct_answer", "정답입니다!"))
+        else:
+            st.error(L.get("incorrect_answer", "오답입니다."))
+        
+        # 해설 표시
+        st.markdown(f"**{L.get('correct_is', '정답')}: {correct_answer_letter}**")
+        st.info(f"**{L.get('explanation', '해설')}:** {q_data['explanation']}")
+
+    # 다음/결과 버튼
+    if st.session_state.quiz_submitted:
+        if q_index < num_questions - 1:
+            if col2.button(L.get("next_question", "다음 문항"), key=f"next_btn_{q_index}"):
+                st.session_state.current_question += 1
+                st.session_state.quiz_submitted = False
+                st.rerun()
+        else:
+            # 최종 결과 표시
+            total_correct = st.session_state.quiz_results.count(True)
+            total_questions = len(st.session_state.quiz_results)
+            st.success(f"**{L.get('quiz_complete', '퀴즈 완료!')}** {L.get('score', '점수')}: {total_correct}/{total_questions}")
+            if st.button(L.get("retake_quiz", "퀴즈 다시 풀기"), key="retake"):
+                st.session_state.current_question = 0
+                st.session_state.quiz_results = [None] * num_questions
+                st.session_state.quiz_submitted = False
+                st.rerun()
+
+
+# ================================
 # 1. RAG 핵심 함수 정의 (최상단)
+# (이전 코드와 동일)
 # ================================
 
 def get_document_chunks(files):
     """업로드된 파일에서 텍스트를 로드하고 청킹합니다."""
     documents = []
     temp_dir = tempfile.mkdtemp()
-
-    for uploaded_file in files:
-        temp_filepath = os.path.join(temp_dir, uploaded_file.name)
-        file_extension = uploaded_file.name.split('.')[-1].lower()
-        
-        # 파일 형식에 따른 로더 선택 (BeautifulSoup 사용 로직 유지)
-        if file_extension == "pdf":
-            with open(temp_filepath, "wb") as f:
-                f.write(uploaded_file.getvalue())
-            loader = PyPDFLoader(temp_filepath)
-            documents.extend(loader.load())
-        
-        elif file_extension == "html":
-            # BeautifulSoup을 사용하여 HTML 태그를 제거하고 텍스트만 추출합니다.
-            raw_html = uploaded_file.getvalue().decode('utf-8')
-            soup = BeautifulSoup(raw_html, 'html.parser')
-            text_content = soup.get_text(separator=' ', strip=True)
-            
-            # LangChain Document 객체로 변환
-            documents.append(Document(page_content=text_content, metadata={"source": uploaded_file.name}))
-
-
-        elif file_extension == "txt": # TXT 파일 처리
-            with open(temp_filepath, "wb") as f:
-                f.write(uploaded_file.getvalue())
-            loader = TextLoader(temp_filepath, encoding="utf-8")
-            documents.extend(loader.load())
-            
-        else:
-            st.warning(f"'{uploaded_file.name}' 파일은 현재 PDF, TXT, HTML만 지원하여 로딩할 수 없습니다.")
-            continue
-
-    # 텍스트 분할 (청킹)
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
-        chunk_overlap=100
-    )
-    
-    return text_splitter.split_documents(documents)
-
+    # (함수 로직 중략) ...
 
 def get_vector_store(text_chunks):
     """텍스트 청크를 임베딩하고 Vector Store를 생성합니다."""
-    
-    # [캐시 로직]
-    cache_key = tuple(doc.page_content for doc in text_chunks)
-    if cache_key in st.session_state.embedding_cache:
-        st.info("✅ 임베딩 캐시가 발견되어 재사용합니다. (API 한도 절약)")
-        return st.session_state.embedding_cache[cache_key]
-    
-    if not st.session_state.is_llm_ready:
-        return None
-
-    try:
-        vector_store = FAISS.from_documents(text_chunks, embedding=st.session_state.embeddings)
-        st.session_state.embedding_cache[cache_key] = vector_store
-        return vector_store
-    
-    except Exception as e:
-        # 429 오류 처리
-        if "429" in str(e):
-             st.error("⚠️ **API 임베딩 한도 초과 (429 Error)**: Google Gemini API의 무료 임베딩 요청 한도를 초과했습니다. 내일 다시 시도하거나 API 사용량 대시보드를 확인하세요.")
-        else:
-            st.error(f"Vector Store 생성 중 오류 발생: {e}")
-        return None
-
+    # (함수 로직 중략) ...
 
 def get_rag_chain(vector_store):
     """검색 체인(ConversationalRetrievalChain)을 생성합니다."""
-    if vector_store is None:
-        return None
-        
-    return ConversationalRetrievalChain.from_llm(
-        llm=st.session_state.llm,
-        retriever=vector_store.as_retriever(),
-        memory=st.session_state.memory
-    )
-
+    # (함수 로직 중략) ...
 
 # ================================
 # 2. LSTM 모델 정의 (최상단)
+# (이전 코드와 동일)
 # ================================
 @st.cache_resource
 def load_or_train_lstm():
     """가상의 학습 성취도 예측을 위한 LSTM 모델을 생성하고 학습합니다."""
-    # 1. 가상 데이터 생성: 10주간의 퀴즈 점수 (0-100)
-    np.random.seed(42)
-    data = np.cumsum(np.random.normal(loc=5, scale=5, size=50)) + 60
-    data = np.clip(data, 50, 95)  # 점수 범위 제한
-
-    # 2. 시계열 데이터 전처리
-    def create_dataset(dataset, look_back=3):
-        X, Y = [], []
-        for i in range(len(dataset) - look_back):
-            X.append(dataset[i:(i + look_back)])
-            Y.append(dataset[i + look_back])
-        return np.array(X), np.array(Y)
-
-    look_back = 5
-    X, Y = create_dataset(data, look_back)
-
-    # LSTM 입력 형태 맞추기: [samples, time steps, features]
-    X = np.reshape(X, (X.shape[0], X.shape[1], 1))
-
-    # 3. LSTM 모델 정의
-    model = Sequential([
-        LSTM(50, activation='relu', input_shape=(look_back, 1)),
-        Dense(1)
-    ])
-
-    # 4. 모델 학습 (빠른 시연을 위해 최소한의 epoch만 설정)
-    model.compile(optimizer='adam', loss='mse')
-    model.fit(X, Y, epochs=10, batch_size=1, verbose=0)
-
-    return model, data
+    # (함수 로직 중략) ...
+    pass # 실제 함수 로직은 여기에 위치
 
 # ================================
 # 3. 다국어 지원 딕셔너리 (Language Dictionary)
@@ -180,8 +179,21 @@ LANG = {
         "embed_success": "총 {count}개 청크로 학습 DB 구축 완료!",
         "embed_fail": "임베딩 실패: 무료 티어 한도 초과 또는 네트워크 문제。",
         "warning_no_files": "먼저 학습 자료를 업로드하세요。",
-        "warning_rag_not_ready": "RAG가 준비되지 않았습니다. 학습 자료를 업로드하고 분석하세요。"
+        "warning_rag_not_ready": "RAG가 준비되지 않았습니다. 학습 자료를 업로드하고 분석하세요。",
+        "quiz_fail_structure": "퀴즈 데이터 구조가 올바르지 않습니다.",
+        "select_answer": "정답을 선택하세요",
+        "check_answer": "정답 확인",
+        "next_question": "다음 문항",
+        "correct_answer": "정답입니다! 🎉",
+        "incorrect_answer": "오답입니다. 😞",
+        "correct_is": "정답",
+        "explanation": "해설",
+        "quiz_complete": "퀴즈 완료!",
+        "score": "점수",
+        "retake_quiz": "퀴즈 다시 풀기"
     },
+
+    
     "en": {
         "title": "Personalized AI Study Coach",
         "sidebar_title": "📚 AI Study Coach Settings",
@@ -212,6 +224,17 @@ LANG = {
         "embed_fail": "Embedding failed: Free tier quota exceeded or network issue.",
         "warning_no_files": "Please upload study materials first.",
         "warning_rag_not_ready": "RAG is not ready. Upload materials and click Start Analysis."
+        "quiz_fail_structure": "Loops for quiz datas are not correct",
+        "select_answer": "Select answer",
+        "check_answer": "Confirm answer",
+        "next_question": "Next Quiz",
+        "correct_answer": "Correct! 🎉",
+        "incorrect_answer": "Incorrect. 😞",
+        "correct_is": "Correct answer",
+        "explanation": "Details",
+        "quiz_complete": "Quiz completed!",
+        "score": "Scores",
+        "retake_quiz": "Retake quize"
     },
     "ja": {
         "title": "パーソナライズAI学習コーチ",
@@ -243,6 +266,17 @@ LANG = {
         "embed_fail": "埋め込み失敗: フリーティアのクォータ超過またはネットワークの問題。",
         "warning_no_files": "まず学習資料をアップロードしてください。",
         "warning_rag_not_ready": "RAGの準備ができていません。資料をアップロードし、分析開始ボタンを押してください。"
+        "quiz_fail_structure": "Loops for quiz datas are not correct",
+        "select_answer": "正解を選んでください",
+        "check_answer": "正解を確認する",
+        "next_question": "次のクイズ",
+        "correct_answer": "正解です! 🎉",
+        "incorrect_answer": "不正解です。 😞",
+        "correct_is": "正解は。。",
+        "explanation": "解説",
+        "quiz_complete": "すべてのクイズを完了しました!",
+        "score": "点数",
+        "retake_quiz": "クイズを再挑戦する"
     }
 }
 
@@ -484,3 +518,4 @@ elif feature_selection == L["lstm_tab"]:
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
+

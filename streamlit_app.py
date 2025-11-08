@@ -10,7 +10,7 @@ import re
 import base64 
 import io 
 
-# Firestore 라이브러리 임포트 (requirements.txt에 google-cloud-firestore 추가 필수)
+# Firestore 라이브러리 임포트 (DB 저장 기능은 유지하되, 오류 메시지 제거)
 from google.cloud import firestore
 from google.oauth2 import service_account 
 
@@ -51,7 +51,7 @@ def initialize_firestore():
     
     required_keys = ["FIREBASE_PROJECT_ID", "FIREBASE_PRIVATE_KEY", "FIREBASE_CLIENT_EMAIL"]
     if not all(os.environ.get(k) for k in required_keys):
-        print("Firebase Secrets are missing. Check FIREBASE_PROJECT_ID, FIREBASE_PRIVATE_KEY, FIREBASE_CLIENT_EMAIL.")
+        # print("Firebase Secrets are missing.")
         return None, "Firebase Secrets are missing."
 
     try:
@@ -59,7 +59,7 @@ def initialize_firestore():
         db = firestore.Client(credentials=creds, project=firestore_credentials["project_id"])
         return db, None
     except Exception as e:
-        print(f"Firebase Initialization Error: {e}")
+        # print(f"Firebase Initialization Error: {e}")
         return None, f"Firebase Initialization Error: {e}"
 
 def save_index_to_firestore(db, vector_store, index_id="user_portfolio_rag"):
@@ -115,7 +115,6 @@ def load_index_from_firestore(db, embeddings, index_id="user_portfolio_rag"):
 # 2. JSON/RAG/LSTM 함수 정의 (최상단)
 # (이전 코드와 동일)
 # ================================
-
 def clean_and_load_json(text):
     """LLM 응답 텍스트에서 JSON 객체만 정규표현식으로 추출하여 로드"""
     match = re.search(r'\{.*\}', text, re.DOTALL)
@@ -194,7 +193,7 @@ def render_interactive_quiz(quiz_data, current_lang):
 
 
 def get_document_chunks(files):
-    # ... (함수 본문 유지)
+    # (함수 본문 유지)
     documents = []
     temp_dir = tempfile.mkdtemp()
 
@@ -234,7 +233,7 @@ def get_document_chunks(files):
 
 
 def get_vector_store(text_chunks):
-    # ... (함수 본문 유지)
+    # (함수 본문 유지)
     cache_key = tuple(doc.page_content for doc in text_chunks)
     if cache_key in st.session_state.embedding_cache:
         return st.session_state.embedding_cache[cache_key]
@@ -256,7 +255,7 @@ def get_vector_store(text_chunks):
 
 
 def get_rag_chain(vector_store):
-    # ... (함수 본문 유지)
+    # (함수 본문 유지)
     if vector_store is None:
         return None
         
@@ -269,7 +268,7 @@ def get_rag_chain(vector_store):
 
 @st.cache_resource
 def load_or_train_lstm():
-    # ... (함수 본문 유지)
+    # (함수 본문 유지)
     np.random.seed(42)
     data = np.cumsum(np.random.normal(loc=5, scale=5, size=50)) + 60
     data = np.clip(data, 50, 95)
@@ -344,6 +343,7 @@ LANG = {
         "quiz_original_response": "LLM 원본 응답",
         "firestore_loading": "데이터베이스에서 RAG 인덱스 로드 중...",
     },
+    # (en, ja 딕셔너리도 동일하게 추가되어 있어야 함)
     "en": {
         "title": "Personalized AI Study Coach",
         "sidebar_title": "📚 AI Study Coach Settings",
@@ -400,7 +400,7 @@ LANG = {
         "rag_header": "RAG知識チャットボット (ドキュメントQ&A)",
         "rag_desc": "アップロードされたドキュメントに基づいて質問に回答します。",
         "rag_input_placeholder": "学習資料について質問してください",
-        "llm_error_key": "⚠️ 警告: GEMINI APIキーが設定されていません。Streamlit Secretsに'GEMINI_API_KEY'を設定してください。",
+        "llm_error_key": "⚠️ 警告: GEMINI APIキーが設定されていません。Streamlit Secretsに'GEMINI_API_KEY'를 설정해주세요。",
         "llm_error_init": "LLM初期化エラー：APIキーを確認してください。",
         "content_header": "カスタム学習コンテンツ生成",
         "content_desc": "学習テーマと難易度に合わせてコンテンツを生成します。",
@@ -413,19 +413,19 @@ LANG = {
         "warning_topic": "学習テーマを入力してください。",
         "lstm_header": "LSTMベース達成度予測ダッシュボード",
         "lstm_desc": "仮想の過去クイズスコアデータに基づき、LSTMモデルを訓練して将来の達成度を予測し表示します。",
-        "lstm_disabled_error": "The LSTM feature is temporarily disabled due to build environment issues. Please use the 'Custom Content Generation' feature first.",
-        "lang_select": "Select Language",
+        "lstm_disabled_error": "現在、ビルド環境の問題によりLSTM機能は一時的に無効化されています。「カスタムコンテンツ生成」機能を先にご利用ください。",
+        "lang_select": "言語選択",
         "embed_success": "全{count}チャンクで学習DB構築完了!",
         "embed_fail": "埋め込み失敗: フリーティアのクォータ超過またはネットワークの問題。",
         "warning_no_files": "まず学習資料をアップロードしてください。",
         "warning_rag_not_ready": "RAGの準備ができていません。資料をアップロードし、分析開始ボタンを押してください。",
         "quiz_fail_structure": "クイズのデータ構造が正しくありません。",
-        "select_answer": "答えを選択してください",
-        "check_answer": "答えを確認",
+        "select_answer": "正解をお選びください",
+        "check_answer": "正解を確認する",
         "next_question": "次の質問",
         "correct_answer": "正解です! 🎉",
         "incorrect_answer": "不正解です。😞",
-        "correct_is": "正解",
+        "correct_is": "正解は。。",
         "explanation": "解説",
         "quiz_complete": "クイズ完了!",
         "score": "スコア",
@@ -439,7 +439,7 @@ LANG = {
 # ================================
 # 4. 세션 상태 및 LLM 초기화 로직
 # ================================
-# ⭐⭐ 세션 상태 변수 초기화 (AttributeError 방지) ⭐⭐
+# ⭐⭐⭐ 세션 상태 변수 초기화 (AttributeError 방지) ⭐⭐⭐
 if 'language' not in st.session_state: st.session_state.language = 'ko'
 if 'uploaded_files_state' not in st.session_state: st.session_state.uploaded_files_state = None
 if 'is_llm_ready' not in st.session_state: st.session_state.is_llm_ready = False
@@ -448,7 +448,7 @@ if 'firestore_db' not in st.session_state: st.session_state.firestore_db = None
 if 'llm_init_error_msg' not in st.session_state: st.session_state.llm_init_error_msg = None
 if 'firestore_load_success' not in st.session_state: st.session_state.firestore_load_success = False
 
-# LLM 및 임베딩 초기화
+
 L = LANG[st.session_state.language] 
 API_KEY = os.environ.get("GEMINI_API_KEY")
 
@@ -462,7 +462,6 @@ if 'llm' not in st.session_state:
             st.session_state.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=API_KEY)
             st.session_state.is_llm_ready = True
             
-            # Firebase 초기화 및 RAG 인덱스 로드 시도
             db, error_message = initialize_firestore()
             st.session_state.firestore_db = db
             
@@ -475,7 +474,7 @@ if 'llm' not in st.session_state:
                     st.session_state.is_rag_ready = True
                     st.session_state.firestore_load_success = True
                 else:
-                    st.session_state.firestore_load_success = False # 로드 실패
+                    st.session_state.firestore_load_success = False
         
         except Exception as e:
             llm_init_error = f"{L['llm_error_init']} {e}"
@@ -494,11 +493,11 @@ if "embedding_cache" not in st.session_state:
 
 
 # ================================
-# 8. Streamlit UI (st.set_page_config 호출)
+# 8. Streamlit UI
 # ================================
 st.set_page_config(page_title=L["title"], layout="wide") # 라인 498 (이제 첫 Streamlit 명령임)
 
-# ⭐⭐ 초기화 오류/성공 메시지 출력 (st.set_page_config 이후) ⭐⭐
+# ⭐⭐ 초기화 오류 메시지 출력 (st.set_page_config 이후) ⭐⭐
 if st.session_state.llm_init_error_msg:
     st.error(st.session_state.llm_init_error_msg)
     
@@ -572,6 +571,8 @@ with st.sidebar:
         L["content_tab"], 
         [L["rag_tab"], L["content_tab"], L["lstm_tab"]]
     )
+
+st.title(L["title"])
 
 st.title(L["title"])
 
@@ -759,4 +760,5 @@ elif feature_selection == L["lstm_tab"]:
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
+
 

@@ -29,8 +29,6 @@ import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
 
-# 0. **Streamlit 설정 (가장 먼저 실행)**
-st.set_page_config(page_title=L["title"], layout="wide")
 
 # ================================
 # 1. Firebase 연동 및 직렬화/역직렬화 함수 (최상단)
@@ -53,7 +51,7 @@ def initialize_firestore():
     
     required_keys = ["FIREBASE_PROJECT_ID", "FIREBASE_PRIVATE_KEY", "FIREBASE_CLIENT_EMAIL"]
     if not all(os.environ.get(k) for k in required_keys):
-        # print("Firebase Secrets are missing.")
+        print("Firebase Secrets are missing. Check FIREBASE_PROJECT_ID, FIREBASE_PRIVATE_KEY, FIREBASE_CLIENT_EMAIL.")
         return None, "Firebase Secrets are missing."
 
     try:
@@ -61,7 +59,7 @@ def initialize_firestore():
         db = firestore.Client(credentials=creds, project=firestore_credentials["project_id"])
         return db, None
     except Exception as e:
-        # print(f"Firebase Initialization Error: {e}")
+        print(f"Firebase Initialization Error: {e}")
         return None, f"Firebase Initialization Error: {e}"
 
 def save_index_to_firestore(db, vector_store, index_id="user_portfolio_rag"):
@@ -195,7 +193,7 @@ def render_interactive_quiz(quiz_data, current_lang):
 
 
 def get_document_chunks(files):
-    # (함수 본문 유지)
+    """업로드된 파일에서 텍스트를 로드하고 청킹합니다."""
     documents = []
     temp_dir = tempfile.mkdtemp()
 
@@ -235,7 +233,7 @@ def get_document_chunks(files):
 
 
 def get_vector_store(text_chunks):
-    # (함수 본문 유지)
+    """텍스트 청크를 임베딩하고 Vector Store를 생성합니다."""
     cache_key = tuple(doc.page_content for doc in text_chunks)
     if cache_key in st.session_state.embedding_cache:
         return st.session_state.embedding_cache[cache_key]
@@ -257,7 +255,7 @@ def get_vector_store(text_chunks):
 
 
 def get_rag_chain(vector_store):
-    # (함수 본문 유지)
+    """검색 체인(ConversationalRetrievalChain)을 생성합니다."""
     if vector_store is None:
         return None
         
@@ -270,7 +268,7 @@ def get_rag_chain(vector_store):
 
 @st.cache_resource
 def load_or_train_lstm():
-    # (함수 본문 유지)
+    """가상의 학습 성취도 예측을 위한 LSTM 모델을 생성하고 학습합니다."""
     np.random.seed(42)
     data = np.cumsum(np.random.normal(loc=5, scale=5, size=50)) + 60
     data = np.clip(data, 50, 95)
@@ -402,7 +400,7 @@ LANG = {
         "rag_header": "RAG知識チャットボット (ドキュメントQ&A)",
         "rag_desc": "アップロードされたドキュメントに基づいて質問に回答します。",
         "rag_input_placeholder": "学習資料について質問してください",
-        "llm_error_key": "⚠️ 警告: GEMINI APIキーが設定されていません。Streamlit Secretsに'GEMINI_API_KEY'를 설정해주세요。",
+        "llm_error_key": "⚠️ 警告: GEMINI APIキーが設定されていません。Streamlit Secretsに'GEMINI_API_KEY'を設定してください。",
         "llm_error_init": "LLM初期化エラー：APIキーを確認してください。",
         "content_header": "カスタム学習コンテンツ生成",
         "content_desc": "学習テーマと難易度に合わせてコンテンツを生成します。",
@@ -422,12 +420,12 @@ LANG = {
         "warning_no_files": "まず学習資料をアップロードしてください。",
         "warning_rag_not_ready": "RAGの準備ができていません。資料をアップロードし、分析開始ボタンを押してください。",
         "quiz_fail_structure": "クイズのデータ構造が正しくありません。",
-        "select_answer": "正解をお選びください",
-        "check_answer": "正解を確認する",
+        "select_answer": "答えを選択してください",
+        "check_answer": "答えを確認",
         "next_question": "次の質問",
         "correct_answer": "正解です! 🎉",
         "incorrect_answer": "不正解です。😞",
-        "correct_is": "正解は。。",
+        "correct_is": "正解",
         "explanation": "解説",
         "quiz_complete": "クイズ完了!",
         "score": "スコア",
@@ -441,7 +439,7 @@ LANG = {
 # ================================
 # 4. 세션 상태 및 LLM 초기화 로직
 # ================================
-# ⭐⭐⭐ 세션 상태 변수 초기화 (AttributeError 방지) ⭐⭐⭐
+# ⭐⭐ 세션 상태 변수 초기화 (AttributeError 방지) ⭐⭐
 if 'language' not in st.session_state: st.session_state.language = 'ko'
 if 'uploaded_files_state' not in st.session_state: st.session_state.uploaded_files_state = None
 if 'is_llm_ready' not in st.session_state: st.session_state.is_llm_ready = False
@@ -497,7 +495,7 @@ if "embedding_cache" not in st.session_state:
 # ================================
 # 8. Streamlit UI
 # ================================
-# st.set_page_config(page_title=L["title"], layout="wide") # 라인 498 (이제 첫 Streamlit 명령임)
+st.set_page_config(page_title=L["title"], layout="wide") 
 
 # ⭐⭐ 초기화 오류 메시지 출력 (st.set_page_config 이후) ⭐⭐
 if st.session_state.llm_init_error_msg:
@@ -573,8 +571,6 @@ with st.sidebar:
         L["content_tab"], 
         [L["rag_tab"], L["content_tab"], L["lstm_tab"]]
     )
-
-st.title(L["title"])
 
 st.title(L["title"])
 
@@ -762,6 +758,7 @@ elif feature_selection == L["lstm_tab"]:
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
+
 
 
 

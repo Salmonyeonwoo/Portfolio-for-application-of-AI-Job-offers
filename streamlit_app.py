@@ -5,10 +5,10 @@ import streamlit as st
 import os
 import tempfile 
 import time
-import json # JSON 처리를 위해 추가
-import re # 정규표현식(Regex)을 위해 추가
-import base64 # Base64 인코딩/디코딩을 위해 추가
-import io # 바이트 스트림 처리를 위해 추가
+import json 
+import re 
+import base64 
+import io 
 
 # Firestore 라이브러리 임포트 (requirements.txt에 google-cloud-firestore 추가 필수)
 from google.cloud import firestore
@@ -113,6 +113,7 @@ def load_index_from_firestore(db, embeddings, index_id="user_portfolio_rag"):
 
 # ================================
 # 2. JSON/RAG/LSTM 함수 정의 (최상단)
+# (이전 코드와 동일)
 # ================================
 
 def clean_and_load_json(text):
@@ -193,7 +194,7 @@ def render_interactive_quiz(quiz_data, current_lang):
 
 
 def get_document_chunks(files):
-    """업로드된 파일에서 텍스트를 로드하고 청킹합니다."""
+    # ... (함수 본문 유지)
     documents = []
     temp_dir = tempfile.mkdtemp()
 
@@ -233,7 +234,7 @@ def get_document_chunks(files):
 
 
 def get_vector_store(text_chunks):
-    """텍스트 청크를 임베딩하고 Vector Store를 생성합니다."""
+    # ... (함수 본문 유지)
     cache_key = tuple(doc.page_content for doc in text_chunks)
     if cache_key in st.session_state.embedding_cache:
         return st.session_state.embedding_cache[cache_key]
@@ -248,7 +249,6 @@ def get_vector_store(text_chunks):
     
     except Exception as e:
         if "429" in str(e):
-             # 429 오류는 여기서만 잡고, st.error는 UI 로직에서 출력하도록 수정
              return None
         else:
             print(f"Vector Store creation failed: {e}") 
@@ -256,7 +256,7 @@ def get_vector_store(text_chunks):
 
 
 def get_rag_chain(vector_store):
-    """검색 체인(ConversationalRetrievalChain)을 생성합니다."""
+    # ... (함수 본문 유지)
     if vector_store is None:
         return None
         
@@ -269,7 +269,7 @@ def get_rag_chain(vector_store):
 
 @st.cache_resource
 def load_or_train_lstm():
-    """가상의 학습 성취도 예측을 위한 LSTM 모델을 생성하고 학습합니다."""
+    # ... (함수 본문 유지)
     np.random.seed(42)
     data = np.cumsum(np.random.normal(loc=5, scale=5, size=50)) + 60
     data = np.clip(data, 50, 95)
@@ -296,6 +296,7 @@ def load_or_train_lstm():
 
 # ================================
 # 3. 다국어 지원 딕셔너리 (Language Dictionary)
+# (이전 코드와 동일)
 # ================================
 LANG = {
     "ko": {
@@ -328,7 +329,7 @@ LANG = {
         "embed_fail": "임베딩 실패: 무료 티어 한도 초과 또는 네트워크 문제。",
         "warning_no_files": "먼저 학습 자료를 업로드하세요。",
         "warning_rag_not_ready": "RAG가 준비되지 않았습니다. 학습 자료를 업로드하고 분석하세요。",
-        "quiz_fail_structure": "퀴즈 데이터 구조가 올바르지 않습니다.",
+        "quiz_fail_structure": "퀴즈 데이터 구조가 올바르지 않습니다。",
         "select_answer": "정답을 선택하세요",
         "check_answer": "정답 확인",
         "next_question": "다음 문항",
@@ -412,8 +413,8 @@ LANG = {
         "warning_topic": "学習テーマを入力してください。",
         "lstm_header": "LSTMベース達成度予測ダッシュボード",
         "lstm_desc": "仮想の過去クイズスコアデータに基づき、LSTMモデルを訓練して将来の達成度を予測し表示します。",
-        "lstm_disabled_error": "現在、ビルド環境の問題によりLSTM機能は一時的に無効化されています。「カスタムコンテンツ生成」機能を先にご利用ください。",
-        "lang_select": "言語選択",
+        "lstm_disabled_error": "The LSTM feature is temporarily disabled due to build environment issues. Please use the 'Custom Content Generation' feature first.",
+        "lang_select": "Select Language",
         "embed_success": "全{count}チャンクで学習DB構築完了!",
         "embed_fail": "埋め込み失敗: フリーティアのクォータ超過またはネットワークの問題。",
         "warning_no_files": "まず学習資料をアップロードしてください。",
@@ -436,26 +437,22 @@ LANG = {
 
 
 # ================================
-# 7. 세션 상태 및 LLM 초기화 로직
+# 4. 세션 상태 및 LLM 초기화 로직
 # ================================
-# 초기 세션 상태 설정 (NameError 방지)
-if 'language' not in st.session_state:
-    st.session_state.language = 'ko'
+# ⭐⭐⭐ 세션 상태 변수 초기화 (AttributeError 방지) ⭐⭐⭐
+if 'language' not in st.session_state: st.session_state.language = 'ko'
+if 'uploaded_files_state' not in st.session_state: st.session_state.uploaded_files_state = None
+if 'is_llm_ready' not in st.session_state: st.session_state.is_llm_ready = False
+if 'is_rag_ready' not in st.session_state: st.session_state.is_rag_ready = False
+if 'firestore_db' not in st.session_state: st.session_state.firestore_db = None
+if 'llm_init_error_msg' not in st.session_state: st.session_state.llm_init_error_msg = None
+if 'firestore_load_success' not in st.session_state: st.session_state.firestore_load_success = False
+
+
 L = LANG[st.session_state.language] 
-if 'uploaded_files_state' not in st.session_state:
-    st.session_state.uploaded_files_state = None
-if 'is_llm_ready' not in st.session_state:
-    st.session_state.is_llm_ready = False
-if 'is_rag_ready' not in st.session_state:
-    st.session_state.is_rag_ready = False
-if 'firestore_db' not in st.session_state:
-    st.session_state.firestore_db = None
-    
-# LLM 및 임베딩 초기화
 API_KEY = os.environ.get("GEMINI_API_KEY")
 
 if 'llm' not in st.session_state: 
-    # LLM 초기화 시도 (st.set_page_config 이전에 st.error 호출하지 않도록 주의)
     llm_init_error = None
     if not API_KEY:
         llm_init_error = L["llm_error_key"]
@@ -465,13 +462,11 @@ if 'llm' not in st.session_state:
             st.session_state.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=API_KEY)
             st.session_state.is_llm_ready = True
             
-            # Firebase 초기화 및 RAG 인덱스 로드 시도
             db, error_message = initialize_firestore()
             st.session_state.firestore_db = db
             
-            # RAG 초기 로드 시도 (UI 업데이트는 st.set_page_config 이후에 진행)
             if db and 'conversation_chain' not in st.session_state:
-                print("Attempting to load RAG index from Firestore...") # Debugging
+                print("Attempting to load RAG index from Firestore...") 
                 loaded_index = load_index_from_firestore(db, st.session_state.embeddings)
                 
                 if loaded_index:
@@ -487,10 +482,7 @@ if 'llm' not in st.session_state:
     
     if llm_init_error:
         st.session_state.is_llm_ready = False
-        st.session_state.llm_init_error_msg = llm_init_error # 메시지를 세션에 저장
-        
-    if 'llm_init_error_msg' not in st.session_state:
-        st.session_state.llm_init_error_msg = None
+        st.session_state.llm_init_error_msg = llm_init_error
 
 
 if "memory" not in st.session_state:
@@ -554,7 +546,11 @@ with st.sidebar:
                 if vector_store:
                     # RAG 인덱스가 성공적으로 생성되면 Firestore에 저장 시도
                     db = st.session_state.firestore_db
-                    if db and save_index_to_firestore(db, vector_store):
+                    save_success = False
+                    if db:
+                        save_success = save_index_to_firestore(db, vector_store)
+                    
+                    if save_success:
                         st.success(L["embed_success"].format(count=len(text_chunks)) + " (DB 저장 완료)")
                     else:
                         st.success(L["embed_success"].format(count=len(text_chunks)) + " (DB 저장 실패)")

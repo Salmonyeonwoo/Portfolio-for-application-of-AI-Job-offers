@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Coach Portfolio - Technical Challenge Resolution</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+KR:wght@100..900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-8">
+
+        <header class="text-center mb-12 py-8 bg-white rounded-xl shadow-lg">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700">AI Study Coach Portfolio</h1>
+            <p class="mt-2 text-xl text-gray-500">Technical Challenge: Persistence Layer Implementation Success Story</p>
+        </header>
+
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-indigo-400 pb-2">1. Challenge Overview</h2>
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <p class="text-lg mb-4">The core technical challenge was integrating Google Cloud Firestore (GCP) for persistent storage of RAG indices (FAISS) within the Streamlit Cloud serverless environment, leading to persistent server authentication conflicts.</p>
+                
+                <h3 class="text-2xl font-semibold text-gray-600 mt-6 mb-4">Core Problem: Admin SDK Initialization Failures</h3>
+                <div class="bg-red-50 p-4 rounded-lg border border-red-300">
+                    <p class="text-red-700 font-medium">**Error Messages Experienced:** Invalid \escape (JSON parsing), The default Firebase app does not exist (Initialization conflict).</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-indigo-400 pb-2">2. Step-by-Step Resolution Process</h2>
+            
+            <div id="resolution-steps" class="space-y-8">
+                
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
+                    <h3 class="text-xl font-bold text-blue-700 mb-3">Step 1: Streamlit Execution Order and Code Structuring</h3>
+                    <p class="text-gray-600 mb-3">We first reorganized the code structure to ensure that configuration loading occurred before any Streamlit commands, resolving the persistent `st.set_page_config` errors.</p>
+                    <div class="bg-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
+                        <pre># Resolution: Configuration -> st.set_page_config -> Initialization</pre>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-yellow-500">
+                    <h3 class="text-xl font-bold text-yellow-700 mb-3">Step 2: Secrets JSON String Recovery (Invalid \escape)</h3>
+                    <p class="text-gray-600 mb-3">To fix the error caused by the double-escaped `\n` characters within the `private_key` of the Service Account JSON string, we implemented robust string recovery logic.</p>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="font-semibold text-sm mb-1">Recovery Logic Applied</p>
+                            <img class="rounded-lg shadow-sm w-full h-32 object-cover" src="https://placehold.co/400x150/505050/FFFFFF?text=JSON+STRING+REPAIR" alt="JSON parsing recovery code image">
+                            <p class="text-xs text-center mt-1 text-gray-500">Code: `sa_info_str.replace('\\n', '\n')` logic to restore line breaks.</p>
+                        </div>
+                         <div>
+                            <p class="font-semibold text-sm mb-1">Secrets Input Method</p>
+                            <img class="rounded-lg shadow-sm w-full h-32 object-cover" src="https://placehold.co/400x150/d1d5db/374151?text=SECRETS+INPUT+EXAMPLE" alt="Secrets TOML input example image">
+                            <p class="text-xs text-center mt-1 text-gray-500">Inputting raw JSON structure (Multi-line TOML).</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-red-500">
+                    <h3 class="text-xl font-bold text-red-700 mb-3">Step 3: Resolving Admin SDK Cache Conflict</h3>
+                    <p class="text-gray-600 mb-3">The `The default Firebase app does not exist` error was resolved by separating the initialization function and ensuring that the Firebase Admin SDK was initialized only once outside of the main caching decorator (`@st.cache_resource`).</p>
+                    <div class="bg-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
+                        <pre># Final Initialization Logic: Separated init from @st.cache_resource client creation.</pre>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
+                    <h3 class="text-xl font-bold text-green-700 mb-3">Step 4: Finalizing GCP IAM Permissions (Database Write Success)</h3>
+                    <p class="text-gray-600 mb-3">Persistent 'DB Save Failed' errors were caused by insufficient **Service Account Roles** in GCP, despite using the Admin SDK. The issue was resolved by explicitly granting necessary roles.</p>
+                    <ul class="list-disc list-inside text-gray-600 mt-2 ml-4">
+                        <li>**Roles Granted:** Cloud Datastore User, Firebase Developer, Cloud Firestore Service Agent.</li>
+                        <li>**Final Outcome:** Successful RAG Indexing and Persistence Layer Implementation.</li>
+                    </ul>
+                    <img class="rounded-lg shadow-sm w-full h-32 object-cover mt-4" src="https://placehold.co/400x150/4ade80/065f46?text=GCP+IAM+ROLE+CONFIRM" alt="GCP IAM role setting confirmation image">
+                </div>
+            </div>
+        </section>
+        
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-indigo-400 pb-2">3. Final Problem Resolution Effort Analysis</h2>
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <canvas id="timeChart"></canvas>
+                <p class="text-sm text-gray-500 text-center mt-4">Estimated effort distribution for resolving complex integration issues.</p>
+            </div>
+        </section>
+
+        <footer class="text-center text-gray-500 mt-12 pt-4 border-t border-gray-300">
+            <p>&copy; 2025 AI Coach Portfolio. Developed with Streamlit & Gemini API.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        const ctx = document.getElementById('timeChart');
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Code Structure/Environment', 'JSON Parsing/Escape Errors', 'Admin SDK Initialization Conflict', 'GCP IAM Permission Propagation'],
+                datasets: [{
+                    label: 'Effort Ratio',
+                    data: [15, 30, 20, 35], // Total 100%
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.7)', 
+                        'rgba(245, 158, 11, 0.7)',
+                        'rgba(239, 68, 68, 0.7)',
+                        'rgba(16, 185, 129, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 255, 255, 1)',
+                        'rgba(255, 255, 255, 1)',
+                        'rgba(255, 255, 255, 1)',
+                        'rgba(255, 255, 255, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

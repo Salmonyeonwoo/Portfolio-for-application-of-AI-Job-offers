@@ -3,17 +3,17 @@
 # ========================================
 import streamlit as st
 import os
-import tempfile 
+import tempfile
 import time
-import json 
-import re 
-import base64 
-import io 
+import json
+import re
+import base64
+import io
 
-# ⭐ Admin SDK 관련 라이브러리 임포트 (기존 임포트 대체 및 Admin SDK 추가)
-from firebase_admin import credentials, firestore, initialize_app 
+# ⭐ Admin SDK 관련 라이브러리 임포트
+from firebase_admin import credentials, firestore, initialize_app
 from google.cloud import firestore as gcp_firestore # Admin SDK의 firestore.Client와 구분하기 위함
-from google.oauth2 import service_account 
+from google.oauth2 import service_account
 
 from langchain.chains import ConversationalRetrievalChain
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
@@ -37,7 +37,7 @@ from tensorflow.keras.layers import LSTM, Dense
 def initialize_firestore_admin():
     """
     Firebase Admin SDK를 사용하여 관리자 권한으로 Firestore 클라이언트를 초기화합니다.
-    Streamlit 환경 변수에서 서비스 계정 정보를 가져와 사용합니다.
+    JSON 파싱 오류를 방지하기 위해 문자열을 정제합니다.
     """
     # 1. Streamlit Secrets에서 JSON 문자열 로드
     try:
@@ -46,17 +46,28 @@ def initialize_firestore_admin():
         if not service_account_json_str:
             return None, "FIREBASE_SERVICE_ACCOUNT_JSON Secret이 누락되었습니다."
             
-        # JSON 문자열을 파이썬 딕셔너리로 변환 (개행 문자 치환 처리 포함)
-        sa_info = json.loads(service_account_json_str.replace('\\n', '\n'))
+        # 2. 문자열 정제 (가장 중요): JSON 파싱 오류를 유발하는 숨겨진 문자 제거 및 치환
+        # .strip()으로 외부 공백 제거
+        # .encode('utf-8', 'ignore').decode('utf-8')으로 유니코드 인코딩 오류 회피
+        purified_str = service_account_json_str.strip().encode('utf-8', 'ignore').decode('utf-8')
+        
+        # 3. 줄 바꿈 및 이스케이프 문자 처리: 
+        # Secrets에 저장된 '\\n' (백슬래시 두 개)를 실제 줄 바꿈('\n')으로 치환
+        # json.loads()가 유효하게 인식하도록 준비
+        sa_info_str = purified_str.replace('\\n', '\n') 
+        
+        # 4. JSON 로드 시도
+        sa_info = json.loads(sa_info_str)
 
-        # 2. Firebase Admin SDK 초기화
-        # 이미 초기화되었는지 확인 (Streamlit 재실행 시 중복 방지)
-        if not firestore._app: 
+        # 5. Firebase Admin SDK 초기화
+        # 이미 초기화되었는지 확인 (st.cache_resource와 함께 중복 초기화 방지)
+        # firestore._app을 사용하여 앱이 초기화되었는지 확인
+        if not firestore._app:
             cred = credentials.Certificate(sa_info)
-            # 프로젝트 ID를 명시적으로 전달하여 초기화
+            # 프로젝트 ID를 명시적으로 전달하여 초기화 충돌 방지
             initialize_app(cred, {'projectId': sa_info.get("project_id")})
         
-        # 3. Firestore 클라이언트 반환 (Admin SDK 클라이언트 사용)
+        # 6. Firestore 클라이언트 반환 (Admin SDK 클라이언트 사용)
         db = firestore.client()
         return db, None
 
@@ -119,7 +130,7 @@ def load_index_from_firestore(db, embeddings, index_id="user_portfolio_rag"):
         return None
 
 # ================================
-# 2. JSON/RAG/LSTM 함수 정의 (기존 내용 유지)
+# 2. JSON/RAG/LSTM 함수 정의
 # ================================
 def clean_and_load_json(text):
     """LLM 응답 텍스트에서 JSON 객체만 정규표현식으로 추출하여 로드"""
@@ -478,8 +489,7 @@ if 'llm' not in st.session_state:
             st.session_state.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=API_KEY)
             st.session_state.is_llm_ready = True
             
-            # ⭐⭐ Admin SDK 클라이언트 초기화로 변경 ⭐⭐
-            # 기존 initialize_firestore() 대신 initialize_firestore_admin() 호출
+            # ⭐⭐ Admin SDK 클라이언트 초기화로 변경 (JSON 파싱 강화 버전) ⭐⭐
             db, error_message = initialize_firestore_admin() 
             st.session_state.firestore_db = db
             
@@ -487,7 +497,7 @@ if 'llm' not in st.session_state:
                 # Admin SDK 초기화 실패 시 에러 메시지를 LLM 에러 메시지에 포함
                 llm_init_error = f"{L['llm_error_init']} (DB Auth Error: {error_message})"
             
-            # DB 로딩 로직은 동일
+            # DB 로딩 로직
             if db and 'conversation_chain' not in st.session_state:
                 # DB 로딩 시도
                 loaded_index = load_index_from_firestore(db, st.session_state.embeddings)
@@ -507,7 +517,7 @@ if 'llm' not in st.session_state:
         st.session_state.is_llm_ready = False
         st.session_state.llm_init_error_msg = llm_init_error # 메시지를 세션에 저장
 
-# 나머지 세션 상태 초기화 (LLM 초기화가 완료된 후에 안전하게)
+# 나머지 세션 상태 초기화
 if "memory" not in st.session_state:
     st.session_state.memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 

@@ -10,8 +10,9 @@ import re
 import base64 
 import io 
 
-# Firestore 라이브러리 임포트 (DB 저장 기능은 유지하되, 오류 메시지 제거)
-from google.cloud import firestore
+# ⭐ Admin SDK 관련 라이브러리 임포트 추가/변경
+from firebase_admin import credentials, firestore, initialize_app 
+from google.cloud import firestore as gcp_firestore # Admin SDK의 firestore.Client와 구분하기 위함
 from google.oauth2 import service_account 
 
 from langchain.chains import ConversationalRetrievalChain
@@ -30,37 +31,41 @@ from tensorflow.keras.layers import LSTM, Dense
 
 
 # ================================
-# 1. Firebase 연동 및 직렬화/역직렬화 함수
+# 1. Firebase 연동 및 직렬화/역직렬화 함수 (Admin SDK 사용)
 # ================================
 @st.cache_resource(ttl=None)
-def initialize_firestore():
-    """Firestore 클라이언트를 초기화하고 캐시합니다."""
-    # Note: Using os.environ.get is necessary for Service Account based auth on Streamlit Cloud
-    firestore_credentials = {
-        "type": "service_account",
-        "project_id": os.environ.get("FIREBASE_PROJECT_ID"),
-        "private_key_id": os.environ.get("FIREBASE_PRIVATE_KEY_ID"),
-        "private_key": os.environ.get("FIREBASE_PRIVATE_KEY").replace('\\n', '\n') if os.environ.get("FIREBASE_PRIVATE_KEY") else None,
-        "client_email": os.environ.get("FIREBASE_CLIENT_EMAIL"),
-        "client_id": os.environ.get("FIREBASE_CLIENT_ID"),
-        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-        "token_uri": "https://oauth2.googleapis.com/token",
-        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-        "client_x509_cert_url": os.environ.get("FIREBASE_CLIENT_X509_CERT_URL"),
-    }
-    
-    required_keys = ["FIREBASE_PROJECT_ID", "FIREBASE_PRIVATE_KEY", "FIREBASE_CLIENT_EMAIL"]
-    if not all(os.environ.get(k) for k in required_keys):
-        print("Firebase Secrets are missing. Check FIREBASE_PROJECT_ID, FIREBASE_PRIVATE_KEY, FIREBASE_CLIENT_EMAIL.")
-        return None, "Firebase Secrets are missing."
-
+def initialize_firestore_admin():
+    """
+    Firebase Admin SDK를 사용하여 관리자 권한으로 Firestore 클라이언트를 초기화합니다.
+    Streamlit 환경 변수에서 서비스 계정 정보를 가져와 사용합니다.
+    """
+    # 1. Streamlit Secrets에서 JSON 문자열 로드
     try:
-        creds = service_account.Credentials.from_service_account_info(firestore_credentials)
-        db = firestore.Client(credentials=creds, project=firestore_credentials["project_id"])
+        # 환경 변수에서 JSON 문자열을 가져옴
+        # (FIREBASE_SERVICE_ACCOUNT_JSON 키를 사용하도록 변경)
+        service_account_json_str = os.environ.get("FIREBASE_SERVICE_ACCOUNT_JSON")
+        if not service_account_json_str:
+            return None, "FIREBASE_SERVICE_ACCOUNT_JSON Secret이 누락되었습니다."
+            
+        # JSON 문자열을 파이썬 딕셔너리로 변환 (개행 문자 치환 처리 포함)
+        sa_info = json.loads(service_account_json_str.replace('\\n', '\n'))
+
+        # 2. Firebase Admin SDK 초기화
+        # 이미 초기화되었는지 확인 (Streamlit 재실행 시 중복 방지)
+        if not firestore._app: 
+            cred = credentials.Certificate(sa_info)
+            # 프로젝트 ID를 명시적으로 전달하여 초기화
+            initialize_app(cred, {'projectId': sa_info.get("project_id")})
+        
+        # 3. Firestore 클라이언트 반환 (Admin SDK 클라이언트 사용)
+        db = firestore.client()
         return db, None
+
     except Exception as e:
-        print(f"Firebase Initialization Error: {e}")
-        return None, f"Firebase Initialization Error: {e}"
+        error_msg = f"Firebase Admin 초기화 실패: Admin SDK 인증 정보를 확인하세요. ({e})"
+        print(error_msg)
+        return None, error_msg
+
 
 def save_index_to_firestore(db, vector_store, index_id="user_portfolio_rag"):
     """FAISS 인덱스를 Firestore에 Base64 형태로 직렬화하여 저장합니다."""
@@ -76,9 +81,10 @@ def save_index_to_firestore(db, vector_store, index_id="user_portfolio_rag"):
         encoded_data = {
             "faiss_data": base64.b64encode(faiss_bytes).decode('utf-8'),
             "metadata_data": base64.b64encode(metadata_bytes).decode('utf-8'),
-            "timestamp": firestore.SERVER_TIMESTAMP
+            "timestamp": gcp_firestore.SERVER_TIMESTAMP
         }
         
+        # Admin SDK를 통해 Firestore에 접근 (관리자 권한으로 인증됨)
         db.collection("rag_indices").document(index_id).set(encoded_data)
         return True
     
@@ -91,6 +97,7 @@ def load_index_from_firestore(db, embeddings, index_id="user_portfolio_rag"):
     if not db: return None
 
     try:
+        # Admin SDK를 통해 Firestore에 접근
         doc = db.collection("rag_indices").document(index_id).get()
         if not doc.exists:
             return None 
@@ -112,7 +119,7 @@ def load_index_from_firestore(db, embeddings, index_id="user_portfolio_rag"):
         return None
 
 # ================================
-# 2. JSON/RAG/LSTM 함수 정의
+# 2. JSON/RAG/LSTM 함수 정의 (기존 내용 유지)
 # ================================
 def clean_and_load_json(text):
     """LLM 응답 텍스트에서 JSON 객체만 정규표현식으로 추출하여 로드"""
@@ -438,7 +445,6 @@ LANG = {
 # ================================
 
 # ⭐⭐ 세션 상태 변수 최소 초기화 (st.set_page_config 이전에 실행) ⭐⭐
-# Streamlit 상태를 읽는 것은 안전하지만, 쓰는 것은 UI 명령어보다 앞서야 합니다.
 if 'language' not in st.session_state: st.session_state.language = 'ko'
 if 'uploaded_files_state' not in st.session_state: st.session_state.uploaded_files_state = None
 if 'is_llm_ready' not in st.session_state: st.session_state.is_llm_ready = False
@@ -472,10 +478,15 @@ if 'llm' not in st.session_state:
             st.session_state.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=API_KEY)
             st.session_state.is_llm_ready = True
             
-            # Firestore 클라이언트 초기화
-            db, error_message = initialize_firestore()
+            # ⭐⭐ Admin SDK 클라이언트 초기화로 변경 ⭐⭐
+            db, error_message = initialize_firestore_admin() # Admin SDK 함수 호출
             st.session_state.firestore_db = db
             
+            if error_message:
+                # Admin SDK 초기화 실패 시 에러 메시지를 LLM 에러 메시지에 포함
+                llm_init_error = f"{L['llm_error_init']} (DB Auth Error: {error_message})"
+            
+            # DB 로딩 로직은 동일
             if db and 'conversation_chain' not in st.session_state:
                 # DB 로딩 시도
                 loaded_index = load_index_from_firestore(db, st.session_state.embeddings)

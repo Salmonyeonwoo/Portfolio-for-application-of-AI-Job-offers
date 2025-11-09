@@ -25,17 +25,17 @@ import numpy as np
 import pandas as pd
 from bs4 import BeautifulSoup
 import matplotlib.pyplot as plt
-import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
 
 
 # ================================
-# 1. Firebase 연동 및 직렬화/역직렬화 함수 (최상단)
+# 1. Firebase 연동 및 직렬화/역직렬화 함수
 # ================================
 @st.cache_resource(ttl=None)
 def initialize_firestore():
     """Firestore 클라이언트를 초기화하고 캐시합니다."""
+    # Note: Using os.environ.get is necessary for Service Account based auth on Streamlit Cloud
     firestore_credentials = {
         "type": "service_account",
         "project_id": os.environ.get("FIREBASE_PROJECT_ID"),
@@ -103,7 +103,7 @@ def load_index_from_firestore(db, embeddings, index_id="user_portfolio_rag"):
         temp_dir = tempfile.mkdtemp()
         with open(f"{temp_dir}/index.faiss", "wb") as f: f.write(faiss_bytes)
         with open(f"{temp_dir}/index.pkl", "wb") as f: f.write(metadata_bytes)
-            
+        
         vector_store = FAISS.load_local(folder_path=temp_dir, embeddings=embeddings, index_name="index")
         return vector_store
         
@@ -112,7 +112,7 @@ def load_index_from_firestore(db, embeddings, index_id="user_portfolio_rag"):
         return None
 
 # ================================
-# 2. JSON/RAG/LSTM 함수 정의 (최상단)
+# 2. JSON/RAG/LSTM 함수 정의
 # ================================
 def clean_and_load_json(text):
     """LLM 응답 텍스트에서 JSON 객체만 정규표현식으로 추출하여 로드"""
@@ -434,9 +434,11 @@ LANG = {
 
 
 # ================================
-# 4. 세션 상태 및 LLM 초기화 로직
+# 4. Streamlit 핵심 Config 설정 및 Session State 초기화 (CRITICAL ZONE)
 # ================================
-# ⭐⭐ 세션 상태 변수 초기화 (AttributeError 방지) ⭐⭐
+
+# ⭐⭐ 세션 상태 변수 최소 초기화 (st.set_page_config 이전에 실행) ⭐⭐
+# Streamlit 상태를 읽는 것은 안전하지만, 쓰는 것은 UI 명령어보다 앞서야 합니다.
 if 'language' not in st.session_state: st.session_state.language = 'ko'
 if 'uploaded_files_state' not in st.session_state: st.session_state.uploaded_files_state = None
 if 'is_llm_ready' not in st.session_state: st.session_state.is_llm_ready = False
@@ -445,9 +447,19 @@ if 'firestore_db' not in st.session_state: st.session_state.firestore_db = None
 if 'llm_init_error_msg' not in st.session_state: st.session_state.llm_init_error_msg = None
 if 'firestore_load_success' not in st.session_state: st.session_state.firestore_load_success = False
 
-
+# 언어 설정 로드 (UI 출력 전 필수)
 L = LANG[st.session_state.language] 
 API_KEY = os.environ.get("GEMINI_API_KEY")
+
+# =======================================================
+# 5. Streamlit UI 페이지 설정 (스크립트 내 첫 번째 ST 명령)
+# =======================================================
+# 이 라인이 st. 로 시작하는 함수 중 무조건 첫 번째로 실행되어야 합니다.
+st.set_page_config(page_title=L["title"], layout="wide") 
+
+# =======================================================
+# 6. 서비스 초기화 및 LLM/DB 로직 (페이지 설정 후 안전하게 실행)
+# =======================================================
 
 if 'llm' not in st.session_state: 
     llm_init_error = None
@@ -455,15 +467,17 @@ if 'llm' not in st.session_state:
         llm_init_error = L["llm_error_key"]
     else:
         try:
+            # LLM 및 Embeddings 초기화
             st.session_state.llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.7, google_api_key=API_KEY)
             st.session_state.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=API_KEY)
             st.session_state.is_llm_ready = True
             
+            # Firestore 클라이언트 초기화
             db, error_message = initialize_firestore()
             st.session_state.firestore_db = db
             
             if db and 'conversation_chain' not in st.session_state:
-                # ⭐⭐ DB 로딩 상태 메시지를 UI 출력 대신 세션에 저장 ⭐⭐
+                # DB 로딩 시도
                 loaded_index = load_index_from_firestore(db, st.session_state.embeddings)
                 
                 if loaded_index:
@@ -472,7 +486,7 @@ if 'llm' not in st.session_state:
                     st.session_state.firestore_load_success = True
                 else:
                     st.session_state.firestore_load_success = False
-        
+            
         except Exception as e:
             llm_init_error = f"{L['llm_error_init']} {e}"
             st.session_state.is_llm_ready = False
@@ -481,20 +495,18 @@ if 'llm' not in st.session_state:
         st.session_state.is_llm_ready = False
         st.session_state.llm_init_error_msg = llm_init_error # 메시지를 세션에 저장
 
-
+# 나머지 세션 상태 초기화 (LLM 초기화가 완료된 후에 안전하게)
 if "memory" not in st.session_state:
     st.session_state.memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
 if "embedding_cache" not in st.session_state:
     st.session_state.embedding_cache = {}
 
-
 # ================================
-# 8. Streamlit UI
+# 7. 초기화 오류 메시지 출력 및 DB 상태 알림
 # ================================
-st.set_page_config(page_title=L["title"], layout="wide") 
 
-# ⭐⭐ 초기화 오류 메시지 출력 (st.set_page_config 이후) ⭐⭐
+# ⭐⭐ 초기화 오류 메시지 출력 (st.set_page_config 이후에 안전하게) ⭐⭐
 if st.session_state.llm_init_error_msg:
     st.error(st.session_state.llm_init_error_msg)
     
@@ -504,6 +516,10 @@ if st.session_state.get('firestore_db'):
     elif not st.session_state.get('is_rag_ready', False):
         st.info("데이터베이스에서 기존 RAG 인덱스를 찾을 수 없습니다. 파일을 업로드하여 새로 만드세요.")
 
+
+# ================================
+# 8. Streamlit UI 시작
+# ================================
 
 with st.sidebar:
     selected_lang_key = st.selectbox(
@@ -747,7 +763,7 @@ elif feature_selection == L["lstm_tab"]:
                  elif avg_predict < avg_recent - 5:
                     comment = "LSTM予測の結果、**達成度がやや低下する可能性**が示されました。学習資料や方法論の基礎理解が不足しているかもしれません。RAGチャットボット機能を利用して、基本概念を再確認することをお勧めします。"
                  else:
-                    comment = "達成度は現状維持と予測されます。停滞期になる可能性があるため、**新しいコンテンツ形式（例：実践例のアイデア）を生成**し、学習に活力を与えることを検討してください。"
+                    comment = "達成度は現状維持と予測されます。停滞期になる可能性があります。**新しいコンテンツ形式（例：実践例のアイデア）を生成**し、学習に活力を与えることを検討してください。"
 
 
             st.info(comment)

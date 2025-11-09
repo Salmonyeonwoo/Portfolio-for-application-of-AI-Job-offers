@@ -20,6 +20,8 @@ paddlenlp
 tensorflow
 keras
 
+#Adding Firestore Admin SDK
+firebase-admin
 # Docs / Parsing
 unstructured==0.14.9
 PyPDF2

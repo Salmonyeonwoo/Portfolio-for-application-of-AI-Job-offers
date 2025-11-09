@@ -575,185 +575,183 @@ st.title(L["title"])
 # 9. 기능별 페이지 구현
 # ================================
 if feature_selection == L["rag_tab"]:
-    st.header(L["rag_header"])
-    st.markdown(L["rag_desc"])
-    if st.session_state.get('is_rag_ready', False) and st.session_state.get('conversation_chain'):
-        if "messages" not in st.session_state:
-            st.session_state.messages = []
+    st.header(L["rag_header"])
+    st.markdown(L["rag_desc"])
+    if st.session_state.get('is_rag_ready', False) and st.session_state.get('conversation_chain'):
+        if "messages" not in st.session_state:
+            st.session_state.messages = []
 
-        for message in st.session_state.messages:
-            with st.chat_message(message["role"]):
-                st.markdown(message["content"])
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
 
-        if prompt := st.chat_input(L["rag_input_placeholder"]):
-            st.session_state.messages.append({"role":"user","content":prompt})
-            with st.chat_message("user"):
-                st.markdown(prompt)
-            with st.chat_message("assistant"):
-                with st.spinner(f"답변 생성 중..." if st.session_state.language == 'ko' else "Generating response..."):
-                    try:
-                        response = st.session_state.conversation_chain.invoke({"question":prompt})
-                        answer = response.get('answer','응답을 생성할 수 없습니다.' if st.session_state.language == 'ko' else 'Could not generate response.')
-                        st.markdown(answer)
-                        st.session_state.messages.append({"role":"assistant","content":answer})
-                    except Exception as e:
-                        st.error(f"챗봇 오류: {e}")
-                        st.session_state.messages.append({"role":"assistant","content":"오류 발생" if st.session_state.language == 'ko' else "An error occurred"})
-    else:
-        st.warning(L["warning_rag_not_ready"])
+        if prompt := st.chat_input(L["rag_input_placeholder"]):
+            st.session_state.messages.append({"role":"user","content":prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
+            with st.chat_message("assistant"):
+                with st.spinner(f"답변 생성 중..." if st.session_state.language == 'ko' else "Generating response..."):
+                    try:
+                        response = st.session_state.conversation_chain.invoke({"question":prompt})
+                        answer = response.get('answer','응답을 생성할 수 없습니다.' if st.session_state.language == 'ko' else 'Could not generate response.')
+                        st.markdown(answer)
+                        st.session_state.messages.append({"role":"assistant","content":answer})
+                    except Exception as e:
+                        st.error(f"챗봇 오류: {e}")
+                        st.session_state.messages.append({"role":"assistant","content":"오류 발생" if st.session_state.language == 'ko' else "An error occurred"})
+    else:
+        st.warning(L["warning_rag_not_ready"])
 
 elif feature_selection == L["content_tab"]:
-    st.header(L["content_header"])
-    st.markdown(L["content_desc"])
+    st.header(L["content_header"])
+    st.markdown(L["content_desc"])
 
-    if st.session_state.is_llm_ready:
-        topic = st.text_input(L["topic_label"])
-        
-        level_map = dict(zip(L["level_options"], ["Beginner", "Intermediate", "Advanced"]))
-        content_map = dict(zip(L["content_options"], ["summary", "quiz", "example"]))
-        
-        level_display = st.selectbox(L["level_label"], L["level_options"])
-        content_type_display = st.selectbox(L["content_type_label"], L["content_options"])
+    if st.session_state.is_llm_ready:
+        topic = st.text_input(L["topic_label"])
+        
+        level_map = dict(zip(L["level_options"], ["Beginner", "Intermediate", "Advanced"]))
+        content_map = dict(zip(L["content_options"], ["summary", "quiz", "example"]))
+        
+        level_display = st.selectbox(L["level_label"], L["level_options"])
+        content_type_display = st.selectbox(L["content_type_label"], L["content_options"])
 
-        level = level_map[level_display]
-        content_type = content_map[content_type_display]
+        level = level_map[level_display]
+        content_type = content_map[content_type_display]
 
-        if st.button(L["button_generate"]):
-            if topic:
-                target_lang = {"ko": "Korean", "en": "English", "ja": "Japanese"}[st.session_state.language]
-                
-                if content_type == 'quiz':
-                    full_prompt = f"""You are a professional AI coach at the {level} level.
+        if st.button(L["button_generate"]):
+            if topic:
+                target_lang = {"ko": "Korean", "en": "English", "ja": "Japanese"}[st.session_state.language]
+                
+                if content_type == 'quiz':
+                    full_prompt = f"""You are a professional AI coach at the {level} level.
 Please generate exactly 3 multiple-choice questions about the topic in {target_lang}.
 Your entire response MUST be a valid JSON object wrapped in ```json tags.
 The JSON must have a single key named 'quiz_questions', which is an array of objects.
 Each question object must contain: 'question' (string), 'options' (array of objects with 'option' (A,B,C,D) and 'text' (string)), 'correct_answer' (A,B,C, or D), and 'explanation' (string).
 
 Topic: {topic}"""
-                else:
-                    display_type_text = L["content_options"][L["content_options"].index(content_type_display)]
-                    full_prompt = f"""You are a professional AI coach at the {level} level.
+                else:
+                    display_type_text = L["content_options"][L["content_options"].index(content_type_display)]
+                    full_prompt = f"""You are a professional AI coach at the {level} level.
 Please generate clear and educational content in the requested {display_type_text} format based on the topic.
 The response MUST be strictly in {target_lang}.
 
 Topic: {topic}
 Requested Format: {display_type_text}"""
-                
-                
-                with st.spinner(f"Generating {content_type_display} for {topic}..."):
-                    
-                    quiz_data_raw = None
-                    try:
-                        response = st.session_state.llm.invoke(full_prompt)
-                        quiz_data_raw = response.content
-                        
-                        if content_type == 'quiz':
-                            quiz_data = clean_and_load_json(quiz_data_raw)
-                            
-                            if quiz_data:
-                                st.session_state.quiz_data = quiz_data
-                                st.session_state.current_question = 0
-                                st.session_state.quiz_submitted = False
-                                st.session_state.quiz_results = [None] * len(quiz_data.get('quiz_questions',[]))
-                                
-                                st.success(f"**{topic}** - **{content_type_display}** Result:")
-                            else:
-                                st.error(L["quiz_error_llm"])
-                                st.markdown(f"**{L['quiz_original_response']}**:")
-                                st.code(quiz_data_raw, language="json")
+                
+                
+                with st.spinner(f"Generating {content_type_display} for {topic}..."):
+                    
+                    quiz_data_raw = None
+                    try:
+                        response = st.session_state.llm.invoke(full_prompt)
+                        quiz_data_raw = response.content
+                        
+                        if content_type == 'quiz':
+                            quiz_data = clean_and_load_json(quiz_data_raw)
+                            
+                            if quiz_data:
+                                st.session_state.quiz_data = quiz_data
+                                st.session_state.current_question = 0
+                                st.session_state.quiz_submitted = False
+                                st.session_state.quiz_results = [None] * len(quiz_data.get('quiz_questions',[]))
+                                
+                                st.success(f"**{topic}** - **{content_type_display}** Result:")
+                            else:
+                                st.error(L["quiz_error_llm"])
+                                st.markdown(f"**{L['quiz_original_response']}**:")
+                                st.code(quiz_data_raw, language="json")
 
-                        else: # 일반 콘텐츠 (요약, 예제)
-                            st.success(f"**{topic}** - **{content_type_display}** Result:")
-                            st.markdown(response.content)
+                        else: # 일반 콘텐츠 (요약, 예제)
+                            st.success(f"**{topic}** - **{content_type_display}** Result:")
+                            st.markdown(response.content)
 
-                    except Exception as e:
-                        st.error(f"Content Generation Error: {e}")
-                        if quiz_data_raw:
-                            st.markdown(f"**{L['quiz_original_response']}**: {quiz_data_raw}")
+                    except Exception as e:
+                        st.error(f"Content Generation Error: {e}")
+                        if quiz_data_raw:
+                            st.markdown(f"**{L['quiz_original_response']}**: {quiz_data_raw}")
 
-            else:
-                st.warning(L["warning_topic"])
-    else:
-        st.error(L["llm_error_init"])
-        
-    # 퀴즈 풀이 렌더링을 메인 루프에서 조건부로 단 한 번 호출
-    is_quiz_ready = content_type == 'quiz' and 'quiz_data' in st.session_state and st.session_state.quiz_data
-    if is_quiz_ready and st.session_state.get('current_question', 0) < len(st.session_state.quiz_data.get('quiz_questions', [])):
-        render_interactive_quiz(st.session_state.quiz_data, st.session_state.language)
+            else:
+                st.warning(L["warning_topic"])
+    else:
+        st.error(L["llm_error_init"])
+        
+    # 퀴즈 풀이 렌더링을 메인 루프에서 조건부로 단 한 번 호출
+    is_quiz_ready = content_type == 'quiz' and 'quiz_data' in st.session_state and st.session_state.quiz_data
+    if is_quiz_ready and st.session_state.get('current_question', 0) < len(st.session_state.quiz_data.get('quiz_questions', [])):
+        render_interactive_quiz(st.session_state.quiz_data, st.session_state.language)
 
 
 elif feature_selection == L["lstm_tab"]:
-    st.header(L["lstm_header"])
-    st.markdown(L["lstm_desc"])
+    st.header(L["lstm_header"])
+    st.markdown(L["lstm_desc"])
 
-    with st.spinner(f"LSTM model loading/training..." if st.session_state.language != 'ko' else "LSTM 모델을 로드/학습 중입니다..."):
-        try:
-            # 1. 모델 로드 및 데이터 생성
-            lstm_model, historical_scores = load_or_train_lstm()
-            st.success("LSTM Model Ready!")
+    with st.spinner(f"LSTM model loading/training..." if st.session_state.language != 'ko' else "LSTM 모델을 로드/학습 중입니다..."):
+        try:
+            # 1. 모델 로드 및 데이터 생성
+            lstm_model, historical_scores = load_or_train_lstm()
+            st.success("LSTM Model Ready!")
 
-            # 2. 예측 로직
-            look_back = 5
-            last_sequence = historical_scores[-look_back:]
-            input_sequence = np.reshape(last_sequence, (1, look_back, 1))
-            
-            future_predictions = []
-            current_input = input_sequence
+            # 2. 예측 로직
+            look_back = 5
+            last_sequence = historical_scores[-look_back:]
+            input_sequence = np.reshape(last_sequence, (1, look_back, 1))
+            
+            future_predictions = []
+            current_input = input_sequence
 
-            for i in range(5):
-                next_score = lstm_model.predict(current_input, verbose=0)[0]
-                future_predictions.append(next_score[0])
+            for i in range(5):
+                next_score = lstm_model.predict(current_input, verbose=0)[0]
+                future_predictions.append(next_score[0])
 
-                next_input = np.append(current_input[:, 1:, :], next_score[0]).reshape(1, look_back, 1)
-                current_input = next_input
+                next_input = np.append(current_input[:, 1:, :], next_score[0]).reshape(1, look_back, 1)
+                current_input = next_input
 
-            # 3. 시각화
-            fig, ax = plt.subplots(figsize=(10, 6))
+            # 3. 시각화
+            fig, ax = plt.subplots(figsize=(10, 6))
 
-            ax.plot(range(len(historical_scores)), historical_scores, label="Past Quiz Scores (Hypothetical)", marker='o', linestyle='-', color='blue')
-            future_indices = range(len(historical_scores), len(historical_scores) + len(future_predictions))
-            ax.plot(future_indices, future_predictions, label="Predicted Achievement (Next 5 Days)", marker='x', linestyle='--', color='red')
+            ax.plot(range(len(historical_scores)), historical_scores, label="Past Quiz Scores (Hypothetical)", marker='o', linestyle='-', color='blue')
+            future_indices = range(len(historical_scores), len(historical_scores) + len(future_predictions))
+            ax.plot(future_indices, future_predictions, label="Predicted Achievement (Next 5 Days)", marker='x', linestyle='--', color='red')
 
-            ax.set_title(L["lstm_header"])
-            ax.set_xlabel(L["topic_label"])
-            ax.set_ylabel("Achievement Score (0-100)")
-            ax.legend()
-            st.pyplot(fig)
+            ax.set_title(L["lstm_header"])
+            ax.set_xlabel(L["topic_label"])
+            ax.set_ylabel("Achievement Score (0-100)")
+            ax.legend()
+            st.pyplot(fig)
 
-            # 4. LLM 분석 코멘트
-            st.markdown("---")
-            st.markdown(f"#### {L.get('coach_analysis', 'AI Coach Analysis Comment')}")
-            
-            avg_recent = np.mean(historical_scores[-5:])
-            avg_predict = np.mean(future_predictions)
-            
-            if st.session_state.language == 'ko':
-                if avg_predict > avg_recent:
-                    comment = "최근 학습 데이터와 LSTM 예측 결과에 따르면, **앞으로의 학습 성취도가 긍정적으로 향상될 것으로 예측**됩니다. 현재 학습 방식을 유지하시거나, 난이도를 한 단계 높여 도전해 보세요!"
-                elif avg_predict < avg_recent - 5:
-                    comment = "LSTM 예측 결과, **성취도가 다소 하락할 수 있다는 신호**가 보입니다. 학습에 사용된 자료나 방법론에 대한 깊은 이해가 부족할 수 있습니다. RAG 챗봇 기능을 활용하여 기초 개념을 다시 확인해 보는 것을 추천합니다."
-                else:
-                    comment = "성취도는 현재 수준을 유지할 것으로 예측됩니다. 정체기가 될 수 있으니, **새로운 학습 콘텐츠 형식(예: 실습 예제 아이디어)을 생성**하여 학습에 활력을 더하는 것을 고려해 보세요。"
-            elif st.session_state.language == 'en': # English
-                if avg_predict > avg_recent:
-                    comment = "Based on recent learning data and LSTM prediction, **your achievement is projected to improve positively**. Maintain your current study methods or consider increasing the difficulty level."
-                elif avg_predict < avg_recent - 5:
-                    comment = "LSTM prediction suggests a **potential drop in achievement**. Your understanding of fundamental concepts may be lacking. Use the RAG Chatbot to review foundational knowledge."
-                else:
-                    comment = "Achievement is expected to remain stable. Consider generating **new content types (e.g., Practical Example Ideas)** to revitalize your learning during this plateau."
-            else: # Japanese
-                 if avg_predict > avg_recent:
-                    comment = "最近の学習データとLSTM予測結果に基づき、**今後の達成度はポジティブに向上すると予測**されます。現在の学習方法を維持するか、難易度を一段階上げて挑戦することを検討してください。"
-                 elif avg_predict < avg_recent - 5:
-                    comment = "LSTM予測の結果、**達成度がやや低下する可能性**が示されました。学習資料や方法論の基礎理解が不足しているかもしれません。RAGチャットボット機能を利用して、基本概念を再確認することをお勧めします。"
-                 else:
-                    comment = "達成度は現状維持と予測されます。停滞期になる可能性があるため、**新しいコンテンツ形式（例：実践例のアイデア）を生成**し、学習に活力を与えることを検討してください。"
-
-
-            st.info(comment)
-
-        except Exception as e:
-            st.error(f"LSTM Model Processing Error: {e}")
-            st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
+            # 4. LLM 분석 코멘트
+            st.markdown("---")
+            st.markdown(f"#### {L.get('coach_analysis', 'AI Coach Analysis Comment')}")
+            
+            avg_recent = np.mean(historical_scores[-5:])
+            avg_predict = np.mean(future_predictions)
+            
+            if st.session_state.language == 'ko':
+                if avg_predict > avg_recent:
+                    comment = "최근 학습 데이터와 LSTM 예측 결과에 따르면, **앞으로의 학습 성취도가 긍정적으로 향상될 것으로 예측**됩니다. 현재 학습 방식을 유지하시거나, 난이도를 한 단계 높여 도전해 보세요!"
+                elif avg_predict < avg_recent - 5:
+                    comment = "LSTM 예측 결과, **성취도가 다소 하락할 수 있다는 신호**가 보입니다. 학습에 사용된 자료나 방법론에 대한 깊은 이해가 부족할 수 있습니다. RAG 챗봇 기능을 활용하여 기초 개념을 다시 확인해 보는 것을 추천합니다."
+                else:
+                    comment = "성취도는 현재 수준을 유지할 것으로 예측됩니다. 정체기가 될 수 있으니, **새로운 학습 콘텐츠 형식(예: 실습 예제 아이디어)을 생성**하여 학습에 활력을 더하는 것을 고려해 보세요。"
+            elif st.session_state.language == 'en': # English
+                if avg_predict > avg_recent:
+                    comment = "Based on recent learning data and LSTM prediction, **your achievement is projected to improve positively**. Maintain your current study methods or consider increasing the difficulty level."
+                elif avg_predict < avg_recent - 5:
+                    comment = "LSTM prediction suggests a **potential drop in achievement**. Your understanding of fundamental concepts may be lacking. Use the RAG Chatbot to review foundational knowledge."
+                else:
+                    comment = "Achievement is expected to remain stable. Consider generating **new content types (e.g., Practical Example Ideas)** to revitalize your learning during this plateau."
+            else: # Japanese
+                 if avg_predict > avg_recent:
+                    comment = "最近の学習データとLSTM予測結果に基づき、**今後の達成度はポジティブに向上すると予測**されます。現在の学習方法を維持するか、難易度を一段階上げて挑戦することを検討してください。"
+                 elif avg_predict < avg_recent - 5:
+                    comment = "LSTM予測の結果、**達成度がやや低下する可能性**が示されました。学習資料や方法論の基礎理解が不足しているかもしれません。RAGチャットボット機能を利用して、基本概念を再確認することをお勧めします。"
+                 else:
+                    comment = "達成度は現状維持と予測されます。停滞期になる可能性があるため、**新しいコンテンツ形式（例：実践例のアイデア）を生成**し、学習に活力を与えることを検討してください。"
 
 
+            st.info(comment)
+
+        except Exception as e:
+            st.error(f"LSTM Model Processing Error: {e}")
+            st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)

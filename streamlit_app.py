@@ -10,8 +10,7 @@ import re
 import base64 
 import io 
 
-# ⭐ Admin SDK 관련 라이브러리 임포트 추가/변경
-import firebase_admin
+# ⭐ Admin SDK 관련 라이브러리 임포트 (기존 임포트 대체 및 Admin SDK 추가)
 from firebase_admin import credentials, firestore, initialize_app 
 from google.cloud import firestore as gcp_firestore # Admin SDK의 firestore.Client와 구분하기 위함
 from google.oauth2 import service_account 
@@ -35,78 +34,57 @@ from tensorflow.keras.layers import LSTM, Dense
 # 1. Firebase 연동 및 직렬화/역직렬화 함수 (Admin SDK 사용)
 # ================================
 @st.cache_resource(ttl=None)
-def init_firebase():
+def initialize_firestore_admin():
+    """
+    Firebase Admin SDK를 사용하여 관리자 권한으로 Firestore 클라이언트를 초기화합니다.
+    Streamlit Secrets 또는 환경 변수에서 서비스 계정 정보를 가져와 사용합니다.
+    """
     try:
-        if not firebase_admin._apps:
-            if "firebase" in st.secrets:  # ✅ Streamlit Cloud 환경
-                firebase_config = dict(st.secrets["firebase"])
-                cred = credentials.Certificate(firebase_config)
-                firebase_admin.initialize_app(cred)
-            elif os.path.exists("firebase_key.json"):  # ✅ 로컬 개발 환경
-                cred = credentials.Certificate("firebase_key.json")
-                firebase_admin.initialize_app(cred)
-            else:
-                st.error("⚠️ Firebase 인증키가 설정되어 있지 않습니다.")
-                return None
-        return firestore.client()
+        # 1. 환경 변수 또는 Streamlit Secrets에서 JSON 문자열 가져오기
+        service_account_json_str = os.environ.get("FIREBASE_SERVICE_ACCOUNT_JSON")
+        if not service_account_json_str:
+            return None, "❌ FIREBASE_SERVICE_ACCOUNT_JSON Secret이 누락되었습니다."
+        
+        # 2. 문자열 → 딕셔너리 변환
+        sa_info = json.loads(service_account_json_str.replace('\\n', '\n'))
+
+        # 3. Firebase Admin SDK 초기화 (중복 방지)
+        if not firestore._app:
+            cred = credentials.Certificate(sa_info)
+            initialize_app(cred, {'projectId': sa_info.get("project_id")})
+
+        # 4. Firestore 클라이언트 생성
+        db = firestore.client()
+        return db, None
+
     except Exception as e:
-        st.error(f"❌ Firebase 초기화 실패: {e}")
-        return None
+        error_msg = f"❌ Firebase Admin 초기화 실패: {e}"
+        print(error_msg)
+        return None, error_msg
 
-db = init_firebase()
 
+# --- Streamlit 앱 UI ---
+st.title("🔥 Firestore 인덱스 등록기")
 
-def save_index_to_firestore(db, vector_store, index_id="user_portfolio_rag"):
-    """FAISS 인덱스를 Firestore에 Base64 형태로 직렬화하여 저장합니다."""
-    if not db: return False
-    temp_dir = tempfile.mkdtemp()
-    
-    try:
-        vector_store.save_local(folder_path=temp_dir, index_name="index")
-        
-        with open(f"{temp_dir}/index.faiss", "rb") as f: faiss_bytes = f.read()
-        with open(f"{temp_dir}/index.pkl", "rb") as f: metadata_bytes = f.read()
-        
+# 입력 필드
+index_id = st.text_input("인덱스 ID 입력 (예: my_rag_index)")
+title = st.text_input("제목 입력")
+vector_count = st.number_input("벡터 개수", min_value=0, step=1)
+
+# 버튼 클릭 시 Firestore에 저장
+if st.button("📤 Firestore에 저장하기"):
+    db, error = initialize_firestore_admin()
+    if error:
+        st.error(error)
+    else:
         encoded_data = {
-            "faiss_data": base64.b64encode(faiss_bytes).decode('utf-8'),
-            "metadata_data": base64.b64encode(metadata_bytes).decode('utf-8'),
-            "timestamp": gcp_firestore.SERVER_TIMESTAMP
+            "title": title,
+            "vector_count": vector_count,
+            "created_at": st.session_state.get("created_at", "2025-11-09")
         }
-        
-        # Admin SDK를 통해 Firestore에 접근 (관리자 권한으로 인증됨)
+
         db.collection("rag_indices").document(index_id).set(encoded_data)
-        return True
-    
-    except Exception as e:
-        print(f"Error saving index to Firestore: {e}")
-        return False
-
-def load_index_from_firestore(db, embeddings, index_id="user_portfolio_rag"):
-    """Firestore에서 Base64 문자열을 로드하여 FAISS 인덱스로 역직렬화합니다."""
-    if not db: return None
-
-    try:
-        # Admin SDK를 통해 Firestore에 접근
-        doc = db.collection("rag_indices").document(index_id).get()
-        if not doc.exists:
-            return None 
-
-        encoded_data = doc.to_dict()
-        
-        faiss_bytes = base64.b64decode(encoded_data["faiss_data"])
-        metadata_bytes = base64.b64decode(encoded_data["metadata_data"])
-        
-        temp_dir = tempfile.mkdtemp()
-        with open(f"{temp_dir}/index.faiss", "wb") as f: f.write(faiss_bytes)
-        with open(f"{temp_dir}/index.pkl", "wb") as f: f.write(metadata_bytes)
-        
-        vector_store = FAISS.load_local(folder_path=temp_dir, embeddings=embeddings, index_name="index")
-        return vector_store
-        
-    except Exception as e:
-        print(f"Error loading index from Firestore: {e}")
-        return None
-
+        st.success(f"✅ Firestore에 '{index_id}' 문서가 성공적으로 저장되었습니다!")
 # ================================
 # 2. JSON/RAG/LSTM 함수 정의 (기존 내용 유지)
 # ================================
@@ -468,7 +446,8 @@ if 'llm' not in st.session_state:
             st.session_state.is_llm_ready = True
             
             # ⭐⭐ Admin SDK 클라이언트 초기화로 변경 ⭐⭐
-            db, error_message = initialize_firestore_admin() # Admin SDK 함수 호출
+            # 기존 initialize_firestore() 대신 initialize_firestore_admin() 호출
+            db, error_message = initialize_firestore_admin() 
             st.session_state.firestore_db = db
             
             if error_message:
@@ -771,5 +750,3 @@ elif feature_selection == L["lstm_tab"]:
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
-
-

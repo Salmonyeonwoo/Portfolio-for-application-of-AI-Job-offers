@@ -430,7 +430,7 @@ LANG = {
         "quiz_complete": "クイズ完了!",
         "score": "スコア",
         "retake_quiz": "クイズを再試行",
-        "quiz_error_llm": "クイズ生成に失敗しました: LLMが有効なJSON形式を返しませんでした。LLMのオリジナル応答を確認してください。",
+        "quiz_error_llm": "クイズ生成に失敗しました: LLMが有効なJSON形式を返しませんでした。LLM의オリジナル応答を確認してください。",
         "quiz_original_response": "LLMオリジナル応答"
     }
 }
@@ -758,6 +758,7 @@ elif feature_selection == L["lstm_tab"]:
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
+
 
 
 

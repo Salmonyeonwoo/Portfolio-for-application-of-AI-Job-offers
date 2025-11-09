@@ -35,36 +35,25 @@ from tensorflow.keras.layers import LSTM, Dense
 # 1. Firebase 연동 및 직렬화/역직렬화 함수 (Admin SDK 사용)
 # ================================
 @st.cache_resource(ttl=None)
-def initialize_firestore_admin():
-    """
-    Firebase Admin SDK를 사용하여 관리자 권한으로 Firestore 클라이언트를 초기화합니다.
-    Streamlit 환경 변수에서 서비스 계정 정보를 가져와 사용합니다.
-    """
-    # 1. Streamlit Secrets에서 JSON 문자열 로드
+def init_firebase():
     try:
-        # 환경 변수에서 JSON 문자열을 가져옴
-        # (FIREBASE_SERVICE_ACCOUNT_JSON 키를 사용하도록 변경)
-        service_account_json_str = os.environ.get("FIREBASE_SERVICE_ACCOUNT_JSON")
-        if not service_account_json_str:
-            return None, "FIREBASE_SERVICE_ACCOUNT_JSON Secret이 누락되었습니다."
-            
-        # JSON 문자열을 파이썬 딕셔너리로 변환 (개행 문자 치환 처리 포함)
-        sa_info = json.loads(service_account_json_str.replace('\\n', '\n'))
-
-        # 2. Firebase Admin SDK 초기화
-        # 이미 초기화되었는지 확인 (Streamlit 재실행 시 중복 방지)
         if not firebase_admin._apps:
-            cred = credentials.Certificate("firebase_key.json")  # 또는 Streamlit Secrets
-            firebase_admin.initialize_app(cred)
-        
-        # 3. Firestore 클라이언트 반환 (Admin SDK 클라이언트 사용)
-        db = firestore.client()
-        return db, None
-
+            if "firebase" in st.secrets:  # ✅ Streamlit Cloud 환경
+                firebase_config = dict(st.secrets["firebase"])
+                cred = credentials.Certificate(firebase_config)
+                firebase_admin.initialize_app(cred)
+            elif os.path.exists("firebase_key.json"):  # ✅ 로컬 개발 환경
+                cred = credentials.Certificate("firebase_key.json")
+                firebase_admin.initialize_app(cred)
+            else:
+                st.error("⚠️ Firebase 인증키가 설정되어 있지 않습니다.")
+                return None
+        return firestore.client()
     except Exception as e:
-        error_msg = f"Firebase Admin 초기화 실패: Admin SDK 인증 정보를 확인하세요. ({e})"
-        print(error_msg)
-        return None, error_msg
+        st.error(f"❌ Firebase 초기화 실패: {e}")
+        return None
+
+db = init_firebase()
 
 
 def save_index_to_firestore(db, vector_store, index_id="user_portfolio_rag"):
@@ -782,4 +771,5 @@ elif feature_selection == L["lstm_tab"]:
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
+
 

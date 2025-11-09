@@ -11,6 +11,7 @@ import base64
 import io 
 
 # ⭐ Admin SDK 관련 라이브러리 임포트 추가/변경
+import firebase_admin
 from firebase_admin import credentials, firestore, initialize_app 
 from google.cloud import firestore as gcp_firestore # Admin SDK의 firestore.Client와 구분하기 위함
 from google.oauth2 import service_account 
@@ -52,10 +53,9 @@ def initialize_firestore_admin():
 
         # 2. Firebase Admin SDK 초기화
         # 이미 초기화되었는지 확인 (Streamlit 재실행 시 중복 방지)
-        if not firestore._app: 
-            cred = credentials.Certificate(sa_info)
-            # 프로젝트 ID를 명시적으로 전달하여 초기화
-            initialize_app(cred, {'projectId': sa_info.get("project_id")})
+        if not firebase_admin._apps:
+            cred = credentials.Certificate("firebase_key.json")  # 또는 Streamlit Secrets
+            firebase_admin.initialize_app(cred)
         
         # 3. Firestore 클라이언트 반환 (Admin SDK 클라이언트 사용)
         db = firestore.client()
@@ -782,3 +782,4 @@ elif feature_selection == L["lstm_tab"]:
         except Exception as e:
             st.error(f"LSTM Model Processing Error: {e}")
             st.markdown(f'<div style="background-color: #fce4e4; color: #cc0000; padding: 10px; border-radius: 5px;">{L["lstm_disabled_error"]}</div>', unsafe_allow_html=True)
+

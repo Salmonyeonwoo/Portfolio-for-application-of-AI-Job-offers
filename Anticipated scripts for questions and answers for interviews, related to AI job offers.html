@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Interview Q&A Cards – Yeonwoo Park (EN)</title>
+  <style>
+    body { font-family: 'Inter', sans-serif; background:#f9ffff; color:#003344; margin:0; padding:0; display:flex; flex-direction:column; align-items:center; }
+    h1 { color:#007b7b; text-align:center; margin:24px 0 12px 0; }
+    .tabs { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+    .tab { padding:10px 20px; background:#e0f7f7; border-radius:8px; cursor:pointer; transition:background 0.3s; border:1px solid #b0e0e0; }
+    .tab.active { background:#00bfbf; color:white; font-weight:600; }
+    .cards { display:none; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:16px; padding:0 20px 40px 20px; max-width:1200px; width:100%; }
+    .cards.active { display:grid; }
+    .card { background:white; border:1px solid #c0f0f0; border-radius:16px; padding:20px; box-shadow:0 2px 6px rgba(0,128,128,0.1); transition:transform 0.2s; }
+    .card:hover { transform: translateY(-3px); }
+    .question { font-weight:600; margin-bottom:8px; color:#006060; }
+    .answer { font-size:15px; line-height:1.5; }
+    footer { font-size:13px; color:#666; margin-bottom:30px; }
+  </style>
+</head>
+<body>
+  <h1>AI Interview Q&A Cards – Yeonwoo Park (EN)</h1>
+  <div class="tabs">
+    <div class="tab active" data-target="annotator">AI Data Annotator</div>
+    <div class="tab" data-target="qa">AI Quality Reviewer</div>
+    <div class="tab" data-target="designer">Conversational AI Designer</div>
+    <div class="tab" data-target="planner">AI Product Planner</div>
+  </div>
+
+  <div class="cards active" id="annotator">
+    <div class="card"><div class="question">In your view, what’s the key factor for ensuring high-quality AI labeling work?</div><div class="answer">The key is achieving **consistency** and applying **human interpretation**. As a non-major, I focus on the humanistic perspective—'How will a user interpret this data?'—to set standards when guidelines are ambiguous, ensuring the data is reliable for long-term AI quality.</div></div>
+    <div class="card"><div class="question">What precautions should be taken when labeling multilingual data?</div><div class="answer">I focus on capturing the **linguistic 'intent'**, not just the literal meaning. Language can be interpreted in dozens of ways, so I strive to deeply understand the **cultural and social context** in which a phrase is used, prioritizing discussions with the team to refine guidelines for ambiguous, cross-cultural cases.</div></div>
+    <div class="card"><div class="question">How do you improve efficiency in labeling tasks?</div><div class="answer">I emphasize **'proactive review' and 'error pattern analysis'**. I meticulously review samples early on to find deficiencies and, instead of just fixing errors, I **patternize them by type** and immediately update the guidelines. This is the most effective way to minimize re-work on large-scale tasks.</div></div>
+    <div class="card"><div class="question">How do you handle data errors once identified?</div><div class="answer">I analyze the **'recurrence potential'** of the error. I don't treat an error as an isolated incident but focus on finding the underlying **data bias or model vulnerability** that caused it. In my QA reports, I attach specific **'counter-example datasets'** alongside error patterns to boost the technical team's efficiency for retraining.</div></div>
+    <div class="card"><div class="question">Have you used automation tools for labeling?</div><div class="answer">Yes. I have experience utilizing tools like Label Studio, and critically, I have **developed my own Python-based scripts** to use the CSV function for bulk application of feedback, which helped streamline quality checks and optimize the data pipeline beyond just tool operation.</div></div>
+    <div class="card"><div class="question">**How do you resolve ambiguity or disagreement among team members regarding labeling criteria?**</div><div class="answer">I start by understanding the **technical team's 'model learning objective'**. Then, I establish a standard based on the **'most common interpretation'** from a user's perspective. Finally, I propose to **strengthen the guidelines** by documenting all ambiguous cases, thereby preventing potential future errors.</div></div>
+  </div>
+
+  <div class="cards" id="qa">
+    <div class="card"><div class="question">What is the core principle of AI quality review?</div><div class="answer">A deep understanding of the **'user experience'**. The goal isn't just correcting errors, but identifying points where users feel 'frustration'—where the AI response's **reliability or usefulness is compromised**. As a non-major, I apply an average user's perspective to evaluate responses and connect findings directly to service improvement.</div></div>
+    <div class="card"><div class="question">How do you provide feedback when a model makes a mistake?</div><div class="answer">I analyze the **'recurrence potential'** of the error. I don't treat an error as an isolated incident but focus on finding the underlying **data bias or model vulnerability** that caused it. In my QA reports, I attach specific **'counter-example datasets'** alongside error patterns to boost the technical team's efficiency for retraining.</div></div>
+    <div class="card"><div class="question">Which metrics do you use to assess AI quality?</div><div class="answer">I use a **3:1 balance** of quantitative (accuracy, consistency) and qualitative (usefulness, satisfaction) metrics. Crucially, I design the satisfaction feedback not just as 'good/bad' but to elicit **'specific suggestions for improvement,'** linking QA results directly to tangible UX enhancements.</div></div>
+    <div class="card"><div class="question">How does customer support experience help in quality review?</div><div class="answer">My experience provides **empathy and instinct**. I instinctively understand when and why a user is frustrated with the AI and what their 'true desired answer' is. This is crucial for making the AI's 'naturalness' feel like **a genuine human conversation**, not just an artificial script.</div></div>
+    <div class="card"><div class="question">How do you share QA results with the team?</div><div class="answer">I share results based on their **business impact**. Instead of just listing error rates, I translate findings into business language, such as, 'This error could negatively impact user retention by 10%,' which helps the development and planning teams **immediately grasp the necessity of the fix.**</div></div>
+    <div class="card"><div class="question">**How do you bridge the knowledge gap when you feel your understanding of AI technology is insufficient?**</div><div class="answer">I use **'user feedback'** and **'AI error logs'** as my primary learning material. By tracing back the AI's errors to their causes, I identify the necessary technical terms and concepts, which I then supplement with **online courses (MOOCs)** on weekends. I focus on proactively learning the knowledge required by the job first.</div></div>
+  </div>
+
+  <div class="cards" id="designer">
+    <div class="card"><div class="question">What defines a good conversational AI interaction?</div><div class="answer">Designing a **'Failure-Tolerant Conversation'**. Given AI is not perfect, it's vital that even when the answer is inaccurate, the user is **not frustrated and can proceed to the next step**. This requires friendly error handling and clear guidelines to recover the conversation flow smoothly.</div></div>
+    <div class="card"><div class="question">How do you structure a dialogue scenario?</div><div class="answer">I prioritize defining the **'Edge Cases'** first. Beyond the happy path, I spend significant time designing **'Recovery Dialogues'**—ensuring the AI can recover smoothly and not 'break' when a user suddenly changes the subject, uses profanity, or asks an ambiguous question.</div></div>
+    <div class="card"><div class="question">How do you account for multicultural users in dialogue design?</div><div class="answer">I focus on instilling a **respectful tone and cultural taboos**. Beyond just language, I ensure the dataset reflects subtle differences, like the specific use of honorifics in Korean or topics to avoid in business conversations in certain cultures, to make sure the AI **'doesn't cause offense.'**</div></div>
+    <div class="card"><div class="question">What criteria do you use to evaluate dialogues?</div><div class="answer">I prioritize **'Persona Consistency'** above all. An AI's response might be individually brilliant, but if it doesn't align with the character or **identity of the service**, I consider it a failure. I evaluate how closely the tone, pace, and emotional expression align with the established persona.</div></div>
+    <div class="card"><div class="question">How do you collect feedback to improve AI conversations?</div><div class="answer">I emphasize **qualitative log analysis**. Instead of just looking at success/failure rates, I personally read hundreds of failed dialogue logs to pinpoint the **'exact moment a user's frustration begins.'** I use this qualitative data to form **improvement hypotheses** and validate them through A/B testing.</div></div>
+    <div class="card"><div class="question">**How do you handle a conversation scenario that performs differently than planned in actual user interactions?**</div><div class="answer">I treat the failure as a **'new user need'** and analyze the log data to uncover the **'hidden intent'**. I then divide the scenario response into a **3-stage approach (Short-term fix, Mid-term A/B test, Long-term redesign)** to quickly address the failure and turn it into momentum for growth.</div></div>
+  </div>
+
+  <div class="cards" id="planner">
+    <div class="card"><div class="question">What is the first thing you consider when planning an AI project?</div><div class="answer">**'User-Centricity as a Non-Major'**. I define the **'value' the AI provides to the user** before the technology itself. My focus is on lowering the technical barrier and solving the user's actual 'Pain Point'—designing AI services that are easily accessible and usable by non-experts.</div></div>
+    <div class="card"><div class="question">How do you measure the success of an AI service?</div><div class="answer">In addition to usage and retention, I track **'AI Dependency Rate'**. This measures the **rate at which users choose and repeatedly use the AI service** over traditional methods. It shows not just frequency of use, but how **essential the AI has become** to the user's workflow.</div></div>
+    <div class="card"><div class="question">How do you collaborate with technical teams in planning?</div><div class="answer">I strive to be a planner who **'asks informed questions'** based on technical understanding. I self-study model characteristics and data collection challenges, then ask specific questions like, **'What resources are needed to implement this feature?'** to build trust with the technical team and set realistic milestones.</div></div>
+    <div class="card"><div class="question">How do you manage operations after launch?</div><div class="answer">I run a **'Zero Trust QA'** system. Even after launch, I **never fully trust** the AI's answers, monitoring user logs daily. I proactively identify **'risk areas'** where the AI is likely to make mistakes and secure stability through manual review and focused retraining.</div></div>
+    <div class="card"><div class="question">What is your vision as an AI product planner?</div><div class="answer">To contribute to **'bridging the technology gap'**. As a non-major, I deeply understand the difficulty of AI. My vision is for my planned services to make AI technology a **'universal tool'** that is not only accessible to experts but easy for everyone to use and improves the value of their daily lives.</div></div>
+    <div class="card"><div class="question">**How do you consider ethical issues (e.g., bias) when planning an AI service?**</div><div class="answer">I begin bias review from the **'data collection phase'**. As a non-major, I focus on representing diverse user voices, ensuring data is collected from **potentially marginalized groups**. I also include **'Guardrail'** features in the planning phase, ensuring the AI avoids sensitive topics or provides neutral information.</div></div>
+    <div class="card"><div class="question">**As a non-major in AI, why did you apply for this role, and what is your unique strength?**</div><div class="answer">I was drawn to the opportunity to **'design the intersection of technology and humanity'**. My core strengths are **empathy** and strong **communication skills**. I can translate complex AI technology into **'user-friendly language'** that non-experts can easily understand, serving as a **bridge** between the technical team and the user to maximize product value.</div></div>
+  </div>
+
+  <footer>© 2025 Yeonwoo Park | AI Interview Q&A Cards (EN)</footer>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const cardGroups = document.querySelectorAll('.cards');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        cardGroups.forEach(c => c.classList.remove('active'));
+        document.getElementById(tab.dataset.target).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

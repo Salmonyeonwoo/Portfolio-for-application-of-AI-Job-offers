@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI面接 Q&Aカード – Yeonwoo Park (JP)</title>
+  <style>
+    body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background:#f9ffff; color:#003344; margin:0; padding:0; display:flex; flex-direction:column; align-items:center; }
+    h1 { color:#007b7b; text-align:center; margin:24px 0 12px 0; }
+    .tabs { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+    .tab { padding:10px 20px; background:#e0f7f7; border-radius:8px; cursor:pointer; transition:background 0.3s; border:1px solid #b0e0e0; }
+    .tab.active { background:#00bfbf; color:white; font-weight:600; }
+    .cards { display:none; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:16px; padding:0 20px 40px 20px; max-width:1200px; width:100%; }
+    .cards.active { display:grid; }
+    .card { background:white; border:1px solid #c0f0f0; border-radius:16px; padding:20px; box-shadow:0 2px 6px rgba(0,128,128,0.1); transition:transform 0.2s; }
+    .card:hover { transform: translateY(-3px); }
+    .question { font-weight:600; margin-bottom:8px; color:#006060; }
+    .answer { font-size:15px; line-height:1.5; }
+    footer { font-size:13px; color:#666; margin-bottom:30px; }
+  </style>
+</head>
+<body>
+  <h1>AI面接 Q&Aカード – Yeonwoo Park (JP)</h1>
+  <div class="tabs">
+    <div class="tab active" data-target="annotator">AIデータアノテーター</div>
+    <div class="tab" data-target="qa">AI品質管理者</div>
+    <div class="tab" data-target="designer">会話型AIデザイナー</div>
+    <div class="tab" data-target="planner">AIプロダクト企画担当</div>
+  </div>
+
+  <div class="cards active" id="annotator">
+    <div class="card"><div class="question">高品質なAIラベル作業の重要なポイントは何ですか？</div><div class="answer">重要なのは、**一貫性の確保**と**人間的な解釈**です。非専攻者として、ガイドラインが曖昧な場合、「ユーザーはこのデータをどう受け止めるか」という人文科学的な観点から基準を設定し、長期的なAIサービス品質に繋がる「信頼性の高いデータ」を作成することに注力しています。</div></div>
+    <div class="card"><div class="question">多言語データのラベル付けで注意すべき点は？</div><div class="answer">ラベル付けの**「意図」**を見失わないことです。言語データは一つの文章でも数十通りの解釈が可能です。単なる翻訳ではなく、その表現が使われた**文化的・社会的な文脈**を深く理解するよう努め、曖昧なケースはチームと議論してガイドラインに反映させるプロセスを重視しています。</div></div>
+    <div class="card"><div class="question">ラベル作業の効率を上げるにはどうしますか？</div><div class="answer">私は**「先行検証」と「エラーのパターン化」**に重点を置きます。初期段階でサンプルを精密に検証して不備を把握し、発生したエラーを修正するだけでなく**類型化してパターン分析**し、ガイドラインを即座に更新します。これは大規模作業での手戻り率を最小限に抑える最も効果的な方法です。</div></div>
+    <div class="card"><div class="question">データエラーを発見した場合、どう対応しますか？</div><div class="answer">エラーの**「再発可能性」を分析**します。見つかった一つのエラーを個別事象として捉えず、そのエラーを引き起こした**データの偏りやモデルの脆弱性**を探ることに集中します。QAレポートにはエラーパターンと共に、再学習のための具体的な**「反例データセット」**を添付し、技術チームの作業効率を高めます。</div></div>
+    <div class="card"><div class="question">ラベル作業に自動化ツールを使った経験はありますか？</div><div class="answer">はい。Label Studioのようなツール利用経験に加え、**CSV機能**を活用し大量のフィードバックを一括反映するための**自動化スクリプトを自ら構築**した経験があります。単なるツールの使用にとどまらず、データフローを最適化することに貢献しました。</div></div>
+    <div class="card"><div class="question">**ラベル付けのガイドラインが曖昧な場合や、チーム内で意見が分かれた場合、どのように解決しますか？**</div><div class="answer">まず**技術チームの「モデル学習の意図」**を把握します。その上で、ユーザー視点から**「最も一般的な解釈」**を基準として設定します。最終的には、このプロセスを文書化し**ガイドラインを強化**することを提案することで、将来的な潜在的エラーを防ぎます。</div></div>
+  </div>
+
+  <div class="cards" id="qa">
+    <div class="card"><div class="question">AI品質検査の核心は何ですか？</div><div class="answer">**「ユーザー体験」に対する深い理解**です。単なる誤りの修正ではなく、ユーザーが「不便」を感じるポイント、すなわちAI応答の**信頼性や有用性が損なわれる部分**を見つけ出すことです。非専攻者として、一般ユーザーの目線でAI応答を評価し、それを実際のサービス改善に繋げる能力が核心です。</div></div>
+    <div class="card"><div class="question">モデルのミスを発見した場合、どうフィードバックしますか？</div><div class="answer">エラーの**「再発可能性」を分析**します。見つかった一つのエラーを個別事象として捉えず、そのエラーを引き起こした**データの偏りやモデルの脆弱性**を探ることに集中します。QAレポートにはエラーパターンと共に、再学習のための具体的な**「反例データセット」**を添付し、技術チームの作業効率を高めます。</div></div>
+    <div class="card"><div class="question">AI品質評価に使用する指標は？</div><div class="answer">定量的指標（正確性、一貫性）と定性的指標（有用性、満足度）を**3:1の比率でバランス**良く設定します。特に、ユーザー満足度フィードバックを単なる「良い/悪い」ではなく、**「具体的な改善方向」**が導き出せるよう設計し、QA結果を実際の**UX改善**に活用します。</div></div>
+    <div class="card"><div class="question">カスタマーサポート経験は品質検査にどう役立ちますか？</div><div class="answer">**共感能力**が最大の財産です。顧客対応経験を通じて、ユーザーがどういう状況でAIに不満を抱くのか、**「本当に求めている答え」**は何なのかを本能的に理解しています。これは、AIの「自然さ」を人工的なスクリプトではなく、**実際の会話のように感じさせる**上で決定的な役割を果たします。</div></div>
+    <div class="card"><div class="question">QA結果はチームにどう共有しますか？</div><div class="answer">**ビジネスへのインパクト**を中心に共有します。単にエラー率を並べるのではなく、「このエラーはユーザーの継続利用率に**10%悪影響**を及ぼす可能性がある」といったビジネス言語に翻訳し、開発チームと企画チームの**双方が改善の必要性を即座に認識**するように促します。</div></div>
+    <div class="card"><div class="question">**AI技術に対する理解が不十分だと感じた場合、どのように知識のギャップを埋めますか？**</div><div class="answer">私は**「ユーザーフィードバック」**と**「AIのエラーログ」**を私の学習教材として活用します。AIの誤りとその原因を逆追跡しながら必要な技術用語や概念を探し、週末ごとに**オンライン講座(MOOC)**を通じて補強しています。単に技術を学ぶのではなく、**現場で必要な知識から逆算して学習**するという主導的な姿勢でギャップを埋めています。</div></div>
+  </div>
+
+  <div class="cards" id="designer">
+    <div class="card"><div class="question">良い会話型AIの定義は何ですか？</div><div class="answer">**「失敗しても安全な会話」**を設計することです。AIが完璧ではないという前提のもと、回答が不正確な場合でもユーザーが**落胆せず次の行動**に進めるよう、フレンドリーなエラーハンドリングと明確なガイドラインを提供することが重要です。</div></div>
+    <div class="card"><div class="question">会話シナリオはどのように構築しますか？</div><div class="answer">私は**「最悪のシナリオ（Edge Case）」**をまず定義します。一般的な流れ（Happy Path）の他に、ユーザーが突然話題を変えたり、不適切な言葉を使ったり、曖昧な質問をした際にAIが**破綻せずスムーズに回復**できる**「リカバリーダイアログ」**の設計に時間をかけます。</div></div>
+    <div class="card"><div class="question">多文化のユーザーをどのように設計に反映しますか？</div><div class="answer">**敬意ある態度と文化的タブー**を学習させることに集中します。単に多言語に対応するだけでなく、例えば日本における敬語の微妙な違いや、特定の国でビジネス会話中に避けるべき話題などをデータセットに反映させ、AIが**「失礼のないように」**慎重に設計します。</div></div>
+    <div class="card"><div class="question">会話評価の基準は？</div><div class="answer">**「ペルソナの一貫性」**を最優先に見ます。AIの応答が個別には優れていても、キャラクターやサービスの**アイデンティティに合致しなければ失敗**と見なします。会話の内容だけでなく、口調、速度、感情のトーンが**設定したペルソナとどれだけ一致しているか**を核心指標として評価します。</div></div>
+    <div class="card"><div class="question">会話改善のためのフィードバックはどう行いますか？</div><div class="answer">私は**定性的なログ分析**を重視します。単に成功/失敗率を見るだけでなく、失敗した会話ログ数百件を自ら読み込み、**「ユーザーのフラストレーションが正確に発生する箇所」**を見つけ出します。この定性データを基に**改善仮説**を立て、A/Bテストを通じて検証します。</div></div>
+    <div class="card"><div class="question">**設計した会話シナリオが実際のユーザーの反応と異なる場合、どう対応しますか？**</div><div class="answer">失敗を**「ユーザーの新たなニーズ」**と捉え、ログデータ分析を通じて**「隠された意図」**を把握します。その後、シナリオへの対応を**短期修正（緊急ホットフィックス）→中期改善（A/Bテスト）→長期再設計（ニーズ反映）**の3段階に分け、迅速に対応することで、失敗を成長の原動力に転換します。</div></div>
+  </div>
+
+  <div class="cards" id="planner">
+    <div class="card"><div class="question">AIプロジェクトを計画する際、最初に考えることは何ですか？</div><div class="answer">**「非専攻者としてのユーザー中心性」**です。技術そのものよりも、**AIがユーザーに提供する「価値」**を先に定義します。非専門家でも簡単にアクセス・利用できるAIサービス、つまり技術的な障壁を下げ、ユーザーの実質的な「Pain Point」を解決することに焦点を当てます。</div></div>
+    <div class="card"><div class="question">AIサービスの成功をどう測定しますか？</div><div class="answer">利用率や継続率に加え、**「AI依存度（AI Dependency Rate）」**を追跡します。これは、ユーザーが従来のやり方ではなくAIサービスを**選択し、繰り返し利用する割合**を示すものです。単なる利用回数を超えて、AIがユーザーのワークフローに**どれほど不可欠な要素**になったかを示します。</div></div>
+    <div class="card"><div class="question">企画段階で技術チームとどう協力しますか？</div><div class="answer">**技術的理解に基づき「質問する」企画者**になろうとしています。コードは書けませんが、モデルの特性やデータ収集の困難さなどを事前に学習し、「この機能実装に必要なリソースはどれくらいですか？」といった具体的な質問を投げかけ、技術チームの共感と信頼を得て現実的なマイルストーンを設定します。</div></div>
+    <div class="card"><div class="question">ローンチ後の運用方法は？</div><div class="answer">**「ゼロトラストQA」**システムを運用します。ローンチ後もAIの回答を**絶対的に信頼せず**、日々ユーザーログをモニタリングし、AIが間違いを犯しやすい**「リスク領域」**を事前に特定して、手動レビューと再学習により安全性を確保します。</div></div>
+    <div class="card"><div class="question">AIプロダクトプランナーとしてのビジョンは？</div><div class="answer">**「技術格差の解消」**に貢献することです。非専攻者として、AIが持つ難しさを誰보다도 잘 이해しています. 제가 기획하는 서비스를 통해, AI 기술이**일부의 전문 인력의 전유물이 아니라**, 누구나 쉽게 액세스할 수 있고, 일상생활의 가치를 높이는 **「보편적인 도구」**가 되도록 공헌하고 싶습니다.</div></div>
+    <div class="card"><div class="question">**AIサービス企画時に倫理的な問題（バイアスなど）をどのように考慮しますか？**</div><div class="answer">**「データ収集段階」**からバイアスチェックを開始します。非専攻者として多様なユーザーの声を代弁し、**疎外されがちなグループ**のデータを確保することに注力します。また、デリケートな話題に対してAIが回答を回避したり中立的な情報を提供するよう、**「ガードレール」**機能を企画段階から明記し運用プロセスに反映します。</div></div>
+    <div class="card"><div class="question">**AI非専攻者として、なぜこの職種に応募したのですか？そして、差別化できる強みは何ですか？**</div><div class="answer">私は**「テクノロジーと人間の接点」**をデザインする仕事に魅力を感じました。私の強みは**共感能力**と優れた**コミュニケーション能力**です。複雑なAI技術を非専門家でも簡単に理解し利用できる**「ユーザーフレンドリーな言葉」**に翻訳し、技術チームとユーザー間の**橋渡し役**として製品価値を最大化できます。</div></div>
+  </div>
+
+  <footer>© 2025 Yeonwoo Park | AI面接 Q&Aカード (JP)</footer>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const cardGroups = document.querySelectorAll('.cards');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        cardGroups.forEach(c => c.classList.remove('active'));
+        document.getElementById(tab.dataset.target).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

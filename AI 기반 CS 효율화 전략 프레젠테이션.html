@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 기반 고객 서비스(CS) 효율화 전략</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js 로드 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f3f4f6;
+            line-height: 1.6;
+            padding: 1rem;
+        }
+        .presentation-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+        .section-title {
+            color: #1e40af;
+            border-bottom: 3px solid #bfdbfe;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .step-card {
+            border-left: 5px solid #3b82f6;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            background-color: #f0f9ff;
+        }
+        .highlight {
+            background-color: #d1fae5; /* Light Green */
+            padding: 0 0.25rem;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        <header class="text-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">AI 기반 3단계 CS 효율화 전략: RAG & LSTM 활용</h1>
+            <p class="text-gray-600 mt-1">블랙 컨슈머 등 비효율적 문의를 식별하고 응대 부하를 최소화하는 방법론</p>
+        </header>
+
+        <!-- 시각화 영역: AI 필터링 효과 차트 -->
+        <section class="mb-10 p-4 border border-gray-200 rounded-lg bg-gray-50">
+            <h2 class="text-xl font-bold section-title">AI 도입 후 직원 개입 필요 문의 변화 (시뮬레이션)</h2>
+            <div class="md:flex md:space-x-8">
+                <div class="md:w-2/3">
+                    <canvas id="efficiencyChart" class="max-h-80"></canvas>
+                </div>
+                <div class="md:w-1/3 mt-4 md:mt-0 text-sm text-gray-700">
+                    <p class="font-semibold text-gray-800 mb-2">차트 해석:</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>**직원 개입 필요성 급감:** AI 1단계(RAG)와 2단계(LSTM) 필터링을 거치면서 대부분의 단순/반복 문의가 자동 또는 시스템으로 처리되어, 최종적으로 숙련된 직원에게 도달하는 문의량이 5% 미만으로 줄어듭니다.</li>
+                        <li>**직원 역할 변화:** 직원은 단순 반복 업무 대신, AI가 분류한 **'고위험 블랙 컨슈머'** 또는 **'정책 개선 필요 문의'**에 집중하여 생산성을 극대화합니다.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 3단계 전략 상세 설명 -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold section-title">AI 기반 3단계 CS 효율화 전략 상세</h2>
+
+            <!-- 1단계: RAG 기반 즉각적이고 정확한 '정보의 필터링 및 표준 응대' -->
+            <div class="step-card">
+                <h3 class="text-xl font-bold text-blue-700 mb-2">1단계: RAG 기반 '정보의 필터링 및 표준 응대'</h3>
+                <p class="text-gray-800 mb-3">**목표:** 단순하거나 표준화된 문의를 AI가 1차로 정확하게 처리하고, 직원의 개입을 최소화합니다.</p>
+                <div class="text-sm space-y-2">
+                    <p><span class="font-bold text-blue-600">기술: RAG (검색 증강 생성)</span> - 실시간으로 최신 환불 정책, 약관을 조회하여 고객 문의에 가장 정확한 답변을 생성합니다.</p>
+                    <p class="pl-4 border-l-2 border-gray-300">**효과:** AI가 <span class="highlight">정확한 규정(취소 불가 사유)을 즉각 제시</span>하여 고객의 오해를 해소하고, "담당자 실수"를 기대하는 반복 요청을 차단합니다.</p>
+                    <p><span class="font-bold text-blue-600">기술: 핵심 키워드 필터링</span> - '취소', '환불', '불가' 등의 키워드를 추출하여 RAG 시스템 응답의 우선순위를 부여합니다.</p>
+                </div>
+            </div>
+
+            <!-- 2단계: LSTM/ML 모델 기반 '악성 패턴 및 의도 분석' -->
+            <div class="step-card">
+                <h3 class="text-xl font-bold text-blue-700 mb-2">2단계: LSTM/ML 기반 '악성 패턴 및 의도 분석'</h3>
+                <p class="text-gray-800 mb-3">**목표:** AI가 고객의 <span class="highlight">과거 이력과 문의 패턴</span>을 분석하여, 반복적인 비합리적 요청을 하는 '블랙 컨슈머'인지 예측하고 분류합니다. (진상 응대 효율화 핵심)</p>
+                <div class="text-sm space-y-2">
+                    <p><span class="font-bold text-blue-600">기술: LSTM (시계열 데이터 예측)</span> - 과거 문의 횟수, 처리 결과 대비 반복 요청 등을 시계열 데이터로 학습합니다.</p>
+                    <p class="pl-4 border-l-2 border-gray-300">**효과:** <span class="highlight">'진상 패턴 예측'</span> 점수(Anomaly Score)를 부여하여, "처리 완료 후 재문의할 확률 80% 이상"인 고위험 케이스를 3단계로 넘길지 결정합니다.</p>
+                    <p><span class="font-bold text-blue-600">기술: 정성적 텍스트 분석 (감정 분석)</span> - 협박, 욕설 등 강한 불만족 표현을 탐지하여 위험도를 긴급 분류하고 자동 응대를 중단합니다.</p>
+                    <p><span class="font-bold text-blue-600">기술: 규정 위반 이력 매핑</span> - 과거 사기 시도, 약관 위반 이력을 연결하여 위험 고객임을 명확히 하고, AI가 단호한 원칙적 템플릿을 사용하도록 지시합니다.</p>
+                </div>
+            </div>
+
+            <!-- 3단계: AI 데이터 기반 '전문 인력의 신속한 최종 결정 및 응대' -->
+            <div class="step-card">
+                <h3 class="text-xl font-bold text-blue-700 mb-2">3단계: AI 데이터 기반 '전문 인력의 신속한 최종 결정 및 응대'</h3>
+                <p class="text-gray-800 mb-3">**목표:** 2단계에서 분류된 '블랙 컨슈머' 케이스를 AI 분석 데이터와 함께 숙련된 팀원에게 이관하여 논쟁을 종결합니다.</p>
+                <div class="text-sm space-y-2">
+                    <p><span class="font-bold text-blue-600">주체: 숙련된 CS 팀원</span> - 2단계 LSTM 분석 결과, RAG 정책 증빙 자료, 과거 상호작용 기록을 요약한 AI 보고서를 활용합니다.</p>
+                    <p class="pl-4 border-l-2 border-gray-300">**효과:** <span class="highlight">신속하고 일관된 대응</span>이 가능하며, 담당자는 복잡한 이력을 5분 내에 파악하고 최종적으로 단호한 거절 또는 법적 대응 준비를 시작하여 논쟁 시간을 단축합니다.</p>
+                    <p><span class="font-bold text-blue-600">주체: 전용 매크로/템플릿</span> - 'LSTM Score X점 이상' 고객에게는 "회사의 최종 결정이며, 추가 반복 문의는 응대가 어렵다"는 경고성 템플릿을 사용하여 논쟁을 종결하고 직원의 감정 소모를 줄입니다.</p>
+                </div>
+            </div>
+        </section>
+        
+    </div>
+
+    <script>
+        // Chart.js 초기화 함수
+        const setupChart = () => {
+            const ctx = document.getElementById('efficiencyChart').getContext('2d');
+            const efficiencyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['총 인입 문의', '1단계 AI 처리 후', '2단계 AI 예측/분류 후', '최종 직원 개입'],
+                    datasets: [{
+                        label: '직원 개입 필요 문의 비율',
+                        data: [100, 20, 5, 2],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.7)', // Blue (Initial)
+                            'rgba(16, 185, 129, 0.7)', // Green (RAG Filtered)
+                            'rgba(251, 191, 36, 0.7)',  // Yellow (LSTM Filtered)
+                            'rgba(239, 68, 68, 0.7)'   // Red (Final High-Value Case)
+                        ],
+                        borderColor: [
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(16, 185, 129, 1)',
+                            'rgba(251, 191, 36, 1)',
+                            'rgba(239, 68, 68, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: '문의 비율 (%)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'AI 필터링을 통한 문의 부하 감소 효과',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+
+        window.onload = setupChart;
+    </script>
+</body>
+</html>

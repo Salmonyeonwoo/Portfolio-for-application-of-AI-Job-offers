@@ -3,116 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yeonwoo Park Resume Overview - Web Presentation</title>
+    <title>Yeonwoo Park Career Summary (Revised & Integrated)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f7f7f7; }
-        .slide { min-height: 100vh; padding: 4rem 2rem; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: left; background-color: white; border-bottom: 8px solid #059669; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 2rem; border-radius: 1rem; }
-        .slide-content { max-width: 800px; width: 100%; }
-        h1, h2 { font-weight: 700; color: #065f46; }
-        .section-header { border-left: 5px solid #10b981; padding-left: 1rem; margin-top: 1.5rem; }
-        ul { list-style: disc; margin-left: 1.5rem; }
-        li { margin-bottom: 0.5rem; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f7f7f7; line-height: 1.6; }
+        .container { max-width: 1000px; padding: 1.5rem; }
+        .slide { background-color: white; border-bottom: 5px solid #3b82f6; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-bottom: 1.5rem; border-radius: 0.75rem; padding: 2rem; }
+        .section-header { font-weight: 700; color: #1e40af; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px dashed #bfdbfe; display: flex; align-items: center; }
+        .section-header i { margin-right: 0.75rem; color: #3b82f6; }
+        .highlight { font-weight: 500; color: #059669; }
+        .scenario-card { background-color: #f0f9ff; border-left: 4px solid #3b82f6; padding: 1rem; margin-top: 0.75rem; border-radius: 0.5rem; }
+        .job-title { font-weight: 700; color: #065f46; font-size: 1.125rem; }
+        .sub-header { font-weight: 600; color: #1f2937; margin-top: 1rem; }
     </style>
 </head>
-<body>
+<body class="p-4">
+    <div class="container mx-auto">
+        <header class="text-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">Yeonwoo Park Career Overview (Integrated Scenarios)</h1>
+            <p class="text-gray-600 mt-1">Minimized Whitespace and Detailed AI/Technical Support Scenarios</p>
+        </header>
 
-    <!-- Slide 1: Cover -->
-    <div id="slide-1" class="slide bg-green-50">
-        <div class="slide-content text-center">
-            <h1 class="text-5xl mb-4 text-green-800">Yeonwoo Park: Introduction for my careers so far</h1>
-            <p class="text-xl text-gray-600">AI Application & QA Specialist</p>
-            <p class="mt-8 text-sm text-gray-500">Updated: October 21, 2025</p>
-            <div class="mt-10">
-                <!--  -->
-                <img src="https://placehold.co/150x150/d1fae5/065f46?text=Yeonwoo+Park" alt="Yeonwoo Park Profile Photo" class="mx-auto rounded-full shadow-lg">
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 2: Professional Summary -->
-    <div id="slide-2" class="slide">
-        <div class="slide-content">
-            <h2 class="text-3xl section-header">Professional Summary & Core Strength</h2>
-            <div class="mt-6 space-y-4 text-lg">
-                <p>8+ years of global customer support and operations experience, transitioning into AI Application & Quality Assurance (QA).</p>
-                <p>I specialize in bridging the communication gap between technical development teams and non-technical business domains (e.g., multilingual, accounting/operations), ensuring AI tools deliver practical, high-quality solutions.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 3: AI & Data-Driven Achievements -->
-    <div id="slide-3" class="slide bg-gray-50">
-        <div class="slide-content">
-            <h2 class="text-3xl section-header"><i class="fas fa-chart-line"></i> AI & Data-Driven Contributions</h2>
-            <div class="mt-6 space-y-6">
-                <!-- Klook Section Updated -->
-                <div>
-                    <h3 class="text-xl font-semibold text-gray-800">Daythree / Klook (2024~2025)</h3>
-                    <ul class="mt-2 text-base" style="list-style-type: none; margin-left: 0; padding-left: 0;">
-                        <li><span class="font-semibold">Role :</span> AI Chatbot QA & Efficiency Improvement</li>
-                        <li class="mt-2"><span class="font-semibold">∙ Key Case :</span> Stabilizing the escalating agent transfer rate (increasing 15% monthly).</li>
-                        <li class="mt-2"><span class="font-semibold">∙ Solution :</span>
-                            <ul style="list-style-type: none; margin-left: 1rem; padding-left: 0; margin-top: 0.5rem;">
-                                <li><span class="font-semibold">  1 Step : </span> Analyzed user inquiry patterns and AI failure data to identify over 10 key issues.</li>
-                                <li class="mt-1"><span class="font-semibold">  2 Step : </span> Provided findings to the development team, leading to FAQ/scenario improvements and stabilization.</li>
-                            </ul>
-                        </li>
+        <!-- Slide 1: Personal Info + Career Goal + Global Skills (Merged) -->
+        <div id="slide-1-merged" class="slide">
+            <h2 class="text-2xl section-header"><i class="fas fa-user-circle"></i> Personal Profile, Career Vision & Global Capabilities</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+                <!-- Personal Info (Left) -->
+                <div class="col-span-1 border-r pr-4 border-gray-200">
+                    <h3 class="sub-header text-lg mb-2">Basic Information</h3>
+                    <ul class="text-sm space-y-1 text-gray-700">
+                        <li><span class="highlight">Name:</span> Yeonwoo Park</li>
+                        <li><span class="highlight">Nationality:</span> South Korea</li>
+                        <li><span class="highlight">Contact No:</span> +6010-968-1392 (Malaysia)</li>
+                        <li><span class="highlight">Residence:</span> Bayan Indah, Pulau Pinang (Current) / Yong-in City (Permanent)</li>
                     </ul>
                 </div>
-                <!-- Motorola Section Updated (Highlight Removed) -->
-                <div>
-                    <h3 class="text-xl font-semibold text-gray-800">Motorola Solutions (2017~2019): Knowledge Base Foundation</h3>
-                    <ul class="mt-2 text-base">
-                        <li>Systematically categorized and compiled over 1,000 technical inquiries, creating a foundational dataset for future AI Knowledge Management.</li>
+                
+                <!-- Career Vision (Center) -->
+                <div class="col-span-1 border-r pr-4 border-gray-200">
+                    <h3 class="sub-header text-lg mb-2"><i class="fas fa-lightbulb"></i> Career Vision: AI Technology Translator</h3>
+                    <p class="text-sm text-gray-700">
+                        My goal is to serve as a bridge, closing the gap between the **Technical Team** and the **End-User**. I aim to contribute to ensuring AI tools function robustly (QA) and solve practical business problems (Application).
+                    </p>
+                </div>
+                
+                <!-- Multilingual & Global Skills (Right) -->
+                <div class="col-span-1">
+                    <h3 class="sub-header text-lg mb-2"><i class="fas fa-globe-asia"></i> Multilingual and Global Experience</h3>
+                    <ul class="text-sm space-y-1 text-gray-700">
+                        <li><span class="highlight">Key Languages:</span> Korean, English (Business Level), Japanese (Fluent).</li>
+                        <li><span class="highlight">Regional Experience:</span> Japan (University Degree), Malaysia (Motorola, Klook), Extensive travel (Singapore, China, Western Europe, U.S.A.).</li>
+                        <li><span class="highlight">Leadership:</span> Served as Team Leader of Korean Students' meeting at Japanese university.</li>
                     </ul>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Slide 4: Technical & Security Expertise -->
-    <div id="slide-4" class="slide">
-        <div class="slide-content">
-            <h2 class="text-3xl section-header"><i class="fas fa-shield-alt"></i> Technical Support & Security QA</h2>
-            <ul class="mt-6 text-lg space-y-2">
-                <!-- Roblox Section Updated -->
-                <li>
-                    <span class->Roblox: Account Security & Process Improvement</span>
-                    <ul class="mt-2 text-base" style="list-style-type: none; margin-left: 0; padding-left: 0;">
-                        <li><span class="font-semibold">Role :</span> Account Security & Process Improvement</li>
-                        <li class="mt-2"><span class="font-semibold">∙ Key Case :</span> High volume of hacked account recovery cases (100+ monthly).</li>
-                        <li class="mt-2"><span class="font-semibold">∙ Solution :</span>
-                            <ul style="list-style-type: none; margin-left: 1rem; padding-left: 0; margin-top: 0.5rem;">
-                                <li><span class="font-semibold">  1 Step : </span> Analyzed recovery cases to identify core vulnerability patterns.</li>
-                                <li class="mt-1"><span class="font-semibold">  2 Step : </span> Proposed and initiated a 2FA (Two-Factor Authentication) campaign, reducing security incidents.</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <!-- Other Sections Updated (Highlight Removed) -->
-                <li class="mt-4">Microsoft VLSC: Managed corporate Volume Licensing accounts, ensuring PII compliance and successful software installation/license management.</li>
-                <li>Data Analysis: Conducted payment error analysis (Roblox) and processed complex refund escalations (Klook).</li>
-            </ul>
+        <!-- Slide 2: AI Achievements + Technical Support & Security (Merged) - Detailed Scenarios -->
+        <div id="slide-2-merged" class="slide">
+            <h2 class="text-2xl section-header"><i class="fas fa-tools"></i> Core Experience: AI Achievements & Technical Support (Scenarios)</h2>
+            
+            <!-- 1. Klook - AI Achievements and Analysis Scenario -->
+            <h3 class="sub-header text-xl mt-4 border-b pb-1">1. Klook: AI-Driven Query Pattern Analysis & Process Improvement</h3>
+            <p class="job-title">(Travel Activity Platform, **Sep 2024 ~ Mar 2025**) <span class="text-sm text-gray-500 font-normal">AI Implementation Period</span></p>
+            <div class="scenario-card">
+                <p class="font-bold text-blue-700 mb-1">Achievement Case: User Query Pattern Analysis (Top 3 of 10+ Identified)</p>
+                <p class="text-sm text-gray-700 mb-2">**Role:** Final Reviewer and QA for the AI Auto-Summarization/Resolution System. I analyzed the failures of the AI system, manually corrected errors, and identified underlying failure patterns for system improvement.</p>
+                
+                <p class="font-semibold text-gray-800">Top 3 Patterns Identified and Resolution:</p>
+                <ul class="text-sm list-disc list-inside ml-4 space-y-1">
+                    <li><span class="highlight">Pattern 1. Complex Policy Misinterpretation:</span> AI misclassified cancellation cases involving 'Promotional Booking + Partial Usage' as simply 'Non-refundable.' <span class="text-red-600">→ Resolution:</span> Requested the implementation of exception tags in the system to trigger a mandatory Human Review for multi-policy parsing.</li>
+                    <li><span class="highlight">Pattern 2. External Documentation Override Failure:</span> AI failed to prioritize external proofs for unavoidable reasons (e.g., 'Flight Cancellation', 'Medical Certificate') over standard Klook policies. <span class="text-red-600">→ Resolution:</span> Improved the process to automatically escalate cases with specific external proof keywords to Supervisors as a **Special Case**, preventing erroneous automatic rejection.</li>
+                    <li><span class="highlight">Pattern 3. Ambiguous/Emotional Language Misunderstanding:</span> AI misinterpreted highly emotional or ambiguous Korean phrases as simple inquiries, resulting in inappropriate automated responses. <span class="text-red-600">→ Resolution:</span> Developed a **'High-Emotion Keyword Library'** to flag these queries for immediate human summarization and response, strengthening the QA process.</li>
+                </ul>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">※ Others: Detailed guidance on non-refundable product policies; assisted with cancellation and rebooking under the same conditions for eligible products.</p>
+
+            <!-- 2. Roblox - Technical Support & Security Scenario (AI Excluded) -->
+            <h3 class="sub-header text-xl mt-6 border-b pb-1">2. Roblox: Security and Technical Issue Resolution Process</h3>
+            <p class="job-title">(Global Gaming Platform, **May 2020 ~ Jun 2024**)</p>
+            <div class="scenario-card">
+                <p class="font-bold text-blue-700 mb-1">Achievement Case: Preventing Suspicious Account Hacking and Fraud</p>
+                <p class="text-sm text-gray-700 mb-2">**Role:** Primary Security Authentication Officer and Escalation Gatekeeper. Strictly enforced ownership verification to prevent potential fraud during account recovery requests.</p>
+                <ul class="text-sm list-disc list-inside ml-4 space-y-1">
+                    <li>**Problem:** A user claimed their account was hacked, but the recovery information provided (contact email/payment history) consistently failed to match the registered details, raising suspicion (Rule A, B).</li>
+                    <li>**Resolution:** <span class="highlight">Step 1 (Policy Adherence):</span> Required Payment/Email verification (Rule B), which the user failed. <span class="highlight">Step 2 (Escalation):</span> Identified the case as unusual and immediately escalated to **Supervisors (Rule A)**. <span class="highlight">Step 3 (Completion):</span> The senior team used secondary security data to confirm the true owner's identity, preventing an unauthorized recovery attempt and mitigating potential fraud.</li>
+                </ul>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">※ Others: For technical issues, requested screenshots/YouTube links to identify device-specific errors, then escalated to the dedicated Specialists Team (Rule E) with complete information for rapid solution delivery.</p>
+
+            <!-- 3. Facebook/Microsoft - Specialized Technical Support (Training Period) (NEW ENTRY) -->
+            <h3 class="sub-header text-xl mt-6 border-b pb-1">3. Facebook/Microsoft: Specialized Technical Support (Training Period)</h3>
+            <p class="job-title">(Concentrix Malaysia, **Jan 2020 ~ Mar 2020**)</p>
+            <div class="scenario-card">
+                <p class="font-bold text-blue-700 mb-1">Key Duties: Rapid Acquisition of Technical Knowledge and PII Compliance</p>
+                <ul class="text-sm list-disc list-inside ml-4 space-y-1">
+                    <li>**Facebook:** Acquired the escalation process for checking ad approval status and managing billing information.</li>
+                    <li>**Microsoft VLSC:** Managed Volume Licensing Service Center accounts, program installation support, and ensured PII compliance during license history management.</li>
+                </ul>
+            </div>
+
+            <!-- 4. Motorola - Regulatory Compliance & Process Management Scenario (AI Excluded) -->
+            <h3 class="sub-header text-xl mt-6 border-b pb-1">4. Motorola: Regulatory Compliance and Partner Management</h3>
+            <p class="job-title">(Global Radio Manufacturer, **Mar 2017 ~ Nov 2019**)</p>
+            <div class="scenario-card">
+                <p class="font-bold text-blue-700 mb-1">Achievement Case: Handling Customer Inquiries on Unregistered Devices</p>
+                <p class="text-sm text-gray-700 mb-2">**Role:** Customer Service and Regulatory Compliance Guide. Handled inquiries from customers who failed to secure the mandatory license for their radio devices.</p>
+                <ul class="text-sm list-disc list-inside ml-4 space-y-1">
+                    <li>**Problem:** Received an angry inquiry from a customer whose radio usage was suddenly restricted because they had not completed the mandatory usage permit registration (Rule D).</li>
+                    <li>**Resolution:** <span class="highlight">Step 1 (Clear Guidance):</span> Clearly explained the regulatory obligation (Rule D) to visit the **local district office (구청)** to complete the radio usage permit and registration. <span class="highlight">Step 2 (Compliance Focus):</span> Emphasized that this was a mandatory procedure to resolve a regulatory violation, providing the necessary forms and contact information to guide the customer to the correct solution.</li>
+                </ul>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">※ Others: Ensured transparency by requiring verification and approval/rejection from HQ Supervisors for all partner transactions (Rule C).</p>
+            
+            <!-- 5. Alexander&sun - International Sales and Settlement Experience -->
+            <h3 class="sub-header text-xl mt-6 border-b pb-1">5. Alexander&sun: International Sales and Settlement Experience</h3>
+            <p class="job-title">(Duty-free Shop, **Aug 2016 ~ Oct 2016**)</p>
+            <div class="scenario-card">
+                <p class="font-bold text-blue-700 mb-1">Key Duties: Multinational Customer Service and Multi-Currency Settlement</p>
+                <ul class="text-sm list-disc list-inside ml-4 space-y-1">
+                    <li>**Multinational Customer Service:** Provided product explanations and sales support to Korean, Chinese, and other foreign customers.</li>
+                    <li>**Multi-Currency Settlement:** Handled cash payments in KRW, CNY, USD, and provided change only in JPY (Japanese Yen).</li>
+                    <li>**Tax Exemption Process Management:** Guided and processed the Tax Exemption benefit for customers presenting their passports.</li>
+                </ul>
+            </div>
         </div>
-    </div>
 
-    <!-- Slide 5: Global Competency & Education -->
-    <div id="slide-5" class="slide bg-green-50">
-        <div class="slide-content">
-            <h2 class="text-3xl section-header"><i class="fas fa-globe"></i> Global Competency & Skills</h2>
-            <div class="mt-6 space-y-4 text-lg">
-                <ul class="mt-2 text-base">
-                    <li><span class="font-semibold">Languages:</span> Advanced proficiency in English and Japanese; basic Mandarin.</li>
-                    <li><span class="font-semibold">Education:</span> International Business degree from Takushoku College, Japan.</li>
-                    <li><span class="font-semibold">AI Training:</span> Completed NVIDIA AI programming education covering Python, TensorFlow, Keras, and optimization algorithms.</li>
-                    <li><span class="font-semibold">Soft Skills:</span> Proven leader (Korean Students Team Leader) and highly adaptable through extensive international travel.</li>
+        <!-- Slide 3: AI Technical Skills and Training (Condensed) -->
+        <div id="slide-3-ai" class="slide">
+            <h2 class="text-2xl section-header"><i class="fas fa-laptop-code"></i> AI Technical Training and Fundamental Skills</h2>
+            <div class="mt-4 space-y-4">
+                <h3 class="sub-header text-lg">Completed NVIDIA AI Programming Training (Jul 2025–Dec 2025)</h3>
+                <ul class="mt-2 text-sm list-disc list-inside space-y-1 text-gray-700">
+                    <li><span class="highlight">Basic Programming:</span> Practical training in C language, Python fundamentals, and utilizing Jupyter Notebooks.</li>
+                    <li><span class="highlight">Machine Learning Libraries:</span> Studied neural network model construction using TensorFlow/Keras and the principles of weight adjustment (Gradient Descent).</li>
+                    <li><span class="highlight">Algorithm Understanding:</span> Implemented logic using conditional/repetitive statements (if, for) and understood the mathematical concepts behind AI algorithms.</li>
                 </ul>
             </div>
         </div>
     </div>
-
 </body>
 </html>

@@ -128,8 +128,8 @@
             
             <div class="sub-concept bg-teal-50 border-teal-400">
                 <p class="font-bold text-teal-700">프로젝트명 및 역할:</p>
-                <p class="text-gray-700 font-medium">**NVIDIA Morpheus를 활용한 GPU 가속 대규모 보안 분석 파이프라인 구축**</p>
-                <p class="text-gray-700 mt-1">교육 과정의 일환으로 **전체 아키텍처 설계** 및 ControlMessage, Tensors, Inference 모듈을 통합하는 **엔드-투-엔드 통합 개발자** 역할을 수행했습니다.</p>
+                <p class="text-gray-700 font-medium">NVIDIA Morpheus를 활용한 GPU 가속 대규모 보안 분석 파이프라인 구축</p>
+                <p class="text-gray-700 mt-1">교육 과정의 일환으로 전체 아키텍처 설계 및 ControlMessage, Tensors, Inference 모듈을 통합하는 엔드-투-엔드 통합 개발자 역할을 수행했습니다.</p>
                 
                 <h3 class="font-bold text-gray-800 mt-4">주요 기술 스택</h3>
                 <div class="mt-2 flex flex-wrap">
@@ -146,31 +146,31 @@
             <!-- 기술 1: ControlMessage와 데이터 변환 -->
             <div class="sub-concept">
                 <h4 class="text-xl font-bold text-gray-800 border-l-4 border-emerald-400 pl-3">2.1. 데이터 생명주기 제어: ControlMessage 및 Serialization</h4>
-                <p class="text-gray-700 key-point">파이프라인 유연성 확보를 위해, 데이터와 함께 **메타데이터 및 다음 Stage에 대한 작업 지시(Task)**를 동적으로 전달하는 **`ControlMessage`**를 활용했습니다.</p>
+                <p class="text-gray-700 key-point">파이프라인 유연성 확보를 위해, 데이터와 함께 메타데이터 및 다음 Stage에 대한 작업 지시(Task)를 동적으로 전달하는 `ControlMessage`를 활용했습니다.</p>
                 <p class="text-gray-700 mt-2 text-sm">원시 로그/PCAP 데이터를 Morpheus의 `MessageMeta`로 변환하고, 이를 다시 `ControlMessage`로 묶어 파이프라인에 주입하는 Serialization/Deserialization 사이클을 직접 구현했습니다.</p>
             </div>
 
             <!-- 기술 2: Tensors 및 Inference Stages 통합 -->
             <div class="sub-concept">
                 <h4 class="text-xl font-bold text-gray-800 border-l-4 border-emerald-400 pl-3 mt-6">2.2. AI 통합: Tensors 및 Triton Inference Stage</h4>
-                <p class="text-gray-700 key-point">GPU 메모리 내에서 데이터가 CPU를 거치지 않도록 **`TensorStage`**를 활용해 CuDF DataFrame을 모델 입력 형식(Tensor)으로 고속 변환했습니다.</p>
-                <p class="text-gray-700 mt-2 text-sm">이후 **`InferenceStage`**에 **ONNX** 형식의 머신러닝 모델을 통합하여, 대규모 데이터에 대한 추론(Inference)을 실시간으로 수행했습니다. </p>
+                <p class="text-gray-700 key-point">GPU 메모리 내에서 데이터가 CPU를 거치지 않도록 `TensorStage`를 활용해 CuDF DataFrame을 모델 입력 형식(Tensor)으로 고속 변환했습니다.</p>
+                <p class="text-gray-700 mt-2 text-sm">이후 `InferenceStage`에 ONNX 형식의 머신러닝 모델을 통합하여, 대규모 데이터에 대한 추론(Inference)을 실시간으로 수행했습니다. </p>
             </div>
 
             <!-- 기술 3: 비선형 그래프 및 다중 포트 설계 -->
             <div class="sub-concept">
                 <h4 class="text-xl font-bold text-gray-800 border-l-4 border-emerald-400 pl-3 mt-6">2.3. 아키텍처 설계: 비선형 그래프 (Broadcast/Multi-Port)</h4>
-                <p class="text-gray-700 key-point">단순 순차 처리의 한계를 극복하기 위해, 데이터 스트림을 분기/병합하는 **비선형 그래프 구조**를 설계했습니다.</p>
-                <p class="text-gray-700 mt-2 text-sm">데이터를 여러 분석 경로로 복사하는 **Broadcast**와, 데이터 내용(예: 정상/비정상)에 따라 후처리 경로를 분할하는 **Multi-Port (RouterStage)** 구조를 구현했습니다.</p>
+                <p class="text-gray-700 key-point">단순 순차 처리의 한계를 극복하기 위해, 데이터 스트림을 분기/병합하는 비선형 그래프 구조를 설계했습니다.</p>
+                <p class="text-gray-700 mt-2 text-sm">데이터를 여러 분석 경로로 복사하는 Broadcast와, 데이터 내용(예: 정상/비정상)에 따라 후처리 경로를 분할하는 Multi-Port (RouterStage) 구조를 구현했습니다.</p>
             </div>
             
             <h2 class="section-title"><i class="fas fa-wrench"></i> 3. 재개발 시 개선점 및 운영 방향</h2>
             <div class="sub-concept bg-red-50 border-red-400">
                 <ul class="list-disc list-inside ml-4 text-gray-700 space-y-2 mt-2">
-                    <li>**개선점 1: 실시간 시각화 대시보드 연동**
-                        <p class="text-sm text-gray-600">GPU 가속 분석 결과를 Kibana/Grafana와 연동하여 분석가들이 인사이트를 즉시 확인할 수 있는 **운영 시스템(Observability)**을 완성하여 의사결정 속도를 높일 것입니다.</p>
+                    <li>개선점 1: 실시간 시각화 대시보드 연동
+                        <p class="text-sm text-gray-600">GPU 가속 분석 결과를 Kibana/Grafana와 연동하여 분석가들이 인사이트를 즉시 확인할 수 있는 운영 시스템(Observability)을 완성하여 의사결정 속도를 높일 것입니다.</p>
                     </li>
-                    <li>**개선점 2: 컨테이너 기반 자동 배포 (DevOps 통합)**
+                    <li>개선점 2: 컨테이너 기반 자동 배포 (DevOps 통합)
                         <p class="text-sm text-gray-600">파이프라인 전체를 Docker 컨테이너화하고 Kubernetes 환경에서 관리하여, 환경 변수 및 버전 불일치 문제를 근본적으로 해결하고 확장성 및 배포의 용이성을 확보할 것입니다. (개별 프로젝트에서 겪은 환경 문제 해결책과 연결)</p>
                     </li>
                 </ul>
@@ -184,21 +184,21 @@
             <div class="collaboration-grid">
                 <div class="collab-box collab-challenge">
                     <h3 class="font-bold text-red-700 mb-2">🚩 갈등/문제 사례: '환경 변수 및 버전 불일치'</h3>
-                    <p class="text-gray-700 text-sm">학원 PC와 네트워크 환경으로 인해 버전 충돌이나 환경 변수 오류가 잦았고, 이로 인해 수업 흐름이 끊기거나 동료 및 선생님께 도움을 요청하는 **'기술적 병목/갈등 유발 요인'**이 발생했습니다.</p>
+                    <p class="text-gray-700 text-sm">학원 PC와 네트워크 환경으로 인해 버전 충돌이나 환경 변수 오류가 잦았고, 이로 인해 수업 흐름이 끊기거나 동료 및 선생님께 도움을 요청하는 '기술적 병목/갈등 유발 요인'이 발생했습니다.</p>
                 </div>
                 
                 <div class="collab-box collab-solution">
                     <h3 class="font-bold text-green-700 mb-2">✅ 해결 방법: 주도적 해결과 프로액티브한 자세</h3>
                     <ul class="list-disc list-inside ml-4 text-gray-700 text-sm space-y-1">
-                        <li>**개인 PC 소지:** 개인 PC 환경을 통일하여 외부 오류를 최소화하고 수업 지연을 막았습니다. (팀 내 **책임 영역** 주도적 해결)</li>
-                        <li>**사전 학습 및 결과 공유:** 부족한 부분을 채운 후, 결과물을 팀원들에게 공유하며 **건설적인 토론**을 유도했습니다. (팀 내 **기여도** 및 **협업 방향성** 제시)</li>
+                        <li>개인 PC 소지: 개인 PC 환경을 통일하여 외부 오류를 최소화하고 수업 지연을 막았습니다. (팀 내 책임 영역 주도적 해결)</li>
+                        <li>사전 학습 및 결과 공유: 부족한 부분을 채운 후, 결과물을 팀원들에게 공유하며 건설적인 토론을 유도했습니다. (팀 내 기여도 및 협업 방향성 제시)</li>
                     </ul>
                 </div>
                 
                 <div class="collab-box collab-insight">
                     <h3 class="font-bold text-yellow-700 mb-2"><i class="fas fa-lightbulb"></i> 느낀 점 및 팀워크 통찰</h3>
                     <p class="text-gray-700 text-sm">
-                        팀 프로젝트에서는 단순히 역할 분담을 넘어 **'환경 통일'** 및 **'버전 관리'**가 갈등을 예방하는 핵심임을 깨달았습니다. 또한, 문제를 회피하지 않고 프로액티브(Proactive)하게 해결하고 결과물을 공유하는 자세가 원활한 협업과 시너지를 창출한다는 것을 배웠습니다.
+                        팀 프로젝트에서는 단순히 역할 분담을 넘어 '환경 통일' 및 '버전 관리'가 갈등을 예방하는 핵심임을 깨달았습니다. 또한, 문제를 회피하지 않고 프로액티브(Proactive)하게 해결하고 결과물을 공유하는 자세가 원활한 협업과 시너지를 창출한다는 것을 배웠습니다.
                     </p>
                 </div>
             </div>

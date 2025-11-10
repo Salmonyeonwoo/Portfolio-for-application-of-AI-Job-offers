@@ -3,267 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI and Customer Support: A Growth Story</title>
+    <title>AI-Based Customer Service (CS) Efficiency Strategy</title>
+    <!-- Tailwind CSS Load -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chart.js Load -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f3f4f6;
+            line-height: 1.6;
+            padding: 1rem;
         }
-        .slide {
-            display: none;
-            transition: opacity 0.5s ease-in-out;
-            min-height: 500px; /* Use min-height for flexibility */
+        .presentation-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
         }
-        .slide.active {
-            display: flex; /* Use flex for better layout control */
-            flex-direction: column;
+        .section-title {
+            color: #1e40af;
+            border-bottom: 3px solid #bfdbfe;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
         }
-        /* Simple fade animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .step-card {
+            border-left: 5px solid #3b82f6;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            background-color: #f0f9ff;
         }
-        .slide.active {
-            animation: fadeIn 0.6s ease-in-out;
+        .highlight {
+            background-color: #d1fae5; /* Light Green */
+            padding: 0 0.25rem;
+            border-radius: 4px;
+            font-weight: 700;
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
-    <div class="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden">
-        <!-- Presentation Container -->
-        <div id="presentation-container" class="relative">
-            
-            <!-- Slide 1: Title -->
-            <div class="slide active p-8 md:p-16 flex-col items-center justify-center text-center bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
-                <h1 class="text-4xl md:text-5xl font-bold mb-4">The Symbiotic Growth: AI & The Future of Customer Support</h1>
-                <p class="text-xl md:text-2xl text-blue-200">An Advanced Growth Relationship</p>
-            </div>
+<body>
 
-            <!-- Slide 2: The Shifting Landscape -->
-            <div class="slide p-8 md:p-12">
-                <div class="flex flex-col md:flex-row items-center gap-8 h-full">
-                    <div class="md:w-1/2">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-6">A New Era of Customer Expectations</h2>
-                        <ul class="space-y-3 text-lg text-gray-600">
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><div><strong>Need for Speed:</strong> 90% expect an "immediate" response.</div></li>
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><div><strong>Personalization:</strong> 71% expect personalized interactions.</div></li>
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><div><strong>24/7 Availability:</strong> Support around the clock is the new standard.</div></li>
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><div><strong>Self-Service:</strong> 67% prefer self-service options.</div></li>
-                        </ul>
-                         <p class="mt-6 text-indigo-700 bg-indigo-50 p-3 rounded-lg text-base">Meeting these demands at scale is the primary driver for AI adoption.</p>
-                    </div>
-                    <div class="md:w-1/2 w-full h-64 md:h-full">
-                        
-                        <img src="https://placehold.co/600x400/e0e7ff/3730a3?text=Modern+Customers" alt="Modern Customers" class="w-full h-full object-cover rounded-lg shadow-md">
-                    </div>
+    <div class="presentation-container">
+        <header class="text-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">AI-Based 3-Step CS Efficiency Strategy: RAG & LSTM Utilization</h1>
+            <p class="text-gray-600 mt-1">Methodology to Identify Inefficient Inquiries (e.g., Black Consumers) and Minimize Response Load</p>
+        </header>
+
+        <!-- Visualization Area: AI Filtering Effect Chart -->
+        <section class="mb-10 p-4 border border-gray-200 rounded-lg bg-gray-50">
+            <h2 class="text-xl font-bold section-title">Change in Inquiries Requiring Staff Intervention After AI Adoption (Simulation)</h2>
+            <div class="md:flex md:space-x-8">
+                <div class="md:w-2/3">
+                    <canvas id="efficiencyChart" class="max-h-80"></canvas>
+                </div>
+                <div class="md:w-1/3 mt-4 md:mt-0 text-sm text-gray-700">
+                    <p class="font-semibold text-gray-800 mb-2">Chart Interpretation:</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>**Sharp Drop in Staff Intervention Needs:** As inquiries pass through AI Stage 1 (RAG) and Stage 2 (LSTM) filtering, most simple/repeated inquiries are handled automatically or by the system, reducing the final volume reaching experienced staff to less than 5%.</li>
+                        <li>**Shift in Staff Role:** Instead of repetitive tasks, staff focus on **'High-Risk Black Consumers'** or **'Policy Improvement Cases'** identified by the AI, maximizing productivity.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 3-Step Strategy Detail -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold section-title">Detail of the AI-Based 3-Step CS Efficiency Strategy</h2>
+
+            <!-- Stage 1: RAG-Based 'Information Filtering and Standard Response' -->
+            <div class="step-card">
+                <h3 class="text-xl font-bold text-blue-700 mb-2">Stage 1: RAG-Based 'Information Filtering and Standard Response'</h3>
+                <p class="text-gray-800 mb-3">**Goal:** AI accurately handles simple or standardized inquiries in the first phase, minimizing staff intervention.</p>
+                <div class="text-sm space-y-2">
+                    <p><span class="font-bold text-blue-600">Technology: RAG (Retrieval-Augmented Generation)</span> - Real-time lookup of the latest refund policies and terms to generate the most accurate response to customer inquiries.</p>
+                    <p class="pl-4 border-l-2 border-gray-300">**Effect:** AI immediately presents <span class="highlight">accurate regulations (reasons for non-cancellation)</span>, resolving customer misunderstanding and blocking repeated requests based on the expectation of a "staff error."</p>
+                    <p><span class="font-bold text-blue-600">Technology: Core Keyword Filtering</span> - Extracts keywords like 'cancellation', 'refund', 'not possible', etc., to prioritize the RAG system's response.</p>
                 </div>
             </div>
 
-            <!-- Slide 3: AI's Impact by the Numbers -->
-            <div class="slide p-8 md:p-12">
-                <div class="flex flex-col md:flex-row items-center gap-8 h-full">
-                    <div class="md:w-1/2 w-full h-64 md:h-full">
-                        
-                        <img src="https://placehold.co/600x400/3b82f6/ffffff?text=Growth+Metrics" alt="Data and Growth Metrics" class="w-full h-full object-cover rounded-lg shadow-md">
-                    </div>
-                    <div class="md:w-1/2">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-6">AI's Impact by the Numbers</h2>
-                        <div class="grid grid-cols-2 gap-4 text-center">
-                            <div class="bg-gray-50 p-4 rounded-lg"><p class="text-3xl font-bold text-blue-600">40%</p><p class="text-gray-600">Efficiency Increase</p></div>
-                            <div class="bg-gray-50 p-4 rounded-lg"><p class="text-3xl font-bold text-blue-600">30%</p><p class="text-gray-600">Cost Reduction</p></div>
-                            <div class="bg-gray-50 p-4 rounded-lg"><p class="text-3xl font-bold text-blue-600">52%</p><p class="text-gray-600">Faster Resolutions</p></div>
-                            <div class="bg-gray-50 p-4 rounded-lg"><p class="text-3xl font-bold text-blue-600">40%</p><p class="text-gray-600">CSAT Score Rise</p></div>
-                        </div>
-                        <p class="mt-6 text-center text-lg text-gray-700">Market projected to hit <strong class="text-indigo-600">$6B by 2032</strong>.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Slide 4: Advanced AI Applications -->
-            <div class="slide p-8 md:p-12">
-                 <div class="flex flex-col md:flex-row items-center gap-8 h-full">
-                    <div class="md:w-1/2">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-6">Beyond Chatbots: Advanced AI</h2>
-                        <ul class="space-y-4 text-lg text-gray-600">
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><strong>Intelligent Routing</strong></li>
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><strong>Predictive Support</strong></li>
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><strong>Sentiment Analysis</strong></li>
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><strong>Generative AI Summaries</strong></li>
-                        </ul>
-                    </div>
-                    <div class="md:w-1/2 w-full h-64 md:h-full">
-                        
-                        <img src="https://placehold.co/600x400/dbeafe/1e3a8a?text=Advanced+AI" alt="Advanced AI" class="w-full h-full object-cover rounded-lg shadow-md">
-                    </div>
+            <!-- Stage 2: LSTM/ML-Based 'Malicious Pattern and Intent Analysis' -->
+            <div class="step-card">
+                <h3 class="text-xl font-bold text-blue-700 mb-2">Stage 2: LSTM/ML-Based 'Malicious Pattern and Intent Analysis'</h3>
+                <p class="text-gray-800 mb-3">**Goal:** AI analyzes the customer's <span class="highlight">past history and inquiry patterns</span> to predict and classify whether they are a 'black consumer' making repeated, unreasonable requests. (Core to efficient handling of difficult customers)</p>
+                <div class="text-sm space-y-2">
+                    <p><span class="font-bold text-blue-600">Technology: LSTM (Time-Series Prediction)</span> - Learns time-series data such as past inquiry counts and repeated requests despite previous resolution.</p>
+                    <p class="pl-4 border-l-2 border-gray-300">**Effect:** Assigns an <span class="highlight">'Abusive Pattern Prediction'</span> score (Anomaly Score) to decide whether to escalate high-risk cases ("80%+ chance of repeating the inquiry after resolution") to Stage 3.</p>
+                    <p><span class="font-bold text-blue-600">Technology: Qualitative Text Analysis (Sentiment Analysis)</span> - Detects strong dissatisfaction expressions like threats or abuse to classify risk urgently and halt automatic response.</p>
+                    <p><span class="font-bold text-blue-600">Technology: Policy Violation History Mapping</span> - Links past history of fraud attempts or terms violations to clearly identify high-risk customers, instructing the AI to use firm, principled response templates.</p>
                 </div>
             </div>
 
-            <!-- Slide 5: AI-Human Synergy -->
-             <div class="slide p-8 md:p-12">
-                <div class="flex flex-col md:flex-row items-center gap-8 h-full">
-                     <div class="md:w-1/2 w-full h-64 md:h-full">
-                         
-                        <img src="https://placehold.co/600x400/e0f2fe/0891b2?text=Synergy" alt="AI-Human Synergy" class="w-full h-full object-cover rounded-lg shadow-md">
-                    </div>
-                    <div class="md:w-1/2">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-6">The AI-Human Synergy</h2>
-                         <ul class="space-y-4 text-lg text-gray-600">
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><strong>AI as a Co-pilot</strong></li>
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><strong>Automating Drudgery</strong></li>
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><strong>Data-Driven Coaching</strong></li>
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><strong>Faster Onboarding</strong></li>
-                        </ul>
-                    </div>
+            <!-- Stage 3: AI Data-Based 'Rapid Final Decision and Response by Expert Staff' -->
+            <div class="step-card">
+                <h3 class="text-xl font-bold text-blue-700 mb-2">Stage 3: AI Data-Based 'Rapid Final Decision and Response by Expert Staff'</h3>
+                <p class="text-gray-800 mb-3">**Goal:** Escalated 'black consumer' cases from Stage 2 are transferred to experienced staff with AI analysis data to resolve the dispute.</p>
+                <div class="text-sm space-y-2">
+                    <p><span class="font-bold text-blue-600">Stakeholder: Experienced CS Staff</span> - Utilizes AI reports summarizing Stage 2 LSTM analysis results, RAG policy evidence, and all past interaction records.</p>
+                    <p class="pl-4 border-l-2 border-gray-300">**Effect:** Enables <span class="highlight">rapid and consistent response</span>; staff can grasp complex history within 5 minutes, initiating a firm refusal or legal action preparation, thereby reducing dispute time.</p>
+                    <p><span class="font-bold text-blue-600">Stakeholder: Dedicated Macro/Template</span> - Uses a warning template with legal effect ("This is the company's final decision, further repeated inquiries will not be responded to") for customers with an 'LSTM Score X or higher', ending the dispute and reducing staff emotional drain.</p>
                 </div>
             </div>
-
-            <!-- Slide 6: Hyper-Personalization -->
-            <div class="slide p-8 md:p-12">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">The Era of Hyper-Personalization</h2>
-                <div class="flex flex-col md:flex-row items-center gap-8 h-full">
-                    <div class="md:w-1/2">
-                         <ul class="space-y-4 text-lg text-gray-600">
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><strong>Tailored Recommendations</strong></li>
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><strong>Dynamic Interactions</strong></li>
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><strong>Proactive Engagement</strong></li>
-                        </ul>
-                         <p class="mt-6 text-center text-xl font-semibold text-indigo-700 bg-indigo-50 p-4 rounded-lg">87% of organizations report better engagement with AI personalization.</p>
-                    </div>
-                     <div class="md:w-1/2 w-full h-64 md:h-full">
-                        
-                        <img src="https://placehold.co/600x400/ede9fe/5b21b6?text=Personalization" alt="Hyper-Personalization" class="w-full h-full object-cover rounded-lg shadow-md">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Slide 7: Case Studies -->
-            <div class="slide p-8 md:p-12 flex-col justify-center">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Case Studies: AI in Action</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-gray-50 p-4 rounded-lg text-center">
-                        <h3 class="font-bold text-lg text-gray-700">American Express</h3>
-                        <p class="text-gray-600 mt-2"><strong>25% reduction</strong> in service costs & <strong>10% increase</strong> in CSAT.</p>
-                    </div>
-                    <div class="bg-gray-50 p-4 rounded-lg text-center">
-                        <h3 class="font-bold text-lg text-gray-700">Bank of America</h3>
-                        <p class="text-gray-600 mt-2">Over <strong>1 billion interactions</strong> & <strong>17% decrease</strong> in call load.</p>
-                    </div>
-                    <div class="bg-gray-50 p-4 rounded-lg text-center">
-                        <h3 class="font-bold text-lg text-gray-700">Vodafone</h3>
-                        <p class="text-gray-600 mt-2"><strong>70% reduction</strong> in cost-per-chat with their TOBi chatbot.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Slide 8: Challenges & Ethics -->
-            <div class="slide p-8 md:p-12">
-                <div class="flex flex-col md:flex-row items-center gap-8 h-full">
-                    <div class="md:w-1/2">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-6">Challenges & Ethical Considerations</h2>
-                         <ul class="space-y-4 text-lg text-gray-600">
-                            <li class="flex items-start"><span class="text-red-500 mr-3 mt-1">&#9888;</span><strong>Data Privacy & Security</strong></li>
-                            <li class="flex items-start"><span class="text-red-500 mr-3 mt-1">&#9888;</span><strong>Integration Complexity</strong></li>
-                            <li class="flex items-start"><span class="text-red-500 mr-3 mt-1">&#9888;</span><strong>Maintaining Human Touch</strong></li>
-                            <li class="flex items-start"><span class="text-red-500 mr-3 mt-1">&#9888;</span><strong>Bias in AI Models</strong></li>
-                        </ul>
-                    </div>
-                    <div class="md:w-1/2 w-full h-64 md:h-full">
-                        
-                        <img src="https://placehold.co/600x400/fee2e2/991b1b?text=Ethics+%26+Trust" alt="Ethics and Challenges" class="w-full h-full object-cover rounded-lg shadow-md">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Slide 9: The Future -->
-            <div class="slide p-8 md:p-12">
-                <div class="flex flex-col md:flex-row items-center gap-8 h-full">
-                     <div class="md:w-1/2 w-full h-64 md:h-full">
-                        
-                        <img src="https://placehold.co/600x400/ccfbf1/0f766e?text=The+Future" alt="The Future of AI" class="w-full h-full object-cover rounded-lg shadow-md">
-                    </div>
-                    <div class="md:w-1/2">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-6">The Future is Proactive</h2>
-                         <ul class="space-y-4 text-lg text-gray-600">
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><strong>The Rise of "Agentic AI"</strong></li>
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><strong>From Reactive to Predictive</strong></li>
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><strong>Deeper Lifecycle Integration</strong></li>
-                            <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10148;</span><strong>Conversational Voice AI</strong></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Slide 10: Conclusion -->
-            <div class="slide p-8 md:p-12 justify-center">
-                 <div class="flex flex-col md:flex-row items-center gap-8 h-full">
-                    <div class="md:w-1/2">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-6">Key Takeaways</h2>
-                         <ul class="space-y-4 text-lg text-gray-600">
-                            <li class="flex items-start"><span class="text-green-500 mr-3 mt-1">&#10004;</span><strong>Growth is Data-Driven</strong></li>
-                            <li class="flex items-start"><span class="text-green-500 mr-3 mt-1">&#10004;</span><strong>Empowerment, Not Replacement</strong></li>
-                            <li class="flex items-start"><span class="text-green-500 mr-3 mt-1">&#10004;</span><strong>Personalization is Standard</strong></li>
-                            <li class="flex items-start"><span class="text-green-500 mr-3 mt-1">&#10004;</span><strong>The Future is Now</strong></li>
-                        </ul>
-                    </div>
-                     <div class="md:w-1/2 w-full h-64 md:h-full">
-                         
-                        <img src="https://placehold.co/600x400/f0fdf4/166534?text=Success" alt="Conclusion" class="w-full h-full object-cover rounded-lg shadow-md">
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Navigation -->
-        <div class="bg-gray-800 text-white flex items-center justify-between p-4">
-            <button id="prevBtn" class="bg-gray-700 hover:bg-gray-600 rounded-md px-4 py-2 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">&larr; Previous</button>
-            <div id="slide-counter" class="text-sm">Slide 1 / 10</div>
-            <button id="nextBtn" class="bg-blue-600 hover:bg-blue-500 rounded-md px-4 py-2 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">Next &rarr;</button>
-        </div>
+        </section>
+        
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const slides = document.querySelectorAll('.slide');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const slideCounter = document.getElementById('slide-counter');
-            let currentSlide = 0;
-            const totalSlides = slides.length;
-
-            function showSlide(n) {
-                if (slides[currentSlide]) {
-                    slides[currentSlide].classList.remove('active');
-                }
-                currentSlide = (n + totalSlides) % totalSlides;
-                if (slides[currentSlide]) {
-                    slides[currentSlide].classList.add('active');
-                }
-                updateUI();
-            }
-            
-            function updateUI() {
-                slideCounter.textContent = `Slide ${currentSlide + 1} / ${totalSlides}`;
-                prevBtn.disabled = currentSlide === 0;
-                nextBtn.disabled = currentSlide === totalSlides - 1;
-            }
-
-            nextBtn.addEventListener('click', () => {
-                if (currentSlide < totalSlides - 1) {
-                    showSlide(currentSlide + 1);
+        // Chart.js Initialization Function
+        const setupChart = () => {
+            const ctx = document.getElementById('efficiencyChart').getContext('2d');
+            const efficiencyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Total Incoming Inquiries', 'After Stage 1 AI Filter', 'After Stage 2 AI Predict/Classify', 'Final Staff Intervention'],
+                    datasets: [{
+                        label: 'Inquiries Requiring Staff Intervention (%)',
+                        data: [100, 20, 5, 2],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.7)', // Blue (Initial)
+                            'rgba(16, 185, 129, 0.7)', // Green (RAG Filtered)
+                            'rgba(251, 191, 36, 0.7)',  // Yellow (LSTM Filtered)
+                            'rgba(239, 68, 68, 0.7)'   // Red (Final High-Value Case)
+                        ],
+                        borderColor: [
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(16, 185, 129, 1)',
+                            'rgba(251, 191, 36, 1)',
+                            'rgba(239, 68, 68, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Inquiry Percentage (%)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Inquiry Load Reduction Effect through AI Filtering',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    }
                 }
             });
+        };
 
-            prevBtn.addEventListener('click', () => {
-                if (currentSlide > 0) {
-                    showSlide(currentSlide - 1);
-                }
-            });
-
-            showSlide(0);
-        });
+        window.onload = setupChart;
     </script>
 </body>
 </html>
-

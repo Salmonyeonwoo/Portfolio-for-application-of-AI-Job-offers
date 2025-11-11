@@ -109,7 +109,7 @@
         <section class="mb-10">
             <h2>1. 프로젝트 개요 및 커스텀 스테이지 설계</h2>
             <div class="card bg-white">
-                <p>Morpheus 파이프라인의 유연성과 확장성을 위해 **`SinglePortStage`**를 상속받아 사용자 정의 로직을 수행하는 커스텀 스테이지를 구현했습니다. 핵심 목표는 GPU 메모리에 상주하는 메시지의 `cuDF` 데이터를 **스레드 안전성(Thread Safety)**을 확보하며 수정하는 것입니다.</p>
+                <p>Morpheus 파이프라인의 유연성과 확장성을 위해 `SinglePortStage`를 상속받아 사용자 정의 로직을 수행하는 커스텀 스테이지를 구현했습니다. 핵심 목표는 GPU 메모리에 상주하는 메시지의 `cuDF` 데이터를 스레드 안전성(Thread Safety)을 확보하며 수정하는 것입니다.</p>
 
                 <h3 class="mt-4 mb-2">핵심 기술 역량</h3>
                 <div class="mt-2 flex flex-wrap">
@@ -131,11 +131,11 @@
 
             <div class="card">
                 <h3 class="mt-0 text-red-700 font-bold">🚩 도전: GPU 데이터의 경쟁 조건 (Race Condition) 회피</h3>
-                <p class="text-gray-700">Morpheus는 고성능 병렬 처리를 위해 여러 스레드를 사용합니다. 이 스레드들이 GPU 메모리(`cuDF`)에 동시 접근하여 데이터를 수정할 때 데이터 충돌(Data Corruption)을 일으키는 **경쟁 조건**을 피해야 했습니다.</p>
+                <p class="text-gray-700">Morpheus는 고성능 병렬 처리를 위해 여러 스레드를 사용합니다. 이 스레드들이 GPU 메모리(`cuDF`)에 동시 접근하여 데이터를 수정할 때 데이터 충돌(Data Corruption)을 일으키는 경쟁 조건을 피해야 했습니다.</p>
                 
                 <h3 class="mt-6 text-green-700 font-bold">✅ 해결: `mutable_dataframe()`을 사용한 잠금(Lock) 구현</h3>
                 <p class="text-gray-700 font-medium">
-                    메시지 객체의 **`with message.mutable_dataframe() as df:`** 컨텍스트 관리자를 활용했습니다. 이 구문은 데이터 수정 시 **내부적인 잠금(Lock) 메커니즘**을 적용하여 스레드 안전성을 확보했습니다. 개발자는 일반 Pandas처럼 `df` 객체를 사용하여 `user` 컬럼을 대문자로 변경하는 등의 변환 로직을 안전하게 구현했습니다.
+                    메시지 객체의 `with message.mutable_dataframe() as df:` 컨텍스트 관리자를 활용했습니다. 이 구문은 데이터 수정 시 내부적인 잠금(Lock) 메커니즘을 적용하여 스레드 안전성을 확보했습니다. 개발자는 일반 Pandas처럼 `df` 객체를 사용하여 `user` 컬럼을 대문자로 변경하는 등의 변환 로직을 안전하게 구현했습니다.
                 </p>
             </div>
         </section>
@@ -162,3 +162,4 @@
     </div>
 </body>
 </html>
+

@@ -130,7 +130,7 @@
         <section class="mb-10">
             <h2 class="section-title">1. 프로젝트 개요 및 핵심 역량</h2>
             <div class="card">
-                <p>Morpheus 파이프라인 내에서 사용자 정의 비즈니스 로직(데이터 변환, 정규화)을 수행하는 **커스텀 스테이지(Custom Stage)**를 직접 구현했습니다. 핵심은 GPU 메모리에 상주하는 데이터(`cuDF`)를 안전하고 효율적으로 수정하는 **`mutable_dataframe()`** 컨텍스트 관리자를 활용한 것입니다.</p>
+                <p>Morpheus 파이프라인 내에서 사용자 정의 비즈니스 로직(데이터 변환, 정규화)을 수행하는 커스텀 스테이지(custom stages)를 직접 구현했습니다. 핵심은 GPU 메모리에 상주하는 데이터(`cuDF`)를 안전하고 효율적으로 수정하는 `mutable_dataframe()` 컨텍스트 관리자를 활용한 것입니다.</p>
 
                 <h3 class="mt-6 mb-2">핵심 기술 역량</h3>
                 <div class="mt-2 flex flex-wrap">
@@ -154,11 +154,11 @@
             <div class="challenge-solution-grid">
                 <div class="challenge-box">
                     <div class="box-title">🚩 도전 1: GPU 데이터의 경쟁 조건 (Race Condition)</div>
-                    <p>Morpheus는 고속 병렬 처리를 위해 여러 스레드가 동시에 데이터 메시지를 처리합니다. 이때 GPU 메모리(cuDF)에 접근하여 데이터를 수정할 때 **데이터 충돌이나 무결성 손상**이 발생할 위험이 있었습니다.</p>
+                    <p>Morpheus는 고속 병렬 처리를 위해 여러 스레드가 동시에 데이터 메시지를 처리합니다. 이때 GPU 메모리(cuDF)에 접근하여 데이터를 수정할 때 데이터 충돌이나 무결성 손상이 발생할 위험이 있었습니다.</p>
                 </div>
                 <div class="solution-box">
                     <div class="box-title">✅ 해결 1: `mutable_dataframe()`을 사용한 안전 장치 구현</div>
-                    <p>메시지 객체의 `with message.mutable_dataframe() as df:` 컨텍스트 관리자를 활용하여 데이터 수정 시 **내부적인 잠금(Lock)** 메커니즘을 적용했습니다. 이는 **동시 수정을 방지**하고 스레드 안전성(Thread Safety)을 확보했습니다.</p>
+                    <p>메시지 객체의 `with message.mutable_dataframe() as df:` 컨텍스트 관리자를 활용하여 데이터 수정 시 내부의 잠금(lock) 메커니즘을 적용했습니다. 이는 동시 수정을 방지하고 스레드 안전성(Thread Safety)을 확보했습니다.</p>
                 </div>
 
                 <div class="challenge-box">
@@ -167,7 +167,7 @@
                 </div>
                 <div class="solution-box">
                     <div class="box-title">✅ 해결 2: `SinglePortStage` 및 `on_data` 메서드 활용</div>
-                    <p>파이프라인의 입/출력 구조를 정의하는 `SinglePortStage`를 상속받고, 데이터 처리의 핵심 로직을 **`on_data`** 메서드 내에 구현하여, 들어온 메시지를 처리 후 즉시 다음 단계로 전달하는 구조를 확립했습니다.</p>
+                    <p>파이프라인의 입/출력 구조를 정의하는 `SinglePortStage`를 상속받고, 데이터 처리의 핵심 로직을 'on_data' 메서드 내에 구현하여, 들어온 메시지를 처리 후 즉시 다음 단계로 전달하는 구조를 확립했습니다.</p>
                 </div>
             </div>
         </section>
@@ -183,7 +183,7 @@
                 </div>
                 <p class="mt-4 text-center text-sm text-gray-600">
                     `with message.mutable_dataframe() as df:` 구문이 실행되는 동안, <br>
-                    데이터(GPU 메모리)는 **잠금(Lock)** 처리되어 다른 스레드의 동시 접근을 막습니다.
+                    데이터(GPU 메모리)는 잠금 처리되어 다른 스레드의 동시 접근을 막습니다.
                 </p>
             </div>
         </section>
@@ -195,3 +195,4 @@
     </div>
 </body>
 </html>
+

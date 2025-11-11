@@ -65,7 +65,7 @@
                         🎯 핵심 보안/저작권 정책 요약
                     </h2>
                     <p class="text-lg text-yellow-200">
-                        NGC API Key, Riva 서버 URI, 경진대회 Submit Key는 모두 **환경 변수 또는 로컬 서버 주소**로 안전하게 처리되었으며, 파일에 직접 하드코딩된 민감 정보는 없습니다. (Git 기록 정리 완료)
+                        NGC API Key, Riva 서버 URI, 경진대회 Submit Key는 모두 환경 변수 또는 로컬 서버 주소로 안전하게 처리되었으며, 파일에 직접 하드코딩된 민감 정보는 없습니다. (Git 기록 정리 완료)
                     </p>
                 </div>
                 <p class="text-sm mt-8 text-gray-500">
@@ -95,19 +95,19 @@
                         <ul class="space-y-2 text-gray-400 text-base">
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**NGC CLI & NGC API Key**: 독점 AI 모델 및 리소스 다운로드 인증 관리.</span>
+                                <span>NGC CLI & NGC API Key: 독점 AI 모델 및 리소스 다운로드 인증 관리.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**Riva gRPC API**: 로컬 컨테이너(localhost:50051)에 ASR 추론 요청 전송.</span>
+                                <span>Riva gRPC API: 로컬 컨테이너(localhost:50051)에 ASR 추론 요청 전송.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**NeMo Model**: End-to-End ASR 구현 및 ITN 후처리로 정확도 최적화.</span>
+                                <span>NeMo Model: End-to-End ASR 구현 및 ITN 후처리로 정확도 최적화.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**Docker 컨테이너**: Riva 서버 배포 및 운영 환경 구축.</span>
+                                <span>Docker 컨테이너: Riva 서버 배포 및 운영 환경 구축.</span>
                             </li>
                         </ul>
                     </div>
@@ -118,11 +118,11 @@
                         <ul class="space-y-2 text-gray-400 text-base">
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">✓</span>
-                                <span>**대화형 AI 서비스**: 콜센터 자동화, 실시간 회의록 작성 등 대규모 실시간 음성 처리 시스템 구축.</span>
+                                <span>대화형 AI 서비스: 콜센터 자동화, 실시간 회의록 작성 등 대규모 실시간 음성 처리 시스템 구축.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">✓</span>
-                                <span>**MLOps 파이프라인**: 엔터프라이즈 환경에서 모델 및 데이터셋을 안전하게 배포하고 관리.</span>
+                                <span>MLOps 파이프라인: 엔터프라이즈 환경에서 모델 및 데이터셋을 안전하게 배포하고 관리.</span>
                             </li>
                         </ul>
                     </div>
@@ -159,15 +159,15 @@ response = riva_asr.recognize(audio_data, config)
                         <ul class="space-y-2 text-gray-400 text-base">
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**ASR → QA → TTS 파이프라인**: 음성 입력부터 음성 답변까지 순차적 연동 구현.</span>
+                                <span>ASR → QA → TTS 파이프라인: 음성 입력부터 음성 답변까지 순차적 연동 구현.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**Riva QA Service**: BERT 기반 Extractive QA 모델을 활용하여 지식 문서 내 정답 추출.</span>
+                                <span>Riva QA Service: BERT 기반 Extractive QA 모델을 활용하여 지식 문서 내 정답 추출.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**Riva TTS Service**: QA 답변 텍스트를 고품질 합성 음성으로 변환.</span>
+                                <span>Riva TTS Service: QA 답변 텍스트를 고품질 합성 음성으로 변환.</span>
                             </li>
                         </ul>
                     </div>
@@ -178,11 +178,11 @@ response = riva_asr.recognize(audio_data, config)
                         <ul class="space-y-2 text-gray-400 text-base">
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">✓</span>
-                                <span>**전문 지식 기반 QA**: 콜센터, 교육용 챗봇 등 지식 영역 내에서 정확한 정답 스팬 추출.</span>
+                                <span>전문 지식 기반 QA: 콜센터, 교육용 챗봇 등 지식 영역 내에서 정확한 정답 스팬 추출.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">✓</span>
-                                <span>**음성 인터페이스**: 내비게이션, 키오스크 등 음성 입출력이 필수적인 서비스.</span>
+                                <span>음성 인터페이스: 내비게이션, 키오스크 등 음성 입출력이 필수적인 서비스.</span>
                             </li>
                         </ul>
                     </div>
@@ -219,15 +219,15 @@ synth_audio = tts_predict(dm_answer)
                         <ul class="space-y-2 text-gray-400 text-base">
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**PyTorch CNN 설계**: `nn.Module` 상속을 통한 컨볼루션 레이어, 풀링, FC 레이어 구성.</span>
+                                <span>PyTorch CNN 설계: `nn.Module` 상속을 통한 컨볼루션 레이어, 풀링, FC 레이어 구성.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**PyTorch CUDA**: `model.to(device)`를 활용한 GPU 가속 훈련 활성화.</span>
+                                <span>PyTorch CUDA: `model.to(device)`를 활용한 GPU 가속 훈련 활성화.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**환경 최적화**: 특정 CUDA 버전에 맞게 모델을 패키징하고 CPU 사용량을 줄인 버전 구현.</span>
+                                <span>환경 최적화: 특정 CUDA 버전에 맞게 모델을 패키징하고 CPU 사용량을 줄인 버전 구현.</span>
                             </li>
                         </ul>
                     </div>
@@ -238,11 +238,11 @@ synth_audio = tts_predict(dm_answer)
                         <ul class="space-y-2 text-gray-400 text-base">
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">✓</span>
-                                <span>**컴퓨터 비전**: 제조업 제품 불량 검사, 의료 영상 분석 등 이미지 분류 모델 개발.</span>
+                                <span>컴퓨터 비전: 제조업 제품 불량 검사, 의료 영상 분석 등 이미지 분류 모델 개발.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">✓</span>
-                                <span>**AI 모델 배포**: 외부 검증 플랫폼(AIFactory) 제출을 통한 모델 인증 및 패키징 절차 숙지.</span>
+                                <span>AI 모델 배포: 외부 검증 플랫폼(AIFactory) 제출을 통한 모델 인증 및 패키징 절차 숙지.</span>
                             </li>
                         </ul>
                     </div>

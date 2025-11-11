@@ -117,9 +117,9 @@ const slidesData = [
             
             <h3 class="text-2xl font-bold mt-6 mb-3 text-white">처리 과정</h3>
             <div class="space-y-3 text-lg">
-                <p>① **HTML 파일 이동:** <span class="highlight-code">K-Food_...FIXED.html</span> 파일을 최종 배포 폴더로 이동.</p>
-                <p>② **슬라이드 폴더 이동:** 이미지 폴더(<span class="highlight-code">Slides</span>)를 HTML 파일과 **같은 계층**으로 이동.</p>
-                <p>③ **경로 점검:** HTML 코드 내 이미지 경로가 <span class="highlight-code">./Slides/slide1.png</span> 형식의 <span class="highlight-main">상대 경로</span>로 지정되었는지 확인하여 파일 구조 변경에 대응했습니다.</p>
+                <p>① HTML 파일 이동: <span class="highlight-code">K-Food_...FIXED.html</span> 파일을 최종 배포 폴더로 이동.</p>
+                <p>② 슬라이드 폴더 이동: 이미지 폴더(<span class="highlight-code">Slides</span>)를 HTML 파일과 같은 계층으로 이동.</p>
+                <p>③ 경로 점검: HTML 코드 내 이미지 경로가 <span class="highlight-code">./Slides/slide1.png</span> 형식의 <span class="highlight-main">상대 경로</span>로 지정되었는지 확인하여 파일 구조 변경에 대응했습니다.</p>
             </div>
         `
     },
@@ -131,9 +131,9 @@ const slidesData = [
             
             <h3 class="text-2xl font-bold mt-6 mb-3 text-white">정제 목표: 코드의 명확성 확보</h3>
             <ul class="list-disc list-inside space-y-3 text-lg pl-4">
-                <li>**Jupyter/IPYNB 파일 삭제:** AI 분석 과정의 일부였던 <span class="highlight-code">.ipynb</span> (Jupyter Notebook) 파일을 일괄 삭제했습니다.</li>
-                <li>**삭제 이유:** 해당 파일들의 복잡한 내부 로직과 <span class="highlight-main">원천 소유권</span> 문제가 발생할 소지가 있어, 최종 포트폴리오에는 순수 HTML/JS 코드와 최종 결과물(슬라이드)만을 남기도록 결정했습니다.</li>
-                <li>**효과:** 포트폴리오의 초점을 '배포된 웹 애플리케이션'의 **안정성 확보**로 집중시켰습니다.</li>
+                <li>Jupyter/IPYNB 파일 삭제: AI 분석 과정의 일부였던 <span class="highlight-code">.ipynb</span> (Jupyter Notebook) 파일을 일괄 삭제했습니다.</li>
+                <li>삭제 이유: 해당 파일들의 복잡한 내부 로직과 <span class="highlight-main">원천 소유권</span> 문제가 발생할 소지가 있어, 최종 포트폴리오에는 순수 HTML/JS 코드와 최종 결과물(슬라이드)만을 남기도록 결정했습니다.</li>
+                <li>효과: 포트폴리오의 초점을 '배포된 웹 애플리케이션'의 안정성 확보로 집중시켰습니다.</li>
             </ul>
         `
     },
@@ -145,9 +145,9 @@ const slidesData = [
             
             <h3 class="text-2xl font-bold text-yellow-400 mt-6 mb-3">오류 원인: 공백(Space) 인식 실패</h3>
             <ul class="list-disc list-inside space-y-3 text-lg pl-4">
-                <li>**실제 폴더명:** <span class="highlight-main">'Slides '</span> (끝에 공백이 포함된 이름)</li>
-                <li>**코드 설정:** <span class="highlight-code">const IMAGE_FOLDER = 'Slides/';</span> (공백을 무시함)</li>
-                <li>**결과:** 웹 브라우저는 공백을 <span class="highlight-main">인코딩된 경로</span>로 처리해야 하지만, 코드에서 이를 놓쳐 파일 로딩에 실패했습니다.</li>
+                <li>실제 폴더명: <span class="highlight-main">'Slides '</span> (끝에 공백이 포함된 이름)</li>
+                <li>코드 설정: <span class="highlight-code">const IMAGE_FOLDER = 'Slides/';</span> (공백을 무시함)</li>
+                <li>결과: 웹 브라우저는 공백을 <span class="highlight-main">인코딩된 경로</span>로 처리해야 하지만, 코드에서 이를 놓쳐 파일 로딩에 실패했습니다.</li>
             </ul>
         `
     },
@@ -155,7 +155,7 @@ const slidesData = [
         title: "해결책: %20/ 적용 및 결론", 
         content: `
             <h1 class="text-4xl font-extrabold mb-4 text-cyan-400">4. 최종 해결: URL 인코딩 (%20/) 적용</h1>
-            <p class="text-xl mb-6">문제의 핵심인 공백을 **URL 인코딩 규칙**에 따라 <span class="highlight-main">%20</span>으로 대체하여 해결했습니다.</p>
+            <p class="text-xl mb-6">문제의 핵심인 공백을 URL 인코딩 규칙에 따라 <span class="highlight-main">%20</span>으로 대체하여 해결했습니다.</p>
             
             <h3 class="text-3xl font-bold text-white mb-2">💡 해결 코드</h3>
             <div class="code-block">
@@ -165,7 +165,7 @@ const slidesData = [
             </div>
             
             <h3 class="text-2xl font-bold text-yellow-300 mt-6">핵심 교훈</h3>
-            <p class="text-xl">웹 환경 배포 시, 파일명이나 폴더명에 포함된 모든 <span class="highlight-main">특수문자 및 공백</span>에 대해 **URL 인코딩** 원칙을 적용해야 한다는 것을 체득했습니다.</p>
+            <p class="text-xl">웹 환경 배포 시, 파일명이나 폴더명에 포함된 모든 <span class="highlight-main">특수문자 및 공백</span>에 대해 URL 인코딩 원칙을 적용해야 한다는 것을 체득했습니다.</p>
         `
     },
 ];

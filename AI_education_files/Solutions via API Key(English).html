@@ -65,7 +65,7 @@
                         🎯 Core Security/Copyright Policy Summary
                     </h2>
                     <p class="text-lg text-yellow-200">
-                        NGC API Key, Riva Server URI, and Competition Submit Key were all securely handled using **Environment Variables or Local Server Addresses**, with no sensitive information hardcoded directly into the files. (Git history cleaned)
+                        NGC API Key, Riva Server URI, and Competition Submit Key were all securely handled using Environment Variables or Local Server Addresses, with no sensitive information hardcoded directly into the files. (Git history cleaned)
                     </p>
                 </div>
                 <p class="text-sm mt-8 text-gray-500">
@@ -95,19 +95,19 @@
                         <ul class="space-y-2 text-gray-400 text-base">
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**NGC CLI & NGC API Key**: Managed authentication for downloading proprietary AI models and resources.</span>
+                                <span>NGC CLI & NGC API Key: Managed authentication for downloading proprietary AI models and resources.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**Riva gRPC API**: Sent ASR inference requests to a local container (localhost:50051).</span>
+                                <span>Riva gRPC API: Sent ASR inference requests to a local container (localhost:50051).</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**NeMo Model**: Implemented End-to-End ASR and optimized accuracy with ITN post-processing.</span>
+                                <span>NeMo Model: Implemented End-to-End ASR and optimized accuracy with ITN post-processing.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**Docker Container**: Established the deployment and operational environment for the Riva server.</span>
+                                <span>Docker Container: Established the deployment and operational environment for the Riva server.</span>
                             </li>
                         </ul>
                     </div>
@@ -118,11 +118,11 @@
                         <ul class="space-y-2 text-gray-400 text-base">
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">✓</span>
-                                <span>**Conversational AI Services**: Built large-scale real-time speech processing systems (e.g., call center automation, live meeting transcription).</span>
+                                <span>Conversational AI Services: Built large-scale real-time speech processing systems (e.g., call center automation, live meeting transcription).</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">✓</span>
-                                <span>**MLOps Pipeline**: Securely deployed and managed models and datasets in an enterprise environment.</span>
+                                <span>MLOps Pipeline: Securely deployed and managed models and datasets in an enterprise environment.</span>
                             </li>
                         </ul>
                     </div>
@@ -159,15 +159,15 @@ response = riva_asr.recognize(audio_data, config)
                         <ul class="space-y-2 text-gray-400 text-base">
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**ASR → QA → TTS Pipeline**: Implemented sequential linkage from voice input to voice response.</span>
+                                <span>ASR → QA → TTS Pipeline: Implemented sequential linkage from voice input to voice response.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**Riva QA Service**: Used a BERT-based Extractive QA model to extract answers from knowledge documents.</span>
+                                <span>Riva QA Service: Used a BERT-based Extractive QA model to extract answers from knowledge documents.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**Riva TTS Service**: Converted QA response text into high-quality synthesized speech.</span>
+                                <span>Riva TTS Service: Converted QA response text into high-quality synthesized speech.</span>
                             </li>
                         </ul>
                     </div>
@@ -178,11 +178,11 @@ response = riva_asr.recognize(audio_data, config)
                         <ul class="space-y-2 text-gray-400 text-base">
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">✓</span>
-                                <span>**Domain-Specific QA**: Extracted precise answer spans within knowledge domains (e.g., call centers, educational chatbots).</span>
+                                <span>Domain-Specific QA: Extracted precise answer spans within knowledge domains (e.g., call centers, educational chatbots).</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">✓</span>
-                                <span>**Voice Interface**: Services requiring essential voice input/output (e.g., navigation, kiosks).</span>
+                                <span>Voice Interface: Services requiring essential voice input/output (e.g., navigation, kiosks).</span>
                             </li>
                         </ul>
                     </div>
@@ -219,15 +219,15 @@ synth_audio = tts_predict(dm_answer)
                         <ul class="space-y-2 text-gray-400 text-base">
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**PyTorch CNN Design**: Configured convolution layers, pooling, and FC layers by inheriting `nn.Module`.</span>
+                                <span>PyTorch CNN Design: Configured convolution layers, pooling, and FC layers by inheriting `nn.Module`.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**PyTorch CUDA**: Enabled GPU-accelerated training using `model.to(device)`.</span>
+                                <span>PyTorch CUDA: Enabled GPU-accelerated training using `model.to(device)`.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">•</span>
-                                <span>**Environment Optimization**: Packaged the model for a specific CUDA version and implemented a version with reduced CPU usage.</span>
+                                <span>Environment Optimization: Packaged the model for a specific CUDA version and implemented a version with reduced CPU usage.</span>
                             </li>
                         </ul>
                     </div>
@@ -238,11 +238,11 @@ synth_audio = tts_predict(dm_answer)
                         <ul class="space-y-2 text-gray-400 text-base">
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">✓</span>
-                                <span>**Computer Vision**: Developed image classification models (e.g., manufacturing defect inspection, medical image analysis).</span>
+                                <span>Computer Vision: Developed image classification models (e.g., manufacturing defect inspection, medical image analysis).</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="key-point-icon mr-2 mt-1">✓</span>
-                                <span>**AI Model Deployment**: Mastered the model verification and packaging process via external validation platforms (AIFactory) submission.</span>
+                                <span>AI Model Deployment: Mastered the model verification and packaging process via external validation platforms (AIFactory) submission.</span>
                             </li>
                         </ul>
                     </div>

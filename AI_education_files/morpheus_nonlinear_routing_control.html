@@ -152,7 +152,7 @@
                 <h2>1. 프로젝트 개요 및 비선형 구조 선택</h2>
             </div>
             <div class="card">
-                <p>본 프로젝트는 Morpheus의 `RouterStage`와 **비선형 파이프라인**을 활용하여 들어오는 데이터 메시지를 조건에 따라 **서로 다른 분석 경로**로 동적으로 분기하는 로직을 구현했습니다. 이는 단일 데이터 스트림에 대해 여러 ML 모델을 적용하거나, 조건부 로그 처리가 필요할 때 필수적인 고급 파이프라인 제어 기술입니다.</p>
+                <p>본 프로젝트는 Morpheus의 `RouterStage`와 비선형 파이프라인을 활용하여 들어오는 데이터 메시지를 조건에 따라 서로 다른 분석 경로로 동적으로 분기하는 로직을 구현했습니다. 이는 단일 데이터 스트림에 대해 여러 ML 모델을 적용하거나, 조건부 로그 처리가 필요할 때 필수적인 고급 파이프라인 제어 기술입니다.</p>
 
                 <h3 class="mt-6 mb-2">핵심 기술 역량</h3>
                 <div class="mt-2 flex flex-wrap">
@@ -190,11 +190,11 @@
                 <div class="output-paths">
                     <div class="path-box path-success">
                         <h3 class="text-xl font-bold text-green-700 mt-0">라우팅 경로: 'success'</h3>
-                        <p class="text-sm text-gray-700">로그인 성공 → **표준 감사/모니터링** 파이프라인으로 전송</p>
+                        <p class="text-sm text-gray-700">로그인 성공 → 표준 감사/모니터링 파이프라인으로 전송</p>
                     </div>
                     <div class="path-box path-failure">
                         <h3 class="text-xl font-bold text-red-700 mt-0">라우팅 경로: 'failure'</h3>
-                        <p class="text-sm text-gray-700">로그인 실패 → **심층 이상 탐지** 파이프라인으로 전송</p>
+                        <p class="text-sm text-gray-700">로그인 실패 → 심층적으로 이상의 부분을 탐지할 수 있는 파이프라인으로 전송</p>
                     </div>
                 </div>
             </div>
@@ -208,18 +208,18 @@
                 
                 <h3 class="mb-2">3-1. 비선형 데이터 흐름 설계 능력</h3>
                 <p class="text-gray-700">
-                    **도전:** 선형 파이프라인만으로는 복잡한 비즈니스 로직(조건부 분기)을 처리할 수 없었습니다.
+                    도전: 선형 파이프라인만으로는 복잡한 비즈니스 로직(조건부 분기)을 처리할 수 없었습니다.
                 </p>
                 <p class="text-gray-700 mt-1">
-                    **해결:** `LinearPipeline` 대신 일반 **`Pipeline` 클래스**를 사용하여 메시지 흐름이 자유로운 그래프 구조를 정의하고, `RouterStage`를 핵심 노드로 삽입하여 유연성을 확보했습니다.
+                    해결:`LinearPipeline` 대신 일반 `Pipeline` 클래스를 사용하여 메시지 흐름이 자유로운 그래프 구조를 정의하고, `RouterStage`를 핵심 노드로 삽입하여 유연성을 확보했습니다.
                 </p>
 
                 <h3 class="mt-6 mb-2">3-2. 동적 라우팅 로직 (key_fn) 구현</h3>
                 <p class="text-gray-700">
-                    라우터 스테이지가 메시지를 어떻게 분기할지 결정하는 **핵심 함수(`key_fn`)**를 구현하는 것이 중요했습니다.
+                    라우터 스테이지가 메시지를 어떻게 분기할지 결정하는 핵심 함수(`key_fn`)를 구현하는 것이 중요했습니다.
                 </p>
                 <p class="text-gray-700 mt-1">
-                    **해결:** `on_data` 메서드와 유사하게 작동하는 `key_fn`을 작성하여, 들어온 메시지의 `status` 컬럼을 검사하고 그 결과를 기반으로 'success' 또는 'failure'라는 **라우팅 키(Key)**를 동적으로 반환하도록 논리를 구축했습니다.
+                    해결: `on_data` 메서드와 유사하게 작동하는 `key_fn`을 작성하여, 들어온 메시지의 `status` 컬럼을 검사하고 그 결과를 기반으로 'success' 또는 'failure'라는 **라우팅 키(Key)**를 동적으로 반환하도록 논리를 구축했습니다.
                 </p>
             </div>
         </section>
@@ -230,3 +230,4 @@
     </div>
 </body>
 </html>
+

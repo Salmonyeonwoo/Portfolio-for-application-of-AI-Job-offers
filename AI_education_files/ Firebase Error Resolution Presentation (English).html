@@ -20,99 +20,86 @@
 
     <div class="container mx-auto p-4 sm:p-8 max-w-4xl">
 
-        <!-- Header (ENGLISH) -->
+        <!-- Header -->
         <header class="text-center mb-12 py-8 bg-white rounded-xl shadow-lg">
             <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700">AI Study Coach Portfolio</h1>
             <p class="mt-2 text-xl text-gray-500">Technical Challenge: Persistence Layer Implementation Success Story</p>
         </header>
 
-        <!-- Header (KOREAN - Secondary) -->
-        <header class="text-center mb-12 -mt-10 py-4 bg-indigo-50 rounded-xl shadow-inner border border-indigo-200">
-            <h1 class="text-3xl font-bold text-indigo-600">AI 학습 코치 포트폴리오</h1>
-            <p class="mt-1 text-base text-indigo-500">기술적 도전과제: 지속성 계층(Persistence Layer) 구축 성공 스토리</p>
-        </header>
-
-
         <!-- Section 1: Challenge Overview -->
         <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-indigo-400 pb-2">1. Challenge Overview (도전 과제 개요)</h2>
+            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-indigo-400 pb-2">1. Challenge Overview</h2>
             <div class="bg-white p-6 rounded-xl shadow-md">
                 <p class="text-lg mb-4 text-gray-600">During the process of integrating Google Cloud Firestore (GCP) to persistently store RAG indices (FAISS) within the Streamlit Cloud serverless environment, we faced unexpected server authentication conflicts and configuration issues.</p>
-                <p class="text-base text-gray-500 italic">Streamlit Cloud 환경에서 RAG 인덱스(FAISS)를 영구적으로 저장하기 위해 Google Cloud Firestore(GCP)를 통합하는 과정에서, 예상치 못한 서버 인증 충돌과 환경 설정 문제에 직면했습니다.</p>
                 
-                <h3 class="text-2xl font-semibold text-gray-600 mt-6 mb-4">Core Problem: Admin SDK Init Failures (핵심 문제: Admin SDK 초기화 실패)</h3>
+                <h3 class="text-2xl font-semibold text-gray-600 mt-6 mb-4">Core Problem: Admin SDK Initialization Failures</h3>
                 <div class="bg-red-50 p-4 rounded-lg border border-red-300">
                     <p class="text-red-700 font-medium">Key Errors Experienced: Complex issues including JSON syntax errors, Datastore Mode conflicts, Invalid private key errors, and AttrDict type mismatches.</p>
-                    <p class="text-red-600 text-sm mt-1 italic">경험한 주요 오류 메시지: JSON 구문 오류, Datastore Mode 충돌, Invalid private key, AttrDict 타입 불일치 등 복합적 문제 발생.</p>
                 </div>
             </div>
         </section>
 
         <!-- Section 2: Step-by-Step Resolution (Visualized) -->
         <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-indigo-400 pb-2">2. Step-by-Step Resolution (단계별 문제 해결 과정)</h2>
+            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-indigo-400 pb-2">2. Step-by-Step Resolution</h2>
             
             <div id="resolution-steps" class="space-y-8">
                 
                 <!-- Step 1: Mode Conflict & Project Change -->
                 <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-fuchsia-500">
-                    <h3 class="text-xl font-bold text-fuchsia-700 mb-3">Step 1: Datastore Mode Conflict and Project Change (데이터스토어 모드 충돌 및 프로젝트 변경)</h3>
+                    <h3 class="text-xl font-bold text-fuchsia-700 mb-3">Step 1: DB Mode Conflict and Project Change</h3>
                     <p class="text-gray-600 mb-3">We identified a 400 error caused by the project being set to Datastore Mode when Firestore Native Mode was required. We created a new Firebase project in Native Mode and replaced the Service Account key.</p>
-                    <p class="text-gray-500 text-sm italic">Firestore Native Mode를 사용해야 하는데 프로젝트가 Datastore Mode로 설정되어 발생하는 400 오류를 확인했습니다. 새로운 Firebase 프로젝트를 Native Mode로 생성하고 서비스 계정 키를 교체했습니다.</p>
                 </div>
 
                 <!-- Step 2: JSON Parsing/Escape Fix (UPDATED WITH CODE) -->
                 <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-yellow-500">
-                    <h3 class="text-xl font-bold text-yellow-700 mb-3">Step 2: Secrets JSON Parsing and Validation (Secrets JSON 파싱 및 유효성 검사)</h3>
-                    <p class="text-gray-600 mb-3">To resolve JSON syntax errors (unicode control characters, escape characters) and the Streamlit AttrDict type issue, we implemented the logic below to explicitly force the conversion of the secrets key into a standard Python dictionary (dict), ensuring compatibility with the Firebase Admin SDK.</p>
-                    <p class="text-gray-500 text-sm italic">Secrets 파일에 포함된 JSON 문자열의 구문 오류(유니코드 제어 문자, 이스케이프 문자) 및 Streamlit의 AttrDict 타입 문제를 해결하기 위해, 아래와 같이 로직을 구현하여 어떤 Secrets 형식(문자열, 딕셔너리)이 들어오더라도 표준 딕셔너리(dict)로 변환하도록 강제했습니다.</p>
+                    <h3 class="text-xl font-bold text-yellow-700 mb-3">Step 2: Secrets JSON Parsing and Validation</h3>
+                    <p class="text-gray-600 mb-3">To resolve JSON syntax errors (unicode control characters, escape characters) and the Streamlit AttrDict type issue, we implemented logic that explicitly forces the conversion of the secrets key into a standard Python dictionary (dict), ensuring compatibility with the Firebase Admin SDK.</p>
                     
                     <p class="mt-4 font-semibold text-gray-700">Applied Python Code (_get_admin_credentials function)</p>
                     <div class="bg-gray-800 text-green-300 p-4 rounded-lg text-xs overflow-x-auto mt-2 shadow-inner">
 <pre class="whitespace-pre-wrap">def _get_admin_credentials():
-    # ... (생략: Secret 존재 여부 확인)
+    # ... (Skipped: Secret existence check)
     
     service_account_data = st.secrets["FIREBASE_SERVICE_ACCOUNT_JSON"]
     sa_info = None
 
     if isinstance(service_account_data, str):
-        # 1. 문자열인 경우: JSON 로드
+        # 1. If string: Load JSON
         try:
             sa_info = json.loads(service_account_data.strip())
         except json.JSONDecodeError as e:
-            return None, f"[Error] JSON 구문 오류: {e}"
+            return None, f"[Error] JSON Syntax Error: {e}"
     elif hasattr(service_account_data, 'get'):
-        # 2. AttrDict (secrets.toml 딕셔너리 형식)인 경우: dict로 변환
-        # Streamlit Secrets에서 AttrDict 타입으로 반환되는 것을 처리
+        # 2. If AttrDict (secrets.toml dictionary format): Convert to dict
+        # Handles AttrDict type returned from Streamlit Secrets
         try:
-            sa_info = dict(service_account_data) # AttrDict를 표준 dict로 변환
+            sa_info = dict(service_account_data) # Convert AttrDict to standard dict
         except Exception:
-             return None, f"[Error] 딕셔너리 변환 실패. 타입: {type(service_account_data)}"
+             return None, f"[Error] Dictionary conversion failed. Type: {type(service_account_data)}"
     
-    # ... (생략: project_id, private_key 존재 여부 확인)
+    # ... (Skipped: project_id, private_key existence check)
     return sa_info, None</pre>
                     </div>
                 </div>
                 
                 <!-- Step 3: Admin SDK Initialization Fix -->
                 <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-red-500">
-                    <h3 class="text-xl font-bold text-red-700 mb-3">Step 3: Invalid Private Key and Admin SDK Authentication (Invalid Private Key 및 Admin SDK 인증)</h3>
+                    <h3 class="text-xl font-bold text-red-700 mb-3">Step 3: Invalid Private Key and Admin SDK Authentication</h3>
                     <p class="text-gray-600 mb-3">The "Invalid private key" error, which occurred even after fixing all syntax errors, was due to the key format in Secrets not matching the exact Raw String format required by the Admin SDK. We ultimately fixed this by standardizing the Secrets to a single-line string format.</p>
-                    <p class="text-gray-500 text-sm italic">모든 구문 오류를 해결했음에도 발생한 "Invalid private key" 오류는, Secrets에 저장된 키의 포맷이 Admin SDK가 요구하는 Raw String 포맷과 정확히 일치하지 않았기 때문이었습니다. Secrets를 단일 라인 문자열 형식으로 정리하여 문제를 최종 해결했습니다.</p>
                 </div>
 
                 <!-- Step 4: Firestore Rules Fix -->
                 <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
-                    <h3 class="text-xl font-bold text-green-700 mb-3">Step 4: Firestore Rules and Write Access (Firestore 규칙 및 쓰기 권한 확보)</h3>
+                    <h3 class="text-xl font-bold text-green-700 mb-3">Step 4: Firestore Rules and Write Access</h3>
                     <p class="text-gray-600 mb-3">To enable the app's database saving functionality, we explicitly granted `read, write` rules to the `rag_indices` collection in Firebase Firestore, finally activating the RAG index persistence feature.</p>
-                    <p class="text-gray-500 text-sm italic">앱의 데이터베이스 저장 기능이 작동하도록, `rag_indices` 컬렉션에 대한 `read, write` 규칙을 명시적으로 부여하여 최종적으로 RAG 인덱스 영구 저장 기능을 활성화했습니다.</p>
                 </div>
             </div>
         </section>
         
         <!-- Section 3: Final Outcome Chart -->
         <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-indigo-400 pb-2">3. Effort Analysis (최종 문제 해결 노력 분석)</h2>
+            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-indigo-400 pb-2">3. Effort Analysis</h2>
             <div class="bg-white p-6 rounded-xl shadow-md">
                 <canvas id="timeChart"></canvas>
                 <p class="text-sm text-gray-500 text-center mt-4">Estimated effort distribution for resolving complex integration issues.</p>
@@ -121,7 +108,7 @@
 
         <!-- Footer -->
         <footer class="text-center text-gray-500 mt-12 pt-4 border-t border-gray-300">
-            <p>&copy; 2025 AI Coach Portfolio. Developed with Streamlit & Gemini API.</p>
+            <p>&copy; 2025 AI Coach Portfolio. Developed with Streamlit and Gemini API.</p>
         </footer>
 
     </div>
@@ -132,10 +119,10 @@
         new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: ['DB Mode/Project Change', 'Secrets JSON Parsing', 'Private Key Authentication', 'Firestore Rules/Permissions'],
+                labels: ['DB Mode / Project Change', 'Secrets JSON Parsing', 'Private Key Authentication', 'Firestore Rules / Permissions'],
                 datasets: [{
                     label: 'Effort Ratio',
-                    data: [25, 35, 30, 10], // 비율 (합계 100)
+                    data: [25, 35, 30, 10], // Total 100
                     backgroundColor: [
                         'rgba(233, 30, 99, 0.7)',  // Pink/Fuchsia
                         'rgba(255, 193, 7, 0.7)',  // Amber/Yellow

@@ -149,11 +149,11 @@
             <div class="intro-grid">
                 <div class="card">
                     <h3 class="mt-0">프로젝트 개요</h3>
-                    <p>단일 입력 메시지의 데이터를 특정 조건에 따라 분리하고, 분리된 메시지를 **두 개의 다른 출력 포트**로 전송하는 커스텀 스테이지(`FilterSplitStage`)를 구현했습니다. 이는 원본 데이터는 전체 흐름을 타게 하고, 특정 조건(예: 길이가 긴 로그)을 만족하는 데이터만 별도의 심층 분석 브랜치로 보내는 데 사용되는 핵심 기술입니다.</p>
+                    <p>단일 입력 메시지의 데이터를 특정 조건에 따라 분리하고, 분리된 메시지를 각자 다른 2개의 출력 포트로 전송하는 커스텀 스테이지(`FilterSplitStage`)를 구현했습니다. 이는 원본 데이터는 전체 흐름을 타게 하고, 특정 조건(예: 길이가 긴 로그)을 만족하는 데이터만 별도의 심층 분석 브랜치로 보내는 데 사용되는 핵심 기술입니다.</p>
                 </div>
                 <div class="card">
                     <h3 class="mt-0">핵심 기술 역량</h3>
-                    <p>Morpheus의 `Stage` 클래스를 상속받아 **다중 출력 포트**를 정의하고 관리하는 능력을 입증했습니다. 또한, GPU 기반 `cuDF`의 쿼리 기능을 활용하여 대용량 데이터의 필터링 및 복제 작업을 효율적으로 수행했습니다.</p>
+                    <p>Morpheus의 `Stage` 클래스를 상속받아 다중 출력 포트를 정의하고 관리하는 능력을 입증했습니다. 또한, GPU 기반 `cuDF`의 쿼리 기능을 활용하여 대용량 데이터의 필터링 및 복제 작업을 효율적으로 수행했습니다.</p>
                     <div class="mt-4 flex flex-wrap">
                         <span class="tech-tag">Custom Stage (Multi-Port)</span>
                         <span class="tech-tag">Conditional Splitting</span>
@@ -186,11 +186,11 @@
                 <div class="output-branches">
                     <div class="branch-box branch-filtered">
                         <h3 class="text-xl font-bold text-yellow-800 mt-0">Port 1: 심층 분석 브랜치</h3>
-                        <p class="text-sm text-gray-700">`cuDF.query(조건)`을 만족하는 행만 포함하는 **새로운 메시지 생성**</p>
+                        <p class="text-sm text-gray-700">`cuDF.query(조건)`을 만족하는 행만 포함하는 새로운 메시지 생성</p>
                     </div>
                     <div class="branch-box branch-passthru">
                         <h3 class="text-xl font-bold text-gray-800 mt-0">Port 2: 표준 처리 브랜치</h3>
-                        <p class="text-sm text-gray-700">**원본 메시지 전체**를 수정 없이 그대로 전송 (Pass-Through)</p>
+                        <p class="text-sm text-gray-700">원본 메시지 전체를 수정 없이 그대로 전송 (Pass-Through)</p>
                     </div>
                 </div>
             </div>
@@ -198,11 +198,11 @@
             <div class="card mt-8">
                 <h3 class="mb-2">주요 구현 내용: 다중 출력 포트 정의</h3>
                 <p class="text-gray-700">
-                    스테이지 생성자에서 `_create_ports(1, 2)`를 사용하여 **1개의 입력 포트**와 **2개의 출력 포트**를 명시적으로 정의했습니다. 이를 통해 Morpheus가 자동으로 스테이지의 다중 출력 구조를 인식하고, 다운스트림 파이프라인에서 두 개의 독립적인 경로를 연결할 수 있도록 했습니다.
+                    스테이지 생성자에서 `_create_ports(1, 2)`를 사용하여 각각 1개의 입력 그리고 2개의 출력 포트들을 명시적으로 정의했습니다. 이를 통해 Morpheus가 자동으로 스테이지의 다중 출력 구조를 인식하고, 다운스트림 파이프라인에서 두 개의 독립적인 경로를 연결할 수 있도록 했습니다.
                 </p>
                 <h3 class="mt-6 mb-2">조건부 분할 및 복제 논리</h3>
                 <p class="text-gray-700">
-                    `on_data` 메서드 내에서 `cuDF`의 고성능 쿼리 기능을 사용하여 조건부 분할을 수행했습니다. 조건에 맞는 행을 추출하여 **새로운 `MessageMeta` 객체**를 만들고 (Port 1), 원본 객체는 변경 없이 다른 포트(Port 2)로 전송함으로써 데이터 복제 및 분할 로직을 GPU에서 효율적으로 구현했습니다.
+                    `on_data` 메서드 내에서 `cuDF`의 고성능 쿼리 기능을 사용하여 조건부 분할을 수행했습니다. 조건에 맞는 행을 추출하여 새로운 `MessageMeta` 객체를 만들고 (Port 1), 원본 객체는 변경 없이 다른 포트(Port 2)로 전송함으로써 데이터 복제 및 분할 로직을 GPU에서 효율적으로 구현했습니다.
                 </p>
             </div>
         </section>
@@ -213,3 +213,4 @@
     </div>
 </body>
 </html>
+

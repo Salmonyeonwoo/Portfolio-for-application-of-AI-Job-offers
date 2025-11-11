@@ -148,8 +148,8 @@
         <section class="mb-10">
             <h2 class="section-title">1. 프로젝트 개요 및 목표</h2>
             <div class="card">
-                <p>본 프로젝트는 기존 XGBoost와 달리, 장비 센서 데이터와 같은 **시계열 데이터의 시간적 종속성(Time Dependency)**을 학습하여 미래 고장 시점을 예측하는 **LSTM (Long Short-Term Memory)** 딥러닝 모델을 Keras와 TensorFlow를 기반으로 구축하는 것을 목표로 했습니다.</p>
-                <p>핵심 기술은 LSTM 모델의 요구사항을 충족시키기 위해 2차원 데이터를 **시간적 흐름**이 포함된 3차원 시퀀스 형태로 효율적으로 변환하는 전처리 로직 구현 능력을 입증하는 것이었습니다.</p>
+                <p>본 프로젝트는 기존 XGBoost와 달리, 장비 센서 데이터와 같은 시계열 데이터의 시간적 종속성(Time Dependency)을 학습하여 미래 고장 시점을 예측하는 LSTM (Long Short-Term Memory) 딥러닝 모델을 Keras와 TensorFlow를 기반으로 구축하는 것을 목표로 했습니다.</p>
+                <p>핵심 기술은 LSTM 모델의 요구사항을 충족시키기 위해 2차원 데이터를 시간적 흐름이 포함된 3차원 시퀀스 형태로 효율적으로 변환하는 전처리 로직 구현 능력을 입증하는 것이었습니다.</p>
 
                 <div class="mt-4 flex flex-wrap">
                     <span class="tech-tag">Keras/TensorFlow</span>
@@ -172,7 +172,7 @@
                 </div>
                 <div class="flow-item">
                     <div class="diagram-box" style="min-width: 250px;">
-                        **전처리: 시퀀스 변환**<br>
+                        전처리: 시퀀스 변환<br>
                         (`timesteps` 정의)<br>
                         <span class="text-xs font-normal text-gray-500 mt-1">NumPy `reshape` 활용</span>
                     </div>
@@ -203,20 +203,20 @@
                 
                 <h3 class="mb-2">3-1. 3차원 시퀀스 데이터 구조화 로직 구현</h3>
                 <p class="text-gray-700">
-                    **도전:** 2차원 테이블 형태의 원본 데이터를 LSTM이 요구하는 **3차원 시퀀스 텐서 `(Samples, Timesteps, Features)`** 형태로 변환해야 하는 복잡한 전처리 과정을 설계해야 했습니다.
+                    도전: 2차원 테이블 형태의 원본 데이터를 LSTM이 요구하는 3차원 시퀀스 텐서 `(Samples, Timesteps, Features)` 형태로 변환해야 하는 복잡한 전처리 과정을 설계해야 했습니다.
                 </p>
                 <p class="text-gray-700 mt-1">
-                    **해결:** **NumPy 배열 슬라이싱** 및 **커스텀 데이터 생성 함수**를 구현하여 `sequence_length` (예: 과거 50일치 데이터)를 기반으로 시퀀스를 추출하고 3차원 텐서로 변환하는 전처리 로직을 완성했습니다. 이는 딥러닝 모델에 필요한 데이터 구조를 능동적으로 설계할 수 있는 역량을 보여줍니다.
+                    해결: NumPy 배열 슬라이싱 및 커스텀 데이터 생성 함수를 구현하여 `sequence_length` (예: 과거 50일치 데이터)를 기반으로 시퀀스를 추출하고 3차원 텐서로 변환하는 전처리 로직을 완성했습니다. 이는 딥러닝 모델에 필요한 데이터 구조를 능동적으로 설계할 수 있는 역량을 보여줍니다.
                 </p>
 
                 <h3 class="mt-6 mb-2">3-2. GPU 최적화 LSTM 모델 설계</h3>
                 <p class="text-gray-700">
-                    Keras의 API를 활용하여 인코더-디코더 또는 다중 LSTM 레이어 구조를 설계하고, GPU 환경에 최적화된 **LSTM Layer** 및 **Dropout** 설정을 적용했습니다. 대규모 시계열 데이터셋에서도 모델을 효율적으로 반복 훈련할 수 있는 안정적인 환경을 구축했습니다.
+                    Keras의 API를 활용하여 인코더-디코더 또는 다중 LSTM 레이어 구조를 설계하고, GPU 환경에 최적화된 LSTM Layer 및 Dropout 설정을 적용했습니다. 대규모 시계열 데이터셋에서도 모델을 효율적으로 반복 훈련할 수 있는 안정적인 환경을 구축했습니다.
                 </p>
 
                 <h3 class="mt-6 mb-2">3-3. 장기 추세 분석 기반 예측 성능 평가</h3>
                 <p class="text-gray-700">
-                    LSTM 모델은 단일 시점의 데이터가 아닌, **과거의 장기간 데이터 추세**를 종합적으로 학습하여 예측을 수행합니다. 이 모델을 통해 장기간의 패턴 변화가 고장 가능성에 미치는 영향을 분석하고, 전통적인 ML 모델(XGBoost)과는 차별화된 예측 성능 및 추세 분석 능력을 평가했습니다.
+                    LSTM 모델은 단일 시점의 데이터가 아닌, 과거의 장기간 데이터 추세를 종합적으로 학습하여 예측을 수행합니다. 이 모델을 통해 장기간의 패턴 변화가 고장 가능성에 미치는 영향을 분석하고, 전통적인 ML 모델(XGBoost)과는 차별화된 예측 성능 및 추세 분석 능력을 평가했습니다.
                 </p>
             </div>
         </section>
@@ -227,3 +227,4 @@
     </div>
 </body>
 </html>
+

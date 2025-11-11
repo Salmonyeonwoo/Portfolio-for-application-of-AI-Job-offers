@@ -56,9 +56,9 @@
                 <h3 class="text-3xl font-bold text-cyan-400 mb-8 text-center">Project Overview</h3>
                 <div class="flex flex-col md:flex-row gap-8 items-center">
                     <div class="w-full md:w-2/3 text-lg lg:text-xl leading-relaxed bg-gray-700/50 p-8 rounded-lg space-y-4">
-                        <p>✓ **Goal:** A **classification** problem to predict the `Label` (0 or 1) for `test.csv`, using data from `A.csv` and `B.csv`.</p>
-                        <p>✓ **Core Challenge:** Type A and Type B data have different features (columns). This requires building **separate preprocessing pipelines and models** for each type.</p>
-                        <p>✓ **Submission:** Run `main.py` (training) on the Dacon server to create models (`*.pkl`), which are then used by `script.py` (inference) for prediction.</p>
+                        <p>✓ Goal: A classification problem to predict the `Label` (0 or 1) for `test.csv`, using data from `A.csv` and `B.csv`.</p>
+                        <p>✓ Core Challenge: Type A and Type B data have different features (columns). This requires building separate preprocessing pipelines and models for each type.</p>
+                        <p>✓ Submission: Run `main.py` (training) on the Dacon server to create models (`*.pkl`), which are then used by `script.py` (inference) for prediction.</p>
                     </div>
                     <div class="w-full md:w-1/3 flex items-center justify-center">
                          <img src="https://placehold.co/400x400/1f2937/38bdf8?text=A/B%20Model%20Split" alt="A/B Model Split" class="rounded-lg shadow-lg">
@@ -71,13 +71,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center">
                     <div class="bg-gray-700 p-6 rounded-lg">
                         <h4 class="text-xl font-semibold mb-3">Type A Data (`A.csv`)</h4>
-                        <p class="text-gray-300 text-left">Contains many **string sequence** data (comma-separated) like `A1-1` to `A6-1`.</p>
-                        <p class="text-gray-300 text-left mt-2">**→ Preprocessing:** Used `seq_mean` and `seq_std` functions to extract the **mean** and **standard deviation** from each sequence, converting them into numeric features.</p>
+                        <p class="text-gray-300 text-left">Contains many string sequence data (comma-separated) like `A1-1` to `A6-1`.</p>
+                        <p class="text-gray-300 text-left mt-2">→ Preprocessing: Used `seq_mean` and `seq_std` functions to extract the mean and standard deviation from each sequence, converting them into numeric features.</p>
                     </div>
                     <div class="bg-gray-700 p-6 rounded-lg">
                         <h4 class="text-xl font-semibold mb-3">Type B Data (`B.csv`)</h4>
                         <p class="text-gray-300 text-left">Contains complex paired sequences, like `B1-1` (value) and `B1-2` (condition).</p>
-                        <p class="text-gray-300 text-left mt-2">**→ Preprocessing:** Used `masked_mean` and `seq_rate` to **filter values based on a condition** (e.g., '1') and calculate their mean/ratio, creating advanced features.</p>
+                        <p class="text-gray-300 text-left mt-2">→ Preprocessing: Used `masked_mean` and `seq_rate` to filter values based on a condition (e.g., '1') and calculate their mean/ratio, creating advanced features.</p>
                     </div>
                 </div>
             </div>
@@ -88,15 +88,15 @@
                     <div class="bg-gray-700/50 p-6 rounded-lg">
                         <h4 class="text-2xl font-semibold mb-4 text-cyan-300">Common Preprocessing</h4>
                         <ul class="list-disc list-inside text-lg space-y-2">
-                            <li>**Age:** Converted string values like '10a', '15a' into numbers (10, 15) using the `convert_age` function.</li>
-                            <li>**TestDate:** Split values like '202201' into 'Year (2022)' and 'Month (01)' using the `split_testdate` function.</li>
+                            <li>Age: Converted string values like '10a', '15a' into numbers (10, 15) using the `convert_age` function.</li>
+                            <li>TestDate: Split values like '202201' into 'Year (2022)' and 'Month (01)' using the `split_testdate` function.</li>
                         </ul>
                     </div>
                     <div class="bg-gray-700/50 p-6 rounded-lg">
                         <h4 class="text-2xl font-semibold mb-4 text-cyan-300">Data Type Error Resolution</h4>
                         <ul class="list-disc list-inside text-lg space-y-2">
-                            <li>**TypeError Fix:** `np.fromstring` failed when raw integers were present. Solved by explicitly casting inputs to strings using `str(x)`.</li>
-                            <li>**ValueError Fix:** Resolved `object` dtype errors in LightGBM by explicitly adding all remaining string columns to a `drop_columns` list before training.</li>
+                            <li>TypeError Fix: `np.fromstring` failed when raw integers were present. Solved by explicitly casting inputs to strings using `str(x)`.</li>
+                            <li>ValueError Fix: Resolved `object` dtype errors in LightGBM by explicitly adding all remaining string columns to a `drop_columns` list before training.</li>
                         </ul>
                     </div>
                 </div>

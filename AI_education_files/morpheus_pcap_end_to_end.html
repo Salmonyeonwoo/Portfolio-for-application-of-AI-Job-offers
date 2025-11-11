@@ -120,7 +120,7 @@
         <section class="mb-10">
             <h2 class="section-title">1. 프로젝트 개요 및 주요 기술 역량</h2>
             <div class="card">
-                <p>본 프로젝트는 클라우드 게임 환경에서 **암호화폐 채굴(Cryptomining) 비정상 행위**를 실시간으로 탐지하기 위해 Morpheus 데이터 파이프라인을 구축한 사례입니다. 핵심은 대규모 네트워크 패킷(PCAP) 데이터를 **GPU 가속화된 XGBoost 모델 추론**과 결합하여 End-to-End로 처리하는 고성능 솔루션을 구현하는 것입니다.</p>
+                <p>본 프로젝트는 클라우드 게임 환경에서 암호화폐 채굴(Cryptomining) 비정상 행위를 실시간으로 탐지하기 위해 Morpheus 데이터 파이프라인을 구축한 사례입니다. 핵심은 대규모 네트워크 패킷(PCAP) 데이터를 GPU 가속화된 XGBoost 모델 추론과 결합하여 End-to-End로 처리하는 고성능 솔루션을 구현하는 것입니다.</p>
 
                 <h3 class="mt-6 mb-2">주요 기술 역량</h3>
                 <div class="mt-2 flex flex-wrap">
@@ -186,10 +186,10 @@
                 
                 <h3 class="mb-2">3-1. Triton Inference Server 통합을 통한 추론 최적화</h3>
                 <p class="text-gray-700">
-                    **도전:** 실시간으로 발생하는 대규모 네트워크 데이터에 대해 지연 시간 없이 ML 모델을 실행해야 했습니다.
+                    도전: 실시간으로 발생하는 대규모 네트워크 데이터에 대해 지연 시간 없이 ML 모델을 실행해야 했습니다.
                 </p>
                 <p class="text-gray-700 mt-1">
-                    **해결:** `TritonInferenceStage`를 사용하여 GPU 기반의 **Triton Inference Server**와 연동했습니다. 이는 모델 추론을 파이프라인 내에서 효율적으로 분리하고, GPU 메모리 공유(`use_shared_memory=True`)를 통해 데이터 복사 오버헤드를 최소화하여 고속 추론을 달성했습니다.
+                    해결: `TritonInferenceStage`를 사용하여 GPU 기반의 Triton Inference Server와 연동했습니다. 이는 모델 추론을 파이프라인 내에서 효율적으로 분리하고, GPU 메모리 공유(`use_shared_memory=True`)를 통해 데이터 복사 오버헤드를 최소화하여 고속 추론을 달성했습니다.
                 </p>
 
                 <h3 class="mt-6 mb-2">3-2. 커스텀 스테이지를 이용한 복잡한 특징 엔지니어링 구현</h3>
@@ -197,7 +197,7 @@
                     암호화폐 채굴 탐지 모델은 IP/Port 변환, 통계적 파생 변수 등 복잡하고 도메인 특화된 특징 엔지니어링을 요구합니다.
                 </p>
                 <p class="text-gray-700 mt-1">
-                    **해결:** Python 또는 C++로 작성된 **Custom Stage**를 파이프라인의 전처리 단계에 삽입하여, 필요한 모든 데이터 변환 및 특징 추출 로직을 **GPU(cuDF)** 환경에서 직접 수행하도록 구현했습니다. 이로써 전처리 과정의 병목 현상을 제거하고 데이터 준비 과정을 가속화했습니다.
+                    해결: Python 또는 C++로 작성된 커스텀 스테이지(custom stage)를 파이프라인의 전처리 단계에 삽입하여, 필요한 모든 데이터 변환 및 특징 추출 로직을 GPU(cuDF) 환경에서 직접 수행하도록 구현했습니다. 이로써 전처리 과정의 병목 현상을 제거하고 데이터 준비 과정을 가속화했습니다.
                 </p>
             </div>
         </section>

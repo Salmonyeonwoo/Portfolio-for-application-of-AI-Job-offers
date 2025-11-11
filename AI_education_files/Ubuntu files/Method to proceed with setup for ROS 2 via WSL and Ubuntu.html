@@ -56,9 +56,9 @@
                 핵심 문제 진단: 'Package not found'의 원인
             </h2>
             <ul class="list-disc list-inside text-gray-300 space-y-3 pl-4">
-                <li>**Conda 충돌:** `(llm_agent_env)` 활성화 상태에서 `source install/setup.bash`를 실행하면 Conda 환경이 ROS 경로를 덮어씁니다. **(해결책: `conda deactivate` 후 Source)**</li>
-                <li>**Source 누락:** `colcon build` 후 **새 터미널을 열었거나** `cd` 후 **`source install/setup.bash`** 명령을 잊어버린 경우.</li>
-                <li>**파이썬 빌드 오류:** `setup.py`의 `data_files` 경로 설정이나 `resource` 파일이 누락되어 빌드가 불완전하게 완료됩니다.</li>
+                <li>Conda 충돌: `(llm_agent_env)` 활성화 상태에서 `source install/setup.bash`를 실행하면 Conda 환경이 ROS 경로를 덮어씁니다. (해결책: `conda deactivate` 후 Source)</li>
+                <li>Source 누락: `colcon build` 후 새 터미널을 열었거나 `cd` 후 `source install/setup.bash` 명령을 잊어버린 경우.</li>
+                <li>Python 빌드 오류: `setup.py`의 `data_files` 경로 설정이나 `resource` 파일이 누락되어 빌드가 불완전하게 완료됩니다.</li>
             </ul>
         </div>
 
@@ -67,7 +67,7 @@
             <h2 class="text-3xl font-extrabold text-white mb-6 text-center">
                 <span class="bg-indigo-600 px-3 py-1 rounded-full text-lg mr-2">⭐</span> 최종 성공 루틴 (4단계)
             </h2>
-            <p class="text-indigo-200 mb-6 text-center">ROS 2 패키지 빌드 및 실행을 **단 한 번에** 성공시키는 필수 절차입니다.</p>
+            <p class="text-indigo-200 mb-6 text-center">ROS 2 패키지 빌드 및 실행을 단 한 번에 성공시키는 필수 절차입니다.</p>
 
             <ol class="space-y-6">
                 <!-- Step 1: Clean Build Prep -->
@@ -101,7 +101,7 @@ rm -rf install build log</pre>
                     <div class="code-block">
                         <pre>colcon build</pre>
                     </div>
-                    <p class="text-xs text-red-300 mt-2">**주의:** 이 단계에서 오류가 없어야 합니다. 오류 발생 시, `package.xml`의 `<name>` 중복을 확인하세요.</p>
+                    <p class="text-xs text-red-300 mt-2">주의: 이 단계에서 오류가 없어야 합니다. 오류 발생 시, `package.xml`의 `<name>` 중복을 확인하세요.</p>
                 </li>
                 
                 <!-- Step 3: Source -->
@@ -110,7 +110,7 @@ rm -rf install build log</pre>
                         <span class="step-icon">3</span>
                         <span class="text-lg font-bold text-yellow-300">환경 로드 (Source)</span>
                     </div>
-                    <p class="text-sm text-indigo-300 mb-3">ROS 2가 방금 빌드된 패키지를 찾도록 현재 셸에 경로를 등록합니다. **(가장 중요)**</p>
+                    <p class="text-sm text-indigo-300 mb-3">ROS 2가 방금 빌드된 패키지를 찾도록 현재 셸에 경로를 등록합니다. (가장 중요)</p>
                     <div class="code-block">
                         <pre>source install/setup.bash</pre>
                     </div>
@@ -145,20 +145,20 @@ ros2 run my_first_package turtle_cmd_and_pose</pre>
             <p class="text-gray-300 mb-3">우리가 작성한 `turtle_cmd_and_pose.py` 노드가 어떻게 거북이를 자율적으로 제어하는지에 대한 설명입니다.</p>
             <div class="bg-gray-900 p-4 rounded-lg border border-gray-700 space-y-3">
                 <h3 class="text-xl font-semibold text-white">1. ROS 통신 모델</h3>
-                <p class="text-sm text-gray-400">이 노드는 ROS의 **Publisher/Subscriber (발행/구독)** 모델을 사용합니다. 코드는 하나의 **노드** 역할을 수행합니다.</p>
+                <p class="text-sm text-gray-400">이 노드는 ROS의 Publisher/Subscriber (발행/구독) 모델을 사용합니다. 코드는 하나의 노드 역할을 수행합니다.</p>
                 
                 <h3 class="text-xl font-semibold text-white">2. 입력 (Subscriber)</h3>
-                <p class="text-sm text-gray-400">노드는 `/turtle1/pose` 토픽을 **구독**합니다. 이 토픽을 통해 거북이 시뮬레이터(Turtlesim)로부터 거북이의 **현재 X, Y 좌표 및 회전 각도(Theta)**를 실시간으로 입력 받습니다.</p>
+                <p class="text-sm text-gray-400">노드는 `/turtle1/pose` 토픽을 구독합니다. 이 토픽을 통해 거북이 시뮬레이터(Turtlesim)로부터 거북이의 현재 X, Y 좌표 및 회전 각도(Theta)를 실시간으로 입력 받습니다.</p>
                 
                 <h3 class="text-xl font-semibold text-white">3. 제어 로직 (Decision Making)</h3>
-                <p class="text-sm text-gray-400">입력된 위치(`Pose`) 정보가 **X 좌표 8.0**을 초과하는 순간, 노드는 '벽에 부딪힐 위험'을 감지합니다. 이 때, 노드는 주행 상태를 변경합니다.</p>
+                <p class="text-sm text-gray-400">입력된 위치(`Pose`) 정보가 X 좌표 8.0을 초과하는 순간, 노드는 '벽에 부딪힐 위험'을 감지합니다. 이 때, 노드는 주행 상태를 변경합니다.</p>
                 <ul class="list-disc list-inside text-sm text-gray-400 pl-4">
-                    <li>**주행 (Moving):** 평소에는 `Linear.x = 2.0` (직진) 명령을 `/turtle1/cmd_vel` 토픽으로 발행합니다.</li>
-                    <li>**회피 (Turning):** X > 8.0이 되면 `Linear.x = 0.0` (정지) 및 `Angular.z = -1.5` (제자리 좌회전) 명령을 발행하여 거북이가 벽에서 멀어지도록 유도합니다.</li>
+                    <li>주행 (Moving): 평소에는 `Linear.x = 2.0` (직진) 명령을 `/turtle1/cmd_vel` 토픽으로 발행합니다.</li>
+                    <li>회피 (Turning): X > 8.0이 되면 `Linear.x = 0.0` (정지) 및 `Angular.z = -1.5` (제자리 좌회전) 명령을 발행하여 거북이가 벽에서 멀어지도록 유도합니다.</li>
                 </ul>
                 
                 <h3 class="text-xl font-semibold text-white">4. 출력 (Publisher)</h3>
-                <p class="text-sm text-gray-400">노드는 계산된 움직임 명령(`Twist` 메시지, 즉 선속도/각속도)을 `/turtle1/cmd_vel` 토픽으로 **발행**합니다. 이 명령을 Turtlesim이 받아 거북이를 움직이게 됩니다.</p>
+                <p class="text-sm text-gray-400">노드는 계산된 움직임 명령(`Twist` 메시지, 즉 선속도/각속도)을 `/turtle1/cmd_vel` 토픽으로 발행합니다. 이 명령을 Turtlesim이 받아 거북이를 움직이게 됩니다.</p>
             </div>
         </div>
 

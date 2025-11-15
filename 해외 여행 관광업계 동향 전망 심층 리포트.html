@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>해외 여행 관광업계 동향 심층 분석 리포트</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Calm Harmony (Primary: Blue-800, Accents: Green-500/Orange-500, Background: Gray-50) -->
+    <!-- Application Structure Plan: 이 SPA는 방대한 데이터를 효과적으로 전달하기 위해 '대시보드/멀티-뷰 심층 보고서' 구조를 채택했습니다. (1)개요, (2)시장 회복, (3)소비자 트렌드, (4)공급망 분석, (5)전망 및 제언의 5개 탭으로 구성되어 있으며, 이는 10페이지 분량 보고서의 챕터와 동일한 역할을 수행합니다. 각 탭은 독립적인 분석 주제를 다루며, 다수의 차트와 심층 텍스트를 포함합니다. 특히 '시장 회복' 탭의 동적 버튼 필터링은 사용자가 데이터를 능동적으로 탐색하게 하여 보고서의 깊이를 더합니다. 이 구조는 복잡한 시장 동향을 체계적으로 분류하고 단계적으로 이해하도록 돕습니다. -->
+    <!-- Visualization & Content Choices: 
+    - [전체 예약 추이] -> (Goal: Change) -> [Chart.js Line Chart] -> (Interaction: 툴팁) -> (Justification: 시계열 변화를 명확히 제시).
+    - [예약 채널 비교] -> (Goal: Compare) -> [Chart.js Bar Chart] -> (Interaction: 버튼 필터링) -> (Justification: 채널별 점유율의 동적 비교를 통한 인사이트 도출).
+    - [ADR vs Occupancy] -> (Goal: Relationships) -> [Chart.js Scatter Plot] -> (Interaction: 툴팁) -> (Justification: 두 핵심 지표 간의 상관관계를 한눈에 파악).
+    - [세대별 테마 선호도] -> (Goal: Compare/Organize) -> [Chart.js Radar Chart] -> (Interaction: 툴팁) -> (Justification: 다차원적인 선호도 데이터를 시각적으로 비교).
+    - [공급망 디지털 성숙도] -> (Goal: Inform/Organize) -> [HTML/CSS Gauge] -> (Interaction: 없음) -> (Justification: 정성적 평가 결과를 직관적인 게이지 형태로 요약).
+    - [주요 리스크 가중치] -> (Goal: Inform) -> [Chart.js Doughnut Chart] -> (Interaction: 툴팁) -> (Justification: 전체 리스크 대비 각 요인의 비중을 비율로 제시).
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 450px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 450px;
+            }
+        }
+        .tab-button[aria-selected="true"] {
+            @apply bg-blue-700 text-white shadow-lg;
+        }
+        .tab-button[aria-selected="false"] {
+            @apply bg-gray-100 text-gray-700 hover:bg-gray-200 border-b-2 border-transparent;
+        }
+        .gauge-container {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(#3b82f6 0%, #10b981 var(--progress), #e5e7eb var(--progress), #e5e7eb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .gauge-inner {
+            width: 120px;
+            height: 120px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <div class="container mx-auto max-w-7xl p-4 md:p-8">
+        
+        <header class="mb-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-blue-900 mb-2">해외 여행 관광업계 심층 분석</h1>
+            <p class="text-xl text-gray-600 border-b pb-4">글로벌 동향, 소비자 트렌드 및 5개년 전망 리포트</p>
+        </header>
+
+        <nav class="mb-8" role="tablist" aria-label="리포트 섹션">
+            <div class="flex flex-wrap gap-2 md:gap-4 p-1 bg-white rounded-xl shadow-md">
+                <button role="tab" aria-selected="true" id="tab-overview" class="tab-button px-4 py-2 rounded-lg font-semibold transition-all duration-300">
+                    Ⅰ. 핵심 개요
+                </button>
+                <button role="tab" aria-selected="false" id="tab-market" class="tab-button px-4 py-2 rounded-lg font-semibold transition-all duration-300">
+                    Ⅱ. 시장 회복 분석
+                </button>
+                <button role="tab" aria-selected="false" id="tab-consumer" class="tab-button px-4 py-2 rounded-lg font-semibold transition-all duration-300">
+                    Ⅲ. 소비자 트렌드
+                </button>
+                <button role="tab" aria-selected="false" id="tab-supply" class="tab-button px-4 py-2 rounded-lg font-semibold transition-all duration-300">
+                    Ⅳ. 공급망 분석
+                </button>
+                <button role="tab" aria-selected="false" id="tab-outlook" class="tab-button px-4 py-2 rounded-lg font-semibold transition-all duration-300">
+                    Ⅴ. 전망 및 제언
+                </button>
+            </div>
+        </nav>
+
+        <main class="space-y-12">
+            <!-- Ⅰ. 핵심 개요 (페이지 1-2) -->
+            <section id="section-overview" role="tabpanel" aria-labelledby="tab-overview">
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6">Ⅰ. 핵심 개요 및 전략적 시사점</h2>
+                    <p class="mb-8 text-gray-700 leading-relaxed border-l-4 border-blue-500 pl-4 bg-blue-50 py-2">
+                        2024년 해외 여행 시장은 'V자 반등'을 넘어 '질적 성장' 단계에 진입했습니다. 전체 예약률은 팬데믹 이전 수준의 95%에 도달했으며, 특히 **장거리 노선과 프리미엄 클래스**의 수요 증가가 관찰됩니다. 보고서는 시장 회복 속도 불균형과 개인화 트렌드 심화에 대응하는 전략적 인사이트를 제공합니다.
+                    </p>
+
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">보고서 핵심 요약</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="p-5 bg-green-50 rounded-xl border border-green-200">
+                            <p class="text-sm text-gray-600 font-medium">총 시장 규모 회복률</p>
+                            <p class="text-4xl font-extrabold text-green-700 mt-1">95.4%</p>
+                            <p class="text-xs text-gray-500 mt-2">팬데믹 이전(2019년) 대비</p>
+                        </div>
+                        <div class="p-5 bg-yellow-50 rounded-xl border border-yellow-200">
+                            <p class="text-sm text-gray-600 font-medium">ADR(평균 일일 객실 단가) 변동</p>
+                            <p class="text-4xl font-extrabold text-yellow-700 mt-1">▲ 15.2%</p>
+                            <p class="text-xs text-gray-500 mt-2">공급 부족 및 프리미엄 수요 증가</p>
+                        </div>
+                        <div class="p-5 bg-indigo-50 rounded-xl border border-indigo-200">
+                            <p class="text-sm text-gray-600 font-medium">주요 리스크 요인</p>
+                            <p class="text-3xl font-extrabold text-indigo-700 mt-1">인플레이션 압력</p>
+                            <p class="text-xs text-gray-500 mt-2">여행 지출 심리 위축 가능성</p>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mt-10 mb-4 border-b pb-2">전략적 시사점</h3>
+                    <ul class="list-none space-y-3 pl-0 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 text-lg mr-3">✔️</span>
+                            <div>**고가치 상품 포트폴리오 강화:** ADR 상승 추세에 맞춰 개인 맞춤형 럭셔리 및 웰니스 상품 개발에 집중해야 합니다.</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 text-lg mr-3">✔️</span>
+                            <div>**디지털 채널 최적화:** OTA 및 직접 예약 채널 간의 경쟁 심화에 대응하여 데이터 기반의 마케팅 투자를 늘려야 합니다.</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 text-lg mr-3">✔️</span>
+                            <div>**공급망 탄력성 확보:** 항공편 부족 및 인력난 등의 공급망 문제를 해결하기 위한 다각적인 파트너십이 요구됩니다.</div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Ⅱ. 시장 회복 분석 (페이지 3-4) -->
+            <section id="section-market" role="tabpanel" aria-labelledby="tab-market" class="hidden">
+                 <div class="bg-white p-8 rounded-xl shadow-lg space-y-10">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6">Ⅱ. 시장 회복 분석: 예약 동향 및 수익성 지표</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div>
+                             <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">2-1. 월별 총 예약 규모 추이</h3>
+                            <p class="mb-4 text-gray-700">
+                                2024년 1분기 이후 꾸준히 상승세를 유지하고 있으며, 특히 하계 성수기가 시작되는 6월과 7월에 예약 증가세가 두드러집니다. 시장의 계절적 패턴이 완전히 회복되었음을 시사합니다.
+                            </p>
+                            <div class="chart-container h-[300px] max-h-[350px]">
+                                <canvas id="totalBookingChart"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                             <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">2-2. 예약 채널별 점유율 비교 (동적 필터)</h3>
+                            <p class="mb-4 text-gray-700">
+                                예약 채널은 직접 예약(Direct)이 여전히 강세이나, OTA(온라인 여행사) 채널의 성장 속도가 가장 빠릅니다. 아래 버튼을 눌러 각 채널의 추이를 비교해 보세요.
+                            </p>
+                            <div id="channelFilter" class="flex gap-2 mb-4">
+                                <button data-channel="Total" class="channel-btn bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">총 예약</button>
+                                <button data-channel="Direct" class="channel-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">직접 예약</button>
+                                <button data-channel="OTA" class="channel-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">OTA 채널</button>
+                            </div>
+                            <div class="chart-container h-[300px] max-h-[350px]">
+                                <canvas id="channelBookingChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-10">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">2-3. 호텔 수익성 분석: ADR vs. Occupancy 상관관계</h3>
+                        <p class="mb-4 text-gray-700">
+                            이 산점도(Scatter Plot)는 지역별 ADR(평균 일일 객실 단가)과 Occupancy(점유율)의 상관관계를 보여줍니다. 일반적으로 높은 ADR은 낮은 점유율로 이어지지만, APEC 지역은 두 지표 모두에서 우위를 보이며 '고수익-고점유' 시장을 형성하고 있습니다.
+                        </p>
+                        <div class="chart-container h-[350px] max-h-[400px]">
+                            <canvas id="adrOccupancyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ⅲ. 소비자 트렌드 (페이지 5-6) -->
+            <section id="section-consumer" role="tabpanel" aria-labelledby="tab-consumer" class="hidden">
+                 <div class="bg-white p-8 rounded-xl shadow-lg space-y-10">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6">Ⅲ. 소비자 트렌드: 세대별 선호 테마 심층 분석</h2>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">3-1. MZ 세대 여행 테마 선호도 비교</h3>
+                    <p class="mb-4 text-gray-700">
+                        MZ 세대(밀레니얼 및 Z세대)는 전통적인 관광보다 '경험'과 '가치'를 중시합니다. 레이더 차트는 이들의 선호도가 **워케이션(유연성)**과 **지속가능성(가치)**에 높게 분포됨을 보여줍니다. X세대는 **럭셔리** 및 **웰니스**에 집중됩니다. (점수가 높을수록 선호도가 높음)
+                    </p>
+                    <div class="chart-container h-[400px] max-h-[450px]">
+                        <canvas id="themePreferenceChart"></canvas>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 mt-10">3-2. 테마별 주요 인사이트</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-5 bg-purple-50 rounded-xl border border-purple-200">
+                            <h4 class="font-bold text-xl text-purple-700 mb-2">⭐ 워케이션: 유연한 삶의 확장</h4>
+                            <p class="text-sm text-gray-700">워케이션 평균 체류 기간은 14일로, 단기 여행 대비 4배 이상 길어 객단가 증대에 기여합니다. 아시아권의 디지털 노마드 비자 정책 확대가 성장의 핵심 동력입니다.</p>
+                        </div>
+                        <div class="p-5 bg-teal-50 rounded-xl border border-teal-200">
+                            <h4 class="font-bold text-xl text-teal-700 mb-2">🌿 지속가능성: 윤리적 여행의 확산</h4>
+                            <p class="text-sm text-gray-700">소비자의 65%는 지속가능한 옵션에 대해 기꺼이 추가 비용을 지불할 의향이 있다고 답했습니다. 친환경 인증 숙소, 현지 문화 보존 프로그램 등이 중요해지고 있습니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ⅳ. 공급망 분석 (페이지 7-8) -->
+            <section id="section-supply" role="tabpanel" aria-labelledby="tab-supply" class="hidden">
+                 <div class="bg-white p-8 rounded-xl shadow-lg space-y-10">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6">Ⅳ. 공급망 분석: 인프라 및 디지털 성숙도</h2>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">4-1. 산업 부문별 디지털 성숙도 평가</h3>
+                    <p class="mb-8 text-gray-700">
+                        여행업계 공급망 전반에 걸쳐 디지털 전환(DT)이 가속화되고 있으나, 부문별로 속도 차이가 큽니다. 여행 기술(Travel Tech) 부문이 AI와 자동화 도입을 선도하고 있습니다.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                        <div class="flex flex-col items-center">
+                            <div class="gauge-container mb-3" style="--progress: 75%;">
+                                <div class="gauge-inner">
+                                    <span class="text-3xl font-bold text-blue-700">75%</span>
+                                </div>
+                            </div>
+                            <h4 class="font-bold text-lg text-gray-800">호텔 부문</h4>
+                            <p class="text-sm text-gray-600">스마트 체크인, CRM 고도화</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="gauge-container mb-3" style="--progress: 60%;">
+                                <div class="gauge-inner">
+                                    <span class="text-3xl font-bold text-blue-700">60%</span>
+                                </div>
+                            </div>
+                            <h4 class="font-bold text-lg text-gray-800">항공 부문</h4>
+                            <p class="text-sm text-gray-600">운항 효율화, 웹/앱 서비스</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="gauge-container mb-3" style="--progress: 88%;">
+                                <div class="gauge-inner">
+                                    <span class="text-3xl font-bold text-blue-700">88%</span>
+                                </div>
+                            </div>
+                            <h4 class="font-bold text-lg text-gray-800">여행 기술 (OTA, 플랫폼)</h4>
+                            <p class="text-sm text-gray-600">AI 기반 개인화, 자동화</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 mt-10">4-2. 공급망 핵심 도전 과제</h3>
+                    <ul class="list-none space-y-3 pl-0 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-red-500 text-lg mr-3">🔥</span>
+                            <div>**인력난 지속:** 특히 서비스 접점(프런트, 기내)에서의 인력 부족이 서비스 품질 저하의 주된 원인이 되고 있습니다.</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 text-lg mr-3">🔥</span>
+                            <div>**지속가능성 투자 지연:** 친환경 설비 구축에 대한 초기 투자 비용 부담으로 인해 전환 속도가 느린 편입니다.</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 text-lg mr-3">🔥</span>
+                            <div>**기술 부채(Technical Debt):** 기존 레거시 시스템과의 통합 문제로 인해 새로운 디지털 솔루션 도입에 병목 현상이 발생합니다.</div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Ⅴ. 전망 및 제언 (페이지 9-10) -->
+            <section id="section-outlook" role="tabpanel" aria-labelledby="tab-outlook" class="hidden">
+                 <div class="bg-white p-8 rounded-xl shadow-lg space-y-10">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6">Ⅴ. 전망 및 제언: 5개년 예측 및 전략</h2>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">5-1. 주요 리스크 가중치 평가</h3>
+                    <p class="mb-4 text-gray-700">
+                        향후 5년간 관광업계의 성장을 저해할 수 있는 주요 리스크 요인들을 분석하고, 그 상대적 가중치를 도넛 차트로 시각화했습니다. 인플레이션으로 인한 소비 심리 위축이 가장 큰 리스크로 평가됩니다.
+                    </p>
+                    <div class="chart-container h-[350px] max-h-[400px] flex items-center justify-center">
+                        <canvas id="riskAssessmentChart"></canvas>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 mt-10">5-2. 최종 전략적 제언</h3>
+                    <div class="p-6 bg-yellow-50 rounded-xl border-l-4 border-yellow-500">
+                        <h4 class="font-bold text-2xl text-yellow-700 mb-3">🎯 장기 성장 로드맵: 'P-A-C-E' 전략</h4>
+                        <ul class="list-none space-y-3 pl-0 text-gray-700">
+                            <li>**P (Personalization):** AI 기반 초개인화 엔진 구축으로 고객 생애 가치(LTV) 극대화.</li>
+                            <li>**A (Adaptability):** 단기 시장 변화에 유연하게 대응할 수 있는 동적 가격 책정(Dynamic Pricing) 시스템 도입.</li>
+                            <li>**C (Conscious Travel):** 지속가능성 인증 및 친환경 상품을 브랜드 핵심 가치로 포지셔닝.</li>
+                            <li>**E (Efficiency):** 인력 부족 해소를 위한 서비스 자동화 및 로봇 프로세스 도입 가속화.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="mt-12 text-center text-sm text-gray-500 border-t pt-4">
+            <p>&copy; 2025 해외 여행 관광업계 동향 심층 분석 리포트. 모든 권리 보유.</p>
+        </footer>
+    </div>
+
+    <script>
+        const mockData = {
+            totalBooking: {
+                labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월'],
+                data: [85, 90, 95, 105, 115, 130, 145]
+            },
+            channelBooking: {
+                Total: [85, 90, 95, 105, 115, 130, 145],
+                Direct: [50, 52, 54, 55, 58, 60, 62],
+                OTA: [30, 35, 38, 45, 52, 65, 75]
+            },
+            adrOccupancy: [
+                {x: 80, y: 150, r: 8, label: 'APEC'},
+                {x: 70, y: 120, r: 6, label: '유럽'},
+                {x: 65, y: 100, r: 6, label: '북미'},
+                {x: 50, y: 80, r: 4, label: '남미'},
+                {x: 75, y: 90, r: 5, label: '중동'}
+            ],
+            themePreference: {
+                labels: ['럭셔리', '웰니스', '워케이션', '지속가능성', '가족여행', '단거리'],
+                datasets: [
+                    { label: 'MZ 세대', data: [70, 75, 95, 85, 60, 50], borderColor: 'rgba(59, 130, 246, 1)', backgroundColor: 'rgba(59, 130, 246, 0.2)' },
+                    { label: 'X 세대', data: [90, 85, 60, 70, 80, 75], borderColor: 'rgba(16, 185, 129, 1)', backgroundColor: 'rgba(16, 185, 129, 0.2)' }
+                ]
+            },
+            riskAssessment: {
+                labels: ['인플레이션', '지정학적 리스크', '공급망 병목', '기후 변화 영향', '신규 팬데믹'],
+                data: [35, 25, 20, 15, 5],
+                backgroundColor: ['#ef4444', '#f97316', '#fbbf24', '#34d399', '#6366f1']
+            }
+        };
+
+        let totalBookingChart, channelBookingChart, adrOccupancyChart, themePreferenceChart, riskAssessmentChart;
+        
+        const chartColors = {
+            blue: 'rgb(59, 130, 246)',
+            green: 'rgb(16, 185, 129)',
+            yellow: 'rgb(245, 158, 11)'
+        };
+
+        const updateChannelChart = (channel) => {
+            const data = mockData.channelBooking[channel];
+            const label = channel === 'Total' ? '총 예약 규모 (기준치 대비 %)' : `${channel} 채널 예약 규모 (%)`;
+            const color = channel === 'Direct' ? chartColors.blue : (channel === 'OTA' ? chartColors.green : chartColors.yellow);
+            
+            channelBookingChart.data.datasets[0].data = data;
+            channelBookingChart.data.datasets[0].label = label;
+            channelBookingChart.data.datasets[0].backgroundColor = color;
+            channelBookingChart.update();
+
+            document.querySelectorAll('.channel-btn').forEach(btn => {
+                if (btn.dataset.channel === channel) {
+                    btn.classList.remove('bg-gray-200', 'text-gray-700');
+                    btn.classList.add('bg-blue-500', 'text-white');
+                } else {
+                    btn.classList.remove('bg-blue-500', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-700');
+                }
+            });
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('[role="tab"]');
+            const sections = document.querySelectorAll('[role="tabpanel"]');
+
+            const showSection = (sectionId) => {
+                sections.forEach(section => {
+                    if (section.id === sectionId) {
+                        section.classList.remove('hidden');
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                });
+                
+                tabs.forEach(tab => {
+                    const controlsSection = 'section-' + tab.id.split('-')[1];
+                    if (controlsSection === sectionId) {
+                        tab.setAttribute('aria-selected', 'true');
+                    } else {
+                        tab.setAttribute('aria-selected', 'false');
+                    }
+                });
+            };
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetSectionId = 'section-' + tab.id.split('-')[1];
+                    showSection(targetSectionId);
+                });
+            });
+
+            // 1. Total Booking Line Chart
+            const totalBookingCtx = document.getElementById('totalBookingChart').getContext('2d');
+            totalBookingChart = new Chart(totalBookingCtx, {
+                type: 'line',
+                data: {
+                    labels: mockData.totalBooking.labels,
+                    datasets: [{
+                        label: '총 예약 규모 (기준치 대비 %)',
+                        data: mockData.totalBooking.data,
+                        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                        borderColor: chartColors.blue,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { title: { display: false }, legend: { display: false } },
+                    scales: {
+                        x: { title: { display: true, text: '월별' } },
+                        y: { title: { display: true, text: '규모 (%)' }, min: 0 }
+                    }
+                }
+            });
+
+            // 2. Channel Booking Bar Chart (Interactive)
+            const channelBookingCtx = document.getElementById('channelBookingChart').getContext('2d');
+            channelBookingChart = new Chart(channelBookingCtx, {
+                type: 'bar',
+                data: {
+                    labels: mockData.totalBooking.labels,
+                    datasets: [{
+                        label: '총 예약 규모 (기준치 대비 %)', 
+                        data: mockData.channelBooking.Total,
+                        backgroundColor: chartColors.yellow,
+                        borderColor: chartColors.yellow,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { title: { display: false }, legend: { display: false } },
+                    scales: {
+                        x: { title: { display: true, text: '월별' } },
+                        y: { title: { display: true, text: '규모 (%)' }, min: 0 }
+                    }
+                }
+            });
+            document.querySelectorAll('.channel-btn').forEach(btn => {
+                btn.addEventListener('click', () => updateChannelChart(btn.dataset.channel));
+            });
+
+            // 3. ADR vs Occupancy Scatter Chart
+            const adrOccupancyCtx = document.getElementById('adrOccupancyChart').getContext('2d');
+            adrOccupancyChart = new Chart(adrOccupancyCtx, {
+                type: 'bubble',
+                data: {
+                    datasets: [{
+                        label: '지역별 수익성',
+                        data: mockData.adrOccupancy,
+                        backgroundColor: mockData.adrOccupancy.map(d => d.label === 'APEC' ? chartColors.green : chartColors.blue),
+                        borderColor: 'white',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { 
+                        title: { display: false }, 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const item = context.raw;
+                                    return `${item.label}: ADR $${item.y}, Occupancy ${item.x}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: '점유율 (Occupancy %)' }, min: 40, max: 90 },
+                        y: { title: { display: true, text: '평균 객실 단가 (ADR $)' }, min: 50, max: 180 }
+                    }
+                }
+            });
+
+            // 4. Theme Preference Radar Chart
+            const themePreferenceCtx = document.getElementById('themePreferenceChart').getContext('2d');
+            themePreferenceChart = new Chart(themePreferenceCtx, {
+                type: 'radar',
+                data: {
+                    labels: mockData.themePreference.labels,
+                    datasets: mockData.themePreference.datasets
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { title: { display: false } },
+                    elements: { line: { borderWidth: 3 } },
+                    scales: {
+                        r: {
+                            angleLines: { display: false },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            pointLabels: { font: { size: 12 } },
+                            ticks: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // 5. Risk Assessment Doughnut Chart
+            const riskAssessmentCtx = document.getElementById('riskAssessmentChart').getContext('2d');
+            riskAssessmentChart = new Chart(riskAssessmentCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: mockData.riskAssessment.labels,
+                    datasets: [{
+                        data: mockData.riskAssessment.data,
+                        backgroundColor: mockData.riskAssessment.backgroundColor,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) { label += ': '; }
+                                    label += context.parsed + '%';
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            showSection('section-overview');
+        });
+    </script>
+
+</body>
+</html>

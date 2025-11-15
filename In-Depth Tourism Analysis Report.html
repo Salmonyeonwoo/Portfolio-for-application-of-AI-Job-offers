@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In-Depth Analysis of the Overseas Travel and Tourism Industry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Calm Harmony (Primary: Blue-800, Accents: Green-500/Orange-500, Background: Gray-50) -->
+    <!-- Application Structure Plan: This SPA adopts a 'Deep Dive Report Dashboard' structure to effectively convey extensive data, mirroring a 10-page chapter-based report. It is organized into five tabs: (1) Executive Summary, (2) Market Recovery, (3) Consumer Trends, (4) Supply Chain Analysis, and (5) Outlook & Recommendations. Each tab addresses an independent analytical theme with multiple charts and detailed text. The 'Market Recovery' tab features dynamic button filtering to allow users active data exploration, enhancing the report's depth. This structure helps users systematically categorize and sequentially understand complex market dynamics. -->
+    <!-- Visualization & Content Choices: 
+    - [Total Booking Trend] -> (Goal: Change) -> [Chart.js Line Chart] -> (Interaction: Tooltip) -> (Justification: Clearly presents time-series changes).
+    - [Booking Channel Comparison] -> (Goal: Compare) -> [Chart.js Bar Chart] -> (Interaction: Button Filtering) -> (Justification: Derives insights through dynamic comparison of channel market share).
+    - [ADR vs Occupancy] -> (Goal: Relationships) -> [Chart.js Scatter Plot] -> (Interaction: Tooltip) -> (Justification: Visualizes the correlation between two key metrics at a glance).
+    - [Generational Theme Preference] -> (Goal: Compare/Organize) -> [Chart.js Radar Chart] -> (Interaction: Tooltip) -> (Justification: Visually compares multi-dimensional preference data).
+    - [Supply Chain Digital Maturity] -> (Goal: Inform/Organize) -> [HTML/CSS Gauge] -> (Interaction: None) -> (Justification: Summarizes qualitative assessment results in a clear gauge format).
+    - [Key Risk Weight] -> (Goal: Inform) -> [Chart.js Doughnut Chart] -> (Interaction: Tooltip) -> (Justification: Presents the proportional weight of each factor relative to the total risk).
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 450px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 450px;
+            }
+        }
+        .tab-button[aria-selected="true"] {
+            @apply bg-blue-700 text-white shadow-lg;
+        }
+        .tab-button[aria-selected="false"] {
+            @apply bg-gray-100 text-gray-700 hover:bg-gray-200 border-b-2 border-transparent;
+        }
+        .gauge-container {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(#3b82f6 0%, #10b981 var(--progress), #e5e7eb var(--progress), #e5e7eb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .gauge-inner {
+            width: 120px;
+            height: 120px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <div class="container mx-auto max-w-7xl p-4 md:p-8">
+        
+        <header class="mb-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-blue-900 mb-2">In-Depth Analysis of the Overseas Travel and Tourism Industry</h1>
+            <p class="text-xl text-gray-600 border-b pb-4">Global Trends, Consumer Behavior, and 5-Year Forecast Report</p>
+        </header>
+
+        <nav class="mb-8" role="tablist" aria-label="Report Sections">
+            <div class="flex flex-wrap gap-2 md:gap-4 p-1 bg-white rounded-xl shadow-md">
+                <button role="tab" aria-selected="true" id="tab-overview" class="tab-button px-4 py-2 rounded-lg font-semibold transition-all duration-300">
+                    I. Executive Summary
+                </button>
+                <button role="tab" aria-selected="false" id="tab-market" class="tab-button px-4 py-2 rounded-lg font-semibold transition-all duration-300">
+                    II. Market Recovery Analysis
+                </button>
+                <button role="tab" aria-selected="false" id="tab-consumer" class="tab-button px-4 py-2 rounded-lg font-semibold transition-all duration-300">
+                    III. Consumer Trends
+                </button>
+                <button role="tab" aria-selected="false" id="tab-supply" class="tab-button px-4 py-2 rounded-lg font-semibold transition-all duration-300">
+                    IV. Supply Chain Analysis
+                </button>
+                <button role="tab" aria-selected="false" id="tab-outlook" class="tab-button px-4 py-2 rounded-lg font-semibold transition-all duration-300">
+                    V. Outlook & Recommendations
+                </button>
+            </div>
+        </nav>
+
+        <main class="space-y-12">
+            <!-- I. Executive Summary (Pages 1-2) -->
+            <section id="section-overview" role="tabpanel" aria-labelledby="tab-overview">
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6">I. Executive Summary and Strategic Implications</h2>
+                    <p class="mb-8 text-gray-700 leading-relaxed border-l-4 border-blue-500 pl-4 bg-blue-50 py-2">
+                        In 2024, the overseas travel market moved beyond a 'V-shaped rebound' into a phase of 'qualitative growth.' Total booking rates have reached 95% of pre-pandemic levels, with notable increases in demand for **long-haul routes and premium classes**. This report provides strategic insights to address the unbalanced pace of market recovery and the deepening trend toward personalization.
+                    </p>
+
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">Key Report Highlights</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="p-5 bg-green-50 rounded-xl border border-green-200">
+                            <p class="text-sm text-gray-600 font-medium">Total Market Volume Recovery Rate</p>
+                            <p class="text-4xl font-extrabold text-green-700 mt-1">95.4%</p>
+                            <p class="text-xs text-gray-500 mt-2">Compared to Pre-Pandemic (2019)</p>
+                        </div>
+                        <div class="p-5 bg-yellow-50 rounded-xl border border-yellow-200">
+                            <p class="text-sm text-gray-600 font-medium">ADR (Average Daily Rate) Fluctuation</p>
+                            <p class="text-4xl font-extrabold text-yellow-700 mt-1">▲ 15.2%</p>
+                            <p class="text-xs text-gray-500 mt-2">Due to supply shortages and premium demand</p>
+                        </div>
+                        <div class="p-5 bg-indigo-50 rounded-xl border border-indigo-200">
+                            <p class="text-sm text-gray-600 font-medium">Primary Risk Factor</p>
+                            <p class="text-3xl font-extrabold text-indigo-700 mt-1">Inflationary Pressure</p>
+                            <p class="text-xs text-gray-500 mt-2">Potential cooling of travel spending sentiment</p>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mt-10 mb-4 border-b pb-2">Strategic Implications</h3>
+                    <ul class="list-none space-y-3 pl-0 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 text-lg mr-3">✔️</span>
+                            <div>**Strengthen High-Value Product Portfolio:** Focus on developing personalized luxury and wellness products in line with the rising ADR trend.</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 text-lg mr-3">✔️</span>
+                            <div>**Optimize Digital Channels:** Increase data-driven marketing investment to compete in the intensifying rivalry between OTAs and Direct booking channels.</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 text-lg mr-3">✔️</span>
+                            <div>**Ensure Supply Chain Resilience:** Multi-faceted partnerships are required to address supply chain issues such as flight shortages and labor deficits.</div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- II. Market Recovery Analysis (Pages 3-4) -->
+            <section id="section-market" role="tabpanel" aria-labelledby="tab-market" class="hidden">
+                 <div class="bg-white p-8 rounded-xl shadow-lg space-y-10">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6">II. Market Recovery Analysis: Booking Trends and Profitability Indicators</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div>
+                             <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">2-1. Monthly Total Booking Volume Trend</h3>
+                            <p class="mb-4 text-gray-700">
+                                The overall trend shows a steady increase since Q1 2024, with a significant surge observed starting in June and July, coinciding with the peak summer travel season preparations. This indicates a complete restoration of the market's seasonal patterns driven by improved consumer confidence and seasonal factors.
+                            </p>
+                            <div class="chart-container h-[300px] max-h-[350px]">
+                                <canvas id="totalBookingChart"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                             <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">2-2. Booking Channel Market Share Comparison (Dynamic Filter)</h3>
+                            <p class="mb-4 text-gray-700">
+                                Direct bookings remain strong, but the growth rate of OTA (Online Travel Agency) channels is the fastest. Use the buttons below to dynamically compare the trends for each channel.
+                            </p>
+                            <div id="channelFilter" class="flex gap-2 mb-4">
+                                <button data-channel="Total" class="channel-btn bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">Total Bookings</button>
+                                <button data-channel="Direct" class="channel-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">Direct</button>
+                                <button data-channel="OTA" class="channel-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">OTA</button>
+                            </div>
+                            <div class="chart-container h-[300px] max-h-[350px]">
+                                <canvas id="channelBookingChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-10">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">2-3. Hotel Profitability Analysis: Correlation between ADR and Occupancy</h3>
+                        <p class="mb-4 text-gray-700">
+                            This scatter plot illustrates the correlation between Average Daily Rate (ADR) and Occupancy across different regions. While high ADR typically leads to lower occupancy, the APEC region shows dominance in both metrics, forming a 'high-profit, high-occupancy' market.
+                        </p>
+                        <div class="chart-container h-[350px] max-h-[400px]">
+                            <canvas id="adrOccupancyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- III. Consumer Trends (Pages 5-6) -->
+            <section id="section-consumer" role="tabpanel" aria-labelledby="tab-consumer" class="hidden">
+                 <div class="bg-white p-8 rounded-xl shadow-lg space-y-10">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6">III. Consumer Trends: In-Depth Analysis of Generational Theme Preferences</h2>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">3-1. Generational Comparison of Travel Theme Preferences</h3>
+                    <p class="mb-4 text-gray-700">
+                        MZ generations (Millennials and Gen Z) prioritize 'experience' and 'values' over traditional sightseeing. The radar chart shows their preference is highly distributed toward **Workation (flexibility)** and **Sustainability (values)**. Gen X focuses more on **Luxury** and **Wellness**. (Higher score indicates higher preference).
+                    </p>
+                    <div class="chart-container h-[400px] max-h-[450px]">
+                        <canvas id="themePreferenceChart"></canvas>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 mt-10">3-2. Key Insights by Theme</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-5 bg-purple-50 rounded-xl border border-purple-200">
+                            <h4 class="font-bold text-xl text-purple-700 mb-2">⭐ Workation: Extension of Flexible Living</h4>
+                            <p class="text-sm text-gray-700">The average duration of a Workation is 14 days, more than 4 times longer than short trips, contributing significantly to increased average transaction value. The expansion of digital nomad visa policies in Asian countries is a key growth driver.</p>
+                        </div>
+                        <div class="p-5 bg-teal-50 rounded-xl border border-teal-200">
+                            <h4 class="font-bold text-xl text-teal-700 mb-2">🌿 Sustainability: The Rise of Ethical Travel</h4>
+                            <p class="text-sm text-gray-700">65% of consumers indicated a willingness to pay extra for sustainable options. Eco-certified accommodations and programs that contribute to local community preservation are gaining importance.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- IV. Supply Chain Analysis (Pages 7-8) -->
+            <section id="section-supply" role="tabpanel" aria-labelledby="tab-supply" class="hidden">
+                 <div class="bg-white p-8 rounded-xl shadow-lg space-y-10">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6">IV. Supply Chain Analysis: Infrastructure and Digital Maturity</h2>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">4-1. Digital Maturity Assessment by Industry Segment</h3>
+                    <p class="mb-8 text-gray-700">
+                        Digital transformation (DT) is accelerating across the travel industry supply chain, but the pace varies significantly by segment. The Travel Tech sector is leading the adoption of AI and automation.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                        <div class="flex flex-col items-center">
+                            <div class="gauge-container mb-3" style="--progress: 75%;">
+                                <div class="gauge-inner">
+                                    <span class="text-3xl font-bold text-blue-700">75%</span>
+                                </div>
+                            </div>
+                            <h4 class="font-bold text-lg text-gray-800">Hotel Sector</h4>
+                            <p class="text-sm text-gray-600">Smart check-in, advanced CRM</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="gauge-container mb-3" style="--progress: 60%;">
+                                <div class="gauge-inner">
+                                    <span class="text-3xl font-bold text-blue-700">60%</span>
+                                </div>
+                            </div>
+                            <h4 class="font-bold text-lg text-gray-800">Aviation Sector</h4>
+                            <p class="text-sm text-gray-600">Operational efficiency, web/app services</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="gauge-container mb-3" style="--progress: 88%;">
+                                <div class="gauge-inner">
+                                    <span class="text-3xl font-bold text-blue-700">88%</span>
+                                </div>
+                            </div>
+                            <h4 class="font-bold text-lg text-gray-800">Travel Tech (OTAs, Platforms)</h4>
+                            <p class="text-sm text-gray-600">AI-driven personalization, automation</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 mt-10">4-2. Key Supply Chain Challenges</h3>
+                    <ul class="list-none space-y-3 pl-0 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-red-500 text-lg mr-3">🔥</span>
+                            <div>**Persistent Labor Shortages:** The lack of personnel, especially at service touchpoints (front desk, in-flight), is the primary cause of service quality decline.</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 text-lg mr-3">🔥</span>
+                            <div>**Delayed Sustainability Investment:** High initial investment costs for eco-friendly facilities are slowing down the transition pace.</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 text-lg mr-3">🔥</span>
+                            <div>**Technical Debt:** Integration issues with existing legacy systems create bottlenecks for the adoption of new digital solutions.</div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- V. Outlook & Recommendations (Pages 9-10) -->
+            <section id="section-outlook" role="tabpanel" aria-labelledby="tab-outlook" class="hidden">
+                 <div class="bg-white p-8 rounded-xl shadow-lg space-y-10">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6">V. Outlook & Recommendations: 5-Year Forecast and Strategy</h2>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">5-1. Key Risk Weight Assessment</h3>
+                    <p class="mb-4 text-gray-700">
+                        We analyzed the key risk factors that could hinder the tourism industry's growth over the next five years and visualized their relative weight in the doughnut chart. Inflation leading to weakened consumer sentiment is assessed as the most significant risk.
+                    </p>
+                    <div class="chart-container h-[350px] max-h-[400px] flex items-center justify-center">
+                        <canvas id="riskAssessmentChart"></canvas>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 mt-10">5-2. Final Strategic Recommendations</h3>
+                    <div class="p-6 bg-yellow-50 rounded-xl border-l-4 border-yellow-500">
+                        <h4 class="font-bold text-2xl text-yellow-700 mb-3">🎯 Long-Term Growth Roadmap: The 'P-A-C-E' Strategy</h4>
+                        <ul class="list-none space-y-3 pl-0 text-gray-700">
+                            <li>**P (Personalization):** Maximize Customer Lifetime Value (LTV) through the development of AI-driven hyper-personalization engines.</li>
+                            <li>**A (Adaptability):** Implement a Dynamic Pricing system capable of flexibly responding to short-term market changes.</li>
+                            <li>**C (Conscious Travel):** Position sustainability certification and eco-friendly products as core brand values.</li>
+                            <li>**E (Efficiency):** Accelerate the adoption of service automation and robotic processes to mitigate labor shortages.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="mt-12 text-center text-sm text-gray-500 border-t pt-4">
+            <p>&copy; 2025 In-Depth Analysis of the Overseas Travel and Tourism Industry Report. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        const mockData = {
+            totalBooking: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                data: [85, 90, 95, 105, 115, 130, 145]
+            },
+            channelBooking: {
+                Total: [85, 90, 95, 105, 115, 130, 145],
+                Direct: [50, 52, 54, 55, 58, 60, 62],
+                OTA: [30, 35, 38, 45, 52, 65, 75]
+            },
+            adrOccupancy: [
+                {x: 80, y: 150, r: 8, label: 'APEC'},
+                {x: 70, y: 120, r: 6, label: 'Europe'},
+                {x: 65, y: 100, r: 6, label: 'N. America'},
+                {x: 50, y: 80, r: 4, label: 'S. America'},
+                {x: 75, y: 90, r: 5, label: 'M. East'}
+            ],
+            themePreference: {
+                labels: ['Luxury', 'Wellness', 'Workation', 'Sustainability', 'Family', 'Short Haul'],
+                datasets: [
+                    { label: 'MZ Generation', data: [70, 75, 95, 85, 60, 50], borderColor: 'rgba(59, 130, 246, 1)', backgroundColor: 'rgba(59, 130, 246, 0.2)' },
+                    { label: 'Gen X', data: [90, 85, 60, 70, 80, 75], borderColor: 'rgba(16, 185, 129, 1)', backgroundColor: 'rgba(16, 185, 129, 0.2)' }
+                ]
+            },
+            riskAssessment: {
+                labels: ['Inflation', 'Geopolitical Risk', 'Supply Bottlenecks', 'Climate Change Impact', 'New Pandemic'],
+                data: [35, 25, 20, 15, 5],
+                backgroundColor: ['#ef4444', '#f97316', '#fbbf24', '#34d399', '#6366f1']
+            }
+        };
+
+        let totalBookingChart, channelBookingChart, adrOccupancyChart, themePreferenceChart, riskAssessmentChart;
+        
+        const chartColors = {
+            blue: 'rgb(59, 130, 246)',
+            green: 'rgb(16, 185, 129)',
+            yellow: 'rgb(245, 158, 11)'
+        };
+
+        const updateChannelChart = (channel) => {
+            const data = mockData.channelBooking[channel];
+            const label = channel === 'Total' ? 'Total Booking Volume (vs. Benchmark %)' : `${channel} Channel Booking Volume (%)`;
+            const color = channel === 'Direct' ? chartColors.blue : (channel === 'OTA' ? chartColors.green : chartColors.yellow);
+            
+            channelBookingChart.data.datasets[0].data = data;
+            channelBookingChart.data.datasets[0].label = label;
+            channelBookingChart.data.datasets[0].backgroundColor = color;
+            channelBookingChart.update();
+
+            document.querySelectorAll('.channel-btn').forEach(btn => {
+                if (btn.dataset.channel === channel) {
+                    btn.classList.remove('bg-gray-200', 'text-gray-700');
+                    btn.classList.add('bg-blue-500', 'text-white');
+                } else {
+                    btn.classList.remove('bg-blue-500', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-700');
+                }
+            });
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('[role="tab"]');
+            const sections = document.querySelectorAll('[role="tabpanel"]');
+
+            const showSection = (sectionId) => {
+                sections.forEach(section => {
+                    if (section.id === sectionId) {
+                        section.classList.remove('hidden');
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                });
+                
+                tabs.forEach(tab => {
+                    const controlsSection = 'section-' + tab.id.split('-')[1];
+                    if (controlsSection === sectionId) {
+                        tab.setAttribute('aria-selected', 'true');
+                    } else {
+                        tab.setAttribute('aria-selected', 'false');
+                    }
+                });
+            };
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetSectionId = 'section-' + tab.id.split('-')[1];
+                    showSection(targetSectionId);
+                });
+            });
+
+            // 1. Total Booking Line Chart
+            const totalBookingCtx = document.getElementById('totalBookingChart').getContext('2d');
+            totalBookingChart = new Chart(totalBookingCtx, {
+                type: 'line',
+                data: {
+                    labels: mockData.totalBooking.labels,
+                    datasets: [{
+                        label: 'Total Booking Volume (vs. Benchmark %)',
+                        data: mockData.totalBooking.data,
+                        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                        borderColor: chartColors.blue,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { title: { display: false }, legend: { display: false } },
+                    scales: {
+                        x: { title: { display: true, text: 'Month' } },
+                        y: { title: { display: true, text: 'Volume (%)' }, min: 0 }
+                    }
+                }
+            });
+
+            // 2. Channel Booking Bar Chart (Interactive)
+            const channelBookingCtx = document.getElementById('channelBookingChart').getContext('2d');
+            channelBookingChart = new Chart(channelBookingCtx, {
+                type: 'bar',
+                data: {
+                    labels: mockData.totalBooking.labels,
+                    datasets: [{
+                        label: 'Total Booking Volume (vs. Benchmark %)', 
+                        data: mockData.channelBooking.Total,
+                        backgroundColor: chartColors.yellow,
+                        borderColor: chartColors.yellow,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { title: { display: false }, legend: { display: false } },
+                    scales: {
+                        x: { title: { display: true, text: 'Month' } },
+                        y: { title: { display: true, text: 'Volume (%)' }, min: 0 }
+                    }
+                }
+            });
+            document.querySelectorAll('.channel-btn').forEach(btn => {
+                btn.addEventListener('click', () => updateChannelChart(btn.dataset.channel));
+            });
+
+            // 3. ADR vs Occupancy Scatter Chart
+            const adrOccupancyCtx = document.getElementById('adrOccupancyChart').getContext('2d');
+            adrOccupancyChart = new Chart(adrOccupancyCtx, {
+                type: 'bubble',
+                data: {
+                    datasets: [{
+                        label: 'Regional Profitability',
+                        data: mockData.adrOccupancy,
+                        backgroundColor: mockData.adrOccupancy.map(d => d.label === 'APEC' ? chartColors.green : chartColors.blue),
+                        borderColor: 'white',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { 
+                        title: { display: false }, 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const item = context.raw;
+                                    return `${item.label}: ADR $${item.y}, Occupancy ${item.x}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Occupancy (%)' }, min: 40, max: 90 },
+                        y: { title: { display: true, text: 'ADR ($)' }, min: 50, max: 180 }
+                    }
+                }
+            });
+
+            // 4. Theme Preference Radar Chart
+            const themePreferenceCtx = document.getElementById('themePreferenceChart').getContext('2d');
+            themePreferenceChart = new Chart(themePreferenceCtx, {
+                type: 'radar',
+                data: {
+                    labels: mockData.themePreference.labels,
+                    datasets: mockData.themePreference.datasets
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { title: { display: false } },
+                    elements: { line: { borderWidth: 3 } },
+                    scales: {
+                        r: {
+                            angleLines: { display: false },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            pointLabels: { font: { size: 12 } },
+                            ticks: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // 5. Risk Assessment Doughnut Chart
+            const riskAssessmentCtx = document.getElementById('riskAssessmentChart').getContext('2d');
+            riskAssessmentChart = new Chart(riskAssessmentCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: mockData.riskAssessment.labels,
+                    datasets: [{
+                        data: mockData.riskAssessment.data,
+                        backgroundColor: mockData.riskAssessment.backgroundColor,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) { label += ': '; }
+                                    label += context.parsed + '%';
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            showSection('section-overview');
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海外旅行観光業 界 深層分析レポート</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Calm Harmony (Primary: Blue-800, Accents: Green-500/Orange-500, Background: Gray-50) -->
+    <!-- Application Structure Plan: このSPAは、膨大なデータを効果的に伝えるために「ディープダイブレポートダッシュボード」構造を採用し、10ページ相当のレポートの章立てを反映しています。(1)概要と戦略、(2)市場回復分析、(3)消費者トレンド、(4)サプライチェーン分析、(5)展望と提言の5つのタブで構成されています。各タブは独立した分析テーマを扱い、複数のグラフと詳細なテキストを含みます。「市場回復」タブの動的なボタンフィルタリング機能により、ユーザーがデータを能動的に探索でき、レポートの深みが増しています。この構造により、複雑な市場の動向を体系的に分類し、段階的に理解できるよう支援します。 -->
+    <!-- Visualization & Content Choices: 
+    - [全体予約推移] -> (Goal: Change) -> [Chart.js Line Chart] -> (Interaction: ツールチップ) -> (Justification: 時系列の変化を明確に提示)。
+    - [予約チャネル比較] -> (Goal: Compare) -> [Chart.js Bar Chart] -> (Interaction: ボタンフィルタリング) -> (Justification: チャネル別シェアの動的比較によるインサイト抽出)。
+    - [ADR対稼働率] -> (Goal: Relationships) -> [Chart.js Scatter Plot] -> (Interaction: ツールチップ) -> (Justification: 2つの重要指標間の相関関係を一目で把握)。
+    - [世代別テーマ選好度] -> (Goal: Compare/Organize) -> [Chart.js Radar Chart] -> (Interaction: ツールチップ) -> (Justification: 多角的な選好度データを視覚的に比較)。
+    - [サプライチェーン デジタル成熟度] -> (Goal: Inform/Organize) -> [HTML/CSS Gauge] -> (Interaction: なし) -> (Justification: 定性的評価結果を直感的なゲージ形式で要約)。
+    - [主要リスクの重み] -> (Goal: Inform) -> [Chart.js Doughnut Chart] -> (Interaction: ツールチップ) -> (Justification: 全体リスクに対する各要因の比重を割合で提示)。
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 450px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 450px;
+            }
+        }
+        .tab-button[aria-selected="true"] {
+            @apply bg-blue-700 text-white shadow-lg;
+        }
+        .tab-button[aria-selected="false"] {
+            @apply bg-gray-100 text-gray-700 hover:bg-gray-200 border-b-2 border-transparent;
+        }
+        .gauge-container {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(#3b82f6 0%, #10b981 var(--progress), #e5e7eb var(--progress), #e5e7eb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .gauge-inner {
+            width: 120px;
+            height: 120px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <div class="container mx-auto max-w-7xl p-4 md:p-8">
+        
+        <header class="mb-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-blue-900 mb-2">海外旅行観光業 界 深層分析レポート</h1>
+            <p class="text-xl text-gray-600 border-b pb-4">グローバルトレンド、消費者行動、および5ヵ年予測</p>
+        </header>
+
+        <nav class="mb-8" role="tablist" aria-label="レポートセクション">
+            <div class="flex flex-wrap gap-2 md:gap-4 p-1 bg-white rounded-xl shadow-md">
+                <button role="tab" aria-selected="true" id="tab-overview" class="tab-button px-4 py-2 rounded-lg font-semibold transition-all duration-300">
+                    I. 概要と戦略
+                </button>
+                <button role="tab" aria-selected="false" id="tab-market" class="tab-button px-4 py-2 rounded-lg font-semibold transition-all duration-300">
+                    II. 市場回復分析
+                </button>
+                <button role="tab" aria-selected="false" id="tab-consumer" class="tab-button px-4 py-2 rounded-lg font-semibold transition-all duration-300">
+                    III. 消費者トレンド
+                </button>
+                <button role="tab" aria-selected="false" id="tab-supply" class="tab-button px-4 py-2 rounded-lg font-semibold transition-all duration-300">
+                    IV. サプライチェーン分析
+                </button>
+                <button role="tab" aria-selected="false" id="tab-outlook" class="tab-button px-4 py-2 rounded-lg font-semibold transition-all duration-300">
+                    V. 展望と提言
+                </button>
+            </div>
+        </nav>
+
+        <main class="space-y-12">
+            <!-- I. 概要と戦略 (1-2ページ相当) -->
+            <section id="section-overview" role="tabpanel" aria-labelledby="tab-overview">
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6">I. エグゼクティブサマリーと戦略的インプリケーション</h2>
+                    <p class="mb-8 text-gray-700 leading-relaxed border-l-4 border-blue-500 pl-4 bg-blue-50 py-2">
+                        2024年の海外旅行市場は、「V字回復」を超え、「質的成長」の段階に入りました。総予約率はパンデミック前の95%に達し、特に**長距離路線とプレミアムクラス**の需要増加が顕著です。本レポートは、市場回復速度の不均衡とパーソナライゼーションの深化傾向に対応するための戦略的インサイトを提供します。
+                    </p>
+
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">レポートの主要ハイライト</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="p-5 bg-green-50 rounded-xl border border-green-200">
+                            <p class="text-sm text-gray-600 font-medium">市場総回復率</p>
+                            <p class="text-4xl font-extrabold text-green-700 mt-1">95.4%</p>
+                            <p class="text-xs text-gray-500 mt-2">パンデミック前(2019年)との比較</p>
+                        </div>
+                        <div class="p-5 bg-yellow-50 rounded-xl border border-yellow-200">
+                            <p class="text-sm text-gray-600 font-medium">ADR(平均客室単価)の変動</p>
+                            <p class="text-4xl font-extrabold text-yellow-700 mt-1">▲ 15.2%</p>
+                            <p class="text-xs text-gray-500 mt-2">供給不足とプレミアム需要による</p>
+                        </div>
+                        <div class="p-5 bg-indigo-50 rounded-xl border border-indigo-200">
+                            <p class="text-sm text-gray-600 font-medium">主要なリスク要因</p>
+                            <p class="text-3xl font-extrabold text-indigo-700 mt-1">インフレ圧力</p>
+                            <p class="text-xs text-gray-500 mt-2">旅行支出心理の冷え込みの可能性</p>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mt-10 mb-4 border-b pb-2">戦略的インプリケーション</h3>
+                    <ul class="list-none space-y-3 pl-0 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 text-lg mr-3">✔️</span>
+                            <div>**高付加価値商品ポートフォリオの強化:** ADRの上昇傾向に合わせ、パーソナライズされたラグジュアリーおよびウェルネス商品の開発に注力すべきです。</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 text-lg mr-3">✔️</span>
+                            <div>**デジタルチャネルの最適化:** OTAと直接予約チャネル間の競争激化に対応するため、データに基づいたマーケティング投資を増やす必要があります。</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 text-lg mr-3">✔️</span>
+                            <div>**サプライチェーンの回復力確保:** 航空便不足や労働力不足などのサプライチェーンの課題に対処するため、多角的なパートナーシップが求められます。</div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- II. 市場回復分析 (3-4ページ相当) -->
+            <section id="section-market" role="tabpanel" aria-labelledby="tab-market" class="hidden">
+                 <div class="bg-white p-8 rounded-xl shadow-lg space-y-10">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6">II. 市場回復分析: 予約動向と収益性指標</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div>
+                             <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">2-1. 月間総予約量の推移</h3>
+                            <p class="mb-4 text-gray-700">
+                                2024年第1四半期以降、着実に上昇傾向を維持しており、特に夏の旅行シーズン準備が始まる6月と7月に予約の増加が顕著です。これは、消費者信頼感の回復と季節的要因が複合的に作用した結果、市場の季節的パターンが完全に回復したことを示唆しています。
+                            </p>
+                            <div class="chart-container h-[300px] max-h-[350px]">
+                                <canvas id="totalBookingChart"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                             <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">2-2. 予約チャネル別シェア比較 (動的フィルタ)</h3>
+                            <p class="mb-4 text-gray-700">
+                                直接予約 (Direct) が依然として強いですが、OTA (オンライン旅行会社) チャネルの成長率が最も速いです。下記のボタンを押して、各チャネルの推移を比較してください。
+                            </p>
+                            <div id="channelFilter" class="flex gap-2 mb-4">
+                                <button data-channel="Total" class="channel-btn bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">全体予約</button>
+                                <button data-channel="Direct" class="channel-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">直接予約</button>
+                                <button data-channel="OTA" class="channel-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">OTA</button>
+                            </div>
+                            <div class="chart-container h-[300px] max-h-[350px]">
+                                <canvas id="channelBookingChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-10">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">2-3. ホテル収益性分析: ADR対稼働率の相関関係</h3>
+                        <p class="mb-4 text-gray-700">
+                            この散布図は、地域ごとの平均客室単価 (ADR) と稼働率 (Occupancy) の相関関係を示しています。一般的にADRが高いほど稼働率は低くなりますが、APEC地域は両方の指標で優位性を示し、「高収益・高稼働」市場を形成しています。
+                        </p>
+                        <div class="chart-container h-[350px] max-h-[400px]">
+                            <canvas id="adrOccupancyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- III. 消費者トレンド (5-6ページ相当) -->
+            <section id="section-consumer" role="tabpanel" aria-labelledby="tab-consumer" class="hidden">
+                 <div class="bg-white p-8 rounded-xl shadow-lg space-y-10">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6">III. 消費者トレンド: 世代別テーマ選好度の深層分析</h2>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">3-1. 世代別旅行テーマ選好度の比較</h3>
+                    <p class="mb-4 text-gray-700">
+                        MZ世代（ミレニアル世代およびZ世代）は、伝統的な観光よりも「体験」と「価値」を重視します。レーダーチャートは、彼らの選好度が**ワーケーション（柔軟性）**と**持続可能性（価値）**に高く分布していることを示しています。X世代は**ラグジュアリー**および**ウェルネス**に集中しています。（スコアが高いほど選好度が高いことを示します）
+                    </p>
+                    <div class="chart-container h-[400px] max-h-[450px]">
+                        <canvas id="themePreferenceChart"></canvas>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 mt-10">3-2. テーマ別主要インサイト</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-5 bg-purple-50 rounded-xl border border-purple-200">
+                            <h4 class="font-bold text-xl text-purple-700 mb-2">⭐ ワーケーション: 柔軟な生活の拡大</h4>
+                            <p class="text-sm text-gray-700">ワーケーションの平均滞在日数は14日で、短期旅行の4倍以上であり、平均取引単価の増加に大きく貢献しています。アジア圏でのデジタルノマドビザ政策の拡大が成長の主要な原動力です。</p>
+                        </div>
+                        <div class="p-5 bg-teal-50 rounded-xl border border-teal-200">
+                            <h4 class="font-bold text-xl text-teal-700 mb-2">🌿 持続可能性: エシカルトラベルの普及</h4>
+                            <p class="text-sm text-gray-700">消費者の65%が、持続可能なオプションに対して喜んで追加費用を支払う意思があると回答しました。エコ認証ホテルや地域社会の保全に貢献するプログラムの重要性が高まっています。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- IV. サプライチェーン分析 (7-8ページ相当) -->
+            <section id="section-supply" role="tabpanel" aria-labelledby="tab-supply" class="hidden">
+                 <div class="bg-white p-8 rounded-xl shadow-lg space-y-10">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6">IV. サプライチェーン分析: インフラとデジタル成熟度</h2>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">4-1. 産業セグメント別デジタル成熟度評価</h3>
+                    <p class="mb-8 text-gray-700">
+                        旅行業界のサプライチェーン全体でデジタルトランスフォーメーション (DT) が加速していますが、セグメントによって速度差が大きいです。旅行技術 (Travel Tech) 部門がAIと自動化の導入をリードしています。
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                        <div class="flex flex-col items-center">
+                            <div class="gauge-container mb-3" style="--progress: 75%;">
+                                <div class="gauge-inner">
+                                    <span class="text-3xl font-bold text-blue-700">75%</span>
+                                </div>
+                            </div>
+                            <h4 class="font-bold text-lg text-gray-800">ホテルセクター</h4>
+                            <p class="text-sm text-gray-600">スマートチェックイン、CRM高度化</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="gauge-container mb-3" style="--progress: 60%;">
+                                <div class="gauge-inner">
+                                    <span class="text-3xl font-bold text-blue-700">60%</span>
+                                </div>
+                            </div>
+                            <h4 class="font-bold text-lg text-gray-800">航空セクター</h4>
+                            <p class="text-sm text-gray-600">運航効率化、Web/アプリサービス</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="gauge-container mb-3" style="--progress: 88%;">
+                                <div class="gauge-inner">
+                                    <span class="text-3xl font-bold text-blue-700">88%</span>
+                                </div>
+                            </div>
+                            <h4 class="font-bold text-lg text-gray-800">旅行技術 (OTA、プラットフォーム)</h4>
+                            <p class="text-sm text-gray-600">AIによるパーソナライゼーション、自動化</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 mt-10">4-2. サプライチェーンの主要課題</h3>
+                    <ul class="list-none space-y-3 pl-0 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-red-500 text-lg mr-3">🔥</span>
+                            <div>**恒常的な労働力不足:** 特にサービス接点（フロント、機内）での人員不足が、サービス品質低下の主な原因となっています。</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 text-lg mr-3">🔥</span>
+                            <div>**持続可能性投資の遅延:** 環境に優しい施設構築のための初期投資コストの負担が大きく、転換速度が遅れています。</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 text-lg mr-3">🔥</span>
+                            <div>**技術的負債（Technical Debt）:** 既存のレガシーシステムとの統合問題が、新しいデジタルソリューション導入のボトルネックとなっています。</div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- V. 展望と提言 (9-10ページ相当) -->
+            <section id="section-outlook" role="tabpanel" aria-labelledby="tab-outlook" class="hidden">
+                 <div class="bg-white p-8 rounded-xl shadow-lg space-y-10">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6">V. 展望と提言: 5ヵ年予測と戦略</h2>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">5-1. 主要リスクの重み評価</h3>
+                    <p class="mb-4 text-gray-700">
+                        今後5年間、観光業界の成長を妨げる可能性のある主要なリスク要因を分析し、その相対的な重みをドーナツチャートで視覚化しました。インフレによる消費心理の冷え込みが最も大きなリスクと評価されています。
+                    </p>
+                    <div class="chart-container h-[350px] max-h-[400px] flex items-center justify-center">
+                        <canvas id="riskAssessmentChart"></canvas>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 mt-10">5-2. 最終戦略提言</h3>
+                    <div class="p-6 bg-yellow-50 rounded-xl border-l-4 border-yellow-500">
+                        <h4 class="font-bold text-2xl text-yellow-700 mb-3">🎯 長期成長ロードマップ: 「P-A-C-E」戦略</h4>
+                        <ul class="list-none space-y-3 pl-0 text-gray-700">
+                            <li>**P (Personalization):** AI駆動のハイパーパーソナライゼーションエンジン構築による顧客生涯価値 (LTV) の最大化。</li>
+                            <li>**A (Adaptability):** 短期的な市場変化に柔軟に対応できるダイナミックプライシングシステムの導入。</li>
+                            <li>**C (Conscious Travel):** 持続可能性認証と環境配慮型商品をブランドのコアバリューとして位置づけ。</li>
+                            <li>**E (Efficiency):** 労働力不足解消のためのサービス自動化およびロボットプロセス導入の加速。</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="mt-12 text-center text-sm text-gray-500 border-t pt-4">
+            <p>&copy; 2025 海外旅行観光業 界 深層分析レポート. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        const mockData = {
+            totalBooking: {
+                labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月'],
+                data: [85, 90, 95, 105, 115, 130, 145]
+            },
+            channelBooking: {
+                Total: [85, 90, 95, 105, 115, 130, 145],
+                Direct: [50, 52, 54, 55, 58, 60, 62],
+                OTA: [30, 35, 38, 45, 52, 65, 75]
+            },
+            adrOccupancy: [
+                {x: 80, y: 150, r: 8, label: 'APEC'},
+                {x: 70, y: 120, r: 6, label: 'ヨーロッパ'},
+                {x: 65, y: 100, r: 6, label: '北米'},
+                {x: 50, y: 80, r: 4, label: '南米'},
+                {x: 75, y: 90, r: 5, label: '中東'}
+            ],
+            themePreference: {
+                labels: ['ラグジュアリー', 'ウェルネス', 'ワーケーション', '持続可能性', '家族旅行', '近距離'],
+                datasets: [
+                    { label: 'MZ世代', data: [70, 75, 95, 85, 60, 50], borderColor: 'rgba(59, 130, 246, 1)', backgroundColor: 'rgba(59, 130, 246, 0.2)' },
+                    { label: 'X世代', data: [90, 85, 60, 70, 80, 75], borderColor: 'rgba(16, 185, 129, 1)', backgroundColor: 'rgba(16, 185, 129, 0.2)' }
+                ]
+            },
+            riskAssessment: {
+                labels: ['インフレ', '地政学的リスク', '供給ボトルネック', '気候変動の影響', '新型パンデミック'],
+                data: [35, 25, 20, 15, 5],
+                backgroundColor: ['#ef4444', '#f97316', '#fbbf24', '#34d399', '#6366f1']
+            }
+        };
+
+        let totalBookingChart, channelBookingChart, adrOccupancyChart, themePreferenceChart, riskAssessmentChart;
+        
+        const chartColors = {
+            blue: 'rgb(59, 130, 246)',
+            green: 'rgb(16, 185, 129)',
+            yellow: 'rgb(245, 158, 11)'
+        };
+
+        const updateChannelChart = (channel) => {
+            const data = mockData.channelBooking[channel];
+            let label, color;
+            if (channel === 'Total') {
+                label = '全体予約量 (ベンチマーク対比 %)';
+                color = chartColors.yellow;
+            } else if (channel === 'Direct') {
+                label = '直接予約チャネル予約量 (%)';
+                color = chartColors.blue;
+            } else { // OTA
+                label = 'OTAチャネル予約量 (%)';
+                color = chartColors.green;
+            }
+            
+            channelBookingChart.data.datasets[0].data = data;
+            channelBookingChart.data.datasets[0].label = label;
+            channelBookingChart.data.datasets[0].backgroundColor = color;
+            channelBookingChart.update();
+
+            document.querySelectorAll('.channel-btn').forEach(btn => {
+                if (btn.dataset.channel === channel) {
+                    btn.classList.remove('bg-gray-200', 'text-gray-700');
+                    btn.classList.add('bg-blue-500', 'text-white');
+                } else {
+                    btn.classList.remove('bg-blue-500', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-700');
+                }
+            });
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('[role="tab"]');
+            const sections = document.querySelectorAll('[role="tabpanel"]');
+
+            const showSection = (sectionId) => {
+                sections.forEach(section => {
+                    if (section.id === sectionId) {
+                        section.classList.remove('hidden');
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                });
+                
+                tabs.forEach(tab => {
+                    const controlsSection = 'section-' + tab.id.split('-')[1];
+                    if (controlsSection === sectionId) {
+                        tab.setAttribute('aria-selected', 'true');
+                    } else {
+                        tab.setAttribute('aria-selected', 'false');
+                    }
+                });
+            };
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetSectionId = 'section-' + tab.id.split('-')[1];
+                    showSection(targetSectionId);
+                });
+            });
+
+            // 1. Total Booking Line Chart
+            const totalBookingCtx = document.getElementById('totalBookingChart').getContext('2d');
+            totalBookingChart = new Chart(totalBookingCtx, {
+                type: 'line',
+                data: {
+                    labels: mockData.totalBooking.labels,
+                    datasets: [{
+                        label: '総予約量 (ベンチマーク対比 %)',
+                        data: mockData.totalBooking.data,
+                        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                        borderColor: chartColors.blue,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { title: { display: false }, legend: { display: false } },
+                    scales: {
+                        x: { title: { display: true, text: '月別' } },
+                        y: { title: { display: true, text: '予約量 (%)' }, min: 0 }
+                    }
+                }
+            });
+
+            // 2. Channel Booking Bar Chart (Interactive)
+            const channelBookingCtx = document.getElementById('channelBookingChart').getContext('2d');
+            channelBookingChart = new Chart(channelBookingCtx, {
+                type: 'bar',
+                data: {
+                    labels: mockData.totalBooking.labels,
+                    datasets: [{
+                        label: '総予約量 (ベンチマーク対比 %)', 
+                        data: mockData.channelBooking.Total,
+                        backgroundColor: chartColors.yellow,
+                        borderColor: chartColors.yellow,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { title: { display: false }, legend: { display: false } },
+                    scales: {
+                        x: { title: { display: true, text: '月別' } },
+                        y: { title: { display: true, text: '予約量 (%)' }, min: 0 }
+                    }
+                }
+            });
+            document.querySelectorAll('.channel-btn').forEach(btn => {
+                btn.addEventListener('click', () => updateChannelChart(btn.dataset.channel));
+            });
+
+            // 3. ADR vs Occupancy Scatter Chart
+            const adrOccupancyCtx = document.getElementById('adrOccupancyChart').getContext('2d');
+            adrOccupancyChart = new Chart(adrOccupancyCtx, {
+                type: 'bubble',
+                data: {
+                    datasets: [{
+                        label: '地域別収益性',
+                        data: mockData.adrOccupancy,
+                        backgroundColor: mockData.adrOccupancy.map(d => d.label === 'APEC' ? chartColors.green : chartColors.blue),
+                        borderColor: 'white',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { 
+                        title: { display: false }, 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const item = context.raw;
+                                    return `${item.label}: ADR $${item.y}, 稼働率 ${item.x}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: '稼働率 (Occupancy %)' }, min: 40, max: 90 },
+                        y: { title: { display: true, text: '平均客室単価 (ADR $)' }, min: 50, max: 180 }
+                    }
+                }
+            });
+
+            // 4. Theme Preference Radar Chart
+            const themePreferenceCtx = document.getElementById('themePreferenceChart').getContext('2d');
+            themePreferenceChart = new Chart(themePreferenceCtx, {
+                type: 'radar',
+                data: {
+                    labels: mockData.themePreference.labels,
+                    datasets: mockData.themePreference.datasets
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { title: { display: false } },
+                    elements: { line: { borderWidth: 3 } },
+                    scales: {
+                        r: {
+                            angleLines: { display: false },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            pointLabels: { font: { size: 12 } },
+                            ticks: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // 5. Risk Assessment Doughnut Chart
+            const riskAssessmentCtx = document.getElementById('riskAssessmentChart').getContext('2d');
+            riskAssessmentChart = new Chart(riskAssessmentCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: mockData.riskAssessment.labels,
+                    datasets: [{
+                        data: mockData.riskAssessment.data,
+                        backgroundColor: mockData.riskAssessment.backgroundColor,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) { label += ': '; }
+                                    label += context.parsed + '%';
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            showSection('section-overview');
+        });
+    </script>
+
+</body>
+</html>

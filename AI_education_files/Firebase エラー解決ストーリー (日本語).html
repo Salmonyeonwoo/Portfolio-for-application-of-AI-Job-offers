@@ -14,6 +14,14 @@
             font-family: 'Noto Sans JP', 'Inter', sans-serif;
             background-color: #f7f9fb; /* Light background for clean look */
         }
+        .code-block {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -23,91 +31,78 @@
         <!-- Header -->
         <header class="text-center mb-12 py-8 bg-white rounded-xl shadow-lg">
             <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700">AI学習コーチ ポートフォリオ</h1>
-            <p class="mt-2 text-xl text-gray-500">技術的な課題：永続性レイヤーの構築成功ストーリー</p>
+            <p class="text-lg text-gray-600 mt-2">技術的課題: Streamlit Firebase連携エラー解決ストーリー</p>
         </header>
 
         <!-- Section 1: Challenge Overview -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-indigo-400 pb-2">1. 課題概要</h2>
-            <div class="bg-white p-6 rounded-xl shadow-md">
-                <p class="text-lg mb-4 text-gray-600">Streamlit Cloud環境でRAGインデックス（FAISS）を永続的に保存するためにGoogle Cloud Firestore（GCP）を統合する過程で、予期せぬサーバー認証の競合と環境設定の問題に直面しました。</p>
-                
-                <h3 class="text-2xl font-semibold text-gray-600 mt-6 mb-4">核心問題：Admin SDK初期化の失敗</h3>
-                <div class="bg-red-50 p-4 rounded-lg border border-red-300">
-                    <p class="text-red-700 font-medium">経験した主なエラーメッセージ：JSON構文エラー、Datastore Modeの競合、無効な秘密鍵、AttrDictの型不一致など、複合的な問題が発生しました。</p>
-                </div>
+        <section class="mb-10 p-6 bg-white rounded-xl shadow-md">
+            <h2 class="text-2xl font-bold text-red-600 mb-4 border-b pb-2">課題概要: 「秘密鍵 (Private Key)」認識の問題</h2>
+            <p class="mb-4">Streamlit環境でFirebase Admin SDKを使用してFirestoreおよびGCSに接続しようとした際、サービスアカウントの**秘密鍵**の読み込み中に持続的なエラーが発生しました。これは、デプロイ環境とローカル環境間でのキー処理の違いと、StreamlitのSecret管理方法に起因するものでした。</p>
+            <ul class="list-disc list-inside text-gray-600">
+                <li>**エラー発生箇所:** 秘密鍵文字列（特に改行文字 `\n`）をJSONオブジェクトにパースし、`credentials.Certificate()`に渡すプロセスで問題が発生。</li>
+                <li>**初期原因:** `secrets.toml`から読み込まれた秘密鍵文字列が、予期せずエスケープされたり、正しくパースされなかったりしたこと。</li>
+                <li>**主要な目標:** ローカル開発環境とGitHubへのデプロイ環境の両方で、安全かつ正確にキーを読み込むソリューションの確立。</li>
+            </ul>
+        </section>
+
+        <!-- Section 2: Resolution Effort Analysis (Chart) -->
+        <section class="mb-10 p-6 bg-white rounded-xl shadow-md">
+            <h2 class="text-2xl font-bold text-indigo-700 mb-4 border-b pb-2">解決への努力分析</h2>
+            <div class="flex justify-center items-center">
+                <canvas id="timeChart" class="max-w-xs"></canvas>
             </div>
         </section>
 
-        <!-- Section 2: Step-by-Step Resolution (Visualized) -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-indigo-400 pb-2">2. ステップごとの問題解決プロセス</h2>
+        <!-- Section 3: Final Secure Resolution (UPDATED) -->
+        <section class="mb-10 p-6 bg-white rounded-xl shadow-md">
+            <h2 class="text-2xl font-bold text-green-600 mb-4 border-b pb-2">セキュリティの考慮事項と最終解決策</h2>
+            <p class="mb-4 font-semibold">ユーザーのセキュリティ上の懸念を考慮し、ローカルファイルシステムに機密キー（`secrets.toml`）を保存するリスクを完全に排除しました。Streamlitのベストプラクティスである**環境変数フォールバック**戦略を採用しています。</p>
             
-            <div id="resolution-steps" class="space-y-8">
-                
-                <!-- Step 1: Mode Conflict & Project Change -->
-                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-fuchsia-500">
-                    <h3 class="text-xl font-bold text-fuchsia-700 mb-3">ステップ1：DBモードの競合とプロジェクト変更</h3>
-                    <p class="text-gray-600 mb-3">Native Modeを使用すべきプロジェクトがDatastore Modeに設定されていたために発生した400エラーを確認しました。新しいFirebaseプロジェクトをNative Modeで作成し、サービスアカウントキーを交換しました。</p>
-                </div>
-
-                <!-- Step 2: JSON Parsing/Escape Fix (UPDATED WITH CODE) -->
-                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-yellow-500">
-                    <h3 class="text-xl font-bold text-yellow-700 mb-3">ステップ2：Secrets JSONパースと検証</h3>
-                    <p class="text-gray-600 mb-3">Secretsファイルに含まれるJSON文字列の構文エラー（Unicode制御文字、エスケープ文字）とStreamlitのAttrDict型問題を解決するために、入力形式に関わらず、Secretsキーを標準のPython辞書（dict）に強制的に変換するロジックを以下のように実装しました。</p>
-                    
-                    <p class="mt-4 font-semibold text-gray-700">適用されたPythonコード (_get_admin_credentials 関数)</p>
-                    <div class="bg-gray-800 text-green-300 p-4 rounded-lg text-xs overflow-x-auto mt-2 shadow-inner">
-<pre class="whitespace-pre-wrap">def _get_admin_credentials():
-    # ... (Secret 存在の確認は省略)
-    
-    service_account_data = st.secrets["FIREBASE_SERVICE_ACCOUNT_JSON"]
-    sa_info = None
-
-    if isinstance(service_account_data, str):
-        # 1. 文字列の場合: JSONをロード
-        try:
-            sa_info = json.loads(service_account_data.strip())
-        except json.JSONDecodeError as e:
-            return None, f"[Error] JSON 構文エラー: {e}"
-    elif hasattr(service_account_data, 'get'):
-        # 2. AttrDict (secrets.toml 辞書形式)の場合: dictに変換
-        # Streamlit SecretsからAttrDictタイプとして返されるものを処理
-        try:
-            sa_info = dict(service_account_data) # AttrDictを標準のdictに変換
-        except Exception:
-             return None, f"[Error] 辞書変換失敗. タイプ: {type(service_account_data)}"
-    
-    # ... (project_id, private_key 存在の確認は省略)
-    return sa_info, None</pre>
-                    </div>
-                </div>
-                
-                <!-- Step 3: Admin SDK Initialization Fix -->
-                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-red-500">
-                    <h3 class="text-xl font-bold text-red-700 mb-3">ステップ3：無効な秘密鍵とAdmin SDK認証</h3>
-                    <p class="text-gray-600 mb-3">全ての構文エラーを解決した後も発生した「無効な秘密鍵」エラーは、Secretsに保存されたキーのフォーマットがAdmin SDKが要求するRaw Stringフォーマットと正確に一致しなかったためでした。Secretsを単一行文字列形式に整理することで問題を最終的に解決しました。</p>
-                </div>
-
-                <!-- Step 4: Firestore Rules Fix -->
-                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
-                    <h3 class="text-xl font-bold text-green-700 mb-3">ステップ4：Firestoreルールと書き込み権限の確保</h3>
-                    <p class="text-gray-600 mb-3">アプリのデータベース保存機能が動作するように、`rag_indices`コレクションに対する`read, write`ルールを明示的に付与し、最終的にRAGインデックスの永続化機能を有効にしました。</p>
-                </div>
-            </div>
-        </section>
+            <h3 class="text-xl font-bold mt-6 mb-3">1. ローカルファイル保存の回避戦略</h3>
+            <p class="mb-3">アプリケーションコードは`secrets.toml`ファイルへの直接的な依存を排除し、キー読み込み関数が次の順序でキーを検索するように修正されました。</p>
+            <ul class="list-disc list-inside ml-4 text-gray-600">
+                <li>**第1優先 (デプロイ環境):** Streamlit CloudのセキュアなSecretsストレージ (`st.secrets`)</li>
+                <li>**第2優先 (ローカル環境):** オペレーティングシステムの環境変数 (`os.environ`)</li>
+            </ul>
+            
+            <h3 class="text-xl font-bold mt-6 mb-3">2. Pythonコードのサンプル (`load_secrets_securely`関数)</h3>
+            <p class="mb-3">このPython関数は、`st.secrets`で失敗した場合に`os.environ`を試行し、秘密鍵の改行文字を正確に処理します。</p>
+            <div class="code-block">
+<pre>
+def load_secrets_securely():
+    secrets = {}
+    try:
+        # 第1優先: Streamlit Secrets (デプロイ用)
+        # ... st.secretsからキーをロードしようとする ...
+        private_key_content = st.secrets["FIREBASE_PRIVATE_KEY"]
+    except Exception:
+        # 第2優先: 環境変数 (ローカル安全実行用)
+        # ... os.environからキーをロードしようとする ...
+        private_key_content = os.environ.get("FIREBASE_PRIVATE_KEY")
         
-        <!-- Section 3: Final Outcome Chart -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-indigo-400 pb-2">3. 最終的な解決への労力分析</h2>
-            <div class="bg-white p-6 rounded-xl shadow-md">
-                <canvas id="timeChart"></canvas>
-                <p class="text-sm text-gray-500 text-center mt-4">複合的な統合問題の解決に費やした労力の割合（推定）</p>
+        # 環境変数からロードする場合、エスケープされた改行文字列 '\n' を実際の改行に変換
+        if private_key_content:
+            private_key_content = private_key_content.replace('\\n', '\n')
+    
+    # ... サービスアカウント情報を構築して返却 ...
+    # (この方法により、機密情報がGitHubにコミットされることを防ぎます。)
+</pre>
             </div>
+
+            <h3 class="text-xl font-bold mt-6 mb-3">3. PowerShell実行コマンド</h3>
+            <p class="mb-3">ローカルで安全に実行するには、キーの値を環境変数として設定してからアプリを実行する必要があります。秘密鍵の改行は必ず `\n` でエスケープしてください。</p>
+            <div class="code-block">
+<pre>
+$env:OPENAI_API_KEY="sk-YOUR_KEY"
+$env:FIREBASE_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n'
+streamlit run "streamlit_app (15).py"
+</pre>
+            </div>
+
         </section>
 
         <!-- Footer -->
-        <footer class="text-center text-gray-500 mt-12 pt-4 border-t border-gray-300">
+        <footer class="text-center mt-12 py-4 border-t border-gray-300">
             <p>&copy; 2025 AI Coach Portfolio. StreamlitとGemini APIによって開発されました。</p>
         </footer>
 
@@ -122,7 +117,7 @@
                 labels: ['DBモード/プロジェクト変更', 'Secrets JSONパース', '秘密鍵認証', 'Firestoreルール/権限'],
                 datasets: [{
                     label: '労力比率',
-                    data: [25, 35, 30, 10], // 合算 100
+                    data: [25, 35, 30, 10], // 合計 100
                     backgroundColor: [
                         'rgba(233, 30, 99, 0.7)',  // Pink/Fuchsia
                         'rgba(255, 193, 7, 0.7)',  // Amber/Yellow
@@ -145,7 +140,8 @@
                         position: 'top',
                     },
                     title: {
-                        display: false
+                        display: true,
+                        text: '技術的課題解決に費やした労力の割合'
                     }
                 }
             }

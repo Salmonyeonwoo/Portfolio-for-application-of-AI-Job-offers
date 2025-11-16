@@ -14,6 +14,14 @@
             font-family: 'Inter', 'Noto Sans KR', sans-serif;
             background-color: #f7f9fb; /* Light background for clean look */
         }
+        .code-block {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -23,91 +31,78 @@
         <!-- Header -->
         <header class="text-center mb-12 py-8 bg-white rounded-xl shadow-lg">
             <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700">AI Study Coach Portfolio</h1>
-            <p class="mt-2 text-xl text-gray-500">Technical Challenge: Persistence Layer Implementation Success Story</p>
+            <p class="text-lg text-gray-600 mt-2">Technical Challenge: Streamlit Firebase Integration Error Resolution Story</p>
         </header>
 
         <!-- Section 1: Challenge Overview -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-indigo-400 pb-2">1. Challenge Overview</h2>
-            <div class="bg-white p-6 rounded-xl shadow-md">
-                <p class="text-lg mb-4 text-gray-600">During the process of integrating Google Cloud Firestore (GCP) to persistently store RAG indices (FAISS) within the Streamlit Cloud serverless environment, we faced unexpected server authentication conflicts and configuration issues.</p>
-                
-                <h3 class="text-2xl font-semibold text-gray-600 mt-6 mb-4">Core Problem: Admin SDK Initialization Failures</h3>
-                <div class="bg-red-50 p-4 rounded-lg border border-red-300">
-                    <p class="text-red-700 font-medium">Key Errors Experienced: Complex issues including JSON syntax errors, Datastore Mode conflicts, Invalid private key errors, and AttrDict type mismatches.</p>
-                </div>
+        <section class="mb-10 p-6 bg-white rounded-xl shadow-md">
+            <h2 class="text-2xl font-bold text-red-600 mb-4 border-b pb-2">Challenge Overview: 'Private Key' Recognition Issue</h2>
+            <p class="mb-4">When attempting to connect Firestore and GCS using the Firebase Admin SDK within the Streamlit environment, persistent errors occurred during the loading of the Service Account's **Private Key**. This was due to differences in key handling between deployment and local environments, and Streamlit's Secret management methodology.</p>
+            <ul class="list-disc list-inside text-gray-600">
+                <li>**Error Point:** Issue occurred during the parsing of the Private Key string (specifically the newline character `\n`) when converting it into a JSON object to pass to `credentials.Certificate()`.</li>
+                <li>**Initial Cause:** The Private Key string loaded from `secrets.toml` was being unexpectedly escaped or parsed incorrectly.</li>
+                <li>**Key Objective:** Securely and correctly load the key in both local development and GitHub deployment environments.</li>
+            </ul>
+        </section>
+
+        <!-- Section 2: Resolution Effort Analysis (Chart) -->
+        <section class="mb-10 p-6 bg-white rounded-xl shadow-md">
+            <h2 class="text-2xl font-bold text-indigo-700 mb-4 border-b pb-2">Resolution Effort Analysis</h2>
+            <div class="flex justify-center items-center">
+                <canvas id="timeChart" class="max-w-xs"></canvas>
             </div>
         </section>
 
-        <!-- Section 2: Step-by-Step Resolution (Visualized) -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-indigo-400 pb-2">2. Step-by-Step Resolution</h2>
+        <!-- Section 3: Final Secure Resolution (UPDATED) -->
+        <section class="mb-10 p-6 bg-white rounded-xl shadow-md">
+            <h2 class="text-2xl font-bold text-green-600 mb-4 border-b pb-2">Security Considerations and Final Solution</h2>
+            <p class="mb-4 font-semibold">Addressing user security concerns, we completely eliminated the risk of storing sensitive keys (`secrets.toml`) in the local file system by adopting Streamlit's best practice: the **Environment Variable Fallback** strategy.</p>
             
-            <div id="resolution-steps" class="space-y-8">
-                
-                <!-- Step 1: Mode Conflict & Project Change -->
-                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-fuchsia-500">
-                    <h3 class="text-xl font-bold text-fuchsia-700 mb-3">Step 1: DB Mode Conflict and Project Change</h3>
-                    <p class="text-gray-600 mb-3">We identified a 400 error caused by the project being set to Datastore Mode when Firestore Native Mode was required. We created a new Firebase project in Native Mode and replaced the Service Account key.</p>
-                </div>
-
-                <!-- Step 2: JSON Parsing/Escape Fix (UPDATED WITH CODE) -->
-                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-yellow-500">
-                    <h3 class="text-xl font-bold text-yellow-700 mb-3">Step 2: Secrets JSON Parsing and Validation</h3>
-                    <p class="text-gray-600 mb-3">To resolve JSON syntax errors (unicode control characters, escape characters) and the Streamlit AttrDict type issue, we implemented logic that explicitly forces the conversion of the secrets key into a standard Python dictionary (dict), ensuring compatibility with the Firebase Admin SDK.</p>
-                    
-                    <p class="mt-4 font-semibold text-gray-700">Applied Python Code (_get_admin_credentials function)</p>
-                    <div class="bg-gray-800 text-green-300 p-4 rounded-lg text-xs overflow-x-auto mt-2 shadow-inner">
-<pre class="whitespace-pre-wrap">def _get_admin_credentials():
-    # ... (Skipped: Secret existence check)
-    
-    service_account_data = st.secrets["FIREBASE_SERVICE_ACCOUNT_JSON"]
-    sa_info = None
-
-    if isinstance(service_account_data, str):
-        # 1. If string: Load JSON
-        try:
-            sa_info = json.loads(service_account_data.strip())
-        except json.JSONDecodeError as e:
-            return None, f"[Error] JSON Syntax Error: {e}"
-    elif hasattr(service_account_data, 'get'):
-        # 2. If AttrDict (secrets.toml dictionary format): Convert to dict
-        # Handles AttrDict type returned from Streamlit Secrets
-        try:
-            sa_info = dict(service_account_data) # Convert AttrDict to standard dict
-        except Exception:
-             return None, f"[Error] Dictionary conversion failed. Type: {type(service_account_data)}"
-    
-    # ... (Skipped: project_id, private_key existence check)
-    return sa_info, None</pre>
-                    </div>
-                </div>
-                
-                <!-- Step 3: Admin SDK Initialization Fix -->
-                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-red-500">
-                    <h3 class="text-xl font-bold text-red-700 mb-3">Step 3: Invalid Private Key and Admin SDK Authentication</h3>
-                    <p class="text-gray-600 mb-3">The "Invalid private key" error, which occurred even after fixing all syntax errors, was due to the key format in Secrets not matching the exact Raw String format required by the Admin SDK. We ultimately fixed this by standardizing the Secrets to a single-line string format.</p>
-                </div>
-
-                <!-- Step 4: Firestore Rules Fix -->
-                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
-                    <h3 class="text-xl font-bold text-green-700 mb-3">Step 4: Firestore Rules and Write Access</h3>
-                    <p class="text-gray-600 mb-3">To enable the app's database saving functionality, we explicitly granted `read, write` rules to the `rag_indices` collection in Firebase Firestore, finally activating the RAG index persistence feature.</p>
-                </div>
-            </div>
-        </section>
+            <h3 class="text-xl font-bold mt-6 mb-3">1. Local File Storage Avoidance Strategy</h3>
+            <p class="mb-3">The app code removed direct dependence on the `secrets.toml` file, modifying the key loading function to search for keys in the following order:</p>
+            <ul class="list-disc list-inside ml-4 text-gray-600">
+                <li>**1st Priority (Deployment):** Streamlit Cloud's secure Secrets storage (`st.secrets`)</li>
+                <li>**2nd Priority (Local):** Operating System Environment Variables (`os.environ`)</li>
+            </ul>
+            
+            <h3 class="text-xl font-bold mt-6 mb-3">2. Python Code Sample (`load_secrets_securely` function)</h3>
+            <p class="mb-3">The Python function loads keys from `os.environ` if `st.secrets` fails, and correctly handles the private key's newline characters.</p>
+            <div class="code-block">
+<pre>
+def load_secrets_securely():
+    secrets = {}
+    try:
+        # 1st Priority: Streamlit Secrets (Deployment)
+        # ... attempt to load key from st.secrets ...
+        private_key_content = st.secrets["FIREBASE_PRIVATE_KEY"]
+    except Exception:
+        # 2nd Priority: Environment Variables (Secure Local Execution)
+        # ... attempt to load key from os.environ ...
+        private_key_content = os.environ.get("FIREBASE_PRIVATE_KEY")
         
-        <!-- Section 3: Final Outcome Chart -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-indigo-400 pb-2">3. Effort Analysis</h2>
-            <div class="bg-white p-6 rounded-xl shadow-md">
-                <canvas id="timeChart"></canvas>
-                <p class="text-sm text-gray-500 text-center mt-4">Estimated effort distribution for resolving complex integration issues.</p>
+        # When loading from env vars, replace the escaped newline '\n' with actual newline
+        if private_key_content:
+            private_key_content = private_key_content.replace('\\n', '\n')
+    
+    # ... construct service account info and return ...
+    # (This method ensures sensitive info is not committed to GitHub.)
+</pre>
             </div>
+
+            <h3 class="text-xl font-bold mt-6 mb-3">3. PowerShell Execution Command</h3>
+            <p class="mb-3">To run securely locally, set key values as environment variables and then run the app. Note that the Private Key's newlines must be escaped with `\n`.</p>
+            <div class="code-block">
+<pre>
+$env:OPENAI_API_KEY="sk-YOUR_KEY"
+$env:FIREBASE_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n'
+streamlit run "streamlit_app (15).py"
+</pre>
+            </div>
+
         </section>
 
         <!-- Footer -->
-        <footer class="text-center text-gray-500 mt-12 pt-4 border-t border-gray-300">
+        <footer class="text-center mt-12 py-4 border-t border-gray-300">
             <p>&copy; 2025 AI Coach Portfolio. Developed with Streamlit and Gemini API.</p>
         </footer>
 
@@ -145,7 +140,8 @@
                         position: 'top',
                     },
                     title: {
-                        display: false
+                        display: true,
+                        text: 'Estimated Effort Distribution for Issue Resolution'
                     }
                 }
             }

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streamlit 環境の共通点と相違点の比較</title>
+    <!-- Tailwind CSS ロード -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .comparison-table th {
+            text-align: left;
+            padding: 1rem;
+            font-weight: 600;
+            background-color: #e5e7eb;
+            color: #1f2937;
+        }
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: top;
+        }
+        .local-cell {
+            background-color: #f3f4f6;
+        }
+        .github-cell {
+            background-color: #ffffff;
+        }
+        .icon-check {
+            color: #10b981; /* green-500 */
+        }
+        .icon-x {
+            color: #ef4444; /* red-500 */
+        }
+        .icon-alert {
+            color: #f59e0b; /* amber-500 */
+        }
+        @media (max-width: 768px) {
+            .comparison-table th, .comparison-table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white shadow-2xl rounded-xl p-6 md:p-8">
+        <h1 class="text-3xl font-bold mb-2 text-gray-800">Streamlit 環境比較分析</h1>
+        <p class="text-gray-600 mb-8">ローカル開発 (Local Development) と GitHub/クラウドデプロイ (Cloud Deployment) 環境の主な相違点</p>
+        
+        <!-- 共通点 -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-gray-700 mb-4 border-b pb-2">✅ 共通点 (コードの一貫性)</h2>
+            <div class="text-gray-600 space-y-2">
+                <p><span class="icon-check text-xl mr-2">✔</span> 主要なコード構造 (Python): Streamlit アプリのロジック、関数、クラスなど、Python コードの大部分は変更なく再利用されます。</p>
+                <p><span class="icon-check text-xl mr-2">✔</span> UI/UX (Streamlit ウィジェット): `st.button`、`st.sidebar`、`st.columns` など Streamlit ウィジェットの動作と外観は同じです。</p>
+                <p><span class="icon-check text-xl mr-2">✔</span> ライブラリの読み込み方法: `import` ステートメントを介して外部ライブラリを取り込む方法は同じです。</p>
+            </div>
+        </div>
+
+        <!-- 相違点テーブル -->
+        <h2 class="text-xl font-bold text-gray-700 mb-4 border-b pb-2">❌ 主な相違点 (環境とセキュリティ)</h2>
+        
+        <div class="overflow-x-auto rounded-lg border border-gray-200">
+            <table class="comparison-table w-full">
+                <thead>
+                    <tr>
+                        <th class="w-1/3">項目</th>
+                        <th class="w-1/3">ローカル環境 (Local)</th>
+                        <th class="w-1/3">GitHub/クラウド (Cloud)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- API Key Management -->
+                    <tr>
+                        <td><strong>API Key 管理/セキュリティ</strong></td>
+                        <td class="local-cell">
+                            <span class="font-medium text-gray-900">直接設定</span><br>
+                            <code>.env</code> ファイルまたはローカルの <code>.streamlit/secrets.toml</code> に保存し、OS 環境変数経由で読み込みます。
+                        </td>
+                        <td class="github-cell">
+                            <span class="font-medium text-gray-900">シークレット注入 (Secrets Injection)</span><br>
+                            Git にキーをアップロードせず、Streamlit Cloud のシークレット管理システムを通じて安全に注入されます。
+                        </td>
+                    </tr>
+                    
+                    <!-- Execution Environment -->
+                    <tr>
+                        <td><strong>実行環境とアドレス</strong></td>
+                        <td class="local-cell">
+                            <span class="font-medium text-gray-900">ローカルマシン/ターミナル</span><br>
+                            <code>streamlit run app.py</code> コマンドで実行され、<code>http://localhost:8501</code> でアクセスします。
+                        </td>
+                        <td class="github-cell">
+                            <span class="font-medium text-gray-900">公開ウェブサイト/クラウド</span><br>
+                            GitHub リポジトリに接続された Streamlit Cloud でホストされ、一意の HTTPS URL を持ちます。
+                        </td>
+                    </tr>
+
+                    <!-- Dependencies Management -->
+                    <tr>
+                        <td><strong>依存関係管理 (Dependencies)</strong></td>
+                        <td class="local-cell">
+                            <span class="font-medium text-gray-900">柔軟</span><br>
+                            ローカル Python 環境に既にインストールされているパッケージを使用するため、<code>requirements.txt</code> の制約が少ないです。
+                        </td>
+                        <td class="github-cell">
+                            <span class="font-medium text-gray-900">厳格な管理 <span class="icon-alert">❗</span></span><br>
+                            <code>requirements.txt</code> に すべての依存関係 を明記する必要があり、不足するとアプリの実行が失敗します。
+                        </td>
+                    </tr>
+                    
+                    <!-- Data Persistence -->
+                    <tr>
+                        <td><strong>データの永続性</strong></td>
+                        <td class="local-cell">
+                            <span class="font-medium text-gray-900">ローカルディスク保存</span><br>
+                            <code>local_db/</code> に相談履歴や音声記録などのデータを永続的に保存できます。
+                        </td>
+                        <td class="github-cell">
+                            <span class="font-medium text-gray-900">揮発性 (Volatile)</span><br>
+                            ローカルディスクに保存されたデータは、セッション終了または再デプロイ時に失われます。（永続化には外部 DB が必要）
+                        </td>
+                    </tr>
+
+                    <!-- File Access -->
+                    <tr>
+                        <td><strong>ファイルシステムアクセス</strong></td>
+                        <td class="local-cell">
+                            ローカルディレクトリパス (例: C:/Users/...) にアクセス可能です。
+                        </td>
+                        <td class="github-cell">
+                            隔離された環境であるため、ローカルディスクへの直接アクセスは不可能です。
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <p class="text-sm text-gray-500 mt-4 italic">
+            * ポートフォリオのために GitHub にコードをアップロードする際は、API Key ファイルや <code>local_db/</code> フォルダを <code>.gitignore</code> ファイルを使用して必ず除外する必要があります。
+        </p>
+    </div>
+
+</body>
+</html>

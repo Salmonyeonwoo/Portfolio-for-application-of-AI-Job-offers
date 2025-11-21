@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streamlit Environment Comparison</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .comparison-table th {
+            text-align: left;
+            padding: 1rem;
+            font-weight: 600;
+            background-color: #e5e7eb;
+            color: #1f2937;
+        }
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: top;
+        }
+        .local-cell {
+            background-color: #f3f4f6;
+        }
+        .github-cell {
+            background-color: #ffffff;
+        }
+        .icon-check {
+            color: #10b981; /* green-500 */
+        }
+        .icon-x {
+            color: #ef4444; /* red-500 */
+        }
+        .icon-alert {
+            color: #f59e0b; /* amber-500 */
+        }
+        @media (max-width: 768px) {
+            .comparison-table th, .comparison-table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white shadow-2xl rounded-xl p-6 md:p-8">
+        <h1 class="text-3xl font-bold mb-2 text-gray-800">Streamlit Environment Comparison Analysis</h1>
+        <p class="text-gray-600 mb-8">Key Differences Between Local Development and GitHub/Cloud Deployment Environments</p>
+        
+        <!-- Common Points -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-gray-700 mb-4 border-b pb-2">✅ Common Points (Code Consistency)</h2>
+            <div class="text-gray-600 space-y-2">
+                <p><span class="icon-check text-xl mr-2">✔</span> Main Code Structure (Python): The logic, functions, and classes of the Streamlit app are reused without major changes.</p>
+                <p><span class="icon-check text-xl mr-2">✔</span> UI/UX (Streamlit Widgets): The behavior and appearance of Streamlit widgets like `st.button`, `st.sidebar`, and `st.columns` remain identical.</p>
+                <p><span class="icon-check text-xl mr-2">✔</span> Library Loading: The method of importing external libraries using the `import` statement is the same.</p>
+            </div>
+        </div>
+
+        <!-- Differences Table -->
+        <h2 class="text-xl font-bold text-gray-700 mb-4 border-b pb-2">❌ Key Differences (Environment and Security)</h2>
+        
+        <div class="overflow-x-auto rounded-lg border border-gray-200">
+            <table class="comparison-table w-full">
+                <thead>
+                    <tr>
+                        <th class="w-1/3">Item</th>
+                        <th class="w-1/3">Local Environment</th>
+                        <th class="w-1/3">GitHub/Cloud</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- API Key Management -->
+                    <tr>
+                        <td><strong>API Key Management/Security</strong></td>
+                        <td class="local-cell">
+                            <span class="font-medium text-gray-900">Direct Configuration</span><br>
+                            Stored in a <code>.env</code> file or local <code>.streamlit/secrets.toml</code> and loaded via OS environment variables.
+                        </td>
+                        <td class="github-cell">
+                            <span class="font-medium text-gray-900">Secrets Injection</span><br>
+                            Keys are not uploaded to Git; they are securely injected via Streamlit Cloud's Secrets management system.
+                        </td>
+                    </tr>
+                    
+                    <!-- Execution Environment -->
+                    <tr>
+                        <td><strong>Execution Environment & Address</strong></td>
+                        <td class="local-cell">
+                            <span class="font-medium text-gray-900">Local Machine/Terminal</span><br>
+                            Executed via the <code>streamlit run app.py</code> command, accessed at <code>http://localhost:8501</code>.
+                        </td>
+                        <td class="github-cell">
+                            <span class="font-medium text-gray-900">Public Website/Cloud</span><br>
+                            Hosted on Streamlit Cloud connected to the GitHub repository, using a unique HTTPS URL.
+                        </td>
+                    </tr>
+
+                    <!-- Dependencies Management -->
+                    <tr>
+                        <td><strong>Dependency Management</strong></td>
+                        <td class="local-cell">
+                            <span class="font-medium text-gray-900">Flexible</span><br>
+                            Uses packages already installed in the local Python environment; fewer constraints from <code>requirements.txt</code>.
+                        </td>
+                        <td class="github-cell">
+                            <span class="font-medium text-gray-900">Strict Control <span class="icon-alert">❗</span></span><br>
+                            MUST explicitly list all dependencies in <code>requirements.txt</code>; app fails if dependencies are missing.
+                        </td>
+                    </tr>
+                    
+                    <!-- Data Persistence -->
+                    <tr>
+                        <td><strong>Data Persistence</strong></td>
+                        <td class="local-cell">
+                            <span class="font-medium text-gray-900">Local Disk Storage</span><br>
+                            Conversation history and audio records can be permanently saved in <code>local_db/</code>.
+                        </td>
+                        <td class="github-cell">
+                            <span class="font-medium text-gray-900">Volatile</span><br>
+                            Data saved to the local disk is lost upon session end or redeployment. (Requires external DB for persistence)
+                        </td>
+                    </tr>
+
+                    <!-- File Access -->
+                    <tr>
+                        <td><strong>File System Access</strong></td>
+                        <td class="local-cell">
+                            Local directory paths (e.g., C:/Users/...) are accessible.
+                        </td>
+                        <td class="github-cell">
+                            The environment is isolated; direct access to the local disk is impossible.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <p class="text-sm text-gray-500 mt-4 italic">
+            * For portfolio purposes, you must ensure that API Key files and the <code>local_db/</code> folder are excluded using <code>.gitignore</code> when uploading code to GitHub.
+        </p>
+    </div>
+
+</body>
+</html>

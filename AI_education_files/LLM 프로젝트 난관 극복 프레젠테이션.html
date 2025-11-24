@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM 프로젝트 난관 극복 및 범위 확대 발표 자료 (시각 자료 및 코드 포함)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+        .slide {
+            min-height: 80vh;
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 4rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .title-slide {
+            background-color: #3b82f6;
+            color: white;
+            justify-content: space-between;
+        }
+        h1, h2, h3 {
+            font-weight: 700;
+        }
+        h1 { font-size: 3rem; margin-bottom: 1rem; }
+        h2 { font-size: 2rem; margin-bottom: 1.5rem; border-bottom: 3px solid #60a5fa; padding-bottom: 0.5rem; }
+        .key-point {
+            background-color: #e0f2f1;
+            color: #004d40;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            transition: transform 0.2s;
+        }
+        .key-point:hover {
+            transform: scale(1.02);
+        }
+        .code-block {
+            background-color: #1e293b;
+            color: #f0f4f8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            tab-size: 4;
+            -moz-tab-size: 4;
+        }
+        .diagram-container {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            background-color: #f9fafb;
+            text-align: center;
+        }
+        .diagram-flow {
+            border: 1px solid #cbd5e1;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            background-color: #ffffff;
+        }
+        .flow-step {
+            padding: 0.5rem 0;
+            margin: 0.5rem 0;
+            border-radius: 0.375rem;
+            background-color: #eff6ff;
+            color: #1e40af;
+            font-weight: 600;
+        }
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: #3b82f6;
+            margin: 0.25rem 0;
+        }
+        .difficulty {
+            color: #ef4444;
+            font-weight: 700;
+        }
+        .solution {
+            color: #10b981;
+            font-weight: 700;
+        }
+        .list-item {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+
+    <!-- 슬라이드 1: 타이틀 --><section class="slide title-slide">
+        <div class="text-center">
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-4">LLM 프로젝트, 초기 난관 극복기</h1>
+            <p class="text-2xl md:text-3xl font-light">LangChain, DB 통합 및 범위 확장을 중심으로</p>
+        </div>
+        <div class="mt-16 text-center">
+            <p class="text-xl">발표자: [발표자 이름]</p>
+            <p class="text-lg mt-1">날짜: [2025.11.24]</p>
+        </div>
+    </section>
+
+    <!-- 슬라이드 2: 프로젝트 개요 및 초기 범위 --><section class="slide">
+        <h2>1. 프로젝트 개요: AI 학습 코치 및 시뮬레이터</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+            <div class="key-point bg-indigo-50 border-indigo-200">
+                <p class="text-2xl mb-2">핵심 기능</p>
+                <p class="text-lg">RAG 기반 Q&A, 맞춤형 콘텐츠 생성, LSTM 예측</p>
+            </div>
+            <div class="key-point bg-blue-50 border-blue-200">
+                <p class="text-2xl mb-2">통합 목표</p>
+                <p class="text-lg">음성(Whisper/TTS), DB(Firestore/GCS) 통합</p>
+            </div>
+            <div class="key-point bg-green-50 border-green-200">
+                <p class="text-2xl mb-2">최종 범위</p>
+                <p class="text-lg">고객 응대 시뮬레이션 (채팅/전화) 및 이력 관리</p>
+            </div>
+        </div>
+        <h3 class="mt-8 text-xl font-semibold">초기 목표와 범위 확대의 기점</h3>
+        <ul class="list-disc ml-6 text-gray-700 mt-4">
+            <li class="list-item">처음에는 단순한 RAG(문서 기반 질의응답) 기능을 목표로 했지만, 실제 활용도를 높이기 위해 <span class="solution">음성 인식/합성 기능과 데이터 영속성(DB/GCS)을 결합</span>하는 것으로 범위를 확장했습니다.</li>
+            <li class="list-item">이러한 범위 확장이 곧 <span class="difficulty">기술 스택 복잡도 증가</span>로 이어졌고, 예상치 못한 통합 문제에 직면했습니다.</li>
+        </ul>
+        <div class="diagram-container">
+            <h4 class="text-lg font-semibold text-gray-800 mb-4">그림 1: LLM 프로젝트의 전체 아키텍처</h4>
+            <div class="diagram-flow">
+                <div class="grid grid-cols-5 gap-2 text-sm font-medium">
+                    <div class="col-span-2 text-center py-2 bg-blue-100 border border-blue-300 rounded-lg">Streamlit UI</div>
+                    <div class="col-span-1 text-center py-2 font-bold text-gray-600">&lt; Session State &gt;</div>
+                    <div class="col-span-2 text-center py-2 bg-blue-100 border border-blue-300 rounded-lg">Streamlit Backend (Python)</div>
+                </div>
+                <div class="flow-arrow text-center">▼</div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <div class="flow-step">Whisper/TTS (OpenAI API)</div>
+                        <div class="text-xs text-gray-500">오디오 변환 및 출력</div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flow-step">LLM/LangChain (Core Logic)</div>
+                        <div class="text-xs text-gray-500">프롬프트, RAG, 메모리 관리</div>
+                    </div>
+                </div>
+                <div class="flow-arrow text-center">▲ (API) / ▼ (Data)</div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <div class="flow-step bg-green-100 text-green-700">GCS (Audio Storage)</div>
+                        <div class="text-xs text-gray-500">음성 기록 영속성 확보</div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flow-step bg-green-100 text-green-700">Firestore/Local DB</div>
+                        <div class="text-xs text-gray-500">RAG Index, 상담 이력 저장</div>
+                    </div>
+                </div>
+                <p class="text-xs mt-4 text-gray-600">모든 외부 DB/Storage 연결은 Service Account를 통한 보안 접속 방식을 사용합니다.</p>
+            </div>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-2">그림 1: LLM 프로젝트의 전체 아키텍처 (Streamlit, LLM, DB, GCS 등)</p>
+    </section>
+
+    <!-- 슬라이드 3: LLM 프레임워크 설정 및 초기화 난관 --><section class="slide">
+        <h2>2. LLM 프레임워크 (LangChain) 설정 난관</h2>
+        <h3 class="text-xl font-semibold mb-4">문제 1: 동기/비동기 환경에서의 API 클라이언트 초기화 충돌</h3>
+        <ul class="ml-6 mt-4">
+            <li class="list-item"><span class="difficulty">어려움:</span> Streamlit 환경은 세션 상태를 기반으로 재실행(Rerun)되는 특성이 있어, @st.cache_resource를 사용하더라도 OpenAI, LangChain ChatOpenAI, OpenAIEmbeddings 클라이언트가 충돌하거나 불완전하게 초기화되는 문제가 발생했습니다.</li>
+            <li class="list-item"><span class="difficulty">특히,</span> init_openai_client 함수를 잘못된 방식으로 호출하거나 세션 상태에 저장할 때 TypeError가 발생하여 LLM 기능이 완전히 마비되었습니다.</li>
+            <li class="list-item"><span class="solution">해결:</span> @st.cache_resource를 사용하여 OpenAI 클라이언트 객체를 한 번만 생성하고, 이를 세션 상태에 명시적으로 저장했습니다. 또한, LangChain LLM 객체도 API 키 변경 시에만 재초기화되도록 외부에서 키 유효성을 확인하는 방식을 도입하여 안정성을 확보했습니다.</li>
+        </ul>
+        <div class="code-block mt-6">
+            <pre><code>
+@st.cache_resource(ttl=3600, experimental_allow_widgets=True)
+def init_llm_clients(openai_api_key):
+    # OpenAI 클라이언트 초기화 (LangChain 포함)
+    llm = ChatOpenAI(temperature=0.7, openai_api_key=openai_api_key)
+    embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+    # ... 다른 LLM 및 임베딩 클라이언트 초기화 ...
+    return llm, embeddings
+
+if 'llm' not in st.session_state or 'embeddings' not in st.session_state:
+    st.session_state.llm, st.session_state.embeddings = init_llm_clients(st.secrets["OPENAI_API_KEY"])
+            </code></pre>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-2">코드 1: @st.cache_resource를 활용한 LangChain LLM/Embedding 클라이언트 안정적 초기화</p>
+
+        <h3 class="text-xl font-semibold mt-6 mb-4">문제 2: LangChain ConversationChain 및 메모리 관리</h3>
+        <ul class="ml-6 mt-4">
+            <li class="list-item"><span class="difficulty">어려움:</span> 시뮬레이터 기능에서 고객/에이전트의 복잡한 대화 흐름을 관리하기 위해 ConversationChain과 ConversationBufferMemory를 사용했는데, Streamlit의 세션 리셋 시 메모리가 제대로 비워지지 않거나, 재실행 시마다 이전 대화 이력이 중복되어 LLM의 응답이 비정상적으로 길어지는 문제가 있었습니다.</li>
+            <li class="list-item"><span class="solution">해결:</span> 대화 시작/종료 시 st.session_state.simulator_memory.clear()를 명시적으로 호출하고, LLM에 전달하는 프롬프트 템플릿에 현재 대화 상태를 수동으로 재구성하여 (대화 내용 추출 후 프롬프트에 삽입) LLM이 정확한 맥락만 파악하도록 했습니다.</li>
+        </ul>
+        <div class="code-block mt-6">
+            <pre><code>
+# 메모리 초기화 및 관리
+if "simulator_memory" not in st.session_state:
+    st.session_state.simulator_memory = ConversationBufferWindowMemory(k=5, memory_key="chat_history")
+
+# 새로운 대화 시작 시 메모리 초기화
+if st.button("새로운 시뮬레이션 시작"):
+    st.session_state.simulator_memory.clear()
+    # ... 다른 세션 상태 초기화 ...
+
+# LLM 체인에 메모리 주입 (대화 히스토리를 직접 프롬프트에 포함하는 방식도 고려)
+conversation_chain = ConversationChain(
+    llm=st.session_state.llm,
+    memory=st.session_state.simulator_memory,
+    prompt=conversation_prompt # 사용자 정의 프롬프트 템플릿
+)
+            </code></pre>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-2">코드 2: LangChain ConversationBufferWindowMemory 관리 예시</p>
+    </section>
+
+    <!-- 슬라이드 4: DB 및 GCS 통합 난관 극복 --><section class="slide">
+        <h2>3. DB/스토리지 통합: 데이터 영속성 확보</h2>
+        <h3 class="text-xl font-semibold mb-4">문제 3: LLM API Key 확보 난관과 Firebase 선행 시도</h3>
+        <ul class="ml-6 mt-4">
+            <li class="list-item"><span class="difficulty">어려움 (LLM Key):</span> 프로젝트 초기에 다른 팀원들과 달리 저 개인의 OpenAI API Key 발급이 늦어지면서 (예산 및 안정성 확보 문제), LLM 기반 기능(LangChain) 개발을 잠시 보류해야 했습니다.</li>
+            <li class="list-item"><span class="difficulty">어려움 (DB 통합):</span> 이로 인해 개발 연속성을 위해 Firebase Admin SDK를 먼저 통합하여 DB/GCS 기능을 구현해야 했고, 이 과정에서 Streamlit 앱에서 SDK를 여러 번 초기화하려는 시도로 인해 ValueError 오류가 발생했습니다.</li>
+            <li class="list-item"><span class="solution">해결 (DB):</span> firebase_admin._apps를 확인하여 이미 초기화된 경우를 건너뛰는 방어 로직을 initialize_firestore_admin 함수에 추가했습니다.</li>
+            <li class="list-item"><span class="solution">해결 (GCS):</span> 서비스 계정 정보를 st.secrets에서 로드하여 임시 파일로 작성하고, os.environ['GOOGLE_APPLICATION_CREDENTIALS']에 해당 경로를 설정한 후 google.cloud.storage.Client()를 초기화하는 표준 방식을 사용했습니다.</li>
+        </ul>
+        <div class="code-block mt-6">
+            <pre><code>
+import firebase_admin
+from firebase_admin import credentials, firestore
+from google.cloud import storage
+import json
+import os
+
+@st.cache_resource(ttl=3600)
+def initialize_firebase_and_gcs():
+    # Firebase Admin SDK 중복 초기화 방지
+    if not firebase_admin._apps:
+        cred_info = json.loads(st.secrets["firestore_admin_sdk"])
+        cred = credentials.Certificate(cred_info)
+        firebase_admin.initialize_app(cred)
+    db = firestore.client()
+
+    # GCS 클라이언트 초기화 (secrets를 파일로 저장하여 경로 설정)
+    with tempfile.NamedTemporaryFile("w", delete=False) as temp_file:
+        temp_file.write(st.secrets["gcs_service_account"])
+        temp_file_path = temp_file.name
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = temp_file_path
+    gcs_client = storage.Client()
+    # temp_file_path 삭제 로직 추가 (앱 종료 시 또는 적절한 시점)
+
+    return db, gcs_client
+
+db, gcs_client = initialize_firebase_and_gcs()
+            </code></pre>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-2">코드 3: Firebase Admin SDK 및 GCS 클라이언트 안정적 초기화</p>
+
+        <h3 class="text-xl font-semibold mt-6 mb-4">문제 4: RAG 인덱스 저장 및 로드</h3>
+        <ul class="ml-6 mt-4">
+            <li class="list-item"><span class="difficulty">어려움:</span> FAISS와 같은 벡터 데이터베이스 인덱스를 DB에 직접 저장하는 과정(Firestore/GCS)에서 데이터 직렬화/역직렬화 오류가 발생했고, 특히 대용량의 인덱스를 DB에 저장하는 것은 비효율적이고 비용적 부담이 컸습니다.</li>
+            <li class="list-item"><span class="solution">해결:</span> DB 대신 로컬 파일 시스템 (혹은 GCS 버킷 내 특정 폴더)에 `FAISS.save_local()`과 `FAISS.load_local()`을 사용하여 인덱스를 저장/로드하는 방식을 채택했습니다. 이는 데이터 영속성을 유지하면서도 LLM 기능에 대한 접근 속도를 최적화했습니다.</li>
+        </ul>
+        <div class="code-block mt-6">
+            <pre><code>
+from langchain_community.vectorstores import FAISS
+
+def save_faiss_index(index, path="faiss_index"):
+    index.save_local(path)
+    st.success(f"FAISS 인덱스가 '{path}'에 저장되었습니다.")
+
+def load_faiss_index(embeddings, path="faiss_index"):
+    if os.path.exists(path):
+        loaded_index = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
+        st.success(f"FAISS 인덱스가 '{path}'에서 로드되었습니다.")
+        return loaded_index
+    else:
+        st.warning(f"'{path}' 경로에 FAISS 인덱스가 없습니다. 새로 생성합니다.")
+        return None # 또는 새로운 인덱스 생성 로직
+
+# 예시:
+# vectorstore = FAISS.from_documents(docs, embeddings)
+# save_faiss_index(vectorstore, "my_rag_index")
+# loaded_vectorstore = load_faiss_index(st.session_state.embeddings, "my_rag_index")
+            </code></pre>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-2">코드 4: FAISS 인덱스 로컬 저장 및 로드 예시</p>
+    </section>
+
+    <!-- 슬라이드 5: 최종 기능 구현 (시뮬레이터) 및 성과 --><section class="slide">
+        <h2>4. 최종 범위 구현: AI 고객 응대 시뮬레이터</h2>
+        <h3 class="text-xl font-semibold mb-4">구현 난관: AI의 역할 강제 및 데이터 분석 통합</h3>
+        <ul class="ml-6 mt-4">
+            <li class="list-item"><span class="difficulty">역할 분리:</span> LLM이 'Supervisor' 역할(응대 가이드 제공)과 'Customer' 역할(재반박)을 오가며 응답해야 했기에, 프롬프트 내에 엄격한 역할극 규칙과 JSON/마크다운 형식 강제 지시를 포함해야 했습니다.</li>
+            <li class="list-item"><span class="solution">해결:</span> LLM에게 JSON 요약 구조를 강제하여 고객의 감정 점수(Sentiment)와 긴급도(Urgency)를 추출하고, 이 결과를 바탕으로 응대 초안을 생성하도록 하여 <span class="solution">데이터 기반 응대 가이드라인</span>을 구축했습니다.</li>
+            <li class="list-item"><span class="difficulty">AHT 모니터링:</span> 고객 응대의 핵심 지표인 AHT(평균 처리 시간) 모니터링을 위해 Python의 datetime 라이브러리를 사용해 실시간으로 시간을 측정하고, @st.rerun()을 3초 단위로 강제 호출하여 실시간성 문제를 해결했습니다.</li>
+        </ul>
+
+        <div class="diagram-container">
+            <h4 class="text-lg font-semibold text-gray-800 mb-2">그림 2: LLM 역할극 및 JSON 출력 강제 시나리오</h4>
+            <div class="diagram-flow">
+                <div class="flow-step bg-purple-100 text-purple-700">1. 초기 문의 및 고객 유형 파악</div>
+                <div class="flow-arrow text-center">▼</div>
+                <div class="flow-step bg-indigo-100 text-indigo-700">2. LLM (상급자 역할) - 가이드라인 및 드래프트 생성 (JSON 출력)</div>
+                <div class="flow-arrow text-center">▼</div>
+                <div class="flow-step bg-blue-100 text-blue-700">3. UI 디스플레이 (가이드라인, 드래프트, 분석)</div>
+                <div class="flow-arrow text-center">▼ (에이전트들로부터의 일반적인 반응)</div>
+                <div class="flow-step bg-red-100 text-red-700">4. 에이전트 응답 전송 (사람 입력)</div>
+                <div class="flow-arrow text-center">▼</div>
+                <div class="flow-step bg-yellow-100 text-yellow-700">5. LLM (고객 역할) - 협조 반응 생성</div>
+                <div class="flow-arrow text-center">▲ (Loop) / ▼ (Exit)</div>
+                <div class="flow-step bg-green-100 text-green-700">6. 최종 종료 (설문 조사 요청 및 이력 저장)</div>
+            </div>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-2">그림 2: LLM에게 특정 역할과 JSON 출력 형식을 강제하여 응답을 제어하는 과정</p>
+
+        <h3 class="text-xl font-semibold mt-6 mb-4">기술적 성과</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="key-point bg-emerald-100 border-emerald-300">
+                <p class="text-xl mb-1">Whisper/TTS 통합</p>
+                <p class="text-base">음성 입력 및 출력 기능을 Streamlit 앱 내에서 완벽히 연동.</p>
+            </div>
+            <div class="key-point bg-emerald-100 border-emerald-300">
+                <p class="text-xl mb-1">멀티 LLM/Embedding Fallback</p>
+                <p class="text-base">OpenAI, Gemini, NVIDIA 등 다양한 LLM API 키 유효성 검사 및 Fallback 구조 구축.</p>
+            </div>
+            <div class="key-point bg-emerald-100 border-emerald-300">
+                <p class="text-xl mb-1">AI 기반 이력 요약 및 검색</p>
+                <p class="text-base">과거 상담 이력을 요약하여 신규 케이스 응대에 활용하는 시스템 구현.</p>
+            </div>
+            <div class="key-point bg-emerald-100 border-emerald-300">
+                <p class="text-xl mb-1">Streamlit-DB-LLM 안정화</p>
+                <p class="text-base">복잡한 세션/재실행 환경에서 DB 및 LLM 클라이언트의 충돌 없이 안정적으로 동작.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 슬라이드 6: 결론 및 Q&A --><section class="slide text-center">
+        <h2 class="border-b-4 border-yellow-400 inline-block pb-2">결론 및 향후 계획</h2>
+        <p class="text-2xl mt-8 mb-8 text-gray-800 font-medium">
+            LLM 프로젝트는 단순히 코드를 작성하는 것을 넘어, 외부 서비스의 통합과 환경적 제약을 극복하는 과정이었습니다.
+            특히, Streamlit의 비동기적 특성과 LangChain의 클라이언트 의존성을 이해하는 것이 핵심이었습니다.
+        </p>
+
+        <p class="key-point bg-red-50 border-red-200 inline-block px-8 py-3 text-xl">
+            가장 큰 교훈: "작은 기능 하나라도, 환경 변수와 초기화 순서에 대한 <span class="difficulty">철저한 방어 로직</span>이 필수적이다."
+        </p>
+
+        <h3 class="mt-12 text-3xl text-gray-700">Q & A</h3>
+        <p class="text-xl mt-4 text-gray-500">질문해 주시면, LLM과의 협업 경험을 바탕으로 구체적인 답변을 드리겠습니다.</p>
+    </section>
+
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLMプロジェクトの初期難関克服および範囲拡大に関する発表資料 (視覚資料・コードを含む)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Fira+Code:wght@400&display=swap');
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+        .slide {
+            min-height: 80vh;
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 4rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .title-slide {
+            background-color: #3b82f6;
+            color: white;
+            justify-content: space-between;
+        }
+        h1, h2, h3 {
+            font-weight: 700;
+        }
+        h1 { font-size: 3rem; margin-bottom: 1rem; }
+        h2 { font-size: 2rem; margin-bottom: 1.5rem; border-bottom: 3px solid #60a5fa; padding-bottom: 0.5rem; }
+        .key-point {
+            background-color: #e0f2f1;
+            color: #004d40;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            transition: transform 0.2s;
+        }
+        .key-point:hover {
+            transform: scale(1.02);
+        }
+        .code-block {
+            background-color: #1e293b;
+            color: #f0f4f8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .diagram-container {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            background-color: #f9fafb;
+            text-align: center;
+        }
+        .diagram-flow {
+            border: 1px solid #cbd5e1;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            background-color: #ffffff;
+            display: inline-block;
+            min-width: 100%;
+        }
+        .flow-step {
+            padding: 0.5rem 0;
+            margin: 0.5rem auto;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            max-width: 400px;
+        }
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: #3b82f6;
+            margin: 0.25rem 0;
+        }
+        .difficulty {
+            color: #ef4444;
+            font-weight: 700;
+        }
+        .solution {
+            color: #10b981;
+            font-weight: 700;
+        }
+        .list-item {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+
+    <!-- スライド 1: タイトル --><section class="slide title-slide">
+        <div class="text-center">
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-4">LLMプロジェクト、初期の難関克服の道のり</h1>
+            <p class="text-2xl md:text-3xl font-light">LangChain、DB統合、および範囲拡大を中心に</p>
+        </div>
+        <div class="mt-16 text-center">
+            <p class="text-xl">発表者: [発表者名]</p>
+            <p class="text-lg mt-1">日付: [2025.11.24]</p>
+        </div>
+    </section>
+
+    <!-- スライド 2: プロジェクト概要と初期スコープ --><section class="slide">
+        <h2>1. プロジェクト概要: AI学習コーチとシミュレーター</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+            <div class="key-point bg-indigo-50 border-indigo-200">
+                <p class="text-2xl mb-2">主要機能</p>
+                <p class="text-lg">RAGベースQ&A、カスタムコンテンツ生成、LSTM予測</p>
+            </div>
+            <div class="key-point bg-blue-50 border-blue-200">
+                <p class="text-2xl mb-2">統合目標</p>
+                <p class="text-lg">音声 (Whisper/TTS)、DB (Firestore/GCS) 統合</p>
+            </div>
+            <div class="key-point bg-green-50 border-green-200">
+                <p class="text-2xl mb-2">最終スコープ</p>
+                <p class="text-lg">顧客対応シミュレーション (チャット/電話) と履歴管理</p>
+            </div>
+        </div>
+        <h3 class="mt-8 text-xl font-semibold">初期目標と範囲拡大の起点</h3>
+        <ul class="list-disc ml-6 text-gray-700 mt-4">
+            <li class="list-item">当初は単純なRAG（ドキュメントベースのQ&A）機能を目標としましたが、実用性を高めるために、<span class="solution">音声認識/合成機能とデータ永続性（DB/GCS）を組み合わせる</span>ようスコープを拡大しました。</li>
+            <li class="list-item">この範囲拡大が<span class="difficulty">技術スタックの複雑化</span>につながり、予期せぬ統合問題に直面しました。</li>
+        </ul>
+        <div class="diagram-container">            
+            <h4 class="text-lg font-semibold text-gray-800 mb-4">図 1: LLMプロジェクト全体のアーキテクチャ</h4>
+            <div class="diagram-flow">
+                <div class="grid grid-cols-5 gap-2 text-sm font-medium">
+                    <div class="col-span-2 text-center py-2 bg-blue-100 border border-blue-300 rounded-lg">Streamlit UI</div>
+                    <div class="col-span-1 text-center py-2 font-bold text-gray-600">&lt; Session State &gt;</div>
+                    <div class="col-span-2 text-center py-2 bg-blue-100 border border-blue-300 rounded-lg">Streamlit Backend (Python)</div>
+                </div>
+                <div class="flow-arrow text-center">▼</div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <div class="flow-step">Whisper/TTS (OpenAI API)</div>
+                        <div class="text-xs text-gray-500">音声変換と出力</div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flow-step">LLM/LangChain (Core Logic)</div>
+                        <div class="text-xs text-gray-500">プロンプト、RAG、メモリ管理</div>
+                    </div>
+                </div>
+                <div class="flow-arrow text-center">▲ (API) / ▼ (Data)</div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <div class="flow-step bg-green-100 text-green-700">GCS (Audio Storage)</div>
+                        <div class="text-xs text-gray-500">音声記録の永続性確保</div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flow-step bg-green-100 text-green-700">Firestore/Local DB</div>
+                        <div class="text-xs text-gray-500">RAGインデックス、相談履歴の保存</div>
+                    </div>
+                </div>
+                <p class="text-xs mt-4 text-gray-600">すべての外部DB/Storage接続はService Accountを通じたセキュアなアクセス方法を使用します。</p>
+            </div>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-2">図 1: LLMプロジェクト全体のアーキテクチャ (Streamlit, LLM, DB, GCSなど)</p>
+    </section>
+
+
+    <!-- スライド 3: LLMフレームワーク設定と初期化の難関 --><section class="slide">
+        <h2>2. LLMフレームワーク (LangChain) 設定の難関</h2>
+        <h3 class="text-xl font-semibold mb-4">問題 1: 同期/非同期環境におけるAPIクライアントの初期化衝突</h3>
+        <ul class="ml-6 mt-4">
+            <li class="list-item"><span class="difficulty">困難点:</span> Streamlit環境はセッション状態に基づき再実行(Rerun)される特性があり、@st.cache_resourceを使用してもOpenAI、LangChain ChatOpenAI、OpenAIEmbeddingsクライアントが衝突したり、不完全に初期化される問題が発生しました。</li>
+            <li class="list-item"><span class="difficulty">特に、</span> init_openai_client関数を誤って呼び出したりセッション状態に保存したりすると、TypeErrorが発生し、LLM機能が麻痺しました。</li>
+            <li class="list-item"><span class="solution">解決策:</span> @st.cache_resourceを使用してOpenAIクライアントオブジェクトを一度だけ作成し、セッション状態に明示的に保存しました。また、LangChain LLMオブジェクトについても、APIキーの変更時にのみ再初期化されるよう、外部でキーの有効性を確認する方法を導入し、安定性を確保しました。</li>
+        </ul>
+        <div class="code-block mt-6">
+            <pre><code>
+@st.cache_resource(ttl=3600, experimental_allow_widgets=True)
+def init_llm_clients(openai_api_key):
+    # Initialize OpenAI client (including LangChain)
+    llm = ChatOpenAI(temperature=0.7, openai_api_key=openai_api_key)
+    embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+    # ... Initialize other LLM and embedding clients ...
+    return llm, embeddings
+
+if 'llm' not in st.session_state or 'embeddings' not in st.session_state:
+    st.session_state.llm, st.session_state.embeddings = init_llm_clients(st.secrets["OPENAI_API_KEY"])
+            </code></pre>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-2">コード 1: @st.cache_resourceを活用したLangChain LLM/Embeddingクライアントの安定的な初期化</p>
+
+        <h3 class="text-xl font-semibold mt-6 mb-4">問題 2: LangChain ConversationChainとメモリ管理</h3>
+        <ul class="ml-6 mt-4">
+            <li class="list-item"><span class="difficulty">困難点:</span> シミュレーター機能の複雑な会話フロー（顧客/エージェント）を管理するためにConversationChainとConversationBufferMemoryを使用しましたが、Streamlitのセッションリセットによりメモリが適切にクリアされなかったり、再実行のたびに履歴が重複し、LLMの応答が異常に長くなる問題が発生しました。</li>
+            <li class="list-item"><span class="solution">解決策:</span> 会話の開始/終了時にst.session_state.simulator_memory.clear()を明示的に呼び出し、LLMに渡すプロンプトテンプレートに現在の会話状態を手動で再構築（履歴を抽出してプロンプトに挿入）することで、LLMが正確なコンテキストのみを把握するようにしました。</li>
+        </ul>
+        <div class="code-block mt-6">
+            <pre><code>
+# Memory initialization and management
+if "simulator_memory" not in st.session_state:
+    st.session_state.simulator_memory = ConversationBufferWindowMemory(k=5, memory_key="chat_history")
+
+# Clear memory when starting a new conversation
+if st.button("新しいシミュレーションを開始"):
+    st.session_state.simulator_memory.clear()
+    # ... Initialize other session states ...
+
+# Inject memory into the LLM chain (consider manually including chat history in the prompt)
+conversation_chain = ConversationChain(
+    llm=st.session_state.llm,
+    memory=st.session_state.simulator_memory,
+    prompt=conversation_prompt # Custom prompt template
+)
+            </code></pre>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-2">コード 2: LangChain ConversationBufferWindowMemoryの管理例</p>
+    </section>
+
+    <!-- スライド 4: DBとGCSの統合における難関克服 --><section class="slide">
+        <h2>3. DB/ストレージ統合: データ永続性の確保</h2>
+        <h3 class="text-xl font-semibold mb-4">問題 3: LLM API Key取得の難関とFirebase先行導入の試み</h3>
+        <ul class="ml-6 mt-4">
+            <li class="list-item"><span class="difficulty">困難点 (LLM Key):</span> プロジェクト開始時、他のチームメンバーとは異なり、私個人のOpenAI API Keyの取得が遅れたため（予算やセキュリティ上の理由）、LLMベースの機能（LangChain）開発を一時的に保留せざるを得ませんでした。</li>
+            <li class="list-item"><span class="difficulty">困難点 (DB統合):</span> 開発の継続性を確保するため、Firebase Admin SDKを先に統合してDB/GCS機能を実装する必要がありました。この過程で、StreamlitアプリがSDKを複数回初期化しようとし、ValueErrorエラーが発生しました。</li>
+            <li class="list-item"><span class="solution">解決策 (DB):</span> initialize_firestore_admin関数に、firebase_admin._appsをチェックし、アプリが既に初期化されている場合は**初期化をスキップする防御ロジック**を追加しました。</li>
+            <li class="list-item"><span class="solution">解決策 (GCS):</span> st.secretsからサービスアカウント情報をロードし、それを一時ファイルに書き込み、os.environ['GOOGLE_APPLICATION_CREDENTIALS']にパスを設定してからgoogle.cloud.storage.Client()を初期化するという標準的な方法を採用しました。</li>
+        </ul>
+        <div class="code-block mt-6">
+            <pre><code>
+import firebase_admin
+from firebase_admin import credentials, firestore
+from google.cloud import storage
+import json
+import os
+
+@st.cache_resource(ttl=3600)
+def initialize_firebase_and_gcs():
+    # Prevent duplicate Firebase Admin SDK initialization
+    if not firebase_admin._apps:
+        cred_info = json.loads(st.secrets["firestore_admin_sdk"])
+        cred = credentials.Certificate(cred_info)
+        firebase_admin.initialize_app(cred)
+    db = firestore.client()
+
+    # Initialize GCS client (saving secrets to file and setting path)
+    with tempfile.NamedTemporaryFile("w", delete=False) as temp_file:
+        temp_file.write(st.secrets["gcs_service_account"])
+        temp_file_path = temp_file.name
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = temp_file_path
+    gcs_client = storage.Client()
+    # Add logic to delete temp_file_path (upon app termination or appropriate time)
+
+    return db, gcs_client
+
+db, gcs_client = initialize_firebase_and_gcs()
+            </code></pre>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-2">コード 3: Firebase Admin SDKおよびGCSクライアントの安定的な初期化</p>
+
+        <h3 class="text-xl font-semibold mt-6 mb-4">問題 4: RAGインデックスの保存とロード</h3>
+        <ul class="ml-6 mt-4">
+            <li class="list-item"><span class="difficulty">困難点:</span> ベクトルデータベースインデックス（FAISSなど）を直接DB（Firestore/GCS）に保存しようとすると、シリアル化/デシリアル化のエラーが発生し、特に大容量インデックスのDB保存は非効率的かつコストが高くなりました。</li>
+            <li class="list-item"><span class="solution">解決策:</span> DBの代わりにローカルファイルシステム（またはGCSバケット内の特定のフォルダ）に、FAISS.save_local()とFAISS.load_local()を使用してインデックスを保存/ロードする方法を採用しました。これにより、データ永続性を維持しつつ、LLM機能へのアクセス速度を最適化しました。</li>
+        </ul>
+        <div class="code-block mt-6">
+            <pre><code>
+from langchain_community.vectorstores import FAISS
+
+def save_faiss_index(index, path="faiss_index"):
+    index.save_local(path)
+    st.success(f"FAISS index saved to '{path}'.")
+
+def load_faiss_index(embeddings, path="faiss_index"):
+    if os.path.exists(path):
+        loaded_index = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
+        st.success(f"FAISS index loaded from '{path}'.")
+        return loaded_index
+    else:
+        st.warning(f"No FAISS index found at '{path}'. Creating a new one.")
+        return None # or logic to create a new index
+
+# Example:
+# vectorstore = FAISS.from_documents(docs, embeddings)
+# save_faiss_index(vectorstore, "my_rag_index")
+# loaded_vectorstore = load_faiss_index(st.session_state.embeddings, "my_rag_index")
+            </code></pre>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-2">コード 4: ローカルFAISSインデックスの保存とロードの例</p>
+    </section>
+
+    <!-- スライド 5: 最終機能実装（シミュレーター）と成果 --><section class="slide">
+        <h2>4. 最終スコープの実装: AI顧客対応シミュレーター</h2>
+        <h3 class="text-xl font-semibold mb-4">実装の難関: AIの役割強制とデータ分析の統合</h3>
+        <ul class="ml-6 mt-4">
+            <li class="list-item"><span class="difficulty">役割分離:</span> LLMが「スーパーバイザー」（対応ガイド提供）と「顧客」（反論提供）の役割を切り替えながら応答する必要があったため、プロンプト内で厳密なロールプレイ規則とJSON/Markdown出力形式の強制指示が必要でした。</li>
+            <li class="list-item"><span class="solution">解決策:</span> LLMにJSON要約構造を強制し、顧客の感情スコア（Sentiment）と緊急度（Urgency）を抽出させました。このデータに基づいて応答草案を生成させることで、<span class="solution">データ駆動型の対応ガイドライン</span>を確立しました。</li>
+            <li class="list-item"><span class="difficulty">AHTモニタリング:</span> 顧客対応の主要指標であるAHT（平均処理時間）を監視するため、Pythonのdatetimeライブラリでリアルタイム追跡を行い、@st.rerun()を3秒ごとに強制的に呼び出すことで、リアルタイム性の問題を解決しました。</li>
+        </ul>
+
+        <div class="diagram-container">
+            <h4 class="text-lg font-semibold text-gray-800 mb-2">図 2: LLMロールプレイとJSON出力強制シナリオ</h4>
+            <div class="diagram-flow">
+                <div class="flow-step bg-purple-100 text-purple-700">1. 初期のお問合せ及び顧客のタイプを把握する。</div>
+                <div class="flow-arrow text-center">▼</div>
+                <div class="flow-step bg-indigo-100 text-indigo-700">2. LLM (上級者の役割) - ガイドライン及びドラフトを作り出す。(JSONを出力)</div>
+                <div class="flow-arrow text-center">▼</div>
+                <div class="flow-step bg-blue-100 text-blue-700">3. UI ディスプレイ (ガイドライン, ドラフト, 分析)</div>
+                <div class="flow-arrow text-center">▼ (エージェントの一般的な反応)</div>
+                <div class="flow-step bg-red-100 text-red-700">4. エージェントの反応をシェアする (人間からの入力)</div>
+                <div class="flow-arrow text-center">▼</div>
+                <div class="flow-step bg-yellow-100 text-yellow-700">5. LLM (顧客の役割) - 協調する反応を作り出す。</div>
+                <div class="flow-arrow text-center">▲ (Loop) / ▼ (Exit)</div>
+                <div class="flow-step bg-green-100 text-green-700">6. 最終の終了(設問調査を要請して、応対の履歴をほ存する。)</div>
+            </div>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-2">図 2: 特定の役割とJSON出力形式を強制することによるLLM応答の制御プロセス</p>
+
+
+        <h3 class="text-xl font-semibold mt-6 mb-4">技術的成果</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="key-point bg-emerald-100 border-emerald-300">
+                <p class="text-xl mb-1">Whisper/TTS 統合</p>
+                <p class="text-base">Streamlitアプリ内で音声入力と出力機能をシームレスに統合。</p>
+            </div>
+            <div class="key-point bg-emerald-100 border-emerald-300">
+                <p class="text-xl mb-1">マルチLLM/埋め込みフォールバック</p>
+                <p class="text-base">様々なLLM APIキー（OpenAI、Gemini、NVIDIAなど）の検証とフォールバック構造を構築。</p>
+            </div>
+            <div class="key-point bg-emerald-100 border-emerald-300">
+                <p class="text-xl mb-1">AIによる履歴要約と検索</p>
+                <p class="text-base">過去の相談要約を活用した、効率的な新規ケース対応システムを実装。</p>
+            </div>
+            <div class="key-point bg-emerald-100 border-emerald-300">
+                <p class="text-xl mb-1">Streamlit-DB-LLMの安定化</p>
+                <p class="text-base">Streamlitの複雑なセッション/再実行環境下で、DBとLLMクライアントの安定動作を実現。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- スライド 6: 結論とQ&A --><section class="slide text-center">
+        <h2 class="border-b-4 border-yellow-400 inline-block pb-2">結論と今後の計画</h2>
+        <p class="text-2xl mt-8 mb-8 text-gray-800 font-medium">
+            LLMプロジェクトは単にコードを書くだけでなく、外部サービスの統合と環境的な制約を乗り越えるプロセスでした。
+            特に、Streamlitの非同期的な性質とLangChainのクライアント依存性を理解することが鍵となりました。
+        </p>
+
+        <p class="key-point bg-red-50 border-red-200 inline-block px-8 py-3 text-xl">
+            最大の教訓: 「小さな機能であっても、環境変数と初期化の順序に関する<span class="difficulty">徹底的な防御ロジック</span>が不可欠である。」
+        </p>
+
+        <h3 class="mt-12 text-3xl text-gray-700">Q & A</h3>
+        <p class="text-xl mt-4 text-gray-500">ご質問がありましたら、これまでの共同作業の経験に基づき、具体的にお答えします。</p>
+    </section>
+
+</body>
+</html>

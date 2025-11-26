@@ -170,7 +170,7 @@
 
     <!-- 슬라이드 3: LLM 프레임워크 설정 및 초기화 난관 --><section class="slide">
         <h2>2. LLM 프레임워크 (LangChain) 설정 난관</h2>
-        <h3 class="text-xl font-semibold mb-4">문제 1: 동기/비동기 환경에서의 API 클라이언트 초기화 충돌</h3>
+        <h3 class="text-xl font-semibold mb-4">문제 1: API 클라이언트 초기화 충돌</h3>
         <ul class="ml-6 mt-4">
             <li class="list-item"><span class="difficulty">어려움:</span> Streamlit 환경은 세션 상태를 기반으로 재실행(Rerun)되는 특성이 있어, @st.cache_resource를 사용하더라도 OpenAI, LangChain ChatOpenAI, OpenAIEmbeddings 클라이언트가 충돌하거나 불완전하게 초기화되는 문제가 발생했습니다.</li>
             <li class="list-item"><span class="difficulty">특히,</span> init_openai_client 함수를 잘못된 방식으로 호출하거나 세션 상태에 저장할 때 TypeError가 발생하여 LLM 기능이 완전히 마비되었습니다.</li>
@@ -225,7 +225,7 @@ conversation_chain = ConversationChain(
         <ul class="ml-6 mt-4">
             <li class="list-item"><span class="difficulty">어려움 (LLM Key):</span> 프로젝트 초기에 다른 팀원들과 달리 저 개인의 OpenAI API Key 발급이 늦어지면서 (예산 및 안정성 확보 문제), LLM 기반 기능(LangChain) 개발을 잠시 보류해야 했습니다.</li>
             <li class="list-item"><span class="difficulty">어려움 (DB 통합):</span> 이로 인해 개발 연속성을 위해 Firebase Admin SDK를 먼저 통합하여 DB/GCS 기능을 구현해야 했고, 이 과정에서 Streamlit 앱에서 SDK를 여러 번 초기화하려는 시도로 인해 ValueError 오류가 발생했습니다.</li>
-            <li class="list-item"><span class="solution">해결 (DB):</span> firebase_admin._apps를 확인하여 이미 초기화된 경우를 건너뛰는 방어 로직을 initialize_firestore_admin 함수에 추가했습니다.</li>
+            <li class="list-item"><span class="solution">해결 (DB):</span> initialize_firestore_admin 함수에, firebase_admin._apps를 확인하여 이미 초기화된 경우를 건너뛰는 방어 로직을 추가했습니다.</li>
             <li class="list-item"><span class="solution">해결 (GCS):</span> 서비스 계정 정보를 st.secrets에서 로드하여 임시 파일로 작성하고, os.environ['GOOGLE_APPLICATION_CREDENTIALS']에 해당 경로를 설정한 후 google.cloud.storage.Client()를 초기화하는 표준 방식을 사용했습니다.</li>
         </ul>
         <div class="code-block mt-6">
@@ -238,20 +238,20 @@ import os
 
 @st.cache_resource(ttl=3600)
 def initialize_firebase_and_gcs():
-    # Firebase Admin SDK 중복 초기화 방지
+    # Prevent duplicate Firebase Admin SDK initialization
     if not firebase_admin._apps:
         cred_info = json.loads(st.secrets["firestore_admin_sdk"])
         cred = credentials.Certificate(cred_info)
         firebase_admin.initialize_app(cred)
     db = firestore.client()
 
-    # GCS 클라이언트 초기화 (secrets를 파일로 저장하여 경로 설정)
+    # Initialize GCS client (saving secrets to file and setting path)
     with tempfile.NamedTemporaryFile("w", delete=False) as temp_file:
         temp_file.write(st.secrets["gcs_service_account"])
         temp_file_path = temp_file.name
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = temp_file_path
     gcs_client = storage.Client()
-    # temp_file_path 삭제 로직 추가 (앱 종료 시 또는 적절한 시점)
+    # Add logic to delete temp_file_path (upon app termination or appropriate time)
 
     return db, gcs_client
 
@@ -263,7 +263,7 @@ db, gcs_client = initialize_firebase_and_gcs()
         <h3 class="text-xl font-semibold mt-6 mb-4">문제 4: RAG 인덱스 저장 및 로드</h3>
         <ul class="ml-6 mt-4">
             <li class="list-item"><span class="difficulty">어려움:</span> FAISS와 같은 벡터 데이터베이스 인덱스를 DB에 직접 저장하는 과정(Firestore/GCS)에서 데이터 직렬화/역직렬화 오류가 발생했고, 특히 대용량의 인덱스를 DB에 저장하는 것은 비효율적이고 비용적 부담이 컸습니다.</li>
-            <li class="list-item"><span class="solution">해결:</span> DB 대신 로컬 파일 시스템 (혹은 GCS 버킷 내 특정 폴더)에 `FAISS.save_local()`과 `FAISS.load_local()`을 사용하여 인덱스를 저장/로드하는 방식을 채택했습니다. 이는 데이터 영속성을 유지하면서도 LLM 기능에 대한 접근 속도를 최적화했습니다.</li>
+            <li class="list-item"><span class="solution">해결:</span> DB 대신 로컬 파일 시스템 (혹은 GCS 버킷 내 특정 폴더)에 FAISS.save_local()과 FAISS.load_local()을 사용하여 인덱스를 저장/로드하는 방식을 채택했습니다. 이는 데이터 영속성을 유지하면서도 LLM 기능에 대한 접근 속도를 최적화했습니다.</li>
         </ul>
         <div class="code-block mt-6">
             <pre><code>
@@ -291,52 +291,38 @@ def load_faiss_index(embeddings, path="faiss_index"):
         <p class="text-center text-sm text-gray-500 mt-2">코드 4: FAISS 인덱스 로컬 저장 및 로드 예시</p>
     </section>
 
-    <!-- 슬라이드 5: 최종 기능 구현 (시뮬레이터) 및 성과 --><section class="slide">
-        <h2>4. 최종 범위 구현: AI 고객 응대 시뮬레이터</h2>
-        <h3 class="text-xl font-semibold mb-4">구현 난관: AI의 역할 강제 및 데이터 분석 통합</h3>
+    <!-- 슬라이드 5: 최종 난관 극복: 퀴즈 안정화 및 다국어 지원 (오늘의 작업 포함) --><section class="slide">
+        <h2>5. 최종 난관 극복: 퀴즈 안정화 및 다국어 지원</h2>
+        <h3 class="text-xl font-semibold mb-4">문제 5: 퀴즈 완료 시 IndexError 발생 및 라디오 버튼 오류</h3>
         <ul class="ml-6 mt-4">
-            <li class="list-item"><span class="difficulty">역할 분리:</span> LLM이 'Supervisor' 역할(응대 가이드 제공)과 'Customer' 역할(재반박)을 오가며 응답해야 했기에, 프롬프트 내에 엄격한 역할극 규칙과 JSON/마크다운 형식 강제 지시를 포함해야 했습니다.</li>
-            <li class="list-item"><span class="solution">해결:</span> LLM에게 JSON 요약 구조를 강제하여 고객의 감정 점수(Sentiment)와 긴급도(Urgency)를 추출하고, 이 결과를 바탕으로 응대 초안을 생성하도록 하여 <span class="solution">데이터 기반 응대 가이드라인</span>을 구축했습니다.</li>
-            <li class="list-item"><span class="difficulty">AHT 모니터링:</span> 고객 응대의 핵심 지표인 AHT(평균 처리 시간) 모니터링을 위해 Python의 datetime 라이브러리를 사용해 실시간으로 시간을 측정하고, @st.rerun()을 3초 단위로 강제 호출하여 실시간성 문제를 해결했습니다.</li>
+            <li class="list-item"><span class="difficulty">어려움:</span> 퀴즈의 마지막 문항을 풀고 점수 표시로 전환될 때, Streamlit의 재실행 로직이 완료 전에 다음 문항에 접근하려 시도하며 `IndexError: list index out of range` 오류가 발생했습니다. 또한, `st.radio`의 인덱스 초기화 문제도 있었습니다.</li>
+            <li class="list-item"><span class="solution">해결:</span> 퀴즈 완료 조건(`idx >= len(quiz_data)`) 직후 `st.stop()`을 명확히 호출하여 불필요한 인덱스 접근을 완전히 차단했습니다. 또한, 퀴즈 답변 배열을 안전한 초기값(1)로 설정하여 라디오 버튼 오류를 해결했습니다.</li>
+            <li class="list-item"><span class="difficulty">추가 문제:</span> LLM에게 JSON 응답 형식을 강제하는 과정에서 `google.generativeai` 라이브러리의 `config` 인자 호환성 문제가 발생했습니다.</li>
+            <li class="list-item"><span class="solution">해결:</span> 불안정한 `config` 인자 대신, LLM에게 **JSON 스키마를 포함한 강력한 시스템 프롬프트**를 전달하여 텍스트 기반으로 JSON 응답을 강제하는 방식으로 우회하여 안정성을 확보했습니다.</li>
         </ul>
+        
+        <div class="code-block mt-6">
+            <pre><code>
+# 퀴즈 완료 및 IndexError 방지 로직 (핵심 수정)
+if idx >= len(quiz_data):
+    st.success(L["quiz_complete"])
+    total_questions = len(quiz_data)
+    score = st.session_state.quiz_score
+    st.subheader(f"{L['score']}: {score} / {total_questions} ({(score / total_questions) * 100:.1f}%)")
 
-        <div class="diagram-container">
-            <h4 class="text-lg font-semibold text-gray-800 mb-2">그림 2: LLM 역할극 및 JSON 출력 강제 시나리오</h4>
-            <div class="diagram-flow">
-                <div class="flow-step bg-purple-100 text-purple-700">1. 초기 문의 및 고객 유형 파악</div>
-                <div class="flow-arrow text-center">▼</div>
-                <div class="flow-step bg-indigo-100 text-indigo-700">2. LLM (상급자 역할) - 가이드라인 및 드래프트 생성 (JSON 출력)</div>
-                <div class="flow-arrow text-center">▼</div>
-                <div class="flow-step bg-blue-100 text-blue-700">3. UI 디스플레이 (가이드라인, 드래프트, 분석)</div>
-                <div class="flow-arrow text-center">▼ (에이전트들로부터의 일반적인 반응)</div>
-                <div class="flow-step bg-red-100 text-red-700">4. 에이전트 응답 전송 (사람 입력)</div>
-                <div class="flow-arrow text-center">▼</div>
-                <div class="flow-step bg-yellow-100 text-yellow-700">5. LLM (고객 역할) - 협조 반응 생성</div>
-                <div class="flow-arrow text-center">▲ (Loop) / ▼ (Exit)</div>
-                <div class="flow-step bg-green-100 text-green-700">6. 최종 종료 (설문 조사 요청 및 이력 저장)</div>
-            </div>
+    if st.button(L["retake_quiz"], key="retake_quiz_btn"):
+        # 상태 초기화
+        st.session_state.is_quiz_active = False
+        st.session_state.quiz_data = None
+        st.session_state.current_question_index = 0
+        st.session_state.quiz_score = 0
+        st.session_state.quiz_answers = []
+        st.session_state.show_explanation = False
+        st.rerun() # 상태 초기화 후 즉시 재실행
+    st.stop() # 퀴즈 완료 후 스크립트 실행을 완전히 중단
+            </code></pre>
         </div>
-        <p class="text-center text-sm text-gray-500 mt-2">그림 2: LLM에게 특정 역할과 JSON 출력 형식을 강제하여 응답을 제어하는 과정</p>
-
-        <h3 class="text-xl font-semibold mt-6 mb-4">기술적 성과</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="key-point bg-emerald-100 border-emerald-300">
-                <p class="text-xl mb-1">Whisper/TTS 통합</p>
-                <p class="text-base">음성 입력 및 출력 기능을 Streamlit 앱 내에서 완벽히 연동.</p>
-            </div>
-            <div class="key-point bg-emerald-100 border-emerald-300">
-                <p class="text-xl mb-1">멀티 LLM/Embedding Fallback</p>
-                <p class="text-base">OpenAI, Gemini, NVIDIA 등 다양한 LLM API 키 유효성 검사 및 Fallback 구조 구축.</p>
-            </div>
-            <div class="key-point bg-emerald-100 border-emerald-300">
-                <p class="text-xl mb-1">AI 기반 이력 요약 및 검색</p>
-                <p class="text-base">과거 상담 이력을 요약하여 신규 케이스 응대에 활용하는 시스템 구현.</p>
-            </div>
-            <div class="key-point bg-emerald-100 border-emerald-300">
-                <p class="text-xl mb-1">Streamlit-DB-LLM 안정화</p>
-                <p class="text-base">복잡한 세션/재실행 환경에서 DB 및 LLM 클라이언트의 충돌 없이 안정적으로 동작.</p>
-            </div>
-        </div>
+        <p class="text-center text-sm text-gray-500 mt-2">코드 5: 퀴즈 완료 시 발생하는 IndexError 방지 로직</p>
     </section>
 
     <!-- 슬라이드 6: 결론 및 Q&A --><section class="slide text-center">

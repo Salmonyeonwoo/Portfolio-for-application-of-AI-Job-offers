@@ -100,7 +100,7 @@
 
     <!-- スライド 1: タイトル --><section class="slide title-slide">
         <div class="text-center">
-            <h1 class="text-5xl md:text-6xl font-extrabold mb-4">LLMプロジェクト、初期の難関克服の道のり</h1>
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-4">LLMプロジェクトの初期難関克服の道のり</h1>
             <p class="text-2xl md:text-3xl font-light">LangChain、DB統合、および範囲拡大を中心に</p>
         </div>
         <div class="mt-16 text-center">
@@ -169,7 +169,7 @@
 
     <!-- スライド 3: LLMフレームワーク設定と初期化の難関 --><section class="slide">
         <h2>2. LLMフレームワーク (LangChain) 設定の難関</h2>
-        <h3 class="text-xl font-semibold mb-4">問題 1: 同期/非同期環境におけるAPIクライアントの初期化衝突</h3>
+        <h3 class="text-xl font-semibold mb-4">問題 1: APIクライアントの初期化衝突</h3>
         <ul class="ml-6 mt-4">
             <li class="list-item"><span class="difficulty">困難点:</span> Streamlit環境はセッション状態に基づき再実行(Rerun)される特性があり、@st.cache_resourceを使用してもOpenAI、LangChain ChatOpenAI、OpenAIEmbeddingsクライアントが衝突したり、不完全に初期化される問題が発生しました。</li>
             <li class="list-item"><span class="difficulty">特に、</span> init_openai_client関数を誤って呼び出したりセッション状態に保存したりすると、TypeErrorが発生し、LLM機能が麻痺しました。</li>
@@ -290,53 +290,38 @@ def load_faiss_index(embeddings, path="faiss_index"):
         <p class="text-center text-sm text-gray-500 mt-2">コード 4: ローカルFAISSインデックスの保存とロードの例</p>
     </section>
 
-    <!-- スライド 5: 最終機能実装（シミュレーター）と成果 --><section class="slide">
-        <h2>4. 最終スコープの実装: AI顧客対応シミュレーター</h2>
-        <h3 class="text-xl font-semibold mb-4">実装の難関: AIの役割強制とデータ分析の統合</h3>
+    <!-- スライド 5: 最終難関克服: クイズ安定化とAPI互換性 (今日の作業を含む) --><section class="slide">
+        <h2>5. 最終難関克服: クイズ安定化と多言語サポート</h2>
+        <h3 class="text-xl font-semibold mb-4">問題 5: クイズ完了時のIndexErrorとラジオボタンのエラー</h3>
         <ul class="ml-6 mt-4">
-            <li class="list-item"><span class="difficulty">役割分離:</span> LLMが「スーパーバイザー」（対応ガイド提供）と「顧客」（反論提供）の役割を切り替えながら応答する必要があったため、プロンプト内で厳密なロールプレイ規則とJSON/Markdown出力形式の強制指示が必要でした。</li>
-            <li class="list-item"><span class="solution">解決策:</span> LLMにJSON要約構造を強制し、顧客の感情スコア（Sentiment）と緊急度（Urgency）を抽出させました。このデータに基づいて応答草案を生成させることで、<span class="solution">データ駆動型の対応ガイドライン</span>を確立しました。</li>
-            <li class="list-item"><span class="difficulty">AHTモニタリング:</span> 顧客対応の主要指標であるAHT（平均処理時間）を監視するため、Pythonのdatetimeライブラリでリアルタイム追跡を行い、@st.rerun()を3秒ごとに強制的に呼び出すことで、リアルタイム性の問題を解決しました。</li>
+            <li class="list-item"><span class="difficulty">困難点:</span> クイズの最終問題が完了し、スコア表示に移行する際に、Streamlitの再実行ロジックが完了前に範囲外のインデックスにアクセスしようとし、`IndexError: list index out of range`が発生しました。また、`st.radio`のインデックス初期化の問題もありました。</li>
+            <li class="list-item"><span class="solution">解決策:</span> クイズ完了の条件（`idx >= len(quiz_data)`）の直後に<strong class="solution">st.stop()を明示的に呼び出す</strong>ことで、不要なインデックスアクセスを完全に阻止しました。さらに、ラジオボタンのインデックスエラーを解決するため、クイズの回答配列を安全な初期値（1）に設定しました。</li>
+            <li class="list-item"><span class="difficulty">追加の問題:</span> LLMにAPI構成を通じてJSON応答形式を強制する際、`unexpected keyword argument 'config'`といった互換性の問題が発生しました。</li>
+            <li class="list-item"><span class="solution">解決策:</span> 不安定なAPI configの代わりに、JSONスキーマを含む<strong class="solution">強力なシステムプロンプト</strong>をLLMに渡し、テキストベースでJSON応答を強制することで、問題を回避し安定性を確保しました。</li>
         </ul>
+        
+        <div class="code-block mt-6">
+            <pre><code>
+# クイズ完了とIndexError防止ロジック (コア修正)
+if idx >= len(quiz_data):
+    st.success(L["quiz_complete"])
+    total_questions = len(quiz_data)
+    score = st.session_state.quiz_score
+    st.subheader(f"{L['score']}: {score} / {total_questions} ({(score / total_questions) * 100:.1f}%)")
 
-        <div class="diagram-container">
-            <h4 class="text-lg font-semibold text-gray-800 mb-2">図 2: LLMロールプレイとJSON出力強制シナリオ</h4>
-            <div class="diagram-flow">
-                <div class="flow-step bg-purple-100 text-purple-700">1. 初期のお問合せ及び顧客のタイプを把握する。</div>
-                <div class="flow-arrow text-center">▼</div>
-                <div class="flow-step bg-indigo-100 text-indigo-700">2. LLM (上級者の役割) - ガイドライン及びドラフトを作り出す。(JSONを出力)</div>
-                <div class="flow-arrow text-center">▼</div>
-                <div class="flow-step bg-blue-100 text-blue-700">3. UI ディスプレイ (ガイドライン, ドラフト, 分析)</div>
-                <div class="flow-arrow text-center">▼ (エージェントの一般的な反応)</div>
-                <div class="flow-step bg-red-100 text-red-700">4. エージェントの反応をシェアする (人間からの入力)</div>
-                <div class="flow-arrow text-center">▼</div>
-                <div class="flow-step bg-yellow-100 text-yellow-700">5. LLM (顧客の役割) - 協調する反応を作り出す。</div>
-                <div class="flow-arrow text-center">▲ (Loop) / ▼ (Exit)</div>
-                <div class="flow-step bg-green-100 text-green-700">6. 最終の終了(設問調査を要請して、応対の履歴をほ存する。)</div>
-            </div>
+    if st.button(L["retake_quiz"], key="retake_quiz_btn"):
+        # State Initialization
+        st.session_state.is_quiz_active = False
+        st.session_state.quiz_data = None
+        st.session_state.current_question_index = 0
+        st.session_state.quiz_score = 0
+        st.session_state.quiz_answers = []
+        st.session_state.show_explanation = False
+        st.rerun() # Force rerun after state initialization
+    st.stop() # 必須: 完了チェック後、スクリプトの実行を直ちに停止
+            </code></pre>
         </div>
-        <p class="text-center text-sm text-gray-500 mt-2">図 2: 特定の役割とJSON出力形式を強制することによるLLM応答の制御プロセス</p>
-
-
-        <h3 class="text-xl font-semibold mt-6 mb-4">技術的成果</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="key-point bg-emerald-100 border-emerald-300">
-                <p class="text-xl mb-1">Whisper/TTS 統合</p>
-                <p class="text-base">Streamlitアプリ内で音声入力と出力機能をシームレスに統合。</p>
-            </div>
-            <div class="key-point bg-emerald-100 border-emerald-300">
-                <p class="text-xl mb-1">マルチLLM/埋め込みフォールバック</p>
-                <p class="text-base">様々なLLM APIキー（OpenAI、Gemini、NVIDIAなど）の検証とフォールバック構造を構築。</p>
-            </div>
-            <div class="key-point bg-emerald-100 border-emerald-300">
-                <p class="text-xl mb-1">AIによる履歴要約と検索</p>
-                <p class="text-base">過去の相談要約を活用した、効率的な新規ケース対応システムを実装。</p>
-            </div>
-            <div class="key-point bg-emerald-100 border-emerald-300">
-                <p class="text-xl mb-1">Streamlit-DB-LLMの安定化</p>
-                <p class="text-base">Streamlitの複雑なセッション/再実行環境下で、DBとLLMクライアントの安定動作を実現。</p>
-            </div>
-        </div>
+        <p class="text-center text-sm text-gray-500 mt-2">コード 5: クイズ完了時に発生するIndexErrorを防ぐロジック</p>
     </section>
 
     <!-- スライド 6: 結論とQ&A --><section class="slide text-center">
@@ -347,7 +332,7 @@ def load_faiss_index(embeddings, path="faiss_index"):
         </p>
 
         <p class="key-point bg-red-50 border-red-200 inline-block px-8 py-3 text-xl">
-            最大の教訓: 「小さな機能であっても、環境変数と初期化の順序に関する<span class="difficulty">徹底的な防御ロジック</span>が不可欠である。」
+            最大の教訓: 「小さな機能であっても、環境変数と初期化の順序に関する<strong class="difficulty">徹底的な防御ロジック</strong>が不可欠である。」
         </p>
 
         <h3 class="mt-12 text-3xl text-gray-700">Q & A</h3>

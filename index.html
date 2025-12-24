@@ -42,9 +42,37 @@
             border-bottom: 2px solid rgba(255, 255, 255, 0.5); 
             padding-bottom: 0.5rem;
             margin-bottom: 2rem;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             gap: 0.75rem;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .section-title:hover {
+            opacity: 0.9;
+        }
+        .section-title .accordion-arrow {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .section-title.collapsed .accordion-arrow {
+            transform: rotate(-90deg);
+        }
+        .section-content {
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            overflow: hidden;
+            max-height: 5000px;
+            opacity: 1;
+        }
+        .section-content.collapsed {
+            max-height: 0 !important;
+            margin: 0;
+            opacity: 0;
+            pointer-events: none;
         }
         
         /* 기존의 어두운 테마 프로젝트 카드 (Resume, Notebooks 섹션 유지) */
@@ -193,6 +221,65 @@
         }
         #pauseBtn { display: none; } /* Initially hide pause button */
 
+        /* 더보기 기능 스타일 */
+        .project-card.hidden-item {
+            display: none;
+        }
+        .show-more-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 2rem auto;
+            display: block;
+            backdrop-filter: blur(8px);
+        }
+        .show-more-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        .section-title-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+        
+        /* 언어 선택 드롭다운 스타일 */
+        .language-selector {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 200;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        .language-selector select {
+            background-color: transparent;
+            border: 2px solid #6a00f4;
+            color: #1f2937;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .language-selector label {
+            color: #1f2937;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+
     </style>
 </head>
 <body class="p-4 sm:p-8">
@@ -223,6 +310,17 @@
                             <a href="https://www.linkedin.com/in/yeonwoo-park-b54bba356/" target="_blank" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-700 transition duration-300 inline-flex items-center"><i class="fab fa-linkedin mr-2"></i> LinkedIn</a>
                             <a href="https://github.com/Salmonyeonwoo" target="_blank" class="bg-gray-900 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-800 transition duration-300 inline-flex items-center"><i class="fab fa-github mr-2"></i> GitHub</a>
                         </div>
+                        
+                        <!-- Language Selector -->
+                        <div class="language-selector">
+                            <label for="languageSelect"><i class="fas fa-language mr-1"></i>Priority for language options:</label>
+                            <select id="languageSelect"> 
+                                <option value="kr">KR</option>
+                                <option value="en">EN</option>
+                                <option value="jp">JP</option>
+                                <option value="all">All</option>    
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -232,46 +330,51 @@
 
             <!-- *** Resume & Storytelling Section (Original CSS maintained) *** -->
             <section>
-                <h2 class="section-title"><i class="fas fa-user-circle"></i>My resume and storytelling details for myself</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="section-title-wrapper">
+                    <h2 class="section-title collapsed" data-accordion="resume-accordion"><i class="fas fa-user-circle"></i>My resume and storytelling details for myself <i class="fas fa-chevron-down accordion-arrow"></i></h2>
+                </div>
+                <div class="section-content collapsed" id="resume-accordion">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-section="resume">
                     
-                    <a href="Resume files /이력서 소개 (한국어) 웹 프레젠테이션.html" target="_blank" class="project-card">
+                    <a href="Resume files /이력서 소개 (한국어) 웹 프레젠테이션.html" target="_blank" class="project-card" data-lang="kr">
                         <div><h4>경력 소개 (한국어 - 웹 PT)</h4>
                             <p>Klook, Roblox 등 글로벌 기업에서 데이터 분석 기반으로 AI 챗봇 성능을 개선하고(상담원 전환율 안정화) 프로세스 효율화를 주도한 핵심 경력을 소개합니다.</p>
                         </div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag kr">KR</span></div>
                     </a>
-                    <a href="Resume files /職務経歴書 (日本語) ウェブプレゼンテーション.html" target="_blank" class="project-card">
+                    <a href="Resume files /職務経歴書 (日本語) ウェブプレゼンテーション.html" target="_blank" class="project-card" data-lang="jp">
                         <div><h4>職務経歴書 (日本語 - ウェブ PT)</h4>
                             <p>AIチャットボックス QA, アカウントのセキュリティの分析等のデータベースの成果に基いた日本市場によって特化された職務経歴書です。</p>
                         </div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag jp">JP</span></div>
                     </a>
-                    <a href="Resume files /Resume Overview (English) Web Presentation.html" target="_blank" class="project-card">
+                    <a href="Resume files /Resume Overview (English) Web Presentation.html" target="_blank" class="project-card" data-lang="en">
                         <div><h4>Resume Overview (English - Web PT)</h4>
                             <p>Presents data-driven achievements, including reducing agent escalation rates at Klook and establishing an AI knowledge base foundation at Motorola.</p>
                         </div>
                         <div class="tags"><span class="tag">HTML</span><span class="tag en">EN</span></div>
                     </a>
 
-                    <a href="https://gemini.google.com/share/5406e7797d40" target="_blank" class="project-card">
+                    <a href="https://gemini.google.com/share/5406e7797d40" target="_blank" class="project-card hidden-item" data-lang="kr">
                         <div><h4>자기 소개 스토리텔링 (한국어)</h4><p>저의 성장 과정과 경험을 담은 한국어 스토리텔링 북입니다.</p></div>
                         <div class="tags"><span class="tag html">HTML</span><span class="tag kr">KR</span></div>
                     </a>
-                    <a href="https://gemini.google.com/share/b02ddda4708d" target="_blank" class="project-card">
+                    <a href="https://gemini.google.com/share/b02ddda4708d" target="_blank" class="project-card hidden-item" data-lang="en">
                         <div><h4>Self-Introduction Storytelling (English)</h4><p>An English storytelling book about my journey and experiences.</p></div>
                         <div class="tags"><span class="tag html">HTML</span><span class="tag en">EN</span></div>
                     </a>
-                    <a href="https://gemini.google.com/share/e4eb22fbf133" target="_blank" class="project-card">
+                    <a href="https://gemini.google.com/share/e4eb22fbf133" target="_blank" class="project-card hidden-item" data-lang="jp">
                         <div><h4>自己紹介ストーリーテリング (日本語)</h4><p>私の成長過程と経験を盛り込んだ日本語のストーリーテリングブックです。</p></div>
                         <div class="tags"><span class="tag html">HTML</span><span class="tag jp">JP</span></div>
                     </a>
-                    <a href="https://notebooklm.google.com/notebook/e10a4d4c-a31a-4c63-9c00-6031d66e2032" target="_blank" class="project-card">
+                    <a href="https://notebooklm.google.com/notebook/e10a4d4c-a31a-4c63-9c00-6031d66e2032" target="_blank" class="project-card hidden-item" data-lang="kr">
                         <div><h4>LLM 활용 Video/Audio Overview</h4>
                             <p>LLM의 스토리텔링 기능을 활용하여 저의 경력과 비전을 음성/영상으로 요약한 자기소개 자료입니다.</p>
                         </div>
                         <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag kr">KR</span></div>
                     </a>                    
+                </div>
+                <button class="show-more-btn" data-section="resume">View more <i class="fas fa-chevron-down"></i></button>
                 </div>
             </section>
             <!-- *** End of Section *** -->
@@ -279,7 +382,10 @@
 
             <!-- *** Relevant jobs to AI functions Section (Original CSS maintained) *** -->
             <section>
-                <h2 class="section-title"><i class="fas fa-user-circle"></i>Examination of job environment, relevant to AI functions</h2>
+                <div class="section-title-wrapper">
+                    <h2 class="section-title collapsed" data-accordion="ai-functions-accordion"><i class="fas fa-user-circle"></i>Examination of job environment, relevant to AI functions <i class="fas fa-chevron-down accordion-arrow"></i></h2>
+                </div>
+                <div class="section-content collapsed" id="ai-functions-accordion">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
             <a href="Relevant jobs to AI functions /AI 기반 CS 효율화 전략 프레젠테이션.html" target="_blank" class="project-card">
@@ -303,13 +409,17 @@
                         <div class="tags"><span class="tag">HTML</span><span class="tag en">EN</span></div>
                     </a>
                 </div>
+                </div>
             </section>
             <!-- *** End of Section *** -->
 
             
             <!-- *** AI Education Files Section (UPDATED: Bright Background & Centered) - START *** -->
             <section>
-                <h2 class="section-title"><i class="fas fa-desktop"></i>AI 교육 프로젝트 요약 (HTML 프레젠테이션)</h2>
+                <div class="section-title-wrapper">
+                    <h2 class="section-title collapsed" data-accordion="ai-education-accordion"><i class="fas fa-desktop"></i>Summarized HTML  presentation files for AI education <i class="fas fa-chevron-down accordion-arrow"></i></h2>
+                </div>
+                <div class="section-content collapsed" id="ai-education-accordion">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">                    
 
                     <!-- [GitHub 내 파일 및 폴더 관리] 섹션 (1개) - Class changed to project-card-ai-pt -->
@@ -528,10 +638,15 @@
                         <div class="tags"><span class="tag pt">HTML PT</span><span class="tag api">API</span></div>
                     </a>   
                 </div>
+                </div>
             </section>
             <!-- *** End of AI Education Files Section - END *** -->
 
-            <h2 class="section-title"><i class="fas fa-user-circle"></i>My processes for streamlit setups with Firebase and GitHub</h2>
+            <section>
+                <div class="section-title-wrapper">
+                    <h2 class="section-title collapsed" data-accordion="streamlit-accordion"><i class="fas fa-user-circle"></i>My processes for streamlit setups with Firebase and GitHub <i class="fas fa-chevron-down accordion-arrow"></i></h2>
+                </div>
+                <div class="section-content collapsed" id="streamlit-accordion">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">           
 
                     <a href="https://utility-convenience-salmonyeonwoo.streamlit.app/" target="_blank" class="project-card">
@@ -608,11 +723,15 @@
                     </a>
                     
                 </div>
+                </div>
             </section>
             <!-- *** End of My processes for streamlit setups with Firebase and GitHub Section - END *** -->
             
             <section>
-                <h2 class="section-title"><i class="fas fa-flask"></i>AI/머신러닝 프로젝트 (주요 요약)</h2>
+                <div class="section-title-wrapper">
+                    <h2 class="section-title collapsed" data-accordion="ml-project-accordion"><i class="fas fa-flask"></i>AI/머신러닝 프로젝트 (주요 요약) <i class="fas fa-chevron-down accordion-arrow"></i></h2>
+                </div>
+                <div class="section-content collapsed" id="ml-project-accordion">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <a href="AI_education_files/ GPU 기반 데이터 파이프라인.html" target="_blank" class="project-card">
                         <div><h4>AI/머신러닝 프로젝트 요약본 (GPU 기반 파이프라인)</h4>
@@ -622,11 +741,15 @@
                     </a>
                            
                 </div>
+                </div>
             </section>
             
             <!-- *** Presentation files for AI competition - START *** -->          
             <section>
-                <h2 class="section-title"><i class="fas fa-desktop"></i>Interactive Web Presentations (HTML)</h2>
+                <div class="section-title-wrapper">
+                    <h2 class="section-title collapsed" data-accordion="interactive-presentations-accordion"><i class="fas fa-desktop"></i>Interactive Web Presentations (HTML) <i class="fas fa-chevron-down accordion-arrow"></i></h2>
+                </div>
+                <div class="section-content collapsed" id="interactive-presentations-accordion">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                     <a href="Presentation files for AI competitions /NVIDIA 교육 성과 및 AI 대회 참가 이력 요약.html" target="_blank" class="project-card">
@@ -754,11 +877,15 @@
                         <div class="tags"><span class="tag">HTML</span><span class="tag en">EN</span></div>
                     </a>
                 </div>
+                </div>
             </section>
             
             <!-- *** Prosperity for globalized tourism - START *** -->          
             <section>
-                <h2 class="section-title"><i class="fas fa-desktop"></i>Prosperity for globalized tourism</h2>
+                <div class="section-title-wrapper">
+                    <h2 class="section-title collapsed" data-accordion="tourism-accordion"><i class="fas fa-desktop"></i>Prosperity for globalized tourism <i class="fas fa-chevron-down accordion-arrow"></i></h2>
+                </div>
+                <div class="section-content collapsed" id="tourism-accordion">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                     <a href="Presentation files for AI competitions /K-Food_Globalization_Strategy_Analysis_Slideshow_FIXED.html" target="_blank" class="project-card">
@@ -791,6 +918,7 @@
                         <div class="tags"><span class="tag">HTML</span><span class="tag en">EN</span></div>
                     </a>
                     
+                </div>
                 </div>
             </section>
 
@@ -844,6 +972,7 @@
             const contactButton = document.getElementById('contactButton');
             const contactModal = document.getElementById('contactModal');
             const closeModalButton = document.getElementById('closeModalButton');
+            const languageSelect = document.getElementById('languageSelect');
 
             // 1. 'Contact Me' 버튼 클릭 시 모달 표시
             contactButton.addEventListener('click', function() {
@@ -861,6 +990,264 @@
                     contactModal.classList.add('hidden');
                 }
             });
+
+            // 6. 아코디언 기능 초기화
+            function initAccordion() {
+                // 기존 이벤트 리스너 제거를 위해 클론 후 교체
+                const accordionTitles = document.querySelectorAll('.section-title[data-accordion]');
+                accordionTitles.forEach(title => {
+                    const accordionId = title.getAttribute('data-accordion');
+                    const content = document.getElementById(accordionId);
+                    
+                    if (!content) return;
+                    
+                    // 기본적으로 접혀있음
+                    if (title.classList.contains('collapsed')) {
+                        content.style.maxHeight = '0px';
+                    }
+                    
+                    // 기존 이벤트 리스너 제거를 위해 새 요소로 교체
+                    const newTitle = title.cloneNode(true);
+                    title.parentNode.replaceChild(newTitle, title);
+                    
+                    // 새 이벤트 리스너 추가
+                    newTitle.addEventListener('click', function() {
+                        const isCollapsed = this.classList.contains('collapsed');
+                        
+                        if (isCollapsed) {
+                            // 펼치기
+                            this.classList.remove('collapsed');
+                            content.classList.remove('collapsed');
+                            const scrollHeight = content.scrollHeight;
+                            content.style.maxHeight = scrollHeight + 'px';
+                        } else {
+                            // 접기
+                            this.classList.add('collapsed');
+                            content.style.maxHeight = '0px';
+                            setTimeout(() => {
+                                content.classList.add('collapsed');
+                            }, 300);
+                        }
+                    });
+                });
+            }
+
+            // 섹션 제목 번역 데이터
+            const sectionTitles = {
+                'resume-accordion': {
+                    en: 'My resume and storytelling details for myself',
+                    kr: '이력서 및 자기소개 스토리텔링',
+                    jp: '履歴書と自己紹介ストーリーテリング'
+                },
+                'ai-functions-accordion': {
+                    en: 'Examination of job environment, relevant to AI functions',
+                    kr: 'AI 기능 관련 직무 환경 검토',
+                    jp: 'AI機能に関連する職務環境の検討'
+                },
+                'ai-education-accordion': {
+                    en: 'Summarized HTML presentation files for AI education',
+                    kr: 'AI 교육 프로젝트 요약 (HTML 프레젠테이션)',
+                    jp: 'AI教育プロジェクト要約（HTMLプレゼンテーション）'
+                },
+                'streamlit-accordion': {
+                    en: 'My processes for streamlit setups with Firebase and GitHub',
+                    kr: 'Streamlit, Firebase 및 GitHub 설정 프로세스',
+                    jp: 'Streamlit、Firebase、GitHub設定プロセス'
+                },
+                'ml-project-accordion': {
+                    en: 'AI/Machine Learning Projects (Key Summary)',
+                    kr: 'AI/머신러닝 프로젝트 (주요 요약)',
+                    jp: 'AI/機械学習プロジェクト（主要要約）'
+                },
+                'interactive-presentations-accordion': {
+                    en: 'Interactive Web Presentations (HTML)',
+                    kr: '인터랙티브 웹 프레젠테이션 (HTML)',
+                    jp: 'インタラクティブウェブプレゼンテーション（HTML）'
+                },
+                'tourism-accordion': {
+                    en: 'Prosperity for globalized tourism',
+                    kr: '글로벌 관광업의 번영',
+                    jp: 'グローバル化された観光業の繁栄'
+                }
+            };
+
+            // 'View more' 버튼 텍스트 번역
+            const viewMoreText = {
+                en: 'View more',
+                kr: '더보기',
+                jp: 'もっと見る'
+            };
+
+            // 5. 언어별 필터링 및 정렬 기능
+            function sortByLanguage(lang) {
+                const sections = document.querySelectorAll('section');
+                sections.forEach(section => {
+                    const grid = section.querySelector('.grid');
+                    if (!grid) return;
+                    
+                    const cards = Array.from(grid.querySelectorAll('.project-card, .project-card-ai-pt'));
+                    if (cards.length === 0) return;
+                    
+                    // 각 카드의 언어 태그 확인 및 data-lang 설정
+                    cards.forEach(card => {
+                        if (!card.getAttribute('data-lang')) {
+                            const tags = card.querySelectorAll('.tag');
+                            let cardLang = 'other';
+                            tags.forEach(tag => {
+                                if (tag.classList.contains('kr') || tag.textContent.includes('KR')) cardLang = 'kr';
+                                else if (tag.classList.contains('en') || tag.textContent.includes('EN')) cardLang = 'en';
+                                else if (tag.classList.contains('jp') || tag.textContent.includes('JP')) cardLang = 'jp';
+                            });
+                            card.setAttribute('data-lang', cardLang);
+                        }
+                    });
+                    
+                    // 언어별 필터링 및 정렬
+                    if (lang === 'all') {
+                        // All: 모든 언어 표시, 순서는 EN > KR > JP
+                        cards.forEach(card => {
+                            card.style.display = '';
+                        });
+                        
+                        cards.sort((a, b) => {
+                            const aLang = a.getAttribute('data-lang');
+                            const bLang = b.getAttribute('data-lang');
+                            
+                            const order = { 'en': 1, 'kr': 2, 'jp': 3, 'other': 4 };
+                            return (order[aLang] || 99) - (order[bLang] || 99);
+                        });
+                    } else {
+                        // 특정 언어만 표시
+                        cards.forEach(card => {
+                            const cardLang = card.getAttribute('data-lang');
+                            if (cardLang === lang) {
+                                card.style.display = '';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+                    }
+                    
+                    // DOM에서 재배치
+                    const fragment = document.createDocumentFragment();
+                    cards.forEach(card => fragment.appendChild(card));
+                    grid.appendChild(fragment);
+                    
+                    // 더보기 기능 재초기화
+                    const hiddenCards = grid.querySelectorAll('.hidden-item');
+                    hiddenCards.forEach(card => card.classList.remove('hidden-item'));
+                    
+                    const visibleCards = Array.from(grid.querySelectorAll('.project-card:not([style*="display: none"]), .project-card-ai-pt:not([style*="display: none"])'));
+                    visibleCards.forEach((card, index) => {
+                        if (index >= 3) {
+                            card.classList.add('hidden-item');
+                        }
+                    });
+                    
+                    // 더보기 버튼 텍스트 변경 (all일 때는 영어로)
+                    const showMoreBtn = section.querySelector('.show-more-btn');
+                    if (showMoreBtn) {
+                        if (visibleCards.length > 3) {
+                            showMoreBtn.style.display = 'block';
+                            const buttonLang = lang === 'all' ? 'en' : lang;
+                            showMoreBtn.innerHTML = viewMoreText[buttonLang] + ' <i class="fas fa-chevron-down"></i>';
+                        } else {
+                            showMoreBtn.style.display = 'none';
+                        }
+                    }
+                });
+                
+                // 섹션 제목 번역 (all일 때는 영어로 유지)
+                updateSectionTitles(lang === 'all' ? 'en' : lang);
+            }
+
+            // 섹션 제목 업데이트 함수
+            function updateSectionTitles(lang) {
+                Object.keys(sectionTitles).forEach(accordionId => {
+                    const titleElement = document.querySelector(`[data-accordion="${accordionId}"]`);
+                    if (titleElement && sectionTitles[accordionId][lang]) {
+                        // 아이콘과 화살표는 유지하고 텍스트만 변경
+                        const icon = titleElement.querySelector('i.fas:not(.accordion-arrow)');
+                        const arrow = titleElement.querySelector('i.accordion-arrow');
+                        const newText = sectionTitles[accordionId][lang];
+                        const isCollapsed = titleElement.classList.contains('collapsed');
+                        
+                        if (icon && arrow) {
+                            titleElement.innerHTML = icon.outerHTML + ' ' + newText + ' ' + arrow.outerHTML;
+                        } else if (icon) {
+                            titleElement.innerHTML = icon.outerHTML + ' ' + newText;
+                        } else {
+                            titleElement.innerHTML = newText;
+                        }
+                        
+                        // collapsed 클래스 유지
+                        if (isCollapsed) {
+                            titleElement.classList.add('collapsed');
+                        }
+                    }
+                });
+            }
+
+            // 언어 선택 이벤트 리스너
+            languageSelect.addEventListener('change', function() {
+                const selectedLang = this.value;
+                sortByLanguage(selectedLang);
+                // 정렬 후 더보기 기능 재초기화
+                setTimeout(() => {
+                    initShowMore(selectedLang);
+                    // 아코디언 이벤트 리스너 재설정
+                    initAccordion();
+                }, 100);
+            });
+
+            // 더보기 기능 초기화 (언어 파라미터 추가)
+            function initShowMore(lang = 'en') {
+                const sections = document.querySelectorAll('section');
+                sections.forEach(section => {
+                    const grid = section.querySelector('.grid');
+                    if (!grid) return;
+                    
+                    const cards = Array.from(grid.querySelectorAll('.project-card:not([style*="display: none"]), .project-card-ai-pt:not([style*="display: none"])'));
+                    if (cards.length <= 3) {
+                        const existingBtn = section.querySelector('.show-more-btn');
+                        if (existingBtn) existingBtn.remove();
+                        return;
+                    }
+                    
+                    cards.forEach((card, index) => {
+                        if (index >= 3) {
+                            card.classList.add('hidden-item');
+                        } else {
+                            card.classList.remove('hidden-item');
+                        }
+                    });
+                    
+                    let showMoreBtn = section.querySelector('.show-more-btn');
+                    if (!showMoreBtn) {
+                        showMoreBtn = document.createElement('button');
+                        showMoreBtn.className = 'show-more-btn';
+                        section.appendChild(showMoreBtn);
+                    }
+                    
+                    showMoreBtn.innerHTML = viewMoreText[lang] + ' <i class="fas fa-chevron-down"></i>';
+                    showMoreBtn.onclick = function() {
+                        const hiddenCards = grid.querySelectorAll('.hidden-item');
+                        if (hiddenCards.length > 0) {
+                            hiddenCards.forEach(card => {
+                                card.classList.remove('hidden-item');
+                            });
+                            this.style.display = 'none';
+                        }
+                    };
+                });
+            }
+
+            // 초기화
+            // 기본값은 'all'이지만 제목은 영어로 표시
+            updateSectionTitles('en');
+            sortByLanguage('all');
+            initShowMore('en');
+            initAccordion();
         });
     </script>
 </body>

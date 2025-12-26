@@ -222,7 +222,8 @@
         #pauseBtn { display: none; } /* Initially hide pause button */
 
         /* 더보기 기능 스타일 */
-        .project-card.hidden-item {
+        .project-card.hidden-item,
+        .project-card-ai-pt.hidden-item {
             display: none;
         }
         .show-more-btn {
@@ -315,9 +316,8 @@
                         <div class="language-selector">
                             <label for="languageSelect"><i class="fas fa-language mr-1"></i>Priority for language options:</label>
                             <select id="languageSelect"> 
-                                <option value="all" selected>All</option>
+                                <option value="en" selected>EN</option>
                                 <option value="kr">KR</option>
-                                <option value="en">EN</option>
                                 <option value="jp">JP</option>
                             </select>
                         </div>
@@ -1100,31 +1100,15 @@
                         }
                     });
                     
-                    // 언어별 필터링 및 정렬
-                    if (lang === 'all') {
-                        // All: 모든 언어 표시, 순서는 EN > KR > JP
-                        cards.forEach(card => {
+                    // 특정 언어만 표시
+                    cards.forEach(card => {
+                        const cardLang = card.getAttribute('data-lang');
+                        if (cardLang === lang) {
                             card.style.display = '';
-                        });
-                        
-                        cards.sort((a, b) => {
-                            const aLang = a.getAttribute('data-lang');
-                            const bLang = b.getAttribute('data-lang');
-                            
-                            const order = { 'en': 1, 'kr': 2, 'jp': 3, 'other': 4 };
-                            return (order[aLang] || 99) - (order[bLang] || 99);
-                        });
-                    } else {
-                        // 특정 언어만 표시
-                        cards.forEach(card => {
-                            const cardLang = card.getAttribute('data-lang');
-                            if (cardLang === lang) {
-                                card.style.display = '';
-                            } else {
-                                card.style.display = 'none';
-                            }
-                        });
-                    }
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
                     
                     // DOM에서 재배치
                     const fragment = document.createDocumentFragment();
@@ -1142,32 +1126,33 @@
                         }
                     });
                     
-                    // 더보기 버튼 텍스트 변경 (all일 때는 영어로)
+                    // 더보기 버튼 텍스트 변경
                     const showMoreBtn = section.querySelector('.show-more-btn');
                     if (showMoreBtn) {
                         if (visibleCards.length > 3) {
                             showMoreBtn.style.display = 'block';
-                            const buttonLang = lang === 'all' ? 'en' : lang;
-                            showMoreBtn.innerHTML = viewMoreText[buttonLang] + ' <i class="fas fa-chevron-down"></i>';
+                            const buttonText = viewMoreText[lang] || viewMoreText['en'];
+                            showMoreBtn.innerHTML = buttonText + ' <i class="fas fa-chevron-down"></i>';
                         } else {
                             showMoreBtn.style.display = 'none';
                         }
                     }
                 });
                 
-                // 섹션 제목 번역 (all일 때는 영어로 유지)
-                updateSectionTitles(lang === 'all' ? 'en' : lang);
+                // 섹션 제목 번역
+                updateSectionTitles(lang);
             }
 
             // 섹션 제목 업데이트 함수
             function updateSectionTitles(lang) {
+                const safeLang = lang || 'en';
                 Object.keys(sectionTitles).forEach(accordionId => {
                     const titleElement = document.querySelector(`[data-accordion="${accordionId}"]`);
-                    if (titleElement && sectionTitles[accordionId][lang]) {
+                    if (titleElement && sectionTitles[accordionId] && sectionTitles[accordionId][safeLang]) {
                         // 아이콘과 화살표는 유지하고 텍스트만 변경
                         const icon = titleElement.querySelector('i.fas:not(.accordion-arrow)');
                         const arrow = titleElement.querySelector('i.accordion-arrow');
-                        const newText = sectionTitles[accordionId][lang];
+                        const newText = sectionTitles[accordionId][safeLang];
                         const isCollapsed = titleElement.classList.contains('collapsed');
                         
                         if (icon && arrow) {
@@ -1188,7 +1173,7 @@
 
             // 언어 선택 이벤트 리스너
             languageSelect.addEventListener('change', function() {
-                const selectedLang = this.value;
+                const selectedLang = this.value || 'en';
                 sortByLanguage(selectedLang);
                 // 정렬 후 더보기 기능 재초기화
                 setTimeout(() => {
@@ -1208,7 +1193,7 @@
                     const cards = Array.from(grid.querySelectorAll('.project-card:not([style*="display: none"]), .project-card-ai-pt:not([style*="display: none"])'));
                     if (cards.length <= 3) {
                         const existingBtn = section.querySelector('.show-more-btn');
-                        if (existingBtn) existingBtn.remove();
+                        if (existingBtn) existingBtn.style.display = 'none';
                         return;
                     }
                     
@@ -1224,10 +1209,17 @@
                     if (!showMoreBtn) {
                         showMoreBtn = document.createElement('button');
                         showMoreBtn.className = 'show-more-btn';
-                        section.appendChild(showMoreBtn);
+                        const sectionContent = section.querySelector('.section-content');
+                        if (sectionContent) {
+                            sectionContent.appendChild(showMoreBtn);
+                        } else {
+                            section.appendChild(showMoreBtn);
+                        }
                     }
                     
-                    showMoreBtn.innerHTML = viewMoreText[lang] + ' <i class="fas fa-chevron-down"></i>';
+                    const buttonText = viewMoreText[lang] || viewMoreText['en'];
+                    showMoreBtn.innerHTML = buttonText + ' <i class="fas fa-chevron-down"></i>';
+                    showMoreBtn.style.display = 'block';
                     showMoreBtn.onclick = function() {
                         const hiddenCards = grid.querySelectorAll('.hidden-item');
                         if (hiddenCards.length > 0) {
@@ -1241,10 +1233,11 @@
             }
 
             // 초기화
-            // 기본값은 'all'이지만 제목은 영어로 표시
-            updateSectionTitles('en');
-            sortByLanguage('all');
-            initShowMore('en');
+            // 기본값은 'en'으로 설정
+            const defaultLang = languageSelect.value || 'en';
+            updateSectionTitles(defaultLang);
+            sortByLanguage(defaultLang);
+            initShowMore(defaultLang);
             initAccordion();
         });
     </script>

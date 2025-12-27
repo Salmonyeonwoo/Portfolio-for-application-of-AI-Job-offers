@@ -18,6 +18,8 @@
             color: #ffffff;
             min-height: 100vh;
             padding-bottom: 100px; /* 오디오 플레이어 공간 확보 */
+            overflow-x: hidden;
+            overflow-y: auto;
         }
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
@@ -29,6 +31,23 @@
             padding: 1rem;
             max-width: 1200px;
             margin: 0 auto;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        main {
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        section {
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .grid {
+            width: 100%;
+            overflow: visible;
         }
         .header-card { 
             background-color: rgba(255, 255, 255, 0.95); 
@@ -64,8 +83,8 @@
         }
         .section-content {
             transition: max-height 0.3s ease, opacity 0.3s ease;
-            overflow: hidden;
-            max-height: 5000px;
+            overflow: visible;
+            max-height: none;
             opacity: 1;
         }
         .section-content.collapsed {
@@ -73,6 +92,7 @@
             margin: 0;
             opacity: 0;
             pointer-events: none;
+            overflow: hidden;
         }
         
         /* 기존의 어두운 테마 프로젝트 카드 (Resume, Notebooks 섹션 유지) */
@@ -90,6 +110,8 @@
             border-left-width: 6px;
             border-left-color: #6a00f4;
             min-height: 180px;
+            overflow: visible;
+            word-wrap: break-word;
         }
         .project-card:hover { 
             transform: translateY(-8px); 
@@ -142,6 +164,8 @@
             border-left-color: #00ff73; /* 기본 색상 지정 */
             min-height: 180px;
             text-align: center; /* 카드 내용 가운데 정렬 */
+            overflow: visible;
+            word-wrap: break-word;
         }
         .project-card-ai-pt:hover { 
             transform: translateY(-5px); /* 더 부드러운 호버 효과 */
@@ -296,7 +320,7 @@
                         <h1 class="text-4xl font-bold text-gray-800">박연우 (Yeonwoo Park)</h1>
                         <h2 class="text-2xl font-medium text-blue-600 mt-1">AI Application & QA Specialist</h2>
                         
-                        <p class="mt-4 max-w-2xl text-gray-600">
+                        <p id="profileDescription" class="mt-4 max-w-2xl text-gray-600">
                             비전공 도메인(언어, 회계) 전문성과 AI 활용 능력을 결합해, 기술팀과 현업 사용자 간의 복잡한 커뮤니케이션 장벽을 해소하는 '기술 번역가' 역할에 강점이 있습니다. 데이터 분석 기반의 AI 품질 보증(QA) 및 서비스 기획을 통해 실질적인 비즈니스 가치를 창출하는 것을 목표로 합니다.
                         </p>
                         
@@ -1018,9 +1042,17 @@
                             content.classList.remove('collapsed');
                             const scrollHeight = content.scrollHeight;
                             content.style.maxHeight = scrollHeight + 'px';
+                            // 애니메이션 완료 후 max-height 제거하여 제한 없이 표시
+                            setTimeout(() => {
+                                content.style.maxHeight = 'none';
+                            }, 350);
                         } else {
                             // 접기
                             this.classList.add('collapsed');
+                            // 접기 전에 현재 높이를 설정
+                            content.style.maxHeight = content.scrollHeight + 'px';
+                            // 리플로우 강제
+                            void content.offsetHeight;
                             content.style.maxHeight = '0px';
                             setTimeout(() => {
                                 content.classList.add('collapsed');
@@ -1074,6 +1106,13 @@
                 en: 'View more',
                 kr: '더보기',
                 jp: 'もっと見る'
+            };
+
+            // 프로필 설명 번역 데이터
+            const profileDescriptionText = {
+                kr: '비전공 도메인(언어, 회계) 전문성과 AI 활용 능력을 결합해, 기술팀과 현업 사용자 간의 복잡한 커뮤니케이션 장벽을 해소하는 \'기술 번역가\' 역할에 강점이 있습니다. 데이터 분석 기반의 AI 품질 보증(QA) 및 서비스 기획을 통해 실질적인 비즈니스 가치를 창출하는 것을 목표로 합니다.',
+                en: 'I combine expertise in non-technical domains (language, accounting) with AI capabilities to bridge complex communication barriers between technical teams and business users, serving as a "technical translator." My goal is to create tangible business value through data-driven AI quality assurance (QA) and service planning.',
+                jp: '非技術ドメイン（言語、会計）の専門性とAI活用能力を組み合わせ、技術チームと現場ユーザー間の複雑なコミュニケーション障壁を解消する「技術翻訳者」としての役割に強みがあります。データ分析に基づくAI品質保証（QA）およびサービス企画を通じて、実質的なビジネス価値を創出することを目指しています。'
             };
 
             // 5. 언어별 필터링 및 정렬 기능
@@ -1141,6 +1180,8 @@
                 
                 // 섹션 제목 번역
                 updateSectionTitles(lang);
+                // 프로필 설명 번역
+                updateProfileDescription(lang);
             }
 
             // 섹션 제목 업데이트 함수
@@ -1171,9 +1212,19 @@
                 });
             }
 
+            // 프로필 설명 업데이트 함수
+            function updateProfileDescription(lang) {
+                const profileDesc = document.getElementById('profileDescription');
+                const safeLang = lang || 'en';
+                if (profileDesc && profileDescriptionText[safeLang]) {
+                    profileDesc.textContent = profileDescriptionText[safeLang];
+                }
+            }
+
             // 언어 선택 이벤트 리스너
             languageSelect.addEventListener('change', function() {
                 const selectedLang = this.value || 'en';
+                updateProfileDescription(selectedLang);
                 sortByLanguage(selectedLang);
                 // 정렬 후 더보기 기능 재초기화
                 setTimeout(() => {
@@ -1236,6 +1287,7 @@
             // 기본값은 'en'으로 설정
             const defaultLang = languageSelect.value || 'en';
             updateSectionTitles(defaultLang);
+            updateProfileDescription(defaultLang);
             sortByLanguage(defaultLang);
             initShowMore(defaultLang);
             initAccordion();

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIVA/TTS Speech AI Server Deployment Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7f9; 
+            font-family: 'Noto Sans JP', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            padding: 30px 0; 
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto; 
+            background-color: #ffffff; 
+            padding: 40px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+        h1 {
+            color: #1a73e8;
+            border-bottom: 3px solid #e6f0ff;
+            padding-bottom: 15px;
+            margin-top: 0;
+            font-size: 2rem;
+        }
+        h2 {
+            color: #3c4043;
+            background-color: #e6f0ff;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 35px;
+            font-size: 1.5rem;
+            border-left: 5px solid #1a73e8;
+        }
+        h3 {
+            color: #0d47a1;
+            font-weight: 700;
+            margin-top: 20px;
+            font-size: 1.1rem;
+        }
+        .lang-label {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #1a73e8;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+            display: block;
+        }
+        .jp-text { color: #333; }
+        .en-text { color: #5f6368; font-style: italic; margin-bottom: 10px; display: block; }
+        
+        .card {
+            background-color: #f7f9fc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .tech-tag {
+            display: inline-block;
+            background-color: #e3f2fd; 
+            color: #1a73e8; 
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        .step-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .step-box {
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            padding: 15px;
+            border-radius: 8px;
+            flex: 1 1 30%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .step-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4CAF50;
+            margin-bottom: 5px;
+        }
+        .step-title {
+            font-weight: 700;
+            color: #1a73e8;
+            margin-bottom: 5px;
+        }
+        .step-detail {
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto">
+        <header class="header">
+            <h1 class="font-bold text-gray-800">RIVA/TTS Speech AI Server Deployment Summary</h1>
+            <p class="text-gray-500 mt-2">NVIDIA Riva Speech AI SDKを活用した高性能gRPCサービスインフラ構築ガイド</p>
+        </header>
+
+        <section class="mb-10">
+            <h2>1. Project Overview & Goals / プロジェクトの概要と目標</h2>
+            <div class="card">
+                <span class="lang-label">English</span>
+                <span class="en-text">This project demonstrates how to stably deploy real-time Automatic Speech Recognition (ASR) and Text-to-Speech (TTS) services using the NVIDIA Riva Speech AI SDK in a GPU-accelerated environment and communicate with clients. This proves the ability to build infrastructure for high-performance conversational AI services and design gRPC-based communication.</span>
+                
+                <span class="lang-label">日本語</span>
+                <p class="jp-text">本プロジェクトは、NVIDIA Riva Speech AI SDKを使用し、リアルタイム音声認識(ASR)および音声合成(TTS)サービスをGPU加速環境で安定的にデプロイし、クライアントと通信する方法を実習したものです。これにより、高性能な対話型AIサービスのためのインフラ構築およびgRPCベースの通信設計能力を実証します。</p>
+
+                <div class="mt-4 flex flex-wrap">
+                    <span class="tech-tag">Riva SDK</span>
+                    <span class="tech-tag">Docker Container</span>
+                    <span class="tech-tag">gRPC Client/Server</span>
+                    <span class="tech-tag">GPU Infrastructure</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-10">
+            <h2>2. GPU-based Deployment Steps / デプロイ手順</h2>
+            <div class="step-container">
+                <div class="step-box">
+                    <div class="step-number">Step 1</div>
+                    <div class="step-title">Docker & Model Setup</div>
+                    <div class="step-detail">
+                        <p class="en-text">Check GPU drivers and download Riva pre-trained container images.</p>
+                        <p class="jp-text">GPUドライバとDocker環境を確認し、学習済みモデルコンテナをダウンロードします。</p>
+                    </div>
+                </div>
+                <div class="step-box">
+                    <div class="step-number">Step 2</div>
+                    <div class="step-title">Run Riva Server</div>
+                    <div class="step-detail">
+                        <p class="en-text">Allocate GPU resources and run ASR/TTS services in the background.</p>
+                        <p class="jp-text">GPUリソースを割り当て、ASR/TTSサービスをバックグラウンドで実行します。</p>
+                    </div>
+                </div>
+                <div class="step-box">
+                    <div class="step-number">Step 3</div>
+                    <div class="step-title">gRPC Communication</div>
+                    <div class="step-detail">
+                        <p class="en-text">Establish connection using gRPC stubs in Python to send requests.</p>
+                        <p class="jp-text">Python環境でgRPCスタブを使用し、サーバーとの通信を確立してリクエストを送信します。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <p class="font-semibold text-gray-700 mb-2">Architecture Diagram / アーキテクチャ図</p>
+                <div class="bg-blue-50 border-2 border-dashed border-blue-200 p-10 rounded-lg">
+                                    </div>
+                <p class="text-sm text-gray-500 mt-2">High-performance Client-Server interaction via gRPC protocol</p>
+            </div>
+        </section>
+
+        <section class="mb-10">
+            <h2>3. Technical Challenges & Solutions / 技術的課題と解決策</h2>
+            <div class="card">
+                <h3>3-1. GPU Resource Allocation / GPUリソースの割り当て</h3>
+                <p class="en-text">Challenge: Complexity of connecting GPU resources to Docker containers. Solution: Applied `nvidia-container-toolkit` and `--gpus all` flags for full GPU utilization.</p>
+                <p class="jp-text">課題：DockerコンテナへのGPUリソース割り当ての複雑さ。解決策：`nvidia-container-toolkit`の設定と`--gpus all`オプションを適用し、GPUを完全に活用できる環境を構築しました。</p>
+
+                <h3 class="mt-6">3-2. Real-time Bidirectional Streaming / リアルタイム双方向ストリーミング</h3>
+                <p class="en-text">Challenge: Implementing real-time processing for ASR. Solution: Developed streaming logic using Python `iterator` and `yield` to handle continuous audio chunks and real-time text results.</p>
+                <p class="jp-text">課題：音声認識(ASR)におけるリアルタイム処理の実装。解決策：Pythonの`iterator`と`yield`を活用し、オーディオチャンクの連続送信とテキスト結果のリアルタイム受信を行う双方向ストリーミングロジックを開発しました。</p>
+            </div>
+        </section>
+
+        <footer class="text-center mt-8 text-gray-500 text-sm">
+            Created for: Riva Server Deployment Guidelines
+        </footer>
+    </div>
+</body>
+</html>

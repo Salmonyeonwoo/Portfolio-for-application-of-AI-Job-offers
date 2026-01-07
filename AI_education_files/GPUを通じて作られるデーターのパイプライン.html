@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プロジェクト要約：NVIDIA Morpheus パイプライン</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&display=swap');
+        body { font-family: 'Noto Sans JP', sans-serif; background-color: #f3f4f6; color: #1f2937; line-height: 1.8; }
+        .container { max-width: 900px; }
+        .section-card { background-color: white; border-radius: 1rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); padding: 2.5rem; margin-bottom: 2rem; border-left: 6px solid #10b981; }
+        .main-title { font-size: 2.25rem; font-weight: 700; color: #059669; margin-bottom: 0.5rem; }
+        .sub-title { font-size: 1.5rem; font-weight: 700; color: #0d9488; margin-top: 2rem; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem; }
+        .tech-label { background-color: #f0f9ff; border-left: 4px solid #38bdf8; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; }
+        .highlight { font-weight: 700; color: #059669; }
+        .code-block { background-color: #1f2937; color: #f9fafb; padding: 1.25rem; border-radius: 0.75rem; overflow-x: auto; font-family: monospace; font-size: 0.9rem; margin-top: 1rem; }
+    </style>
+</head>
+<body class="p-6 md:p-10">
+    <div class="container mx-auto">
+        <header class="text-center mb-10">
+            <p class="text-gray-500 text-xs font-bold tracking-widest mb-2">就職面接対策 プロジェクト要約</p>
+            <h1 class="main-title">NVIDIA Morpheus プロジェクト</h1>
+            <p class="text-lg text-gray-600">GPU加速セキュリティ分析パイプラインの深層分析</p>
+        </header>
+
+        <div class="section-card">
+            <h2 class="sub-title"><i class="fas fa-sitemap"></i> 1. プロジェクトの役割と概要</h2>
+            <div class="tech-label">
+                <p class="font-bold text-blue-800">プロジェクト名：</p>
+                <p class="text-gray-700">NVIDIA Morpheusを活用したGPU加速大規模セキュリティ分析パイプラインの構築</p>
+            </div>
+            <p class="mt-4">
+                教育課程の一環として、<span class="highlight">エンドツーエンド統合開発者</span>の役割を遂行しました。全体的なアーキテクチャ設計から、ControlMessage、Tensors、Inferenceモジュールの統合までを担当しました。
+            </p>
+
+            <h2 class="sub-title"><i class="fas fa-microchip"></i> 2. 核心技術の実装</h2>
+            
+            <h3 class="text-xl font-bold text-gray-800 mt-6">2.1 データ制御：ControlMessage とシリアル化</h3>
+            <p>システムの柔軟な拡張を実現するため、<span class="highlight">ControlMessage</span> を使用してメタデータと次のステージへの作業指示（Task）を動的に伝達しました。PCAPやログデータをMessageMeta形式に変換し、パイプラインに注入するシリアル化サイクルを直接実装しました。</p>
+            
+            <div class="code-block">
+<pre>
+# ControlMessage を通じたタスク伝達ロジック
+cm = ControlMessage()
+# 次のステージにファイル読み込みタスクを指示
+cm.add_task(type='load', properties={'name': 'file_path', 'value': '/data/log.csv'})
+# パイプライン内でタスクが動的に実行される
+</pre>
+            </div>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-8">2.2 AI統合：Tensors と 推論ステージ</h3>
+            <p><span class="highlight">TensorStage</span> を活用し、CPUを経由することなくGPUメモリ内でCuDF DataFrameをTensor形式に高速変換しました。その後、<span class="highlight">ONNX</span> 形式の学習モデルを InferenceStage に統合し、大規模データに対するリアルタイムの不正検知を実現しました。</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-8">2.3 アーキテクチャ：非線形グラフの設計</h3>
+            <p>単一の順次処理を超え、ストリームを分岐・統合する非線形グラフ構造を設計しました。</p>
+            <ul class="list-disc list-inside mt-4 space-y-2 text-gray-700">
+                <li><span class="font-bold">Broadcast:</span> データを複数の分析パスに複製。</li>
+                <li><span class="font-bold">Multi-Port:</span> 内容（正常/異常）に基づいて後処理パスを分岐。</li>
+            </ul>
+        </div>
+
+        <div class="section-card" style="border-left-color: #3b82f6;">
+            <h2 class="sub-title" style="color: #1d4ed8;"><i class="fas fa-users"></i> 3. 協業と問題解決</h2>
+            <p class="font-bold text-gray-800 mb-2">課題：開発環境の不一致による非効率</p>
+            <p>共有環境におけるバージョンの競合が技術的なボトルネックとなっていました。私は<span class="highlight">プロアクティブな姿勢</span>で個人端末を導入し、開発環境を統一することで遅延を最小限に抑えました。</p>
+            
+            <p class="mt-4 font-bold text-gray-800 mb-2">解決に向けた行動：</p>
+            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                <li><span class="font-semibold">主体的解決：</span>環境構築に責任を持ち、プロジェクトの停滞を防止。</li>
+                <li><span class="font-semibold">成果の共有：</span>自身で解決したコードや知見をチームに共有し、建設的な議論をリード。</li>
+            </ul>
+            <div class="mt-6 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400 text-blue-800 text-sm">
+                「技術力だけでなく、環境の統一や能動的なコミュニケーションが円滑なチームワークに不可欠であることを学びました。」
+            </div>
+        </div>
+
+        <footer class="text-center text-gray-400 text-sm mt-12 pb-8">
+            &copy; 2024 GPU データパイプライン プロジェクト要約 | NVIDIA Morpheus DLI ベース
+        </footer>
+    </div>
+</body>
+</html>

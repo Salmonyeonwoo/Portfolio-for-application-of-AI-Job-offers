@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Summary: NVIDIA Morpheus Pipeline</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #334155; line-height: 1.7; }
+        .container { max-width: 900px; }
+        .section-card { background-color: white; border-radius: 1.25rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); padding: 2.5rem; margin-bottom: 2.5rem; border-left: 6px solid #10b981; }
+        .title-main { font-size: 2.25rem; font-weight: 800; color: #065f46; letter-spacing: -0.025em; }
+        .sub-header { font-size: 1.5rem; font-weight: 700; color: #0f766e; margin-top: 2rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 0.5rem; }
+        .tech-box { background-color: #f0fdf4; border-left: 4px solid #10b981; padding: 1.25rem; border-radius: 0.5rem; margin: 1rem 0; }
+        .code-snippet { background-color: #0f172a; color: #f8fafc; padding: 1.5rem; border-radius: 0.75rem; font-family: 'ui-monospace', monospace; font-size: 0.9rem; margin-top: 1rem; overflow-x: auto; }
+        .highlight { font-weight: 700; color: #059669; }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+    <div class="container mx-auto">
+        <header class="text-center mb-12">
+            <p class="text-slate-500 uppercase tracking-widest text-xs font-bold mb-2">Technical Interview Resource</p>
+            <h1 class="title-main">NVIDIA Morpheus Project</h1>
+            <p class="text-xl text-slate-500 mt-2">GPU-Accelerated Security Analysis Pipeline Analysis</p>
+        </header>
+
+        <div class="section-card">
+            <h2 class="sub-header"><i class="fas fa-id-badge"></i> 1. Role & Project Overview</h2>
+            <div class="tech-box">
+                <p class="font-bold text-emerald-800">Project Name:</p>
+                <p class="text-slate-700 font-semibold">Building a GPU-Accelerated Large-Scale Security Analysis Pipeline using NVIDIA Morpheus</p>
+            </div>
+            <p class="mt-4">
+                As part of the training curriculum, I served as the <span class="highlight">End-to-End Integrated Developer</span>. I was responsible for the entire architectural design and the seamless integration of ControlMessage, Tensors, and Inference modules.
+            </p>
+
+            <h2 class="sub-header"><i class="fas fa-microchip"></i> 2. Technical Implementation</h2>
+            
+            <h3 class="text-lg font-bold text-slate-800 mt-6">2.1 Data Control: ControlMessage & Serialization</h3>
+            <p>To ensure system flexibility, I utilized <span class="highlight">ControlMessage</span> to dynamically pass metadata and specific task instructions (Tasks) to subsequent stages. I implemented a full serialization cycle, converting raw logs/PCAP data into MessageMeta format for pipeline injection.</p>
+            
+            <div class="code-snippet">
+<pre>
+# ControlMessage Task Assignment Logic
+cm = ControlMessage()
+# Instruct the next stage to load a specific file
+cm.add_task(type='load', properties={'name': 'file_path', 'value': '/data/log.csv'})
+# Pipeline processes the task dynamically
+</pre>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-800 mt-8">2.2 AI Integration: Tensors & Inference</h3>
+            <p>I utilized <span class="highlight">TensorStage</span> to perform high-speed conversions of CuDF DataFrames into Tensors directly in GPU memory, effectively bypassing CPU bottlenecks. Subsequently, I integrated machine learning models in <span class="highlight">ONNX</span> format into the InferenceStage to perform real-time detection on large-scale data streams.</p>
+
+            <h3 class="text-lg font-bold text-slate-800 mt-8">2.3 Architecture: Non-linear Graphs</h3>
+            <p>To overcome the limitations of sequential processing, I designed a non-linear graph structure capable of branching and merging data streams.</p>
+            <div class="tech-box">
+                <ul class="list-disc list-inside space-y-2 text-slate-700">
+                    <li><span class="font-bold">Broadcast:</span> Duplicating data for parallel analysis paths.</li>
+                    <li><span class="font-bold">Multi-Port:</span> Splitting post-processing paths based on content (e.g., normal vs. abnormal).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-card" style="border-left-color: #3b82f6;">
+            <h2 class="sub-header" style="color: #1d4ed8;"><i class="fas fa-users"></i> 3. Collaboration & Problem Solving</h2>
+            <p class="font-bold text-slate-800 mb-2">Challenge: Environmental Inconsistencies</p>
+            <p>Frequent version conflicts in the shared lab environment created technical bottlenecks. I took a proactive approach by maintaining a personal workstation to ensure environment consistency and minimize delays.</p>
+            <p class="mt-4 font-bold text-slate-800 mb-2">The Proactive Solution:</p>
+            <ul class="list-disc list-inside space-y-2 text-slate-700">
+                <li><span class="font-semibold">Ownership:</span> Took responsibility for my development environment to prevent project stalls.</li>
+                <li><span class="font-semibold">Knowledge Sharing:</span> Shared refined code and findings with the team to foster constructive technical discussions.</li>
+            </ul>
+            <div class="mt-6 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400 italic text-blue-800">
+                "I learned that environmental consistency and proactive communication are just as vital as code quality in successful teamwork."
+            </div>
+        </div>
+
+        <footer class="text-center text-slate-400 text-sm mt-12 pb-8">
+            &copy; 2024 GPU Pipeline Analysis | Prepared for Technical Interviews
+        </footer>
+    </div>
+</body>
+</html>

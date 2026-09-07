@@ -3,736 +3,1295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>David's Career Command Center & Portfolio App</title>
-    <!-- Tailwind CSS -->
+    <title>박연우 | AI Specialist Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- React & ReactDOM -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    <!-- Babel Standalone -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
-        body { font-family: 'Inter', 'Noto Sans KR', sans-serif; }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen">
-    <div id="root">
-        <!-- Fallback if React compilation fails -->
-        <div class="p-10 text-center text-slate-400">Loading David's Career Suite...</div>
-    </div>
-
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-
-        // Icons
-        const BriefcaseIcon = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-        );
-        const TerminalIcon = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
-        );
-        const ShieldCheckIcon = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-        );
-        const SparklesIcon = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
-        );
-
-        // ==========================================
-        // Visualized Diagrams (시각화된 그림 컴포넌트)
-        // ==========================================
-
-        // 1. PTP 3-Way Matching Visual Diagram
-        const PtpVisualDiagram = () => (
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between space-y-4 h-full">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                    <span className="text-xs font-black text-indigo-300 flex items-center gap-2">
-                        <i className="fa-solid fa-code-compare text-indigo-400"></i>
-                        <span>시각화 다이어그램: SAP ERP PTP 3-Way 대조 & 차액 조율</span>
-                    </span>
-                    <span className="text-[10px] bg-indigo-950 text-indigo-300 px-2.5 py-0.5 rounded-full border border-indigo-500/30 font-mono font-bold">
-                        Reconciliation Workflow
-                    </span>
-                </div>
-
-                <div className="w-full bg-slate-950 p-4 rounded-xl border border-slate-800/80 shadow-inner">
-                    <svg viewBox="0 0 520 330" className="w-full h-auto max-h-[300px]" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="boxGrad1" x1="0" y1="0" x2="1" y2="1">
-                                <stop offset="0%" stopColor="#1e293b"/>
-                                <stop offset="1%" stopColor="#0f172a"/>
-                            </linearGradient>
-                        </defs>
-
-                        {/* PO Node */}
-                        <rect x="20" y="25" width="135" height="65" rx="10" fill="url(#boxGrad1)" stroke="#6366f1" strokeWidth="1.5" />
-                        <text x="87" y="50" fill="#818cf8" fontSize="11" fontWeight="800" textAnchor="middle">1. Purchase Order (PO)</text>
-                        <text x="87" y="70" fill="#ffffff" fontSize="12" fontWeight="900" textAnchor="middle">RM 10,500 (SAP)</text>
-
-                        {/* GR Node */}
-                        <rect x="190" y="25" width="135" height="65" rx="10" fill="url(#boxGrad1)" stroke="#06b6d4" strokeWidth="1.5" />
-                        <text x="257" y="50" fill="#38bdf8" fontSize="11" fontWeight="800" textAnchor="middle">2. Goods Receipt (GR)</text>
-                        <text x="257" y="70" fill="#ffffff" fontSize="12" fontWeight="900" textAnchor="middle">실물 입고 확인</text>
-
-                        {/* Vendor Invoice Node */}
-                        <rect x="360" y="25" width="140" height="65" rx="10" fill="url(#boxGrad1)" stroke="#f43f5e" strokeWidth="1.5" />
-                        <text x="430" y="50" fill="#fb7185" fontSize="11" fontWeight="800" textAnchor="middle">3. Vendor Invoice</text>
-                        <text x="430" y="70" fill="#ffffff" fontSize="12" fontWeight="900" textAnchor="middle">RM 12,000 (청구액)</text>
-
-                        {/* Arrows */}
-                        <path d="M 87 90 L 87 125 L 210 145" stroke="#6366f1" strokeWidth="2" strokeDasharray="3 3"/>
-                        <path d="M 257 90 L 257 130" stroke="#06b6d4" strokeWidth="2"/>
-                        <path d="M 430 90 L 430 125 L 310 145" stroke="#f43f5e" strokeWidth="2" strokeDasharray="3 3"/>
-
-                        {/* Center 3-Way Matching Engine */}
-                        <rect x="140" y="130" width="240" height="65" rx="12" fill="#1e1b4b" stroke="#818cf8" strokeWidth="2" />
-                        <text x="260" y="156" fill="#a5b4fc" fontSize="12" fontWeight="900" textAnchor="middle">SAP 3-Way Automated Matching</text>
-                        <text x="260" y="177" fill="#f87171" fontSize="11" fontWeight="800" textAnchor="middle">⚠️ Discrepancy Flag: +RM 1,500</text>
-
-                        <path d="M 260 195 L 260 225" stroke="#a5b4fc" strokeWidth="2"/>
-
-                        {/* Bottom Resolution Protocol */}
-                        <rect x="40" y="225" width="440" height="80" rx="12" fill="url(#boxGrad1)" stroke="#10b981" strokeWidth="1.5" />
-                        <text x="260" y="250" fill="#34d399" fontSize="12" fontWeight="800" textAnchor="middle">David의 선제적 분쟁 조율 프로토콜 (Resolution)</text>
-                        <text x="260" y="272" fill="#e2e8f0" fontSize="11" textAnchor="middle">• 1차 긴급 지급: PO 기준 RM 10,500 선결제 집행 (공급망 중단 방지)</text>
-                        <text x="260" y="291" fill="#e2e8f0" fontSize="11" textAnchor="middle">• 2차 정산 감사: 운임/수량 오차 확인 후 4시간 내 Credit Note 요청</text>
-                    </svg>
-                </div>
-
-                <div className="bg-indigo-950/50 p-3.5 rounded-xl border border-indigo-500/30 text-xs text-slate-300">
-                    <strong className="text-indigo-400">💡 시각화 핵심:</strong> 단순 승인 지연이 아닌, 검증된 PO 금액(RM 10,500)을 선지급하고 차액(RM 1,500)을 분리 감사하여 <strong>공급선 납품 중단 리스크를 100% 방어</strong>하는 전문 프로세스입니다.
-                </div>
-            </div>
-        );
-
-        // 2. OTA Trouble Shooting Visual Diagram
-        const AgodaVisualDiagram = () => (
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between space-y-4 h-full">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                    <span className="text-xs font-black text-emerald-300 flex items-center gap-2">
-                        <i className="fa-solid fa-arrows-split-up-and-left text-emerald-400"></i>
-                        <span>시각화 다이어그램: OTA 긴급 분쟁 에스컬레이션 & 환불 구조도</span>
-                    </span>
-                    <span className="text-[10px] bg-emerald-950 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-mono font-bold">
-                        Incident Flowchart
-                    </span>
-                </div>
-
-                <div className="w-full bg-slate-950 p-4 rounded-xl border border-slate-800/80 shadow-inner">
-                    <svg viewBox="0 0 520 330" className="w-full h-auto max-h-[300px]" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="boxGrad2" x1="0" y1="0" x2="1" y2="1">
-                                <stop offset="0%" stopColor="#1e293b"/>
-                                <stop offset="1%" stopColor="#0f172a"/>
-                            </linearGradient>
-                        </defs>
-
-                        {/* Step 1 */}
-                        <rect x="20" y="20" width="140" height="65" rx="10" fill="url(#boxGrad2)" stroke="#f43f5e" strokeWidth="1.5"/>
-                        <text x="90" y="45" fill="#fb7185" fontSize="11" fontWeight="800" textAnchor="middle">Step 1. 고객 클레임 접수</text>
-                        <text x="90" y="65" fill="#ffffff" fontSize="11" fontWeight="600" textAnchor="middle">노쇼 위약금 청구 항의</text>
-
-                        {/* Step 2 */}
-                        <rect x="190" y="20" width="140" height="65" rx="10" fill="url(#boxGrad2)" stroke="#06b6d4" strokeWidth="1.5"/>
-                        <text x="260" y="45" fill="#38bdf8" fontSize="11" fontWeight="800" textAnchor="middle">Step 2. 시스템 로그 대조</text>
-                        <text x="260" y="65" fill="#ffffff" fontSize="11" fontWeight="600" textAnchor="middle">Agoda API ↔ Hotel PMS</text>
-
-                        {/* Step 3 */}
-                        <rect x="360" y="20" width="140" height="65" rx="10" fill="url(#boxGrad2)" stroke="#eab308" strokeWidth="1.5"/>
-                        <text x="430" y="45" fill="#facc15" fontSize="11" fontWeight="800" textAnchor="middle">Step 3. 과실 원인 소명</text>
-                        <text x="430" y="65" fill="#ffffff" fontSize="11" fontWeight="600" textAnchor="middle">호텔 측 취소 동기화 누락</text>
-
-                        {/* Connectors */}
-                        <path d="M 160 52 L 190 52" stroke="#94a3b8" strokeWidth="2"/>
-                        <path d="M 330 52 L 360 52" stroke="#94a3b8" strokeWidth="2"/>
-                        <path d="M 430 85 L 430 135 L 360 155" stroke="#facc15" strokeWidth="2" strokeDasharray="3 3"/>
-
-                        {/* Center Rapid Action Trigger */}
-                        <rect x="130" y="125" width="260" height="70" rx="12" fill="#064e3b" stroke="#34d399" strokeWidth="2"/>
-                        <text x="260" y="152" fill="#6ee7b7" fontSize="12" fontWeight="900" textAnchor="middle">David의 긴급 승인 에스컬레이션</text>
-                        <text x="260" y="174" fill="#ffffff" fontSize="11" fontWeight="700" textAnchor="middle">100% 전액 환불 즉시 승인 + 대체 숙소 바우처</text>
-
-                        <path d="M 260 195 L 260 225" stroke="#34d399" strokeWidth="2"/>
-
-                        {/* Bottom Stage */}
-                        <rect x="40" y="225" width="440" height="85" rx="12" fill="url(#boxGrad2)" stroke="#10b981" strokeWidth="1.5"/>
-                        <text x="260" y="250" fill="#34d399" fontSize="12" fontWeight="800" textAnchor="middle">Closed-Loop Resolution & Partner Reconcile</text>
-                        <text x="260" y="272" fill="#e2e8f0" fontSize="11" textAnchor="middle">• 고객 케어: 일본어 정식 사과문(謝罪文) 발송 및 CSAT 5점 만점 방어</text>
-                        <text x="260" y="291" fill="#e2e8f0" fontSize="11" textAnchor="middle">• 파트너 제휴 정산: 호텔 측 위약금 면제 조항 발효 및 재발 방지 통보</text>
-                    </svg>
-                </div>
-
-                <div className="bg-emerald-950/50 p-3.5 rounded-xl border border-emerald-500/30 text-xs text-slate-300">
-                    <strong className="text-emerald-400">💡 시각화 핵심:</strong> 격앙된 고객에게 즉시 100% 환불을 확약하고, 호텔 PMS 동기화 로그를 통해 <strong>불필요한 에스컬레이션 핑퐁 시간을 80% 단축</strong>시키는 글로벌 OTA 전문 커뮤니케이션입니다.
-                </div>
-            </div>
-        );
-
-        // 3. Pipeline Funnel Visual Diagram
-        const PipelineVisualDiagram = () => (
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between space-y-4 h-full">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                    <span className="text-xs font-black text-cyan-300 flex items-center gap-2">
-                        <i className="fa-solid fa-filter text-cyan-400"></i>
-                        <span>시각화 다이어그램: 채용 퍼널 및 단계별 매트릭스</span>
-                    </span>
-                    <span className="text-[10px] bg-cyan-950 text-cyan-300 px-2.5 py-0.5 rounded-full border border-cyan-500/30 font-mono font-bold">
-                        4-Stage Funnel
-                    </span>
-                </div>
-
-                <div className="w-full bg-slate-950 p-4 rounded-xl border border-slate-800/80 shadow-inner flex flex-col items-center justify-center">
-                    <svg viewBox="0 0 540 320" className="w-full h-auto max-h-[290px]" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <polygon points="40,15 500,15 460,75 80,75" fill="#1d4ed8" rx="8" />
-                        <text x="270" y="42" fill="#ffffff" fontSize="13" fontWeight="800" textAnchor="middle">1. 서류 지원 (Application 100%)</text>
-                        <text x="270" y="62" fill="#bae6fd" fontSize="11" fontWeight="600" textAnchor="middle">Accenture, Agoda, Hilton, Initia 지원 완료</text>
-
-                        <polygon points="85,85 455,85 420,145 120,145" fill="#0891b2" />
-                        <text x="270" y="112" fill="#ffffff" fontSize="13" fontWeight="800" textAnchor="middle">2. 서류 스크리닝 (Screening 75%)</text>
-                        <text x="270" y="132" fill="#cffafe" fontSize="11" fontWeight="600" textAnchor="middle">PTP 재무 정산 실무 & 일문 비즈니스 커뮤니케이션 검증</text>
-
-                        <polygon points="125,155 415,155 380,215 160,215" fill="#6d28d9" />
-                        <text x="270" y="182" fill="#ffffff" fontSize="13" fontWeight="800" textAnchor="middle">3. 심층 면접 (Interview 50%)</text>
-                        <text x="270" y="202" fill="#ede9fe" fontSize="11" fontWeight="600" textAnchor="middle">Hilton Niseko 1차 통과 완료 / Accenture & Agoda 대기</text>
-
-                        <polygon points="165,225 375,225 345,285 195,285" fill="#047857" />
-                        <text x="270" y="252" fill="#ffffff" fontSize="14" fontWeight="900" textAnchor="middle">4. 최종 오퍼 및 온보딩 (Offer & Placement)</text>
-                        <text x="270" y="272" fill="#a7f3d0" fontSize="11" fontWeight="700" textAnchor="middle">말레이시아 KL / 일본 요코하마 즉시 출근 가능</text>
-                    </svg>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3 text-center text-xs">
-                    <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-                        <span className="text-[10px] text-slate-400 block uppercase font-bold">1순위 타겟 포지션</span>
-                        <span className="text-sm font-black text-indigo-400">Accenture & Agoda</span>
-                    </div>
-                    <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-                        <span className="text-[10px] text-slate-400 block uppercase font-bold">근무지 가용성</span>
-                        <span className="text-sm font-black text-emerald-400">KL / Japan Relocation</span>
-                    </div>
-                </div>
-            </div>
-        );
-
-        // 4. Competency Radar Visual Diagram
-        const CompetencyVisualDiagram = () => (
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between space-y-4 h-full">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                    <span className="text-xs font-black text-purple-300 flex items-center gap-2">
-                        <i className="fa-solid fa-atom text-purple-400"></i>
-                        <span>시각화 다이어그램: 3대 핵심 전문성 & 테크 스택 궤도</span>
-                    </span>
-                    <span className="text-[10px] bg-purple-950 text-purple-300 px-2.5 py-0.5 rounded-full border border-purple-500/30 font-mono font-bold">
-                        Tri-Core Orbit
-                    </span>
-                </div>
-
-                <div className="w-full bg-slate-950 p-4 rounded-xl border border-slate-800/80 shadow-inner flex flex-col items-center justify-center">
-                    <svg viewBox="0 0 520 310" className="w-full h-auto max-h-[280px]" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="260" cy="155" r="120" stroke="#334155" strokeWidth="1" strokeDasharray="4 4"/>
-                        <circle cx="260" cy="155" r="75" stroke="#475569" strokeWidth="1" strokeDasharray="3 3"/>
-                        <circle cx="260" cy="155" r="40" fill="#1e1b4b" stroke="#6366f1" strokeWidth="2"/>
-
-                        <text x="260" y="152" fill="#ffffff" fontSize="12" fontWeight="900" textAnchor="middle">David Park</text>
-                        <text x="260" y="168" fill="#818cf8" fontSize="10" fontWeight="700" textAnchor="middle">Senior Ops</text>
-
-                        {/* Node 1: Financial */}
-                        <line x1="260" y1="155" x2="130" y2="60" stroke="#6366f1" strokeWidth="2"/>
-                        <rect x="50" y="30" width="160" height="60" rx="10" fill="#0f172a" stroke="#6366f1" strokeWidth="2"/>
-                        <text x="130" y="55" fill="#818cf8" fontSize="12" fontWeight="800" textAnchor="middle">Financial & AP/AR</text>
-                        <text x="130" y="75" fill="#cbd5e1" fontSize="10" textAnchor="middle">SAP, Klook, 3-Way Audit</text>
-
-                        {/* Node 2: Trust & Safety */}
-                        <line x1="260" y1="155" x2="390" y2="60" stroke="#10b981" strokeWidth="2"/>
-                        <rect x="310" y="30" width="160" height="60" rx="10" fill="#0f172a" stroke="#10b981" strokeWidth="2"/>
-                        <text x="390" y="55" fill="#34d399" fontSize="12" fontWeight="800" textAnchor="middle">Trust & Security</text>
-                        <text x="390" y="75" fill="#cbd5e1" fontSize="10" textAnchor="middle">Roblox, Meta, MS VLSC</text>
-
-                        {/* Node 3: Trilingual & AI */}
-                        <line x1="260" y1="155" x2="260" y2="245" stroke="#06b6d4" strokeWidth="2"/>
-                        <rect x="170" y="225" width="180" height="65" rx="10" fill="#0f172a" stroke="#06b6d4" strokeWidth="2"/>
-                        <text x="260" y="250" fill="#38bdf8" fontSize="12" fontWeight="800" textAnchor="middle">Trilingual & AI Integration</text>
-                        <text x="260" y="270" fill="#cbd5e1" fontSize="10" textAnchor="middle">KR / JP(N1) / EN + Morpheus</text>
-                    </svg>
-                </div>
-
-                <div className="flex flex-wrap gap-2 justify-center text-[11px] font-mono">
-                    <span className="bg-slate-950 text-indigo-300 border border-slate-800 px-3 py-1 rounded-lg">SAP ERP (PTP/OTC)</span>
-                    <span className="bg-slate-950 text-emerald-300 border border-slate-800 px-3 py-1 rounded-lg">Zendesk / Salesforce</span>
-                    <span className="bg-slate-950 text-cyan-300 border border-slate-800 px-3 py-1 rounded-lg">JLPT N1 Certified</span>
-                    <span className="bg-slate-950 text-amber-300 border border-slate-800 px-3 py-1 rounded-lg">NVIDIA AI Modeling</span>
-                </div>
-            </div>
-        );
-
-        function App() {
-            const [activeTab, setActiveTab] = useState('simulator');
-            const [notification, setNotification] = useState(null);
-
-            // Storyboard / Pipeline Data
-            const [pipelines, setPipelines] = useState([
-                { id: 1, company: 'Accenture Malaysia', role: 'Finance Analyst (PTP/OTC)', status: '지원 완료 (지원서 튜닝 완료)', date: '2026-09-07', priority: 'High', color: 'bg-indigo-900/50 text-indigo-300 border-indigo-500/30' },
-                { id: 2, company: 'Agoda Japan', role: 'Support Associate (Yokohama)', status: '일문 이력서 제출 완료', date: '2026-09-05', priority: 'High', color: 'bg-emerald-900/50 text-emerald-300 border-emerald-500/30' },
-                { id: 3, company: 'Hilton Niseko Village', role: 'Front Office (Front Desk)', status: '1차 면접 완료 (결과 대기중)', date: '2026-08-26', priority: 'Medium', color: 'bg-amber-900/50 text-amber-300 border-amber-500/30' },
-                { id: 4, company: 'Initia Group (말레이시아)', role: 'Admin / Accounts Assistant', status: 'F/U 후 보류 (Keep Warm)', date: '2026-06-11', priority: 'Low', color: 'bg-slate-800 text-slate-400 border-slate-700' }
-            ]);
-
-            // Simulator State
-            const [selectedScenario, setSelectedScenario] = useState('ptp');
-            const [userAnswer, setUserAnswer] = useState('');
-            const [simResult, setSimResult] = useState(null);
-            const [isEvaluating, setIsEvaluating] = useState(false);
-
-            const scenarios = {
-                ptp: {
-                    title: "💼 [PTP / AP 정산] 대형 공급업체 인보이스 불일치 조율",
-                    shortTitle: "PTP / AP 인보이스 불일치 조율 (Accenture Target)",
-                    context: "가맹점(Vendor)으로부터 접수된 물류비용 인보이스(RM 12,000)와 내부 SAP ERP에 등록된 PO(Purchase Order) 금액(RM 10,500) 간에 RM 1,500의 차이가 발생하여 공급업체 담당자가 강하게 항의 중인 상황.",
-                    query: "“We delivered the requested inventory last Tuesday, but your AP department short-paid our invoice by RM 1,500. Unless this discrepancy is reconciled today, we will hold upcoming shipments.”",
-                    keywords: ["reconcile", "discrepancy", "purchase order", "invoice", "audit", "verify", "po"],
-                    sampleAnswer: `Dear Vendor AP Team,\n\nThank you for reaching out regarding invoice #INV-8842. We have audited the RM 1,500 discrepancy between your RM 12,000 invoice and our SAP PO (#PO-4501) of RM 10,500.\n\nTo prevent any supply chain interruption, we have already approved the verified PO amount of RM 10,500 in today's payment cycle. Concurrently, our audit team is reconciling the remaining RM 1,500 against warehouse Goods Receipt (GR) notes and freight sheets.\n\nWe will revert with the reconciliation report or a request for a revised invoice/credit note by 3:00 PM today. Please proceed with scheduled shipments without disruption.\n\nBest regards,\nDavid Yeonwoo Park\nSenior Finance Analyst`
-                },
-                agoda: {
-                    title: "✈️ [OTA 트러블슈팅] 요코하마 지점 - 호텔 노쇼(No-Show) 환불 분쟁",
-                    shortTitle: "OTA 요코하마 호텔 노쇼 환불 분쟁 (Agoda Target)",
-                    context: "일본 요코하마 랜드마크 타워 아고다 서포트 데스크. 고객이 호텔 측의 시스템 착오로 노쇼(No-Show) 처리되어 전액 위약금이 청구되었다며 격앙된 상태로 이메일/채팅 문의를 남긴 상황.",
-                    query: "「昨日チェックインしようとしたところ、ホテル側から『予約がキャンセルされている』と言われ宿泊できませんでした。その上、キャンセル料として全額請求されています。すぐに返金し、正式な謝罪文を送ってください。」",
-                    keywords: ["申し訳ございません", "確認", "ホテル", "返金", "システム", "調査", "お詫び"],
-                    sampleAnswer: `○○様\n\n平素よりアゴダをご利用いただき、誠にありがとうございます。\nアゴダ・カスタマーサポートのアソシエイト、パクと申します。\n\nこの度は、ホテルチェックイン時にシステム上の不具合によりご予約がキャンセル扱いとなり、宿泊いただけなかった上、キャンセル料の全額請求というご不快な思いをおかけしましたことを、心より深くお詫び申し上げます。\n\n直ちにホテル側のシステムログ（PMS）と照会・調査を行いました結果、ホテル側のシステム同期エラーが確認されました。お客様に過失は一切ございません。\n\nつきましては、ご請求いたしましたキャンセル料を【本日付で全額返金（100%返金）】の手続きを完了いたしました。また、次回ご利用いただける宿泊補償バウチャーを別途お送りいたします。\n\n今後はホテル連携システムの見直しを徹底し、再発防止に努めてまいります。重ねてこの度の件につき深くお詫び申し上げます。\n\nアゴダ・カスタマーエクスペリエンス\nシニアスペシャリスト パク・ヨンウ`
-                }
-            };
-
-            const showToast = (msg) => {
-                setNotification(msg);
-                setTimeout(() => setNotification(null), 3000);
-            };
-
-            const loadSample = () => {
-                setUserAnswer(scenarios[selectedScenario].sampleAnswer);
-                showToast('모범 답변이 텍스트 영역에 자동 로드되었습니다!');
-            };
-
-            const evaluateAnswer = () => {
-                if (!userAnswer.trim()) {
-                    showToast('대응하실 답변 내용을 입력해 주세요!');
-                    return;
-                }
-                setIsEvaluating(true);
-                setSimResult(null);
-
-                setTimeout(() => {
-                    const sc = scenarios[selectedScenario];
-                    let score = 65;
-                    let matched = [];
-
-                    sc.keywords.forEach(kw => {
-                        if (userAnswer.toLowerCase().includes(kw.toLowerCase())) {
-                            score += 5;
-                            matched.push(kw);
-                        }
-                    });
-
-                    if (userAnswer.length > 90) score += 10;
-
-                    const finalScore = Math.min(score, 100);
-                    setSimResult({
-                        score: finalScore,
-                        matched,
-                        grade: finalScore >= 90 ? 'Senior Specialist (S)' : finalScore >= 80 ? 'Professional (A)' : 'Standard (B)',
-                        feedback: finalScore >= 85 
-                            ? "완벽한 글로벌 오퍼레이션 톤앤매너와 정산/CS 프로세스 지식이 돋보입니다. 실무 투입 즉시 성과를 낼 수 있는 탁월한 커뮤니케이션입니다."
-                            : "기본적인 응대는 좋으나, 정산 시스템 대조 절차(Audit)나 구체적인 타임라인(SLA) 소통 단어를 더 보강하면 완벽합니다."
-                    });
-                    setIsEvaluating(false);
-                    showToast('AI 정밀 직무 적합성 분석 완료!');
-                }, 900);
-            };
-
-            return (
-                <div className="min-h-screen bg-slate-950 text-slate-100 font-sans pb-16">
-                    {/* Toast Notification */}
-                    {notification && (
-                        <div className="fixed top-5 right-5 z-50 bg-indigo-900 text-white px-4 py-3 rounded-xl shadow-2xl border border-indigo-500/40 flex items-center space-x-2">
-                            <SparklesIcon />
-                            <span className="text-xs font-bold">{notification}</span>
-                        </div>
-                    )}
-
-                    {/* Top Main Command Header */}
-                    <header className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border-b border-slate-800 py-6 px-6 shadow-xl">
-                        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                            <div>
-                                <div className="flex items-center space-x-2 bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 px-3 py-1 rounded-full text-xs font-bold w-fit mb-2">
-                                    <span>David's Personal Career & Portfolio Hub 🚀</span>
-                                </div>
-                                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">Career Development & Command Center</h1>
-                                <p className="text-slate-400 text-xs sm:text-sm mt-1">글로벌 8.5년 차 오퍼레이션 전문 역량 시각화 및 실전 어드민/재무 시뮬레이터</p>
-                            </div>
-                            <div className="flex bg-slate-900/80 p-3 rounded-2xl border border-slate-800 text-center gap-4">
-                                <div>
-                                    <span className="text-[10px] text-slate-400 block uppercase font-bold">핵심 타겟</span>
-                                    <span className="text-sm font-black text-indigo-400">Accenture & Agoda</span>
-                                </div>
-                                <div className="border-r border-slate-800"></div>
-                                <div>
-                                    <span className="text-[10px] text-slate-400 block uppercase font-bold">전문성 수준</span>
-                                    <span className="text-sm font-black text-emerald-400">Senior Specialist</span>
-                                </div>
-                            </div>
-                        </div>
-                    </header>
-
-                    {/* Main Nav Tabs */}
-                    <nav className="max-w-7xl mx-auto px-6 mt-6">
-                        <div className="flex border-b border-slate-800 overflow-x-auto scrollbar-hide pb-px space-x-4">
-                            <button
-                                onClick={() => setActiveTab('simulator')}
-                                className={`flex items-center space-x-2 py-3 px-5 font-bold text-xs border-b-2 transition-all whitespace-nowrap rounded-t-lg ${
-                                    activeTab === 'simulator' 
-                                        ? 'border-indigo-500 text-indigo-400 bg-indigo-500/10' 
-                                        : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900'
-                                }`}
-                            >
-                                <TerminalIcon />
-                                <span>PTP 정산 & OTA 모의 시뮬레이터</span>
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('board')}
-                                className={`flex items-center space-x-2 py-3 px-5 font-bold text-xs border-b-2 transition-all whitespace-nowrap rounded-t-lg ${
-                                    activeTab === 'board' 
-                                        ? 'border-indigo-500 text-indigo-400 bg-indigo-500/10' 
-                                        : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900'
-                                }`}
-                            >
-                                <BriefcaseIcon />
-                                <span>지원 파이프라인 스토리보드</span>
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('summary')}
-                                className={`flex items-center space-x-2 py-3 px-5 font-bold text-xs border-b-2 transition-all whitespace-nowrap rounded-t-lg ${
-                                    activeTab === 'summary' 
-                                        ? 'border-indigo-500 text-indigo-400 bg-indigo-500/10' 
-                                        : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900'
-                                }`}
-                            >
-                                <ShieldCheckIcon />
-                                <span>핵심 역량 요약 (Executive Summary)</span>
-                            </button>
-                        </div>
-                    </nav>
-
-                    {/* Main Content Container */}
-                    <main className="max-w-7xl mx-auto px-6 mt-6 space-y-6">
-
-                        {/* ========================================================= */}
-                        {/* TAB 2: PTP & OTA 모의 시뮬레이터 (사용자 요청 핵심 화면)   */}
-                        {/* ========================================================= */}
-                        {activeTab === 'simulator' && (
-                            <div className="space-y-6">
-                                {/* 1. 상단 제목 (Top Header) */}
-                                <div className="bg-gradient-to-r from-slate-900 via-indigo-950/80 to-slate-900 border border-indigo-500/30 p-6 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                                    <div>
-                                        <div className="flex items-center gap-2 mb-1.5">
-                                            <span className="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">
-                                                Active Case Simulation
-                                            </span>
-                                            <span className="text-xs text-slate-400 font-mono">
-                                                Target: {selectedScenario === 'ptp' ? 'Accenture Malaysia' : 'Agoda Japan'}
-                                            </span>
-                                        </div>
-                                        <h2 className="text-xl sm:text-2xl font-black text-white">
-                                            {scenarios[selectedScenario].title}
-                                        </h2>
-                                        <p className="text-xs text-slate-400 mt-1">
-                                            상단 제목과 함께, 가운데에 실무 내용 설명(좌측)과 시각화된 아키텍처 다이어그램(우측)이 결합된 실전 시뮬레이션
-                                        </p>
-                                    </div>
-
-                                    {/* Quick Scenario Selector Buttons */}
-                                    <div className="flex bg-slate-950 p-1.5 rounded-xl border border-slate-800 space-x-1.5">
-                                        <button
-                                            onClick={() => {
-                                                setSelectedScenario('ptp');
-                                                setUserAnswer('');
-                                                setSimResult(null);
-                                            }}
-                                            className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
-                                                selectedScenario === 'ptp'
-                                                    ? 'bg-indigo-600 text-white shadow-md'
-                                                    : 'text-slate-400 hover:text-white hover:bg-slate-900'
-                                            }`}
-                                        >
-                                            <i className="fa-solid fa-file-invoice-dollar"></i>
-                                            <span>PTP 인보이스 조율</span>
-                                        </button>
-                                        <button
-                                            onClick={() => {
-                                                setSelectedScenario('agoda');
-                                                setUserAnswer('');
-                                                setSimResult(null);
-                                            }}
-                                            className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
-                                                selectedScenario === 'agoda'
-                                                    ? 'bg-indigo-600 text-white shadow-md'
-                                                    : 'text-slate-400 hover:text-white hover:bg-slate-900'
-                                            }`}
-                                        >
-                                            <i className="fa-solid fa-hotel"></i>
-                                            <span>OTA 호텔 노쇼 분쟁</span>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* 2. 가운데: 해당 내용 설명(좌측) + 시각화된 그림(우측) */}
-                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-                                    {/* 좌측 (내용 설명 및 실무 대응 폼) */}
-                                    <div className="lg:col-span-6 space-y-4 flex flex-col justify-between">
-                                        <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 shadow-lg">
-                                            {/* 상황 배경 Context */}
-                                            <div>
-                                                <span className="text-[11px] font-extrabold text-indigo-400 uppercase tracking-wider block mb-1">
-                                                    📌 상황 배경 (Context)
-                                                </span>
-                                                <p className="text-xs text-slate-300 bg-slate-950 p-3.5 rounded-xl border border-slate-800 leading-relaxed font-medium">
-                                                    {scenarios[selectedScenario].context}
-                                                </p>
-                                            </div>
-
-                                            {/* Inbound Query */}
-                                            <div className="bg-indigo-950/50 border border-indigo-500/30 p-4 rounded-xl">
-                                                <span className="text-[11px] font-black text-indigo-300 block uppercase tracking-wider mb-1">
-                                                    <i className="fa-solid fa-envelope-open-text mr-1.5"></i>
-                                                    인바운드 인보이스 / 컴플레인 쿼리 원문
-                                                </span>
-                                                <p className="text-xs text-slate-200 font-mono italic leading-relaxed bg-slate-950/80 p-3 rounded-lg border border-indigo-500/20">
-                                                    {scenarios[selectedScenario].query}
-                                                </p>
-                                            </div>
-
-                                            {/* Input Form Header with Auto-Load button */}
-                                            <div className="pt-1">
-                                                <div className="flex justify-between items-center mb-2">
-                                                    <h4 className="font-extrabold text-sm text-white flex items-center gap-1.5">
-                                                        <i className="fa-solid fa-pen-nib text-indigo-400"></i>
-                                                        <span>시니어 오퍼레이터(David)의 실무 대응 작성</span>
-                                                    </h4>
-                                                    <button
-                                                        onClick={loadSample}
-                                                        className="text-[11px] text-indigo-400 hover:text-indigo-300 font-bold underline transition-colors"
-                                                    >
-                                                        모범 답변 자동 로드 (Auto Load)
-                                                    </button>
-                                                </div>
-
-                                                <textarea
-                                                    value={userAnswer}
-                                                    onChange={(e) => setUserAnswer(e.target.value)}
-                                                    placeholder="인보이스 오차 대조 과정, 정산 승인 규칙, 혹은 호텔 노쇼 건에 대한 신속한 환불/대체 숙소 안내 답변을 전문적인 비즈니스 톤으로 작성해 주세요..."
-                                                    rows="6"
-                                                    className="w-full bg-slate-950 p-4 text-xs font-mono text-slate-200 border border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 leading-relaxed"
-                                                ></textarea>
-
-                                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pt-3">
-                                                    <span className="text-[11px] text-slate-400">
-                                                        권장 키워드: <strong className="text-indigo-400 font-mono">{scenarios[selectedScenario].keywords.slice(0, 4).join(', ')}</strong>
-                                                    </span>
-                                                    <button
-                                                        onClick={evaluateAnswer}
-                                                        disabled={isEvaluating}
-                                                        className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-800 text-white font-black text-xs px-5 py-2.5 rounded-xl shadow-lg transition-all active:scale-[0.98] flex items-center space-x-2"
-                                                    >
-                                                        {isEvaluating ? (
-                                                            <>
-                                                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                                                <span>AI 분석 중...</span>
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <SparklesIcon />
-                                                                <span>실무 적합성 평가 실행</span>
-                                                            </>
-                                                        )}
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* AI 직무 평가 리포트 */}
-                                        {simResult && (
-                                            <div className="bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-2xl p-5 shadow-xl border border-indigo-500/30 space-y-3 animate-in fade-in">
-                                                <div className="flex justify-between items-center border-b border-slate-800 pb-2.5">
-                                                    <span className="text-xs text-indigo-300 font-black uppercase tracking-wider">AI 직무 평가 리포트</span>
-                                                    <span className="text-xs font-black px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                                                        {simResult.grade}
-                                                    </span>
-                                                </div>
-
-                                                <div className="grid grid-cols-2 gap-3">
-                                                    <div className="bg-slate-950/60 p-3 rounded-xl border border-slate-800 text-center">
-                                                        <span className="text-[10px] text-slate-400 block uppercase font-bold tracking-wider">오퍼레이션 점수</span>
-                                                        <span className="text-2xl font-black text-indigo-400 mt-0.5 block">{simResult.score} / 100</span>
-                                                    </div>
-                                                    <div className="bg-slate-950/60 p-3 rounded-xl border border-slate-800 text-center">
-                                                        <span className="text-[10px] text-slate-400 block uppercase font-bold tracking-wider">핵심 키워드 매칭</span>
-                                                        <span className="text-2xl font-black text-emerald-400 mt-0.5 block">{simResult.matched.length} 개</span>
-                                                    </div>
-                                                </div>
-
-                                                <div className="space-y-1 text-xs border-t border-slate-800 pt-2.5">
-                                                    <span className="font-bold text-indigo-300 block">시니어 피드백:</span>
-                                                    <p className="text-slate-200 leading-relaxed font-medium bg-slate-950/80 p-3 rounded-xl border border-slate-800">
-                                                        {simResult.feedback}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* 우측 (시각화된 그림 - Visualized Diagram) */}
-                                    <div className="lg:col-span-6">
-                                        {selectedScenario === 'ptp' ? (
-                                            <PtpVisualDiagram />
-                                        ) : (
-                                            <AgodaVisualDiagram />
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* ========================================================= */}
-                        {/* TAB 1: 지원 파이프라인 스토리보드                          */}
-                        {/* ========================================================= */}
-                        {activeTab === 'board' && (
-                            <div className="space-y-6">
-                                {/* 1. 상단 제목 */}
-                                <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                                    <div>
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <span className="bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">
-                                                Active Pipeline
-                                            </span>
-                                        </div>
-                                        <h2 className="text-xl sm:text-2xl font-extrabold text-white">현재 지원 진행 중인 핵심 기업 파이프라인</h2>
-                                        <p className="text-xs text-slate-400 mt-1">말레이시아/일본 대형 테크 및 호스피탈리티 서류/면접 진행 상황 판도</p>
-                                    </div>
-                                    <div className="bg-indigo-950 border border-indigo-500/30 text-indigo-300 px-4 py-2.5 rounded-xl text-xs font-bold">
-                                        💡 주력 타겟: Accenture Finance Analyst & Agoda Support Associate
-                                    </div>
-                                </div>
-
-                                {/* 2. 가운데: 해당 내용 설명(좌측) + 시각화된 그림(우측) */}
-                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-                                    {/* 좌측: 4개 기업 카드 목록 */}
-                                    <div className="lg:col-span-6 space-y-4">
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            {pipelines.map(item => (
-                                                <div key={item.id} className="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl shadow-sm hover:border-slate-700 transition-all flex flex-col justify-between space-y-3">
-                                                    <div>
-                                                        <div className="flex justify-between items-center mb-2">
-                                                            <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${item.color}`}>
-                                                                {item.status}
-                                                            </span>
-                                                        </div>
-                                                        <h4 className="font-black text-base text-white mt-1">{item.company}</h4>
-                                                        <p className="text-xs font-semibold text-indigo-400 mt-0.5">{item.role}</p>
-                                                    </div>
-                                                    <div className="pt-2.5 border-t border-slate-800 flex justify-between items-center text-xs">
-                                                        <span className="text-slate-400">우선순위: <strong className="text-slate-200">{item.priority}</strong></span>
-                                                        <span className="text-slate-500 font-mono text-[11px]">{item.date}</span>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    {/* 우측: 시각화된 퍼널 다이어그램 */}
-                                    <div className="lg:col-span-6">
-                                        <PipelineVisualDiagram />
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* ========================================================= */}
-                        {/* TAB 3: 핵심 역량 요약 (Executive Summary)                 */}
-                        {/* ========================================================= */}
-                        {activeTab === 'summary' && (
-                            <div className="space-y-6">
-                                {/* 1. 상단 제목 */}
-                                <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                                    <div>
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <span className="bg-purple-500/10 text-purple-400 border border-purple-500/30 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">
-                                                Executive Summary
-                                            </span>
-                                        </div>
-                                        <h2 className="text-xl sm:text-2xl font-extrabold text-white">Executive Career Summary & Core Competencies</h2>
-                                        <p className="text-xs text-slate-400 mt-1">박연우 (David) | 글로벌 8.5년 차 시니어 오퍼레이션 & 재무 정산 스페셜리스트</p>
-                                    </div>
-                                    <div className="bg-purple-950 border border-purple-500/30 text-purple-300 px-4 py-2 rounded-xl text-xs font-bold">
-                                        🛡️ 8.5 Years Global Corporate Track Record
-                                    </div>
-                                </div>
-
-                                {/* 2. 가운데: 해당 내용 설명(좌측) + 시각화된 그림(우측) */}
-                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-                                    {/* 좌측: 3대 핵심 전문성 설명 카드 */}
-                                    <div className="lg:col-span-6 space-y-4">
-                                        <div className="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 space-y-2">
-                                            <div className="flex items-center gap-2">
-                                                <i className="fa-solid fa-calculator text-indigo-400"></i>
-                                                <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">Financial & Ledger Operations</span>
-                                            </div>
-                                            <p className="text-xs text-slate-300 leading-relaxed">
-                                                Klook 가맹점 정산(AP/AR), 인보이스 오차 대조, SAP/Oracle 기반 분쟁 해결(Dispute Resolution) 및 부정 결제 차단.
-                                            </p>
-                                        </div>
-
-                                        <div className="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 space-y-2">
-                                            <div className="flex items-center gap-2">
-                                                <i className="fa-solid fa-shield-halved text-emerald-400"></i>
-                                                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Trust, Safety & Security</span>
-                                            </div>
-                                            <p className="text-xs text-slate-300 leading-relaxed">
-                                                Roblox 계정 보안, Meta 광고 컴플라이언스, Microsoft VLSC 라이선스 검증 및 피싱/부정 결제 방어.
-                                            </p>
-                                        </div>
-
-                                        <div className="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 space-y-2">
-                                            <div className="flex items-center gap-2">
-                                                <i className="fa-solid fa-language text-amber-400"></i>
-                                                <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">Trilingual & AI Integration</span>
-                                            </div>
-                                            <p className="text-xs text-slate-300 leading-relaxed">
-                                                한국어(Native), 일본어(Native-level / N1), 영어(Business). NVIDIA AI Academy 수료를 통한 데이터 프로세스 자동화.
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    {/* 우측: 시각화된 궤도 다이어그램 */}
-                                    <div className="lg:col-span-6">
-                                        <CompetencyVisualDiagram />
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </main>
-
-                    <footer className="max-w-7xl mx-auto px-6 mt-16 text-center text-xs text-slate-500 border-t border-slate-800 pt-6">
-                        <p>© 2026 David Yeonwoo Park Career Development Suite. Built for absolute market dominance.</p>
-                    </footer>
-                </div>
-            );
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #6a00f4, #00f7ff, #00ffb3); /* 보라-하늘-민트 그라디언트 */
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #ffffff;
+            min-height: 100vh;
+            padding-bottom: 100px; /* 오디오 플레이어 공간 확보 */
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .card-container {
+            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        main {
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        section {
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .grid {
+            width: 100%;
+            overflow: visible;
+        }
+        .header-card { 
+            background-color: rgba(255, 255, 255, 0.95); 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); 
+            color: #1f2937;
+        }
+        .section-title { 
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #ffffff; 
+            border-bottom: 2px solid rgba(255, 255, 255, 0.5); 
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .section-title:hover {
+            opacity: 0.9;
+        }
+        .section-title .accordion-arrow {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .section-title.collapsed .accordion-arrow {
+            transform: rotate(-90deg);
+        }
+        .section-content {
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            overflow: visible;
+            max-height: none;
+            opacity: 1;
+        }
+        .section-content.collapsed {
+            max-height: 0 !important;
+            margin: 0;
+            opacity: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        /* 기존의 어두운 테마 프로젝트 카드 (Resume, Notebooks 섹션 유지) */
+        .project-card { 
+            background-color: rgba(0, 0, 0, 0.4); 
+            border-radius: 1rem; 
+            border: 1px solid transparent;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            backdrop-filter: blur(8px); 
+            color: #ffffff;
+            border-left-width: 6px;
+            border-left-color: #6a00f4;
+            min-height: 180px;
+            overflow: visible;
+            word-wrap: break-word;
+        }
+        .project-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .project-card:nth-child(3n+1) { border-left-color: #ff5252; }
+        .project-card:nth-child(3n+2) { border-left-color: #a200ff; }
+        .project-card:nth-child(3n+3) { border-left-color: #00ff73; }
+
+        .project-card h4 { 
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff; 
+            margin-bottom: 0.5rem;
+        }
+        .project-card p { 
+            font-size: 1rem; 
+            color: #d4faff; 
+            margin-top: 0.5rem; 
+            flex-grow: 1; 
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        .project-card .tags { margin-top: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .project-card .tag { font-size: 0.8rem; font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 9999px; font-weight: 600; }
+        .tag.ipynb { background: rgba(255, 243, 199, 0.5); color: #8a6500; }
+        .tag.gpu { background: rgba(179, 213, 255, 0.5); color: #004d99; }
+        .tag.api { background: rgba(179, 255, 213, 0.5); color: #00664d; }
+        .tag.ml { background: rgba(255, 179, 230, 0.5); color: #80005d; }
+        .tag.kr { background: rgba(179, 217, 255, 0.5); color: #003366; }
+        .tag.en { background: rgba(217, 179, 255, 0.5); color: #330066; }
+        .tag.jp { background: rgba(255, 217, 179, 0.5); color: #663300; }
+        .tag.html { background: rgba(255, 204, 153, 0.5); color: #993d00; }
+        .tag.ai { background: rgba(153, 204, 255, 0.5); color: #003366; }
+
+
+        /* === 새로 추가된 AI 교육 PT 섹션 카드 스타일: 밝은 배경 및 가운데 정렬 === */
+        .project-card-ai-pt { 
+            background-color: rgba(255, 255, 255, 0.9); /* 밝은 투명 흰색 */
+            border-radius: 1rem; 
+            border: 1px solid transparent;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            backdrop-filter: blur(4px); 
+            color: #1f2937; /* 어두운 텍스트 색상 */
+            border-left-width: 6px;
+            border-left-color: #00ff73; /* 기본 색상 지정 */
+            min-height: 180px;
+            text-align: center; /* 카드 내용 가운데 정렬 */
+            overflow: visible;
+            word-wrap: break-word;
+        }
+        .project-card-ai-pt:hover { 
+            transform: translateY(-5px); /* 더 부드러운 호버 효과 */
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+        .project-card-ai-pt:nth-child(3n+1) { border-left-color: #a200ff; }
+        .project-card-ai-pt:nth-child(3n+2) { border-left-color: #ff5252; }
+        .project-card-ai-pt:nth-child(3n+3) { border-left-color: #00ff73; }
+
+        .project-card-ai-pt h4 { 
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e40af; /* 제목 색상 강조 */
+            margin-bottom: 0.5rem;
+        }
+        .project-card-ai-pt p { 
+            font-size: 1rem; 
+            color: #4b5563; /* 본문 텍스트 색상 */
+            margin-top: 0.5rem; 
+            flex-grow: 1; 
+        }
+
+        .project-card-ai-pt .tags { margin-top: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; } /* 태그 가운데 정렬 */
+        .project-card-ai-pt .tag { font-size: 0.8rem; font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 9999px; font-weight: 600; }
+        
+        /* AI PT 섹션 태그 색상 (밝은 배경에 맞춰 조정) */
+        .project-card-ai-pt .tag.pt { background: rgba(153, 0, 0, 0.2); color: #990000; } 
+        .project-card-ai-pt .tag.morpheus { background: rgba(0, 77, 51, 0.2); color: #004d33; }
+        .project-card-ai-pt .tag.network { background: rgba(128, 0, 0, 0.2); color: #800000; }
+        .project-card-ai-pt .tag.gpu { background: rgba(0, 77, 153, 0.2); color: #004d99; }
+        .project-card-ai-pt .tag.ml { background: rgba(128, 0, 93, 0.2); color: #80005d; }
+        .project-card-ai-pt .tag.ai { background: rgba(0, 51, 102, 0.2); color: #003366; }
+        .project-card-ai-pt .tag.api { background: rgba(0, 102, 77, 0.2); color: #00664d; }
+
+
+        /* Audio Player Styles - (기존 그대로 유지) */
+        #audio-container {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            z-index: 100;
+        }
+        #audio-container button {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            width: 40px;
+            height: 40px;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        #audio-container button:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+        #songTitle {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #e0f7ff;
+            width: 180px; /* Adjust width as needed */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        #pauseBtn { display: none; } /* Initially hide pause button */
+
+        /* 더보기 기능 스타일 */
+        .project-card.hidden-item,
+        .project-card-ai-pt.hidden-item {
+            display: none;
+        }
+        .show-more-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 2rem auto;
+            display: block;
+            backdrop-filter: blur(8px);
+        }
+        .show-more-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        .section-title-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+        
+        /* 언어 선택 드롭다운 스타일 */
+        .language-selector {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 200;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        .language-selector select {
+            background-color: transparent;
+            border: 2px solid #6a00f4;
+            color: #1f2937;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .language-selector label {
+            color: #1f2937;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+    <div class="card-container">
+        <header class="mb-16">
+            <div class="header-card p-8 rounded-2xl shadow-xl border border-gray-200">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-shrink-0">
+                        <!-- Profile Image Link -->
+                        <img src="스크린샷 2025-10-20 202241.png" "raw=true" class="w-40 h-40 rounded-full object-cover border-4 border-blue-400 shadow-lg" alt="Yeonwoo Park Profile Photo">
+                    </div>
+                    <div class="text-center md:text-left">
+                        <h1 class="text-4xl font-bold text-gray-800">박연우 (Yeonwoo Park)</h1>
+                        <h2 class="text-2xl font-medium text-blue-600 mt-1">AI Application & QA Specialist</h2>
+                        
+                        <p id="profileDescription" class="mt-4 max-w-2xl text-gray-600">
+                            비전공 도메인(언어, 회계) 전문성과 AI 활용 능력을 결합해, 기술팀과 현업 사용자 간의 복잡한 커뮤니케이션 장벽을 해소하는 '기술 번역가' 역할에 강점이 있습니다. 데이터 분석 기반의 AI 품질 보증(QA) 및 서비스 기획을 통해 실질적인 비즈니스 가치를 창출하는 것을 목표로 합니다.
+                        </p>
+                        
+                        <div class="mt-6 flex flex-wrap justify-center md:justify-start gap-4">
+                            <a href="Resume files /Cover letter.pdf" target="_blank" class="bg-red-600 text-white font-bold py-2 px-6 rounded-full hover:bg-red-700 transition duration-300 inline-flex items-center"><i class="fas fa-file-alt mr-2"></i> View Cover Letter (자소서) </a>
+                            
+                            <!-- Contact Me Button (with Modal Logic) -->
+                            <button id="contactButton" class="bg-gray-800 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-700 transition duration-300 inline-flex items-center">
+                                <i class="fas fa-address-book mr-2"></i> Contact Me
+                            </button>
+                            
+                            <a href="https://www.linkedin.com/in/yeonwoo-park-b54bba356/" target="_blank" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-700 transition duration-300 inline-flex items-center"><i class="fab fa-linkedin mr-2"></i> LinkedIn</a>
+                            <a href="https://github.com/Salmonyeonwoo" target="_blank" class="bg-gray-900 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-800 transition duration-300 inline-flex items-center"><i class="fab fa-github mr-2"></i> GitHub</a>
+                        </div>
+                        
+                        <!-- Language Selector -->
+                        <div class="language-selector">
+                            <label for="languageSelect"><i class="fas fa-language mr-1"></i>Priority for language options:</label>
+                            <select id="languageSelect"> 
+                                <option value="en" selected>EN</option>
+                                <option value="kr">KR</option>
+                                <option value="jp">JP</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="space-y-16">
+
+            <!-- *** Resume & Storytelling Section (Original CSS maintained) *** -->
+            <section>
+                <div class="section-title-wrapper">
+                    <h2 class="section-title collapsed" data-accordion="resume-accordion"><i class="fas fa-user-circle"></i>My resume and storytelling details for myself <i class="fas fa-chevron-down accordion-arrow"></i></h2>
+                </div>
+                <div class="section-content collapsed" id="resume-accordion">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-section="resume">
+                    
+                    <a href="Resume files /이력서 소개 (한국어) 웹 프레젠테이션.html" target="_blank" class="project-card" data-lang="kr">
+                        <div><h4>경력 소개 (한국어 - 웹 PT)</h4>
+                            <p>Klook, Roblox 등 글로벌 기업에서 데이터 분석 기반으로 AI 챗봇 성능을 개선하고(상담원 전환율 안정화) 프로세스 효율화를 주도한 핵심 경력을 소개합니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag kr">KR</span></div>
+                    </a>
+                    <a href="Resume files /職務経歴書 (日本語) ウェブプレゼンテーション.html" target="_blank" class="project-card" data-lang="jp">
+                        <div><h4>職務経歴書 (日本語 - ウェブ PT)</h4>
+                            <p>AIチャットボックス QA, アカウントのセキュリティの分析等のデータベースの成果に基いた日本市場によって特化された職務経歴書です。</p>
+                        </div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag jp">JP</span></div>
+                    </a>
+                    <a href="Resume files /Resume Overview (English) Web Presentation.html" target="_blank" class="project-card" data-lang="en">
+                        <div><h4>Resume Overview (English - Web PT)</h4>
+                            <p>Presents data-driven achievements, including reducing agent escalation rates at Klook and establishing an AI knowledge base foundation at Motorola.</p>
+                        </div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag en">EN</span></div>
+                    </a>
+
+                    <a href="https://gemini.google.com/share/5406e7797d40" target="_blank" class="project-card hidden-item" data-lang="kr">
+                        <div><h4>자기 소개 스토리텔링 (한국어)</h4><p>저의 성장 과정과 경험을 담은 한국어 스토리텔링 북입니다.</p></div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag kr">KR</span></div>
+                    </a>
+                    <a href="https://gemini.google.com/share/b02ddda4708d" target="_blank" class="project-card hidden-item" data-lang="en">
+                        <div><h4>Self-Introduction Storytelling (English)</h4><p>An English storytelling book about my journey and experiences.</p></div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag en">EN</span></div>
+                    </a>
+                    <a href="https://gemini.google.com/share/e4eb22fbf133" target="_blank" class="project-card hidden-item" data-lang="jp">
+                        <div><h4>自己紹介ストーリーテリング (日本語)</h4><p>私の成長過程と経験を盛り込んだ日本語のストーリーテリングブックです。</p></div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag jp">JP</span></div>
+                    </a>
+                    <a href="https://notebooklm.google.com/notebook/e10a4d4c-a31a-4c63-9c00-6031d66e2032" target="_blank" class="project-card hidden-item" data-lang="kr">
+                        <div><h4>LLM 활용 Video/Audio Overview</h4>
+                            <p>LLM의 스토리텔링 기능을 활용하여 저의 경력과 비전을 음성/영상으로 요약한 자기소개 자료입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag kr">KR</span></div>
+                    </a>                    
+                </div>
+                <button class="show-more-btn" data-section="resume">View more <i class="fas fa-chevron-down"></i></button>
+                </div>
+            </section>
+            <!-- *** End of Section *** -->
+            
+
+            <!-- *** Relevant jobs to AI functions Section (Original CSS maintained) *** -->
+            <section>
+                <div class="section-title-wrapper">
+                    <h2 class="section-title collapsed" data-accordion="ai-functions-accordion"><i class="fas fa-user-circle"></i>Examination of job environment, relevant to AI functions <i class="fas fa-chevron-down accordion-arrow"></i></h2>
+                </div>
+                <div class="section-content collapsed" id="ai-functions-accordion">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <a href="Relevant jobs to AI functions /AI 기반 CS 효율화 전략 프레젠테이션.html" target="_blank" class="project-card" data-lang="kr">
+                <div><h4>AI 기능 도입 후의 고객 응대 업무 효율성 변화</h4>
+                      <p>AI 기능이 도입 및 발전된 이후에 고객 응대 업무의 효율성이 얼마나 증진되고 있는지를 분석합니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag kr">KR</span></div>
+                    </a>
+
+            <a href="Relevant jobs to AI functions /AI-Based CS Efficiency Strategy Presentation.html" target="_blank" class="project-card" data-lang="en">
+               <div><h4>AI & Customer Support Synergy</h4>
+                    <p>Analyzes how AI (chatbots, data analysis) and human agents create a symbiotic relationship, enhancing support efficiency and quality based on my direct experience.</p>
+                        </div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag en">EN</span></div>
+                    </a>
+
+            <a href="Relevant jobs to AI functions /AIを活用したCS効率化戦略プレゼンテーション.html" target="_blank" class="project-card" data-lang="jp">
+               <div><h4>AI技能の導入と発展の後に、顧客応対の業務に関わる効率性がどれ位変わっているか Customer Support Synergy</h4>
+                    <p>AI技能が導入と発展された後に、顧客応対の業務がどれぐらい効率的に便利になってるのか、変化の詳細情報を分析した資料です。</p>
+                        </div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag jp">JP</span></div>
+                    </a>
+                </div>
+                </div>
+            </section>
+            <!-- *** End of Section *** -->
+
+            
+            <!-- *** AI Education Files Section (UPDATED: Bright Background & Centered) - START *** -->
+            <section>
+                <div class="section-title-wrapper">
+                    <h2 class="section-title collapsed" data-accordion="ai-education-accordion"><i class="fas fa-desktop"></i>Summarized HTML  presentation files for AI education <i class="fas fa-chevron-down accordion-arrow"></i></h2>
+                </div>
+                <div class="section-content collapsed" id="ai-education-accordion">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">                    
+
+                    <!-- [GitHub 내 파일 및 폴더 관리] 섹션 (1개) - Class changed to project-card-ai-pt -->
+                    <a href="AI_education_files/GitHub에서 파일 및 폴더 관리 오류 및 해결했던 과정들.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>GitHub 내의 파일 및 폴더 관리 오류 해결 과정들</h4>
+                            <p>GitHub 내에서 폴더들 설정 후에 파일들 관리하는 부분에서 오류 및 해결 방법 요약본입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag gpu">GPU</span><span class="tag ml">ML</span></div>
+                    </a>
+
+                    <!-- [예측 유지보수] 섹션 (3개) - Class changed to project-card-ai-pt -->
+                    <a href="AI_education_files/Applications of AI for Predictive Maintenance/Predictive conservation_ GPU LSTM.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[예측 유지보수] GPU LSTM 시계열 요약</h4>
+                            <p>GPU Keras/TensorFlow 기반 LSTM 모델을 활용한 시계열 예측 유지보수 방법론 요약본입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag gpu">GPU</span><span class="tag ml">ML</span></div>
+                    </a>
+                    
+                    <a href="AI_education_files/Applications of AI for Predictive Maintenance/Predictive conservation_ Summary for GPU XGBoost.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[예측 유지보수] GPU XGBoost 요약</h4>
+                            <p>NVIDIA RAPIDS cuML을 활용한 GPU 가속 XGBoost 모델 기반 예측 유지보수 적용 사례 요약본입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag gpu">GPU</span><span class="tag ml">ML</span></div>
+                    </a>
+
+                    <a href="AI_education_files/Applications of AI for Predictive Maintenance/Predictive conservation_ Detection of error for auto-encoder.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[예측 유지보수] 오토인코더 기반 이상 탐지 요약</h4>
+                            <p>정상 데이터 학습을 통한 재구성 오류 임계치 설정 기반의 오토인코더(AE) 이상 탐지 기법 요약본입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag ml">ML</span></div>
+                    </a>
+
+                    <!-- [LLM/RIVA/CrewAI] 섹션 (6개) - Class changed to project-card-ai-pt -->
+                    <a href="AI_education_files/Riva and TTS (Conversational AI)/Guidelines to diverge Riva and TTS servers via AI Server.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[RIVA/TTS] Speech AI 서버 배포 가이드</h4>
+                            <p>NVIDIA Riva Speech AI 서비스를 Docker 기반으로 배포하고 활용하는 기술 가이드라인 요약본입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag ai">AI</span><span class="tag gpu">GPU</span></div>
+                    </a>
+
+                    <a href="AI_education_files/Riva and TTS (Conversational AI)/System to display Q&A for Riva and TTS Servers(Korean).html target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[RIVA/TTS] 대화형 오디오 플레이어 구현</h4>
+                            <p>한국어로 Riva 및 TTS 기능으로 대화형 오디오를 구현합니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag ai">AI</span></div>
+                    </a>
+                    
+                    <a href="AI_education_files/Riva and TTS (Conversational AI)/System to display Q&A for Riva and TTS Servers(English).html target="_blank" class="project-card" data-lang="en">
+                        <div>
+                            <h4>[RIVA/TTS] The system to display conversational audios</h4>
+                            <p>This document proves the details how to play conversational audios for English version.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag ai">AI</span></div>
+                    </a>
+                    
+                    <a href="AI_education_files/Riva and TTS (Conversational AI)/Riva - AI Pipelines for conversational Riva and TTS.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[RIVA/TTS] 대화형 AI 파이프라인</h4>
+                            <p>Riva를 이용한 ASR 및 TTS를 포함하는 End-to-End 대화형 AI 파이프라인 구축 요약본입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag ai">AI</span></div>
+                    </a>
+                    
+                    <a href="AI_education_files/Riva and TTS (Conversational AI)/Searching and summary for logistics of Riva and TTS.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[RIVA/TTS] 논문 검색 및 요약</h4>
+                            <p>Riva와 TTS 기술을 활용하여 텍스트 기반 논문 검색 결과를 음성으로 요약 제공하는 시스템 구축 요약본입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag ai">AI</span></div>
+                    </a>
+
+                    <a href="AI_education_files/Ubuntu files/Method to proceed with setup for ROS 2 via WSL and Ubuntu.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>WSL 및 Ubuntu로 가상 환경 및 ROS 2 설정 방법</h4>
+                            <p>거북이 및 다른 게임들을 WSL 및 Ubuntu로 가상 환경 설정 후에 ROS 2 프로그램으로 설정해 온 코딩 및 풀이 절차 부분의 요약본 내용입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag api">API</span></div>
+                    </a>
+
+                    <a href="AI_education_files/Ubuntu files/Turtle Explorer Game.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>WSL 및 Ubuntu로 실행된 거북이 게임 및 매뉴얼</h4>
+                            <p>거북이 게임을 실행하기 위한 매뉴얼 및 그 과정에 대한 내용입니다..</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag api">API</span></div>
+                    </a>
+                    
+                    <a href="AI_education_files/Summary for CrewAI.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>CrewAI - 주식 분석팀 요약</h4>
+                            <p>다중 AI 에이전트가 협력하여 주식 시장 분석 리포트를 생성하는 CrewAI 프레임워크 활용 프로젝트 요약본입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag api">API</span></div>
+                    </a>
+                    
+                    <a href="AI_education_files/LLM - Summary for split preference.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>LLM - 선호도 예측 분류 모델 요약</h4>
+                            <p>TF-IDF 및 수치형 특징을 결합하여 LLM 응답에 대한 사용자 선호도를 예측하는 모델 개발 요약본입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag ai">AI</span></div>
+                    </a>
+                    
+
+                    <!-- *** [Morpheus] 통합 파이프라인 섹션 (총 9개로 확장) - Class changed to project-card-ai-pt *** -->
+                    
+                    <!-- 1. PCAP E2E -->
+                    <a href="AI_education_files/morpheus_pcap_end_to_end.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[Morpheus] PCAP 엔드투엔드 분석 파이프라인</h4>
+                            <p>네트워크 PCAP 데이터를 Triton 추론 서버를 통해 실시간으로 처리하고 암호화폐 채굴을 탐지하는 E2E 파이프라인 요약입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag morpheus">Morpheus</span><span class="tag network">Network</span></div>
+                    </a>
+
+                    <!-- 2. 복합 필터링 -->
+                    <a href="AI_education_files/morpheus_advanced_filters.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[Morpheus] 복합 필터링 및 조건부 분석</h4>
+                            <p>다중 FilterStage를 병렬로 배치하고 복합적인 조건으로 메시지를 분리, 보안 분석 로직을 적용하는 고급 필터링 요약입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag morpheus">Morpheus</span></div>
+                    </a>
+
+                    <!-- 3. 데이터 분할/복제 -->
+                    <a href="AI_education_files/morpheus_data_split_broadcast.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[Morpheus] 데이터 분할 및 복제 로직</h4>
+                            <p>단일 메시지 페이로드에서 조건부 데이터 분할 및 MRC Broadcast 노드를 활용한 다중 경로 복제 로직 구현 요약입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag morpheus">Morpheus</span></div>
+                    </a>
+
+                    <!-- 4. 커스텀 스테이지 데이터 변환 -->
+                    <a href="AI_education_files/morpheus_custom_stage_data_transform.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[Morpheus] 커스텀 스테이지 데이터 변환</h4>
+                            <p>Mutable DataFrame을 사용하여 메시지 페이로드(cuDF)의 컬럼 값을 안전하고 효율적으로 변환하는 커스텀 스테이지 구현 요약입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag morpheus">Morpheus</span></div>
+                    </a>
+                    
+                    <!-- 5. 비선형 라우팅 -->
+                    <a href="AI_education_files/morpheus_nonlinear_routing_control.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[Morpheus] 비선형 파이프라인 및 라우팅 제어</h4>
+                            <p>RouterStage와 key_fn을 활용하여 메시지 상태(성공/실패)에 따라 데이터를 동적으로 분기하는 비선형 파이프라인 설계 요약입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag morpheus">Morpheus</span></div>
+                    </a>
+
+                    <!-- 6. ControlMessage 활용 (기존 4번) -->
+                    <a href="AI_education_files/Morpheus - Summary for function of control message.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[Morpheus] ControlMessage 파이프라인 통합 및 활용</h4>
+                            <p>메시지에 메타데이터와 태스크 정보를 주입하는 커스텀 스테이지를 통해 파이프라인 흐름을 동적으로 제어하는 방법 요약입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag morpheus">Morpheus</span></div>
+                    </a>
+                    
+                    <!-- 7. Broadcast 노드 -->
+                    <a href="AI_education_files/morpheus_broadcast_node.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[Morpheus] Broadcast 노드 활용</h4>
+                            <p>단일 입력 메시지를 여러 다운스트림 스테이지로 동시에 복제 및 전송하는 Broadcast 노드 커스텀 스테이지 구현 요약입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag morpheus">Morpheus</span></div>
+                    </a>
+
+                    <!-- 8. MIMO 캡스톤 (기존 5번) -->
+                    <a href="AI_education_files/Morpheus - Multiple inputs and outputs of capstone pipelines.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[Morpheus] 캡스톤 다중 입력/출력 (MIMO)</h4>
+                            <p>GPU 텔레메트리/PCAP 로그를 통합 처리하고 Triton 추론을 통해 채굴 활동을 탐지하는 캡스톤 프로젝트 요약입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag morpheus">Morpheus</span><span class="tag network">Network</span></div>
+                    </a>
+
+                    <!-- 9. 고급 파이프라인 및 LLM 평가 -->
+                    <a href="AI_education_files/morpheus_advanced_llm_assessment.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[Morpheus] 고급 파이프라인 및 LLM 평가 솔루션</h4>
+                            <p>비선형 라우팅, 커스텀 스테이지 내 그래프 구축 및 DeepSpeed를 활용한 대규모 LLM 평가 솔루션 구축 요약입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag morpheus">Morpheus</span></div>
+                    </a>
+                    
+                    <!-- 10. 커스텀 스테이지 기본기 (기존 3번) -->
+                    <a href="AI_education_files/morpheus_custom_stage_basics_v2.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>[Morpheus] 커스텀 스테이지 기본 구조 및 업데이트</h4>
+                            <p>MessageMeta의 페이로드(cuDF)를 안전하게 읽고 수정하는 커스텀 스테이지 개발 기본 로직을 요약했습니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag morpheus">Morpheus</span></div>
+                    </a>
+
+                    <a href="AI_education_files/Solutions via API Key.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>각 프로젝트 별 API Key로 해결했던 과정</h4>
+                            <p>Colab, NVIDIA Jupyter-Notebook 별로 풀어왔던 과정 내용입니다..</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag api">API</span></div>
+                    </a>
+
+                    <a href="AI_education_files/Solutions via API Key(English).html" target="_blank" class="project-card" data-lang="en">
+                        <div>
+                            <h4>Summary of process for solutions via API Keys</h4>
+                            <p>English version of summary for API Key processes via Colab, NVIDIA Jupyter-Notebook.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag api">API</span></div>
+                    </a>   
+                </div>
+                </div>
+            </section>
+            <!-- *** End of AI Education Files Section - END *** -->
+
+            <section>
+                <div class="section-title-wrapper">
+                    <h2 class="section-title collapsed" data-accordion="streamlit-accordion"><i class="fas fa-user-circle"></i>My processes for streamlit setups with Firebase and GitHub <i class="fas fa-chevron-down accordion-arrow"></i></h2>
+                </div>
+                <div class="section-content collapsed" id="streamlit-accordion">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">           
+
+                    <a href="https://utility-convenience-salmonyeonwoo.streamlit.app/" target="_blank" class="project-card" data-lang="kr">
+                        <div><h4>Streamlit 앱 활용(그동안 수집한 자료들의 프레젠테이션 용도)</p></div>
+                            <p>Streamlit app을 활용하여 해당 자료들을 Gemini 및 GPT 확장 기능을 이용해서 RAG로 자료를 분석하는 기능과 AI 시뮬레이션으로 고객 응대 업무 시나리오를 구현하는 기능을 추가했습니다.</p>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag kr">KR</span></div>
+                    </a>
+
+                    <a href="https://competitions-for-new-business-at-some-restaurants.streamlit.app/" target="_blank" class="project-card" data-lang="kr">
+                        <div><h4>Streamlit 앱 활용 (프랜차이즈 사업 AI 솔루션 경진대회 용도)</p></div>
+                            <p>Streamlit app을 활용하여 향후 특정 지역 내 프랜차이즈 사업을 하는 부분에 있어서 고객 응대 시에 AI 솔루션 부분의 아이디어를 구현한 경진대회 용도 streamlit 기능을 추가했습니다.</p>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag kr">KR</span></div>
+                    </a>
+
+                    <a href="AI_education_files/Firebase 오류 해결 스토리 HTML 프레젠테이션.html" target="_blank" class="project-card" data-lang="kr">
+                        <div>
+                            <h4>Firebase 연결 오류 및 DB 저장 부분 해결</h4>
+                            <p>Streamlit 내 제 앱을 만들면서 Firebase 연결 오류 및 DB 저장 부분을 해결해 온 과정을 담은 내용입니다..</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag api">API</span></div>
+                    </a>
+
+                    <a href="AI_education_files/ Firebase Error Resolution Presentation (English).html" target="_blank" class="project-card" data-lang="en">
+                        <div>
+                            <h4>Resolution process for connection with Firebase and DB via Streamlits</h4>
+                            <p>This document indicates my resolution process about connection and compilation error at Firebase and Streamlits.</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag api">API</span></div>
+                    </a>
+
+                    <a href="AI_education_files/Firebase エラー解決ストーリー (日本語).html" target="_blank" class="project-card" data-lang="jp">
+                        <div>
+                            <h4>StreamlitsでFirebase及びデーターベースの様々なエラーが生じた時に、解決した手続</h4>
+                            <p>StreamlitsでFirebase及びデーターベースの接続と保存等、様々なエラーが生じた時に、解決した手続を纏めました</p>
+                        </div>
+                        <div class="tags"><span class="tag pt">HTML PT</span><span class="tag api">API</span></div>
+                    </a>
+
+                    <a href="AI_education_files/Streamlit 환경 비교 차트 (Korean Version).html" target="_blank" class="project-card" data-lang="kr">
+                        <div><h4>Streamlit 앱을 GitHub 연결 용도 웹사이트 연동 부분과 로컬 경로로 작동시켰을 때의 공통점과 차이점</p></div>
+                            <p>GitHub로 작동시킬 때와 로컬로 작동시킬 때 streamlit app의 작동 기능의 공통점과 차이점을 분석해서 요약했습니다.</p>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag kr">KR</span></div>
+                    </a>
+
+                    <a href="AI_education_files/Streamlit Environment Comparison Chart (English).html" target="_blank" class="project-card" data-lang="en">
+                        <div><h4>Common and differentiated points for streamlit apps to be worked between GitHub for public websites, and local path for checks via only owner's personal devices</p></div>
+                            <p>This document indicates the summary for functions of streamlit apps between Github for public websites and local paths via only owner's personal devices to check</p>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag en">EN</span></div>
+                    </a>
+
+                    <a href="AI_education_files/Streamlit 環境比較チャート (Japanese).html" target="_blank" class="project-card" data-lang="jp">
+                        <div><h4>GitHubで公共のウェブサイトの目的の為に起動される物と、APIとの暗証化保安のキーが通されるローカルの経路で起動されるStreamlitアプリの共通点と差異点</p></div>
+                            <p>StreamlitアプリがGitHubで公共のウェブサイトの目的の為の物と、APIとの暗証化保安のキーが通されるローカルの経路、それぞれ違う方法で起動されるStreamlitアプリの共通点と差異点を調べて纏めてみた資料です。</p>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag jp">JP</span></div>
+                    </a>
+
+                    <!-- [LLM 수정 절차들] 섹션 (1개) - Class changed to project-card-ai-pt -->
+                    <a href="AI_education_files/LLM 프로젝트 난관 극복 프레젠테이션.html" target="_blank" class="project-card" data-lang="kr">
+                        <div><h4>LLM 프로젝트를 기획하면서 해결 과정 </p></div>
+                            <p>LLM으로 프로젝트를 기획하면서 여러 난관과 극복해 온 해결 과정을 요약한 자료입니다..</p>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag kr">KR</span></div>
+                    </a>
+
+                    <a href="AI_education_files/Presentation for troublesomes and recovery process of LLM.html" target="_blank" class="project-card" data-lang="en">
+                        <div><h4>Troublesome and recovery process for LLM projects</p></div>
+                            <p>This document indicates the summary for my troublesome cases and recovery process while creating the LLM projects</p>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag en">EN</span></div>
+                    </a>
+
+                    <a href="AI_education_files/LLMプロジェクトのトラブル及び乗り越えた手続.html" target="_blank" class="project-card" data-lang="jp">
+                        <div><h4>LLMでプロジェクトを企画しながら向き合ったトラブル及び乗り越えた手続</p></div>
+                            <p>LLMでプロジェクトを企画しながら、どんなトラブルに向き合ったのか、そして、そのトラブルをどうやって乗り越えてやり直したのか、その手続が詰めてある要約本の資料です。</p>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag jp">JP</span></div>
+                    </a>
+                    
+                </div>
+                </div>
+            </section>
+            <!-- *** End of My processes for streamlit setups with Firebase and GitHub Section - END *** -->
+            
+            <section>
+                <div class="section-title-wrapper">
+                    <h2 class="section-title collapsed" data-accordion="ml-project-accordion"><i class="fas fa-flask"></i>AI/머신러닝 프로젝트 (주요 요약) <i class="fas fa-chevron-down accordion-arrow"></i></h2>
+                </div>
+                <div class="section-content collapsed" id="ml-project-accordion">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <a href="AI_education_files/ GPU 기반 데이터 파이프라인.html" target="_blank" class="project-card" data-lang="kr">
+                        <div><h4>AI/머신러닝 프로젝트 요약본 (GPU 기반 파이프라인)</h4>
+                            <p>NVIDIA Morpheus 프레임워크를 활용한 AI 데이터 파이프라인 구축 프로젝트입니다. ControlMessage, Tensors, Inference 등 핵심 기능을 통합한 실무 역량을 요약했습니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag gpu">GPU</span><span class="tag">HTML</span><span class="tag ml">ML</span><span class="tag kr">KR</span></div>
+                    </a>
+                           
+                </div>
+                </div>
+            </section>
+            
+            <!-- *** Presentation files for AI competition - START *** -->          
+            <section>
+                <div class="section-title-wrapper">
+                    <h2 class="section-title collapsed" data-accordion="interactive-presentations-accordion"><i class="fas fa-desktop"></i>Interactive Web Presentations (HTML) <i class="fas fa-chevron-down accordion-arrow"></i></h2>
+                </div>
+                <div class="section-content collapsed" id="interactive-presentations-accordion">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <a href="Presentation files for AI competitions /NVIDIA 교육 성과 및 AI 대회 참가 이력 요약.html" target="_blank" class="project-card" data-lang="kr">
+                        <div><h4>NVIDIA에서 교육해 온 성과와 그에 따른 AI 대회 참가 이력</h4>
+                            <p>경진대회 참석했을 때 제출한 정책제안서 파일입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag kr">KR</span></div>
+                    </a>
+
+                    <a href="Presentation files for AI competitions /AI Learning via NVIDIA and histories of AI competitions.html" target="_blank" class="project-card" data-lang="en">
+                        <div><h4>Accomplishment of AI education via NVIDIA at Korea and participation histories of AI competitions</h4>
+                            <p>This document is related to my accomplishment of AI education via NVIDIA and my careers of AI competitions so far.</p>
+                        </div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag en">EN</span></div>
+                    </a>
+                    
+                    <a href="Presentation files for AI competitions /AI K-Culture Scripter Policy Proposal (Korean).html" target="_blank" class="project-card" data-lang="kr">
+                        <div><h4>AI 경진대회 정책제안서</h4>
+                            <p>경진대회 참석했을 때 제출한 정책제안서 파일입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag kr">KR</span></div>
+                    </a>
+
+                    <a href="Presentation files for AI competitions /AI K-Culture Scripter Policy Proposal (English).html" target="_blank" class="project-card" data-lang="en">
+                        <div><h4>Policy proposal English version</h4>
+                            <p>This is English version file for policy proposal for AI competition </p>
+                        </div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag en">EN</span></div>
+                    </a>
+
+                    <a href="Presentation files for AI competitions /관광업 DX 혹은 AI 핵심 트렌드 발표 자료.html" target="_blank" class="project-card" data-lang="kr">
+                        <div><h4>관광업 AI 기술 혁신과 관련된 세미나 강의 내용 요약 및 Klook 업무 경력 연계</h4>
+                            <p>11월 3일에 개최된 관광업계 AI 기술 혁신 내용 관련 세미나 내용을 총정리한 내용과 Klook에서 업무한 경력과의 연관성 소개 </p>
+                        </div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag kr">KR</span></div>
+                    </a>
+
+                    <a href="Presentation files for AI competitions /Tourism DX or AI Core Trends Presentation.html" target="_blank" class="project-card" data-lang="en">
+                        <div><h4>Summary for details about connectivity between tourism industries and AI innovations from seminar, and my careers of Klook</h4>
+                            <p> This document indicates the details for connectivity between tourism industries and AI innovation from seminar, and my careers of Klook </p>
+                        </div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag en">EN</span></div>
+                    </a>
+
+                    <a href="Presentation files for AI competitions /Galaxy XR: Vision and Outlook (v5) - Korean.html" target="_blank" class="project-card" data-lang="kr">
+                        <div><h4>갤럭시 XR 비전과 전망</h4>
+                            <p>앞으로 향후 삼성 갤럭시 측에서 정식 출시될 XR 제품의 간단한 소개와 뛰어난 고퀄리티 성능 상세 내용입니다. </p>
+                        </div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag kr">KR</span></div>
+                    </a>
+
+                    <a href="Presentation files for AI competitions /Galaxy XR: Vision and Outlook (v5) - English.html" target="_blank" class="project-card" data-lang="en">
+                        <div><h4>Vision and propsperity for Galaxy XR devices</h4>
+                            <p>This document proves the simple introduction and high quality function for Samsung Galaxy XR devices in future </p>
+                        </div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag en">EN</span></div>
+                    </a>
+
+                    <a href="Presentation files for AI competitions /교통사고 예측 내용.html" target="_blank" class="project-card" data-lang="kr">
+                        <div><h4>교통사고 위험 예측 내용</h4>
+                            <p>Dacon 경진대에서 진행한 교통사고 위험도 예측을 한 자료입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag kr">KR</span></div>
+                    </a>
+
+                    <a href="Presentation files for AI competitions /Prediction for risk of traffic accident.html" target="_blank" class="project-card" data-lang="en">
+                        <div><h4>Predicting the risk of traffic accidents</h4>
+                            <p>This document proves the result for prediction of risk of traffic accidents, held the AI competition via Dacon, Korea</p>
+                        </div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag en">EN</span></div>
+                    </a>
+                    
+                    <a href="Presentation files for AI competitions /AI_Solutions_for_smart_city_at_Paju(Korean).html" target="_blank" class="project-card" data-lang="kr">
+                        <div><h4>파주 스마트시티 AI 아이디어 제안</h4>
+                            <p>파주시의 실제 도시 문제를 해결하기 위해 AI를 활용한 도로 안전(객체 탐지), 환경(데이터 분석), 복지(챗봇) 서비스를 제안한 Dacon 공모전 자료입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag kr">KR</span></div>
+                    </a>
+
+                    <a href="Presentation files for AI competitions /AI_Solutions_for_smart_city_at_Paju(English).html" target="_blank" class="project-card" data-lang="en">
+                        <div><h4>Suggestion for strategy to grow AI smart cities within Paju areas</h4>
+                            <p>This is a Dacon contest submission proposing AI-utilized services—covering road safety (object detection), environment (data analysis), and welfare (chatbot)—to solve real urban problems in Paju City.</p>
+                        </div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag en">EN</span></div>
+                    </a>
+
+                    <a href="Presentation files for AI competitions /AI_Solutions_for_smart_city_at_Paju(English).html" target="_blank" class="project-card" data-lang="en">
+                        <div><h4>Suggestion to grow AI smart cities at Paju city</h4>
+                            <p>This document proves the </p>
+                        </div>
+                        <div class="tags"><span class="tag html">HTML</span><span class="tag ai">AI</span><span class="tag en">EN</span></div>
+                    </a>
+                    
+                    <a href="Presentation files for AI competitions /Voice_of_AI_features.html" target="_blank" class="project-card" data-lang="kr">
+                        <div><h4>AI 언어 모델 발전 과정 분석</h4>
+                            <p>단순한 기술 나열이 아닌, Seq2Seq부터 Transformer, ChatGPT에 이르기까지 각 모델이 '왜' 등장했는지 그 배경과 한계를 중심으로 발전사를 분석했습니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag kr">KR</span></div>
+                    </a>
+                    
+                    <a href="Presentation files for AI competitions /Popularity for k-drama-retro(Korean).html" target="_blank" class="project-card" data-lang="kr">
+                        <div><h4>K-복고 드라마 성공 비결</h4>
+                            <p>K-드라마의 성공 요인인 '복고 전략'을 분석하고, Gemini AI API를 연동하여 시청자의 감성을 자극하는 마케팅 문구를 생성하는 기능을 구현했습니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag kr">KR</span><span class="tag api">API</span></div>
+                    </a>
+
+                    <a href="Presentation files for AI competitions /Popularity for k-drama-retro(English).html" target="_blank" class="project-card" data-lang="en">
+                        <div><h4>Strategy for K-Retro dramas</h4>
+                            <p>This document proves the details for popularity methods of K-retro dramas, whose background is based at 1980~1990s.</p>
+                        </div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag en">EN</span><span class="tag api">API</span></div>
+                    </a>
+                    
+                    <a href="Presentation files for AI competitions / 중국 AI 강국 전략.html" target="_blank" class="project-card" data-lang="kr">
+                        <div><h4>중국 AI 기술 독립 및 경쟁 전략</h4>
+                            <p>단순한 규제가 아닌, 글로벌 서비스 차단이라는 특수한 환경이 어떻게 중국의 독자적인 AI 기술(Baidu, Alibaba 등) 생태계 구축의 기회가 되었는지 분석합니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag kr">KR</span></div>
+                    </a>
+                    <a href="Presentation files for AI competitions /AI advanced skill and globalized strategy at China.html" target="_blank" class="project-card" data-lang="en">
+                        <div><h4>China's AI Globalization Strategy</h4>
+                            <p>An analysis of how China's unique regulatory environment (the 'Great Firewall') paradoxically fostered a highly competitive and independent AI ecosystem.</p>
+                        </div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag en">EN</span></div>
+                    </a>
+                </div>
+                </div>
+            </section>
+            
+            <!-- *** Prosperity for globalized tourism - START *** -->          
+            <section>
+                <div class="section-title-wrapper">
+                    <h2 class="section-title collapsed" data-accordion="tourism-accordion"><i class="fas fa-desktop"></i>Prosperity for globalized tourism <i class="fas fa-chevron-down accordion-arrow"></i></h2>
+                </div>
+                <div class="section-content collapsed" id="tourism-accordion">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <a href="Presentation files for AI competitions /K-Food_Globalization_Strategy_Analysis_Slideshow_FIXED.html" target="_blank" class="project-card" data-lang="en">
+                        <div><h4>K-Food Globalization Strategy</h4>
+                            <p>A strategic analysis deck on K-Food's globalization, focusing on market adaptation, social media leverage, and brand storytelling as key success factors.</p>
+                        </div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag en">EN</span></div>
+                    </a>
+
+                    <a href="Presentation files for AI competitions /해외 여행 관광업계 동향 전망 심층 리포트.html" target="_blank" class="project-card" data-lang="kr">
+                        <div><h4>해외 여행 동향과 관련된 전망 분석</h4>
+                            <p>해외 여행의 성장율의 동향에 따라 변화되는 여행 관광업계의 전망을 분석한 자료입니다.</p>
+                        </div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag kr">KR</span></div>
+                    </a>
+
+                    <a href="Presentation files for AI competitions /In-Depth Tourism Analysis Report.html" target="_blank" class="project-card" data-lang="en">
+                        <div><h4>Analyzing datas for prosperity of global tourism</h4>
+                            <p>A strategic analysis deck on global tourism case for tourism companies</p>
+                        </div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag en">EN</span></div>
+                    </a>
+
+                    <a href="Presentation files for AI competitions /海外旅行観光業界の事に対する深層分析レポート.html" target="_blank" class="project-card" data-lang="jp">
+                        <div><h4>海外旅行業界がグローバル化される影響の分析</h4>
+                            <p>海外旅行業が気がグローバル化されている影響が分析してある要約資料です。</p>
+                        </div>
+                        <div class="tags"><span class="tag">HTML</span><span class="tag jp">JP</span></div>
+                    </a>
+                    
+                </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="text-center mt-20 text-white p-4 bg-gray-900 bg-opacity-30 rounded-lg">
+            <p>&copy; 2025 박연우. All Rights Reserved.</p>
+            <p class="mt-1">GitHub Repository: <a href="https://github.com/Salmonyeonwoo/Portfolio-for-application-of-AI-Job-offers" target="_blank" class="text-blue-300 hover:text-blue-100 underline">바로가기</a></p>
+        </footer>
+    </div>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex justify-center items-center z-50 hidden">
+        <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full m-4 text-gray-800 relative">
+            <button id="closeModalButton" class="absolute top-4 right-5 text-gray-500 hover:text-gray-800 text-3xl font-bold">
+                &times;
+            </button>
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">연락처 정보 (Contact Info)</h3>
+            <div class="space-y-5">
+                <div>
+                    <h4 class="font-bold text-lg text-blue-600 flex items-center">
+                      <span class="inline-block w-5 h-5 mr-2 align-middle">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="1" y="1" width="22" height="22" rx="4" ry="4" fill="#FEE500"/>
+                            <path d="M6 11.5C6 8.46 8.69 6 12 6s6 2.46 6 5.5-2.69 5.5-6 5.5c-.46 0-.91-.03-1.34-.1L8 18l.66-2.02C6.97 15 6 13.37 6 11.5z"
+                                    fill="#000"/>
+                            </svg>
+                        </span>
+                        <i class="fab fa-line mr-2 text-green-400"></i>
+                        <i class="fab fa-whatsapp mr-2 text-green-500"></i>                        
+                        메신저 (Kakao / LINE / WhatsApp)
+                    </h4>
+                    <p class="text-gray-700 text-lg mt-2 ml-1">+6010-968-1392</p>
+                    <p class="text-gray-700 text-lg mt-1 ml-1">+8210-2153-1208</p>
+                </div>
+                <div class="border-t border-gray-200 pt-5">
+                    <h4 class="font-bold text-lg text-red-600 flex items-center">
+                        <i class="fas fa-envelope mr-2"></i>
+                        이메일 (Email)
+                    </h4>
+                    <p class="text-gray-700 text-lg mt-2 ml-1">yeonwoopark40@gmail.com</p>
+                    <p class="text-gray-700 text-lg mt-1 ml-1">yunwoopk@gmail.com</p>
+                    <p class="text-gray-700 text-lg mt-1 ml-1">yunwoopk@hanmail.net</p>                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const contactButton = document.getElementById('contactButton');
+            const contactModal = document.getElementById('contactModal');
+            const closeModalButton = document.getElementById('closeModalButton');
+            const languageSelect = document.getElementById('languageSelect');
+
+            // 1. 'Contact Me' 버튼 클릭 시 모달 표시
+            contactButton.addEventListener('click', function() {
+                contactModal.classList.remove('hidden');
+            });
+
+            // 2. 닫기 버튼 ('×') 클릭 시 모달 숨기기
+            closeModalButton.addEventListener('click', function() {
+                contactModal.classList.add('hidden');
+            });
+
+            // 3. 모달 외부 영역 클릭 시 모달 숨기기
+            contactModal.addEventListener('click', function(e) {
+                if (e.target === contactModal) {
+                    contactModal.classList.add('hidden');
+                }
+            });
+
+            // 6. 아코디언 기능 초기화
+            function initAccordion() {
+                // 기존 이벤트 리스너 제거를 위해 클론 후 교체
+                const accordionTitles = document.querySelectorAll('.section-title[data-accordion]');
+                accordionTitles.forEach(title => {
+                    const accordionId = title.getAttribute('data-accordion');
+                    const content = document.getElementById(accordionId);
+                    
+                    if (!content) return;
+                    
+                    // 기본적으로 접혀있음
+                    if (title.classList.contains('collapsed')) {
+                        content.style.maxHeight = '0px';
+                    }
+                    
+                    // 기존 이벤트 리스너 제거를 위해 새 요소로 교체
+                    const newTitle = title.cloneNode(true);
+                    title.parentNode.replaceChild(newTitle, title);
+                    
+                    // 새 이벤트 리스너 추가
+                    newTitle.addEventListener('click', function() {
+                        const isCollapsed = this.classList.contains('collapsed');
+                        
+                        if (isCollapsed) {
+                            // 펼치기
+                            this.classList.remove('collapsed');
+                            content.classList.remove('collapsed');
+                            const scrollHeight = content.scrollHeight;
+                            content.style.maxHeight = scrollHeight + 'px';
+                            // 애니메이션 완료 후 max-height 제거하여 제한 없이 표시
+                            setTimeout(() => {
+                                content.style.maxHeight = 'none';
+                            }, 350);
+                        } else {
+                            // 접기
+                            this.classList.add('collapsed');
+                            // 접기 전에 현재 높이를 설정
+                            content.style.maxHeight = content.scrollHeight + 'px';
+                            // 리플로우 강제
+                            void content.offsetHeight;
+                            content.style.maxHeight = '0px';
+                            setTimeout(() => {
+                                content.classList.add('collapsed');
+                            }, 300);
+                        }
+                    });
+                });
+            }
+
+            // 섹션 제목 번역 데이터
+            const sectionTitles = {
+                'resume-accordion': {
+                    en: 'My resume and storytelling details for myself',
+                    kr: '이력서 및 자기소개 스토리텔링',
+                    jp: '履歴書と自己紹介ストーリーテリング'
+                },
+                'ai-functions-accordion': {
+                    en: 'Examination of job environment, relevant to AI functions',
+                    kr: 'AI 기능 관련 직무 환경 검토',
+                    jp: 'AI機能に関連する職務環境の検討'
+                },
+                'ai-education-accordion': {
+                    en: 'Summarized HTML presentation files for AI education',
+                    kr: 'AI 교육 프로젝트 요약 (HTML 프레젠테이션)',
+                    jp: 'AI教育プロジェクト要約（HTMLプレゼンテーション）'
+                },
+                'streamlit-accordion': {
+                    en: 'My processes for streamlit setups with Firebase and GitHub',
+                    kr: 'Streamlit, Firebase 및 GitHub 설정 프로세스',
+                    jp: 'Streamlit、Firebase、GitHub設定プロセス'
+                },
+                'ml-project-accordion': {
+                    en: 'AI/Machine Learning Projects (Key Summary)',
+                    kr: 'AI/머신러닝 프로젝트 (주요 요약)',
+                    jp: 'AI/機械学習プロジェクト（主要要約）'
+                },
+                'interactive-presentations-accordion': {
+                    en: 'Interactive Web Presentations (HTML)',
+                    kr: '인터랙티브 웹 프레젠테이션 (HTML)',
+                    jp: 'インタラクティブウェブプレゼンテーション（HTML）'
+                },
+                'tourism-accordion': {
+                    en: 'Prosperity for globalized tourism',
+                    kr: '글로벌 관광업의 번영',
+                    jp: 'グローバル化された観光業の繁栄'
+                }
+            };
+
+            // 'View more' 버튼 텍스트 번역
+            const viewMoreText = {
+                en: 'View more',
+                kr: '더보기',
+                jp: 'もっと見る'
+            };
+
+            // 프로필 설명 번역 데이터
+            const profileDescriptionText = {
+                kr: '비전공 도메인(언어, 회계) 전문성과 AI 활용 능력을 결합해, 기술팀과 현업 사용자 간의 복잡한 커뮤니케이션 장벽을 해소하는 \'기술 번역가\' 역할에 강점이 있습니다. 데이터 분석 기반의 AI 품질 보증(QA) 및 서비스 기획을 통해 실질적인 비즈니스 가치를 창출하는 것을 목표로 합니다.',
+                en: 'I combine expertise in non-technical domains (language, accounting) with AI capabilities to bridge complex communication barriers between technical teams and business users, serving as a "technical translator." My goal is to create tangible business value through data-driven AI quality assurance (QA) and service planning.',
+                jp: '非技術ドメイン（言語、会計）の専門性とAI活用能力を組み合わせ、技術チームと現場ユーザー間の複雑なコミュニケーション障壁を解消する「技術翻訳者」としての役割に強みがあります。データ分析に基づくAI品質保証（QA）およびサービス企画を通じて、実質的なビジネス価値を創出することを目指しています。'
+            };
+
+            // 5. 언어별 필터링 및 정렬 기능
+            function sortByLanguage(lang) {
+                const sections = document.querySelectorAll('section');
+                sections.forEach(section => {
+                    const grid = section.querySelector('.grid');
+                    if (!grid) return;
+                    
+                    const cards = Array.from(grid.querySelectorAll('.project-card, .project-card-ai-pt'));
+                    if (cards.length === 0) return;
+                    
+                    // 각 카드의 data-lang 속성 확인 (없으면 태그 기반으로 설정)
+                    cards.forEach(card => {
+                        if (!card.getAttribute('data-lang')) {
+                            const tags = card.querySelectorAll('.tag');
+                            let cardLang = 'other';
+                            tags.forEach(tag => {
+                                if (tag.classList.contains('kr') || tag.textContent.includes('KR')) cardLang = 'kr';
+                                else if (tag.classList.contains('en') || tag.textContent.includes('EN')) cardLang = 'en';
+                                else if (tag.classList.contains('jp') || tag.textContent.includes('JP')) cardLang = 'jp';
+                            });
+                            card.setAttribute('data-lang', cardLang);
+                        }
+                    });
+                    
+                    // 특정 언어만 표시
+                    cards.forEach(card => {
+                        const cardLang = card.getAttribute('data-lang');
+                        if (cardLang === lang) {
+                            card.style.display = '';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                    
+                    // DOM에서 재배치
+                    const fragment = document.createDocumentFragment();
+                    cards.forEach(card => fragment.appendChild(card));
+                    grid.appendChild(fragment);
+                    
+                    // 더보기 기능 재초기화
+                    const hiddenCards = grid.querySelectorAll('.hidden-item');
+                    hiddenCards.forEach(card => card.classList.remove('hidden-item'));
+                    
+                    const visibleCards = Array.from(grid.querySelectorAll('.project-card:not([style*="display: none"]), .project-card-ai-pt:not([style*="display: none"])'));
+                    visibleCards.forEach((card, index) => {
+                        if (index >= 3) {
+                            card.classList.add('hidden-item');
+                        }
+                    });
+                    
+                    // 더보기 버튼 텍스트 변경
+                    const showMoreBtn = section.querySelector('.show-more-btn');
+                    if (showMoreBtn) {
+                        if (visibleCards.length > 3) {
+                            showMoreBtn.style.display = 'block';
+                            const buttonText = viewMoreText[lang] || viewMoreText['en'];
+                            showMoreBtn.innerHTML = buttonText + ' <i class="fas fa-chevron-down"></i>';
+                        } else {
+                            showMoreBtn.style.display = 'none';
+                        }
+                    }
+                });
+                
+                // 섹션 제목 번역
+                updateSectionTitles(lang);
+                // 프로필 설명 번역
+                updateProfileDescription(lang);
+            }
+
+            // 섹션 제목 업데이트 함수
+            function updateSectionTitles(lang) {
+                const safeLang = lang || 'en';
+                Object.keys(sectionTitles).forEach(accordionId => {
+                    const titleElement = document.querySelector(`[data-accordion="${accordionId}"]`);
+                    if (titleElement && sectionTitles[accordionId] && sectionTitles[accordionId][safeLang]) {
+                        // 아이콘과 화살표는 유지하고 텍스트만 변경
+                        const icon = titleElement.querySelector('i.fas:not(.accordion-arrow)');
+                        const arrow = titleElement.querySelector('i.accordion-arrow');
+                        const newText = sectionTitles[accordionId][safeLang];
+                        const isCollapsed = titleElement.classList.contains('collapsed');
+                        
+                        if (icon && arrow) {
+                            titleElement.innerHTML = icon.outerHTML + ' ' + newText + ' ' + arrow.outerHTML;
+                        } else if (icon) {
+                            titleElement.innerHTML = icon.outerHTML + ' ' + newText;
+                        } else {
+                            titleElement.innerHTML = newText;
+                        }
+                        
+                        // collapsed 클래스 유지
+                        if (isCollapsed) {
+                            titleElement.classList.add('collapsed');
+                        }
+                    }
+                });
+            }
+
+            // 프로필 설명 업데이트 함수
+            function updateProfileDescription(lang) {
+                const profileDesc = document.getElementById('profileDescription');
+                const safeLang = lang || 'en';
+                if (profileDesc && profileDescriptionText[safeLang]) {
+                    profileDesc.textContent = profileDescriptionText[safeLang];
+                }
+            }
+
+            // 언어 선택 이벤트 리스너
+            languageSelect.addEventListener('change', function() {
+                const selectedLang = this.value || 'en';
+                updateProfileDescription(selectedLang);
+                sortByLanguage(selectedLang);
+                // 정렬 후 더보기 기능 재초기화
+                setTimeout(() => {
+                    initShowMore(selectedLang);
+                    // 아코디언 이벤트 리스너 재설정
+                    initAccordion();
+                }, 100);
+            });
+
+            // 더보기 기능 초기화 (언어 파라미터 추가)
+            function initShowMore(lang = 'en') {
+                const sections = document.querySelectorAll('section');
+                sections.forEach(section => {
+                    const grid = section.querySelector('.grid');
+                    if (!grid) return;
+                    
+                    const cards = Array.from(grid.querySelectorAll('.project-card:not([style*="display: none"]), .project-card-ai-pt:not([style*="display: none"])'));
+                    if (cards.length <= 3) {
+                        const existingBtn = section.querySelector('.show-more-btn');
+                        if (existingBtn) existingBtn.style.display = 'none';
+                        return;
+                    }
+                    
+                    cards.forEach((card, index) => {
+                        if (index >= 3) {
+                            card.classList.add('hidden-item');
+                        } else {
+                            card.classList.remove('hidden-item');
+                        }
+                    });
+                    
+                    let showMoreBtn = section.querySelector('.show-more-btn');
+                    if (!showMoreBtn) {
+                        showMoreBtn = document.createElement('button');
+                        showMoreBtn.className = 'show-more-btn';
+                        const sectionContent = section.querySelector('.section-content');
+                        if (sectionContent) {
+                            sectionContent.appendChild(showMoreBtn);
+                        } else {
+                            section.appendChild(showMoreBtn);
+                        }
+                    }
+                    
+                    const buttonText = viewMoreText[lang] || viewMoreText['en'];
+                    showMoreBtn.innerHTML = buttonText + ' <i class="fas fa-chevron-down"></i>';
+                    showMoreBtn.style.display = 'block';
+                    showMoreBtn.onclick = function() {
+                        const hiddenCards = grid.querySelectorAll('.hidden-item');
+                        if (hiddenCards.length > 0) {
+                            hiddenCards.forEach(card => {
+                                card.classList.remove('hidden-item');
+                            });
+                            this.style.display = 'none';
+                        }
+                    };
+                });
+            }
+
+            // 초기화
+            // 기본값은 'en'으로 설정
+            const defaultLang = languageSelect.value || 'en';
+            updateSectionTitles(defaultLang);
+            updateProfileDescription(defaultLang);
+            sortByLanguage(defaultLang);
+            initShowMore(defaultLang);
+            initAccordion();
+        });
     </script>
 </body>
 </html>

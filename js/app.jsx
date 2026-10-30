@@ -57,6 +57,20 @@ const { useState, useEffect, useRef } = React;
                     step1: "• 第1次仮払: PO基準 RM 10,500 先行支払実行（サプライチェーン遮断を防御）",
                     step2: "• 第2次精査: 運賃誤差を照合の上、4時間以内にクレジットノート発行を正式要請",
                     keyInsight: "承認遅延による納品停止を回避するため、確認済みのPO金額を即時仮払いし、差額のみを分離監査することで供給リスクを100%遮断する高度な財務実務です。"
+                },
+                zh: {
+                    title: "SAP ERP PTP 三单匹配与差额协调架构",
+                    sub: "Reconciliation Workflow",
+                    po: "1. 采购订单 (PO)",
+                    gr: "2. 入库验收单 (GR)",
+                    inv: "3. 供应商发票 (Invoice)",
+                    grSub: "实物入库已确认",
+                    centerEngine: "SAP 3-Way 自动对账引擎",
+                    discrepancy: "⚠️ 差额预警标记: +RM 1,500",
+                    protocol: "David 的前瞻性争议协调协议 (Resolution)",
+                    step1: "• 第一步紧急付款: 按 PO 基准先行支付 RM 10,500（防御供应链中断）",
+                    step2: "• 第二步隔离审计: 比对运费/数量误差，4 小时内正式申请 Credit Note",
+                    keyInsight: "拒绝消极冻结整笔付款——通过立即先行支付已核准的 PO 金额并单独隔离审计争议差额，100% 阻断供应商断供停产风险。"
                 }
             };
             const l = labels[lang] || labels.kr;
@@ -112,7 +126,7 @@ const { useState, useEffect, useRef } = React;
                     </div>
 
                     <div className="bg-indigo-950/50 p-3 rounded-xl border border-indigo-500/30 text-xs text-slate-300">
-                        <strong className="text-indigo-400">💡 {lang === 'jp' ? '図解のポイント:' : lang === 'en' ? 'Core Architecture Insight:' : '시각화 핵심:'}</strong> {l.keyInsight}
+                        <strong className="text-indigo-400">💡 {lang === 'jp' ? '図解のポイント:' : lang === 'zh' ? '架构图核心洞察:' : lang === 'en' ? 'Core Architecture Insight:' : '시각화 핵심:'}</strong> {l.keyInsight}
                     </div>
                 </div>
             );
@@ -168,6 +182,22 @@ const { useState, useEffect, useRef } = React;
                     res1: "• 顧客ケア: 日本語正式謝罪文の即時発行とCSAT 5.0満点防衛",
                     res2: "• 提携精算: ホテル側違約金免除条項の発効および再発防止策通達",
                     keyInsight: "顧客へ即座に100%返金を確約して不信感を払拭し、ホテルPMSログ照合により不毛な責任転嫁を80%短縮するグローバルOTA特化の実務です。"
+                },
+                zh: {
+                    title: "OTA 紧急客诉升级与退款恢复架构图",
+                    sub: "Incident Flowchart",
+                    s1: "Step 1. 客诉工单受理",
+                    s1Sub: "未入住违约金抗议",
+                    s2: "Step 2. 系统日志比对",
+                    s2Sub: "OTA API ↔ 酒店 PMS",
+                    s3: "Step 3. 过失根因查明",
+                    s3Sub: "确认酒店端同步遗漏",
+                    centerAction: "David 的紧急审批升级机制",
+                    centerSub: "立即批准 100% 全额退款 + 替代酒店补偿代金券",
+                    resolution: "闭环服务恢复与合作方结算协调",
+                    res1: "• 客户关怀: 发送母语正式致歉函，成功捍卫 CSAT 5.0 满分评价",
+                    res2: "• 合作方结算: 启动酒店端违约金豁免条款并下达防复发整改通知",
+                    keyInsight: "第一时间向情绪激动的旅客兑现 100% 全额退款承诺，并通过比对酒店 PMS 同步日志将跨部门推诿耗时缩短 80%。"
                 }
             };
             const l = labels[lang] || labels.kr;
@@ -223,7 +253,7 @@ const { useState, useEffect, useRef } = React;
                     </div>
 
                     <div className="bg-emerald-950/50 p-3 rounded-xl border border-emerald-500/30 text-xs text-slate-300">
-                        <strong className="text-emerald-400">💡 {lang === 'jp' ? '図解のポイント:' : lang === 'en' ? 'Core Architecture Insight:' : '시각화 핵심:'}</strong> {l.keyInsight}
+                        <strong className="text-emerald-400">💡 {lang === 'jp' ? '図解のポイント:' : lang === 'zh' ? '架构图核心洞察:' : lang === 'en' ? 'Core Architecture Insight:' : '시각화 핵심:'}</strong> {l.keyInsight}
                     </div>
                 </div>
             );
@@ -276,6 +306,21 @@ const { useState, useEffect, useRef } = React;
                     b1: "• 新規参画者の引き継ぎ工数を70%削減・標準テンプレートを全社共有",
                     b2: "• 単発の帳尻合わせではなく、反復課題の根本原因をチェックリストで恒久排除",
                     keyInsight: "属人的な勘に頼っていた決算確認を4段階の標準運用に昇華させ、決算時間を35%短縮したチーム共有のオペレーション資産です。"
+                },
+                zh: {
+                    title: "运营改进监控看板与问题状态管控架构",
+                    sub: "Scalable Ops Matrix",
+                    st1: "1. 识别重复问题", st1Sub: "结账延迟 2~3 天",
+                    st2: "2. 管控核对清单", st2Sub: "D-1 ~ D+3 每日对账",
+                    st3: "3. 实时 KPI 指标", st3Sub: "SLA 80% 预警触发",
+                    st4: "4. 可复用资产", st4Sub: "团队共享 SOP 手册",
+                    monitorHead: "OPERATIONS CONTROL RADAR & ISSUE MONITOR",
+                    m1Name: "PTP 结账周期耗时", m1Val: "缩短 -35%",
+                    m2Name: "未决问题防遗漏率", m2Val: "100% (零遗漏)",
+                    boxHead: "将个人的严谨细致升级为全团队可持续复用的系统资产",
+                    b1: "• 新员工入职交接培训时间缩短 70% · 全部门推广标准化模板",
+                    b2: "• 不止步于单次结账，通过系统化核对清单彻底隔离重复痛点根源",
+                    keyInsight: "将原本依赖个人经验的结账核查提炼为 4 步标准化流程，结账周期缩短 35%，打造为全团队可直接复用的运营资产。"
                 }
             };
             const l = labels[lang] || labels.kr;
@@ -346,7 +391,7 @@ const { useState, useEffect, useRef } = React;
                     </div>
 
                     <div className="bg-cyan-950/50 p-3 rounded-xl border border-cyan-500/30 text-xs text-slate-300">
-                        <strong className="text-cyan-400">💡 {lang === 'jp' ? '図解のポイント:' : lang === 'en' ? 'Core Architecture Insight:' : '시각화 핵심:'}</strong> {l.keyInsight}
+                        <strong className="text-cyan-400">💡 {lang === 'jp' ? '図解のポイント:' : lang === 'zh' ? '架构图核心洞察:' : lang === 'en' ? 'Core Architecture Insight:' : '시각화 핵심:'}</strong> {l.keyInsight}
                     </div>
                 </div>
             );
@@ -356,7 +401,19 @@ const { useState, useEffect, useRef } = React;
         // Main Application Component
         // ==========================================
         function App() {
-            const [lang, setLang] = useState('kr');
+            const [lang, setLang] = useState(() => {
+                try {
+                    return localStorage.getItem('david_portfolio_lang') || 'kr';
+                } catch (e) {
+                    return 'kr';
+                }
+            });
+            useEffect(() => {
+                try {
+                    localStorage.setItem('david_portfolio_lang', lang);
+                } catch (e) {}
+                document.documentElement.lang = lang === 'kr' ? 'ko' : lang === 'jp' ? 'ja' : lang === 'zh' ? 'zh-CN' : 'en';
+            }, [lang]);
             const [selectedProject, setSelectedProject] = useState('ptp');
             const [contactModalOpen, setContactModalOpen] = useState(false);
             const [filterCategory, setFilterCategory] = useState('all');
@@ -417,7 +474,7 @@ const { useState, useEffect, useRef } = React;
                 if (!file) return;
 
                 if (file.size > 10 * 1024 * 1024) {
-                    alert(lang === 'jp' ? 'ファイルサイズは10MB以下のみ添付可能です。' : lang === 'en' ? 'File size must be 10MB or less.' : '파일 크기는 10MB 이하만 첨부 가능합니다.');
+                    alert(lang === 'jp' ? 'ファイルサイズは10MB以下のみ添付可能です。' : lang === 'zh' ? '文件大小不能超过 10MB。' : lang === 'en' ? 'File size must be 10MB or less.' : '파일 크기는 10MB 이하만 첨부 가능합니다.');
                     return;
                 }
 
@@ -447,6 +504,9 @@ const { useState, useEffect, useRef } = React;
 
                 // Detect response language: prioritize Japanese/English in text or site lang
                 let targetLang = activeLang || 'kr';
+                if (/[\u4e00-\u9fff]/.test(userText) && !/[\uac00-\ud7af\u3040-\u30ff]/.test(userText) && activeLang !== 'jp') {
+                    targetLang = 'zh';
+                }
                 if (/[\u3040-\u30ff]/.test(userText)) {
                     targetLang = 'jp';
                 } else if (/^[a-zA-Z0-9\s.,!?\'\"#\-()\/]+$/.test(userText.trim()) && userText.trim().length > 3) {
@@ -460,7 +520,17 @@ const { useState, useEffect, useRef } = React;
                     const sizeKb = (attachment.size / 1024).toFixed(1);
 
                     // 1-A. Flight / Hotel waiver proof (결항, 병원, 진단서, 호텔, 항공, 취소)
-                    if (fileName.includes('결항') || fileName.includes('진단서') || fileName.includes('병원') || fileName.includes('소견') || fileName.includes('欠航') || fileName.includes('診断') || fileName.includes('cancellation') || fileName.includes('medical') || fileName.includes('hotel') || fileName.includes('flight') || selectedCat === 'hotel' || selectedCat === 'flight' || lower.includes('호텔') || lower.includes('항공') || lower.includes('특가') || lower.includes('취소') || lower.includes('ホテル') || lower.includes('航空') || lower.includes('flight')) {
+                    if (fileName.includes('결항') || fileName.includes('진단서') || fileName.includes('병원') || fileName.includes('소견') || fileName.includes('欠航') || fileName.includes('診断') || fileName.includes('航班') || fileName.includes('取消') || fileName.includes('诊断') || fileName.includes('医院') || fileName.includes('酒店') || fileName.includes('cancellation') || fileName.includes('medical') || fileName.includes('hotel') || fileName.includes('flight') || selectedCat === 'hotel' || selectedCat === 'flight' || lower.includes('호텔') || lower.includes('항공') || lower.includes('특가') || lower.includes('취소') || lower.includes('ホテル') || lower.includes('航空') || lower.includes('酒店') || lower.includes('航班') || lower.includes('机票') || lower.includes('flight')) {
+                        if (targetLang === 'zh') {
+                            return "📎 **【已收到附件 " + (isPdf ? 'PDF 文档' : '截图凭证') + "：启动特殊豁免（Waiver）审核】**\n\n" +
+                                "您提交的文件 `" + attachment.name + "` (" + sizeKb + " KB) 已安全登记至运营风控系统。\n\n" +
+                                "• **凭证核验结果**:\n" +
+                                "  - 已完成签发日期、官方机构公章及客观不可抗力事由（航班取消证明 / 医院诊断书 / 现场 PMS 同步故障截图）比对。\n" +
+                                "  - 即使订单条款为“不可退款（Non-Refundable）”，凭此官方证明材料亦可立即发起 **合作方（酒店/航司）违约金豁免（Waiver）特批升级**。\n\n" +
+                                "• **后续跟进时间表**:\n" +
+                                "  - 已向合作酒店总经理及航司总部审核组发送正式豁免公函。\n" +
+                                "  - 审核确认后将立即执行 **100% 全额退款或发放 VIP 补偿代金券**，并于 1 小时内通过邮件通知最终处理结果。";
+                        }
                         if (targetLang === 'jp') {
                             return "📎 **[添付 " + (isPdf ? 'PDF文書' : 'スクショ証憑') + " 受領：特別免除（Waiver）審査開始]**\n\n" +
                                 "ご提出いただいたファイル `" + attachment.name + "` (" + sizeKb + " KB) を安全に電算登録いたしました。\n\n" +
@@ -492,7 +562,15 @@ const { useState, useEffect, useRef } = React;
                     }
 
                     // 1-B. BPO PTP / Freight variance / Invoice proof
-                    if (fileName.includes('인보이스') || fileName.includes('invoice') || fileName.includes('운임') || fileName.includes('sap') || fileName.includes('정산') || fileName.includes('請求') || fileName.includes('運賃') || selectedCat === 'payout' || lower.includes('정산') || lower.includes('운임') || lower.includes('精算') || lower.includes('運賃')) {
+                    if (fileName.includes('인보이스') || fileName.includes('invoice') || fileName.includes('운임') || fileName.includes('sap') || fileName.includes('정산') || fileName.includes('請求') || fileName.includes('運賃') || fileName.includes('发票') || fileName.includes('运费') || fileName.includes('结算') || selectedCat === 'payout' || lower.includes('정산') || lower.includes('운임') || lower.includes('精算') || lower.includes('運賃') || lower.includes('结算') || lower.includes('运费') || lower.includes('发票')) {
+                        if (targetLang === 'zh') {
+                            return "📊 **【财务对账凭证（发票 / 运费提单 B/L）接收确认】**\n\n" +
+                                "您上传的文件 `" + attachment.name + "` (" + sizeKb + " KB) 已登记至 SAP ERP 三单匹配对账模块。\n\n" +
+                                "• **3-Way 三单匹配审核结果**:\n" +
+                                "  - 已完成供应商发票与 WMS 入库验收单之间运费差额区间的系统比对。\n" +
+                                "  - 为保障供应商现金流与供应链连续性，**已核准的正常 PO 订单金额将于今日 15:00 前优先执行先行付款（Pre-payment）**。\n" +
+                                "  - 针对不符的差额部分，已凭本凭证启动 **Credit Note（贷项通知单）签发与总账冲销流程**。";
+                        }
                         if (targetLang === 'jp') {
                             return "📊 **[財務照合証憑（請求書・運賃B/L）ファイル受領確認]**\n\n" +
                                 "アップロードされたファイル `" + attachment.name + "` (" + sizeKb + " KB) をSAP ERP対査システムへ登録いたしました。\n\n" +
@@ -518,7 +596,14 @@ const { useState, useEffect, useRef } = React;
                     }
 
                     // 1-C. Chargeback / Signed POD proof
-                    if (fileName.includes('pod') || fileName.includes('서명') || fileName.includes('차지백') || fileName.includes('受領') || selectedCat === 'dispute' || lower.includes('차지백') || lower.includes('도용') || lower.includes('チャージバック')) {
+                    if (fileName.includes('pod') || fileName.includes('서명') || fileName.includes('차지백') || fileName.includes('受領') || fileName.includes('签收') || fileName.includes('拒付') || selectedCat === 'dispute' || lower.includes('차지백') || lower.includes('도용') || lower.includes('チャージバック') || lower.includes('拒付') || lower.includes('盗刷')) {
+                        if (targetLang === 'zh') {
+                            return "🛡️ **【欺诈拒付抗辩 - 物流妥投签收证明（POD）核验确认】**\n\n" +
+                                "您提交的物流签收凭证 `" + attachment.name + "` 已录入卡组织争议抗辩防御系统。\n\n" +
+                                "• **抗辩申诉核对结果**:\n" +
+                                "  - 3D Secure 2.0 身份验证日志与收件人亲笔签名完全吻合，100% 满足国际卡组织发卡行责任转移（Liability Shift）免责条件。\n" +
+                                "  - **将在 24 小时内向 Visa/Mastercard 提交正式抗辩申诉（Representment）**，并立即为您解冻商户结算保留金。";
+                        }
                         if (targetLang === 'jp') {
                             return "🛡️ **[不正決済異議申立 - 配達受領書（POD）証憑受領確認]**\n\n" +
                                 "ご提出いただいた配達証憑ファイル `" + attachment.name + "` をカード紛争防衛システムへ登録いたしました。\n\n" +
@@ -541,6 +626,14 @@ const { useState, useEffect, useRef } = React;
                     }
 
                     // 1-D. General Attachment response
+                    if (targetLang === 'zh') {
+                        return "📎 **【已收到凭证文件 - " + attachment.name + "】**\n\n" +
+                            "您发送的证明文件（`" + attachment.name + "`, " + sizeKb + " KB）已成功接收。\n\n" +
+                            "• **运营审核流程**:\n" +
+                            "  - 正依据朴演雨（David）的标准化运营流程，核验附件规格及客观真实性。\n" +
+                            "  - 凭证核验通过后，将免除常规取消手续费并启动 **特殊豁免（Waiver）或账务差额调账协议**。\n\n" +
+                            "如有相关订单号或预订号，请一并输入以便快速关联。";
+                    }
                     if (targetLang === 'jp') {
                         return "📎 **[証憑書類の受領完了 - " + attachment.name + "]**\n\n" +
                             "お送りいただいた証憑ファイル（`" + attachment.name + "`, " + sizeKb + " KB）を正常に受信いたしました。\n\n" +
@@ -567,10 +660,20 @@ const { useState, useEffect, useRef } = React;
 
                 // 2. Policy Challenge / Blind Cancellation Verification
                 // e.g. "정책 안 보고 바로 취소되나요?", "Can I cancel without checking policy?", "ポリシー未確認で即時キャンセルされるのですか？"
-                const hasPolicyTerm = lower.includes('정책') || lower.includes('규정') || lower.includes('약관') || lower.includes('기준') || lower.includes('ポリシー') || lower.includes('規程') || lower.includes('約款') || lower.includes('規約') || lower.includes('polic') || lower.includes('rule') || lower.includes('term');
-                const hasBlindTerm = lower.includes('안 보') || lower.includes('안보') || lower.includes('무조건') || lower.includes('그냥') || lower.includes('바로') || lower.includes('확인 없') || lower.includes('확인안') || lower.includes('見ず') || lower.includes('確認せず') || lower.includes('無条件') || lower.includes('without') || lower.includes('blind') || lower.includes('immediately');
+                const hasPolicyTerm = lower.includes('정책') || lower.includes('규정') || lower.includes('약관') || lower.includes('기준') || lower.includes('ポリシー') || lower.includes('規程') || lower.includes('約款') || lower.includes('規約') || lower.includes('政策') || lower.includes('规定') || lower.includes('条款') || lower.includes('规则') || lower.includes('polic') || lower.includes('rule') || lower.includes('term');
+                const hasBlindTerm = lower.includes('안 보') || lower.includes('안보') || lower.includes('무조건') || lower.includes('그냥') || lower.includes('바로') || lower.includes('확인 없') || lower.includes('확인안') || lower.includes('見ず') || lower.includes('確認せず') || lower.includes('無条件') || lower.includes('不看') || lower.includes('不核对') || lower.includes('直接') || lower.includes('无条件') || lower.includes('立刻') || lower.includes('without') || lower.includes('blind') || lower.includes('immediately');
 
-                const isBlindCancel = (hasPolicyTerm && hasBlindTerm) || (lower.includes('바로 취소') && (lower.includes('정책') || lower.includes('안') || lower.includes('규정') || lower.includes('되나요') || lower.includes('되는 건가요'))) || lower.includes('바로 취소가 되는 건가요') || lower.includes('即時キャンセルされるのですか');
+                const isBlindCancel = (hasPolicyTerm && hasBlindTerm) || (lower.includes('바로 취소') && (lower.includes('정책') || lower.includes('안') || lower.includes('규정') || lower.includes('되나요') || lower.includes('되는 건가요'))) || lower.includes('바로 취소가 되는 건가요') || lower.includes('即時キャンセルされるのですか') || lower.includes('直接取消吗') || lower.includes('立即取消吗');
+                if (isBlindCancel && targetLang === 'zh') {
+                    return "⚠️ **【运营风险管控与政策合规审查原则说明】**\n\n" +
+                        "**不可以盲目直接取消。** 所有订单与预订的取消及退款，**必须事先严格比对所购业务品类（酒店/机票/电商物流/BPO财务）及具体条款规范（免费取消时限、不可退款特约等 SOP 核验）后，方可决定是否批准**。\n\n" +
+                        "不经政策核查的无条件立即取消，将严重违反合作商户协议并给公司造成重大财务损失（不当退款累积），因此绝不执行盲目审批。\n\n" +
+                        "为进行精准核查，请确认以下信息：\n" +
+                        "• **业务/服务品类**: 酒店住宿 / 机票航空 / 实物电商物流 / 供应商结算\n" +
+                        "• **订单/预订状态**: 是否为不可退款特价、物流仓库是否已发货、是否已超过免费取消截止时限\n" +
+                        "• **上传证明文件**: 点击下方 📎 按钮上传航班取消证明、医院诊断书或发票凭证，即可申请特殊豁免（Waiver）审核。\n\n" +
+                        "请选择上方分类标签或告知具体订单状态，系统将依据 David 的运营决策树为您提供准确的退款与违约金标准。";
+                }
 
                 if (isBlindCancel) {
                     if (targetLang === 'jp') {
@@ -606,24 +709,32 @@ const { useState, useEffect, useRef } = React;
                 // 3. Determine Domain / Product Category
                 let domain = selectedCat;
                 if (domain === 'auto') {
-                    if (lower.includes('호텔') || lower.includes('숙박') || lower.includes('숙소') || lower.includes('객실') || lower.includes('체크인') || lower.includes('hotel') || lower.includes('ota') || lower.includes('투숙') || lower.includes('오버부킹') || lower.includes('pms') || lower.includes('宿泊')) {
+                    if (lower.includes('호텔') || lower.includes('숙박') || lower.includes('숙소') || lower.includes('객실') || lower.includes('체크인') || lower.includes('hotel') || lower.includes('ota') || lower.includes('투숙') || lower.includes('오버부킹') || lower.includes('pms') || lower.includes('宿泊') || lower.includes('酒店') || lower.includes('住宿') || lower.includes('客房') || lower.includes('入住') || lower.includes('超售')) {
                         domain = 'hotel';
-                    } else if (lower.includes('항공') || lower.includes('비행기') || lower.includes('탑승') || lower.includes('노쇼') || lower.includes('flight') || lower.includes('fare') || lower.includes('공항세') || lower.includes('발권') || lower.includes('航空') || lower.includes('搭乗')) {
+                    } else if (lower.includes('항공') || lower.includes('비행기') || lower.includes('탑승') || lower.includes('노쇼') || lower.includes('flight') || lower.includes('fare') || lower.includes('공항세') || lower.includes('발권') || lower.includes('航空') || lower.includes('搭乗') || lower.includes('航班') || lower.includes('机票') || lower.includes('飞机') || lower.includes('登机')) {
                         domain = 'flight';
-                    } else if (lower.includes('배송') || lower.includes('출고') || lower.includes('택배') || lower.includes('송장') || lower.includes('반품') || lower.includes('물류') || lower.includes('shipping') || lower.includes('delivery') || lower.includes('커머스') || lower.includes('주문') || lower.includes('配送') || lower.includes('出荷') || lower.includes('返品')) {
+                    } else if (lower.includes('배송') || lower.includes('출고') || lower.includes('택배') || lower.includes('송장') || lower.includes('반품') || lower.includes('물류') || lower.includes('shipping') || lower.includes('delivery') || lower.includes('커머스') || lower.includes('주문') || lower.includes('配送') || lower.includes('出荷') || lower.includes('返品') || lower.includes('发货') || lower.includes('退货') || lower.includes('物流') || lower.includes('快递')) {
                         domain = 'commerce';
-                    } else if (lower.includes('정산') || lower.includes('지연') || lower.includes('운임') || lower.includes('인보이스') || lower.includes('sap') || lower.includes('3-way') || /\\bpo\\b/.test(lower) || lower.includes('발주') || lower.includes('크레딧') || lower.includes('차액') || lower.includes('variance') || lower.includes('대금') || lower.includes('精算') || lower.includes('遅延') || lower.includes('運賃') || lower.includes('請求書') || lower.includes('payout')) {
+                    } else if (lower.includes('정산') || lower.includes('지연') || lower.includes('운임') || lower.includes('인보이스') || lower.includes('sap') || lower.includes('3-way') || /\\bpo\\b/.test(lower) || lower.includes('발주') || lower.includes('크레딧') || lower.includes('차액') || lower.includes('variance') || lower.includes('대금') || lower.includes('精算') || lower.includes('遅延') || lower.includes('運賃') || lower.includes('請求書') || lower.includes('结算') || lower.includes('运费') || lower.includes('发票') || lower.includes('差额') || lower.includes('货款') || lower.includes('payout')) {
                         domain = 'payout';
-                    } else if (lower.includes('차지백') || lower.includes('도용') || lower.includes('부정') || lower.includes('분쟁') || lower.includes('이의제기') || lower.includes('chargeback') || lower.includes('3ds') || lower.includes('pod') || lower.includes('チャージバック') || lower.includes('不正利用')) {
+                    } else if (lower.includes('차지백') || lower.includes('도용') || lower.includes('부정') || lower.includes('분쟁') || lower.includes('이의제기') || lower.includes('chargeback') || lower.includes('3ds') || lower.includes('pod') || lower.includes('チャージバック') || lower.includes('不正利用') || lower.includes('拒付') || lower.includes('盗刷') || lower.includes('争议') || lower.includes('申诉')) {
                         domain = 'dispute';
-                    } else if (lower.includes('환불 불가') || lower.includes('환불불가') || lower.includes('특가') || lower.includes('non-refundable') || lower.includes('返金不可')) {
+                    } else if (lower.includes('환불 불가') || lower.includes('환불불가') || lower.includes('특가') || lower.includes('non-refundable') || lower.includes('返金不可') || lower.includes('不可退款') || lower.includes('不退') || lower.includes('特价')) {
                         domain = 'hotel';
                     }
                 }
 
                 // Category 1: Accommodation / Hotel (OTA)
                 if (domain === 'hotel') {
-                    if (lower.includes('환불 불가') || lower.includes('환불불가') || lower.includes('특가') || lower.includes('non-refundable') || lower.includes('프로모션') || lower.includes('오버부킹') || lower.includes('시스템 오류') || lower.includes('返金不可') || lower.includes('オーバーブッキング')) {
+                    if (lower.includes('환불 불가') || lower.includes('환불불가') || lower.includes('특가') || lower.includes('non-refundable') || lower.includes('프로모션') || lower.includes('오버부킹') || lower.includes('시스템 오류') || lower.includes('返金不可') || lower.includes('オーバーブッキング') || lower.includes('不可退款') || lower.includes('不退') || lower.includes('特价') || lower.includes('超售')) {
+                        if (targetLang === 'zh') {
+                            return "🏨 **【酒店/住宿 - 不可退款（Non-Refundable）特价异常豁免审核 SOP】**\n\n" +
+                                "• **基本原则**: 促销特价类的不可退款订单在确认后即适用 100% 取消违约金，原则上不支持因个人主观原因取消。\n\n" +
+                                "• **特殊救济（CX Recovery）协议**:\n" +
+                                "  1) **平台或酒店端过失查明时**: 若因酒店 PMS 与平台 API 同步故障或到店超售等客观原因导致（确认客户 0% 过失），立即执行 **免除 100% 手续费全额退款 + 免费安排附近五星级替代住宿 + 发放 VIP 补偿代金券**。\n" +
+                                "  2) **不可抗力事由**: 提交航班取消证明或医院诊断书等官方凭证后，立即向酒店总经理发起 Waiver（违约金豁免）特批申请。\n\n" +
+                                "如有相关证明文件（PDF/截图），请点击 **下方 📎 按钮** 上传，我们将立即启动总部特批升级。";
+                        }
                         if (targetLang === 'jp') {
                             return "🏨 **[宿泊・ホテル - 返金不可（Non-refundable）特約例外審査SOP]**\n\n" +
                                 "• **基本原則**: プロモーション特約付き返金不可プランは、成立時点で100%の取消手数料が適用され、自己都合キャンセルは原則不可となります。\n\n" +
@@ -659,6 +770,12 @@ const { useState, useEffect, useRef } = React;
                             "• **After Cutoff / Same-Day Cancellation**: The first night's room rate penalty is deducted per hotel policy, and remaining balance is refunded.\n" +
                             "• **No-Show**: 100% non-refundable under standard lodging regulations.\n\n" +
                             "Please provide your check-in date and property name to determine exact penalty thresholds.";
+                    } else if (targetLang === 'zh') {
+                        return "🏨 **【酒店/住宿 - 标准取消与退款规定说明】**\n\n" +
+                            "• **免费取消期内（入住前 24~48 小时前）**: 免收一切手续费，100% 全额退还已支付房费。\n" +
+                            "• **超过取消时限 / 当日取消**: 依据酒店住宿条款扣除首晚房费作为违约金后，退还剩余差额。\n" +
+                            "• **未入住（No-Show）**: 原则上不支持退款。\n\n" +
+                            "请告知您的预计入住日期及酒店名称，我们将为您精准核算适用的手续费标准。";
                     } else {
                         return "🏨 **[숙박/호텔 - 취소 및 환불 규정 심사 안내]**\n\n" +
                             "• **무료 취소 기한 내 (체크인 24~48시간 전)**: 위약금 없이 결제 금액 100% 전액 환불 처리됩니다.\n" +
@@ -669,7 +786,23 @@ const { useState, useEffect, useRef } = React;
                 }
 
                 // Category 2: Flight / Aviation
+                if (domain === 'hotel' && targetLang === 'zh') {
+                    return "🏨 **【酒店/住宿 - 标准取消与退款规定说明】**\n\n" +
+                        "• **免费取消期内（入住前 24~48 小时前）**: 免收一切手续费，100% 全额退还已支付房费。\n" +
+                        "• **超过取消时限 / 当日取消**: 依据酒店住宿条款扣除首晚房费作为违约金后，退还剩余差额。\n" +
+                        "• **未入住（No-Show）**: 原则上不支持退款。\n\n" +
+                        "请告知您的预计入住日期及酒店名称，我们将为您精准核算适用的手续费标准。";
+                }
+                // Category 2: Flight / Aviation
                 if (domain === 'flight') {
+                    if (targetLang === 'zh') {
+                        return "✈️ **【机票/航空 - 基于航司运价规则（Fare Rules）的退票指南】**\n\n" +
+                            "• **优先适用航司运价规则**: 机票退改签严格依据各航空公司舱位等级（Class）规定及出票代理服务费标准核算。\n" +
+                            "• **手续费扣除结构**: 扣除 [航司退票费] + [出票服务费] 后退还剩余票款。\n" +
+                            "• **100% 全额退还项目**: 燃油附加费及未使用的机场建设税费（Tax）无论舱位限制均 100% 全额退还。\n" +
+                            "• **起飞当日 / 误机（No-Show）提醒**: 航班起飞后取消将加收高额误机费，请务必在起飞前提交退票申请。\n\n" +
+                            "如遇航班延误、取消或突发疾病等不可抗力，请点击 **下方 📎 按钮** 上传证明文件以申请违约金豁免（Waiver）。";
+                    }
                     if (targetLang === 'jp') {
                         return "✈️ **[航空券 - 航空会社運賃規則（Fare Rules）に基づく払戻案内]**\n\n" +
                             "• **航空会社運賃約款の優先適用**: 航空券の払戻は、航空会社の運賃クラス別規程および発券代理店手数料に基づき算定されます。\n" +
@@ -696,7 +829,12 @@ const { useState, useEffect, useRef } = React;
 
                 // Category 3: Commerce / Physical Goods Delivery
                 if (domain === 'commerce') {
-                    if (lower.includes('출고 전') || lower.includes('준비 중') || lower.includes('배송 전') || lower.includes('出荷前') || lower.includes('pre-dispatch') || lower.includes('before shipping')) {
+                    if (lower.includes('출고 전') || lower.includes('준비 중') || lower.includes('배송 전') || lower.includes('出荷前') || lower.includes('发货前') || lower.includes('未发货') || lower.includes('pre-dispatch') || lower.includes('before shipping')) {
+                        if (targetLang === 'zh') {
+                            return "📦 **【电商/物流 - 发货前即时取消审批】**\n\n" +
+                                "经确认订单处于 WMS（物流仓库）打包及移交快递前的“待发货”阶段时，**无需扣除任何往返运费，立即执行 100% 全额退款**。\n\n" +
+                                "请提供您的订单号，我们将立即在仓储系统中锁定出库。";
+                        }
                         if (targetLang === 'jp') {
                             return "📦 **[配送・EC - 出荷前即時キャンセル承認]**\n\n" +
                                 "WMS（物流倉庫）ピッキングおよび配送業者引渡前の「出荷準備中」段階であれば、**往復運賃等の控除なく即時100%全額返金**を執行いたします。\n\n" +
@@ -723,6 +861,12 @@ const { useState, useEffect, useRef } = React;
                             "• **Change of Mind**: **Round-trip shipping fees are deducted** from the refund balance upon unopened inspection at warehouse.\n" +
                             "• **Damaged / Defective / Wrong Item**: 100% covered by platform with complimentary reverse pickup and full refund.\n\n" +
                             "For damage or defect claims, attach product photos via the **📎 button below** for immediate courier claim processing.";
+                    } else if (targetLang === 'zh') {
+                        return "📦 **【电商/物流 - 已发货商品退货与退款规定】**\n\n" +
+                            "• **已发货（运输中 / 已签收）**: 已移交快递公司的包裹无法直接拦截取消，需在签收后按 **“退货入库质检流程”** 办理。\n" +
+                            "• **个人原因退货**: 仓库确认包装完好未拆封后，**扣除往返物流运费**并退还剩余货款。\n" +
+                            "• **错发 / 破损 / 质量瑕疵**: 由平台 100% 承担运费，免费上门取件并执行全额退款或换货。\n\n" +
+                            "如遇商品破损或错发，请点击 **下方 📎 按钮** 上传商品照片或面单截图，我们将立即为您办理免费退换。";
                     } else {
                         return "📦 **[물류/커머스 - 출고 완료 상품 반품 및 환불 규정]**\n\n" +
                             "• **출고 완료(배송 중 / 배송 완료)**: 물류센터에서 이미 택배사로 인계된 상품은 즉시 취소가 불가하며, 상품 수령 후 **'반품 검수 절차'**로 진행됩니다.\n" +
@@ -733,7 +877,21 @@ const { useState, useEffect, useRef } = React;
                 }
 
                 // Category 4: BPO PTP Accounts Payable & Freight Variance
-                if (domain === 'payout' || lower.includes('정산') || lower.includes('지연') || lower.includes('운임') || lower.includes('인보이스') || lower.includes('sap') || lower.includes('3-way') || /\\bpo\\b/.test(lower) || lower.includes('발주') || lower.includes('차액') || lower.includes('精算') || lower.includes('運賃') || lower.includes('payout')) {
+                if (domain === 'commerce' && targetLang === 'zh') {
+                    return "📦 **【电商/物流 - 已发货商品退货与退款规定】**\n\n" +
+                        "• **已发货（运输中 / 已签收）**: 已移交快递公司的包裹无法直接拦截取消，需在签收后按 **“退货入库质检流程”** 办理。\n" +
+                        "• **个人原因退货**: 仓库确认包装完好未拆封后，**扣除往返物流运费**并退还剩余货款。\n" +
+                        "• **错发 / 破损 / 质量瑕疵**: 由平台 100% 承担运费，免费上门取件并执行全额退款或换货。\n\n" +
+                        "如遇商品破损或错发，请点击 **下方 📎 按钮** 上传商品照片或面单截图，我们将立即为您办理免费退换。";
+                }
+                // Category 4: BPO PTP Accounts Payable & Freight Variance
+                if (domain === 'payout' || lower.includes('정산') || lower.includes('지연') || lower.includes('운임') || lower.includes('인보이스') || lower.includes('sap') || lower.includes('3-way') || /\\bpo\\b/.test(lower) || lower.includes('발주') || lower.includes('차액') || lower.includes('精算') || lower.includes('運賃') || lower.includes('结算') || lower.includes('运费') || lower.includes('发票') || lower.includes('payout')) {
+                    if (targetLang === 'zh') {
+                        return "📊 **【BPO PTP - 供应链保供与运费差额结算协议】**\n\n" +
+                            "• **彻底阻断断供风险**: 即使在 SAP ERP 3-Way 三单匹配中检测到运费差额（Variance），为防止供应商暂停供货，**针对“已核准的正常 PO 订单金额”仍将在今日 15:00 前优先执行先行付款（Pre-payment）**。\n\n" +
+                            "• **差额隔离审计与冲销**: 争议运费差额将转入独立科目隔离审计，凭正式凭证**申请开具 Credit Note（贷项通知单）并在下月账期冲销**，确保按时完成财务月结。\n\n" +
+                            "请点击 **下方 📎 按钮** 上传发票或提单（B/L）文件，系统将立即联动 ERP 总账比对与紧急付款审批。";
+                    }
                     if (targetLang === 'jp') {
                         return "📊 **[BPO PTP - サプライチェーン防衛・運賃差額精算プロトコル]**\n\n" +
                             "• **供給停止リスクの完全遮断**: SAP ERP 3-Way対査において運賃差額（Variance）が検出された場合でも、仕入先の納品停止を防ぐため**「確認済みのPO承認金額」を本日15:00までに先行決済（Pre-payment）執行**いたします。\n\n" +
@@ -753,7 +911,13 @@ const { useState, useEffect, useRef } = React;
                 }
 
                 // Category 5: Chargeback Dispute & Fraud Defense
-                if (domain === 'dispute' || lower.includes('차지백') || lower.includes('도용') || lower.includes('부정') || lower.includes('분쟁') || lower.includes('3ds') || lower.includes('チャージバック')) {
+                if (domain === 'dispute' || lower.includes('차지백') || lower.includes('도용') || lower.includes('부정') || lower.includes('분쟁') || lower.includes('3ds') || lower.includes('チャージバック') || lower.includes('拒付') || lower.includes('盗刷')) {
+                    if (targetLang === 'zh') {
+                        return "🛡️ **【商户风控保护 - 3DS 2.0 拒付（Chargeback）抗辩协议】**\n\n" +
+                            "• **适用发卡行责任转移（Liability Shift）**: 通过 3D Secure 2.0 认证的交易，依据国际卡组织（Visa/Mastercard）规则，欺诈责任依法转移至发卡银行，商户享受免责保护。\n\n" +
+                            "• **24 小时内提交抗辩申诉（Representment）**: 凭买家签收妥投证明（POD）与设备认证日志快速反证，**立即解冻商户被冻结的结算保留金**。\n\n" +
+                            "请点击 **下方 📎 按钮** 上传签收单（POD）或交易凭证，我们将在 24 小时内完成申诉提交。";
+                    }
                     if (targetLang === 'jp') {
                         return "🛡️ **[加盟店保護 - 3DS 2.0 チャージバック反証プロトコル]**\n\n" +
                             "• **イシュアー責任転換（Liability Shift）適用**: 3Dセキュア2.0認証済み取引は国際カードブランド（Visa/Mastercard）規程に基づき発券銀行へ責任が転換されるため、加盟店責務は免責となります。\n\n" +
@@ -773,7 +937,17 @@ const { useState, useEffect, useRef } = React;
                 }
 
                 // Category 6: General refund / cancellation mentioned without category
-                if (lower.includes('환불') || lower.includes('취소') || lower.includes('refund') || lower.includes('cancel') || lower.includes('返金') || lower.includes('キャンセル')) {
+                if (lower.includes('환불') || lower.includes('취소') || lower.includes('refund') || lower.includes('cancel') || lower.includes('返金') || lower.includes('キャンセル') || lower.includes('退款') || lower.includes('取消')) {
+                    if (targetLang === 'zh') {
+                        return "💡 **【分品类取消与退款规则指南】**\n\n" +
+                            "您咨询的退款规定 **取决于具体的业务品类与适用条款**：\n\n" +
+                            "1. 🏨 **酒店/住宿**: 核对免费取消时限（入住前 24~48h）/ 不可退款特价特殊豁免审核\n" +
+                            "2. ✈️ **机票/航空**: 航司运价规则（Fare Rules）及出票服务费扣除标准\n" +
+                            "3. 📦 **电商/物流**: 仓库发货前 100% 免费取消 vs 发货后扣除往返运费退货\n" +
+                            "4. 📊 **BPO 财务结算**: SAP 3-Way 运费差额隔离审计与已核准金额先行付款\n" +
+                            "5. 🛡️ **支付拒付争议**: 3D Secure 2.0 发卡行责任转移抗辩申诉\n\n" +
+                            "如有相关凭证（收据、诊断书、航班取消证明、发票），请点击 **下方 📎 按钮** 上传以加快审核进度。";
+                    }
                     if (targetLang === 'jp') {
                         return "💡 **[品目別取消・返金のご案内]**\n\n" +
                             "お問い合わせの返金規定は、**対象の品目分類により約款が異なります**:\n\n" +
@@ -817,6 +991,8 @@ const { useState, useEffect, useRef } = React;
                 if (!textToSend || !textToSend.trim()) {
                     textToSend = lang === 'jp'
                         ? "📎 証憑書類 [" + fileToSend.name + "] 添付照会"
+                        : lang === 'zh'
+                            ? "📎 附加证明文件 [" + fileToSend.name + "] 审核咨询"
                         : lang === 'en'
                             ? "📎 Attaching evidence document [" + fileToSend.name + "]"
                             : "📎 증빙 파일 [" + fileToSend.name + "] 첨부 문의";
@@ -858,13 +1034,13 @@ const { useState, useEffect, useRef } = React;
             const loadSimSample = () => {
                 const sampleText = bpoDomains[simDomain].sampleAnswer[lang] || bpoDomains[simDomain].sampleAnswer.kr;
                 setUserAnswer(sampleText);
-                showToast(lang === 'jp' ? '模範回答がエディタに自動ロードされました！' : lang === 'en' ? 'Model answer auto-loaded!' : '모범 답변이 텍스트 영역에 자동 로드되었습니다!');
+                showToast(lang === 'jp' ? '模範回答がエディタに自動ロードされました！' : lang === 'zh' ? '模范回答已自动加载至编辑区！' : lang === 'en' ? 'Model answer auto-loaded!' : '모범 답변이 텍스트 영역에 자동 로드되었습니다!');
             };
 
             // Upgraded Context-Aware, Differentiated AI Rubric & Dynamic Feedback Engine
             const evaluateAnswer = () => {
                 if (!userAnswer.trim()) {
-                    showToast(lang === 'jp' ? '回答文を入力してください！' : lang === 'en' ? 'Please enter a response!' : '대응하실 답변 내용을 입력해 주세요!');
+                    showToast(lang === 'jp' ? '回答文を入力してください！' : lang === 'zh' ? '请输入您的业务回复内容！' : lang === 'en' ? 'Please enter a response!' : '대응하실 답변 내용을 입력해 주세요!');
                     return;
                 }
                 setIsEvaluating(true);
@@ -905,21 +1081,21 @@ const { useState, useEffect, useRef } = React;
 
                     // 3. Detect User's Input Topic / Intent Focus
                     let topic = 'general';
-                    if (["수수료", "비용", "fee", "charge", "cost", "commission", "手数料", "費用", "料金"].some(k => lowerAnswer.includes(k))) {
+                    if (["수수료", "비용", "fee", "charge", "cost", "commission", "手数料", "費用", "料金", "手续费", "费用", "违约金"].some(k => lowerAnswer.includes(k))) {
                         topic = 'fee';
-                    } else if (["환불", "취소", "반품", "refund", "cancel", "return", "返金", "キャンセル", "返品"].some(k => lowerAnswer.includes(k))) {
+                    } else if (["환불", "취소", "반품", "refund", "cancel", "return", "返金", "キャンセル", "返品", "退款", "取消", "退货"].some(k => lowerAnswer.includes(k))) {
                         topic = 'refund';
-                    } else if (["일정", "언제", "기한", "시간", "날짜", "timeline", "schedule", "when", "eta", "deadline", "日程", "いつ", "期日", "時間"].some(k => lowerAnswer.includes(k))) {
+                    } else if (["일정", "언제", "기한", "시간", "날짜", "timeline", "schedule", "when", "eta", "deadline", "日程", "いつ", "期日", "時間", "时间", "期限", "什么时候", "几点"].some(k => lowerAnswer.includes(k))) {
                         topic = 'timeline';
-                    } else if (["배송", "출고", "도착", "택배", "송장", "delivery", "shipment", "dispatch", "tracking", "配送", "出荷", "到着", "追跡", "伝票"].some(k => lowerAnswer.includes(k))) {
+                    } else if (["배송", "출고", "도착", "택배", "송장", "delivery", "shipment", "dispatch", "tracking", "配送", "出荷", "到着", "追跡", "伝票", "发货", "签收", "快递", "运单", "物流"].some(k => lowerAnswer.includes(k))) {
                         topic = 'delivery';
-                    } else if (["시스템", "오류", "버그", "접속", "로그인", "장애", "system", "error", "bug", "login", "outage", "システム", "エラー", "不具合", "障害", "ログイン"].some(k => lowerAnswer.includes(k))) {
+                    } else if (["시스템", "오류", "버그", "접속", "로그인", "장애", "system", "error", "bug", "login", "outage", "システム", "エラー", "不具合", "障害", "ログイン", "系统", "故障", "错误", "登录", "瘫痪"].some(k => lowerAnswer.includes(k))) {
                         topic = 'system';
-                    } else if (["정산", "대금", "지급", "입금", "송금", "결제", "payment", "settlement", "payout", "invoice", "精算", "代金", "支払", "送金", "決済"].some(k => lowerAnswer.includes(k))) {
+                    } else if (["정산", "대금", "지급", "입금", "송금", "결제", "payment", "settlement", "payout", "invoice", "精算", "代金", "支払", "送金", "決済", "结算", "货款", "付款", "汇款", "发票"].some(k => lowerAnswer.includes(k))) {
                         topic = 'settlement';
-                    } else if (["죄송", "사과", "미안", "apologize", "sorry", "excuse", "申し訳", "お詫び", "ご迷惑"].some(k => lowerAnswer.includes(k))) {
+                    } else if (["죄송", "사과", "미안", "apologize", "sorry", "excuse", "申し訳", "お詫び", "ご迷惑", "抱歉", "歉意", "道歉", "对不起"].some(k => lowerAnswer.includes(k))) {
                         topic = 'apology';
-                    } else if (["문의", "여부", "인가요", "있나요", "어떻게", "질문", "?", "inquiry", "how", "what", "question", "照会", "確認", "でしょうか", "質問"].some(k => lowerAnswer.includes(k))) {
+                    } else if (["문의", "여부", "인가요", "있나요", "어떻게", "질문", "?", "？", "inquiry", "how", "what", "question", "照会", "確認", "でしょうか", "質問", "请问", "是否", "怎么", "吗"].some(k => lowerAnswer.includes(k))) {
                         topic = 'inquiry';
                     } else if (len < 18) {
                         topic = 'short';
@@ -941,13 +1117,13 @@ const { useState, useEffect, useRef } = React;
 
                     // D. Professional Tone, Empathy & Courtesy (0 - 20 pts)
                     let toneScoreRaw = 0;
-                    const greetingMarkers = ["dear", "hello", "hi", "mr", "ms", "안녕하십니까", "안녕하세요", "님", "이사님", "대표님", "담당자님", "様", "平素", "お世話"];
+                    const greetingMarkers = ["dear", "hello", "hi", "mr", "ms", "안녕하십니까", "안녕하세요", "님", "이사님", "대표님", "담당자님", "様", "平素", "お世話", "尊敬的", "您好", "你好", "总监", "经理", "代表", "贵宾"];
                     if (greetingMarkers.some(m => lowerAnswer.includes(m))) toneScoreRaw += 5;
 
-                    const empathyMarkers = ["apologize", "sorry", "inconvenience", "regret", "pardon", "사과", "죄송", "불편", "양해", "유감", "우려", "お詫び", "申し訳", "ご不便", "ご迷惑", "ご心配", "陳謝"];
+                    const empathyMarkers = ["apologize", "sorry", "inconvenience", "regret", "pardon", "사과", "죄송", "불편", "양해", "유감", "우려", "お詫び", "申し訳", "ご不便", "ご迷惑", "ご心配", "陳謝", "歉意", "抱歉", "不便", "理解", "放心", "深表"];
                     if (empathyMarkers.some(m => lowerAnswer.includes(m))) toneScoreRaw += 6;
 
-                    const closingMarkers = ["sincerely", "regards", "respectfully", "thanks", "thank you", "드림", "배상", "올림", "감사합니다", "최선", "何卒", "宜しく", "敬具", "拝啓", "最善", "謹んで"];
+                    const closingMarkers = ["sincerely", "regards", "respectfully", "thanks", "thank you", "드림", "배상", "올림", "감사합니다", "최선", "何卒", "宜しく", "敬具", "拝啓", "最善", "謹んで", "此致", "敬礼", "感谢", "顺祝", "全力"];
                     if (closingMarkers.some(m => lowerAnswer.includes(m))) toneScoreRaw += 5;
 
                     if (userAnswer.includes('\n')) toneScoreRaw += 4;
@@ -959,7 +1135,7 @@ const { useState, useEffect, useRef } = React;
                     if (numberMatch && numberMatch.length >= 1) precScoreRaw += 5;
                     if (numberMatch && numberMatch.length >= 2) precScoreRaw += 5;
 
-                    const actionMarkers = ["credit", "refund", "release", "restore", "unblock", "payout", "audit", "representment", "상계", "환불", "복구", "해제", "지급", "집행", "소명", "감사", "이의제기", "返金", "復旧", "解除", "送金", "相殺", "異議", "決済", "執行", "監査"];
+                    const actionMarkers = ["credit", "refund", "release", "restore", "unblock", "payout", "audit", "representment", "상계", "환불", "복구", "해제", "지급", "집행", "소명", "감사", "이의제기", "返金", "復旧", "解除", "送金", "相殺", "異議", "決済", "執行", "監査", "抵扣", "冲销", "退款", "恢复", "解冻", "付款", "汇款", "申诉", "抗辩", "审计", "核查"];
                     if (actionMarkers.some(m => lowerAnswer.includes(m))) precScoreRaw += 8;
                     precScoreRaw = Math.min(18, precScoreRaw);
 
@@ -1247,6 +1423,93 @@ const { useState, useEffect, useRef } = React;
                         }
                     }
 
+                    if (lang === 'zh') {
+                        if (totalScore >= 90) {
+                            grade = 'Senior Specialist (S级)';
+                            diagnosisBadge = 'S级 · 高级总监水准';
+                            summary = '展现出卓越的运营管控力与完美的风险防御能力。全面涵盖 4 大核心合规准则，通过明确的 SLA 时间节点与财务保护措施，彻底稳固了合作方与客户的信任。';
+                        } else if (totalScore >= 75) {
+                            grade = 'Professional (A级)';
+                            diagnosisBadge = 'A级 · 资深独立执行水准';
+                            summary = '展现出稳健的一线专业应对能力。核心处理方向准确，若能进一步强化量化的 SLA 办结时限与正式凭证提交流程，即可达到高级专家水准。';
+                        } else if (totalScore >= 50) {
+                            grade = 'Standard (B级)';
+                            diagnosisBadge = 'B级 · 标准业务水准 (需补充)';
+                        } else {
+                            grade = 'Developing (C级)';
+                            const zhTopicBadges = {
+                                fee: 'C级 · 手续费咨询受理 (需补充SOP依据)',
+                                refund: 'C级 · 退款申请受理 (需明确零过失责任)',
+                                timeline: 'C级 · 进度查询阶段 (需承诺量化SLA)',
+                                delivery: 'C级 · 物流核实阶段 (需调取POD签收单)',
+                                system: 'C级 · 系统故障受理 (需下发应急备用令牌)',
+                                settlement: 'C级 · 结算冻结受理 (需执行先行付款保供)',
+                                apology: 'C级 · 单纯致歉受理 (缺乏实质解决措施)',
+                                inquiry: 'C级 · 被动反问语气 (需展现主动担当)'
+                            };
+                            diagnosisBadge = zhTopicBadges[topic] || 'C级 · 简短输入 (建议撰写完整商务信函)';
+                        }
+                        if (totalScore < 75) {
+                            const zhTopicSummaries = {
+                                fee: `针对您输入内容（“${cleanSnippet}”）的分析：在重大升级争议现场，仅确认是否产生手续费无法阻止供应商断供或商户流失。必须说明系统日志核查结果，并主动承诺基于规则的手续费豁免或下期账单贷项抵扣（Credit Note）标准。`,
+                                refund: `针对您输入内容（“${cleanSnippet}”）的分析：不能仅停留于受理退款，高级 CX 运营要求明确宣告“因系统故障导致的客户 0% 过失”、免除全部违约金执行 100% 即时退款，并配套提供替代安置与补偿代金券。`,
+                                timeline: `针对您输入内容（“${cleanSnippet}”）的分析：“尽快处理”等模糊表述会加剧合作方的焦虑。必须给出精确到分钟或小时的量化 SLA 截止时间（如“今日 15:00 前”或“15 分钟内”）。`,
+                                delivery: `针对您输入内容（“${cleanSnippet}”）的分析：物流争议不能依赖主观解释，必须援引带有买家亲笔签名的妥投证明（POD）与运单轨迹记录，才能有效驳回银行拒付并保护商户资金。`,
+                                system: `针对您输入内容（“${cleanSnippet}”）的分析：面对导致客户全公司停摆的系统故障，仅承认问题远远不够，必须展现技术治理能力——立即下发应急备用认证令牌（Fallback Token）并核查审计日志。`,
+                                settlement: `针对您输入内容（“${cleanSnippet}”）的分析：涉及现金流的紧急投诉需要高度的运营敏捷性——切勿全额冻结付款，应立即先行支付已核准的 PO 款项或解冻非争议结算资金。`,
+                                apology: `针对您输入内容（“${cleanSnippet}”）的分析：及时的致歉与共情态度值得肯定，但仅靠道歉无法化解现场风险，必须结合客观的系统根因核查与实质性的补救行动（先行付款、下发令牌、拒付申诉等）。`,
+                                inquiry: `回复函语气诊断（检测到被动提问：“${cleanSnippet}”）：在高级升级工单处理中，运营专家不应向客户提出被动反问，而应第一时间掌控全局并主动给出确定的解决方案（Ownership）。`
+                            };
+                            summary = zhTopicSummaries[topic] || `针对简短输入（“${cleanSnippet}”）的分析：当前仅输入了简短关键词。本模拟器在您撰写完整的商务回复函（尊称问候 - 根因核查 - 补救措施 - SLA 时限 - 落款）时，可提供最精准的岗位胜任力评估。`;
+                        }
+                        strengths.length = 0;
+                        matchedPillars.forEach(p => strengths.push(p.strength.zh || p.strength.kr));
+                        if (toneScoreRaw >= 11) {
+                            strengths.unshift('【商务礼仪与共情】通过得体的商务敬语与迅速的共情表态，有效缓解了客户/合作方的初期对立情绪。');
+                        }
+                        gaps.length = 0;
+                        if (totalScore < 90) {
+                            const zhTopicGaps = {
+                                fee: '▲ [缺少费用合规依据] 请勿被动询问手续费，应明确援引政策规定的手续费豁免或下期账单贷项通知单（Credit Note）冲销方案。',
+                                refund: '▲ [需明确零过失与全额退款] 除安排退款外，请明确承诺因系统同步故障导致的“客户 0% 过失责任”及免除 100% 取消违约金。',
+                                timeline: '▲ [缺少量化办结时间] 请避免模糊的时间表述，明确给出具体的小时或分钟级 SLA 目标（如：今日 15:00 前、24 小时内）。',
+                                delivery: '▲ [需确保签收证明（POD）物证] 请明确要求调取亲笔签收妥投证明（POD）及物流追踪记录，作为向卡组织申诉的核心证据。',
+                                system: '▲ [缺少紧急技术恢复措施] 除通报故障外，必须明确宣布下发应急 SAML 备用认证令牌，确保 15 分钟内恢复全员访问。',
+                                settlement: '▲ [需先行保障现金流] 避免全额冻结货款，请立即宣布优先支付已核准的正常采购订单金额（RM 10,500）。',
+                                apology: '▲ [缺乏实质性补救措施] 在礼貌致歉之外，必须提供令合作方安心的即时补救行动（先行汇款、全额退款或下发应急令牌）。',
+                                inquiry: '▲ [避免被动反问语气] 请将疑问句替换为积极主动的专业承诺——立即核查后台日志并执行调账或恢复操作。'
+                            };
+                            if (zhTopicGaps[topic]) {
+                                gaps.push(zhTopicGaps[topic]);
+                            } else if (len < 20) {
+                                gaps.push('▲ [建议撰写完整商务信函] 请勿仅输入简短词汇，建议按照“收件人尊称、根因说明、紧急补救措施、SLA 时限、落款”撰写完整回复。');
+                            }
+                            if (missingPillars.length > 0) {
+                                const rawG = missingPillars[0].gap.zh || missingPillars[0].gap.kr;
+                                gaps.push(rawG.startsWith('▲') ? rawG : '▲ ' + rawG);
+                            }
+                            if (precScoreRaw < 8 && gaps.length < 3) {
+                                gaps.push('▲ [需提供量化 SLA 时限] 请明确给出消除合作方焦虑的具体完成时间节点（如：15 分钟内或今日 15:00 前）。');
+                            }
+                        }
+                        if (simDomain === 'ptp') {
+                            directive = totalScore >= 85
+                                ? '【模范运营要点】先行支付已核准的 PO 金额并隔离审计运费差额，是全球 PTP 财务运营的黄金准则。建议将此流程沉淀为团队共享的 ERP 标准 SOP 资产。'
+                                : '【改进指令】为防止供应商暂停供货，请务必在回复中明确承诺：1) 立即先行支付已核准的 PO 金额（RM 10,500）；2) 今日 15:00 前完成核查并签发 Credit Note。';
+                        } else if (simDomain === 'ota') {
+                            directive = totalScore >= 85
+                                ? '【模范运营要点】通过 PMS 日志核查确认客户零过失，并结合即时全额退款、五星级酒店安置与补偿代金券，是将严重客诉转化为高忠诚度的闭环典范。'
+                                : '【改进指令】为迅速平息旅客恐慌，请明确写入：1) 经 PMS 日志核查确认客户 0% 过失；2) 免手续费 100% 全额退款 + 免费替代酒店安置与补偿代金券。';
+                        } else if (simDomain === 'chargeback') {
+                            directive = totalScore >= 85
+                                ? '【模范运营要点】援引 3D Secure 2.0 责任转移规则，凭签收证明（POD）在 24 小时内发起抗辩申诉并解冻正常结算款，是保障商户现金流的风控典范。'
+                                : '【改进指令】为消除商户资金链焦虑，请明确提出：1) 适用国际卡组织 3D Secure 2.0 责任转移免责保护；2) 凭签收证明（POD）在 24 小时内提交正式抗辩申诉（Representment）并解冻其余货款。';
+                        } else {
+                            directive = totalScore >= 85
+                                ? '【模范运营要点】通过下发应急 SAML 备用令牌实现 15 分钟内全员恢复，并凭审计日志将 $4,500 误扣款全额计入账单抵扣，展现了顶尖的企业级 SaaS 技术治理力。'
+                                : '【改进指令】为平息企业 IT 总监的升级投诉，请明确承诺：1) 15 分钟内下发应急备用令牌恢复全员访问；2) 经核查审计日志，将 $4,500 超额费用 100% 冲销抵扣下期账单。';
+                        }
+                    }
                     setSimResult({
                         score: totalScore,
                         grade,
@@ -1263,7 +1526,7 @@ const { useState, useEffect, useRef } = React;
                         feedback: summary
                     });
                     setIsEvaluating(false);
-                    showToast(lang === 'jp' ? 'AI実務適合性分析が完了しました！' : lang === 'en' ? 'AI Competency Analysis Complete!' : '정밀 AI 직무 적합성 분석 완료!');
+                    showToast(lang === 'jp' ? 'AI実務適合性分析が完了しました！' : lang === 'zh' ? 'AI 岗位胜任力深度评估已完成！' : lang === 'en' ? 'AI Competency Analysis Complete!' : '정밀 AI 직무 적합성 분석 완료!');
                 }, 500);
             };
 
@@ -1295,13 +1558,14 @@ const { useState, useEffect, useRef } = React;
                             value={lang}
                             onChange={(e) => {
                                 setLang(e.target.value);
-                                showToast(`Language switched to ${e.target.value.toUpperCase()}`);
+                                showToast(e.target.value === 'zh' ? '语言已切换为中文 (ZH)' : e.target.value === 'jp' ? '言語を日本語 (JP) に切り替えました' : e.target.value === 'kr' ? '언어가 한국어(KR)로 변경되었습니다' : 'Language switched to EN');
                             }}
                             className="text-xs font-black px-2.5 py-1 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-400 cursor-pointer"
                         >
                             <option value="kr">KR (한국어)</option>
                             <option value="en">EN (English)</option>
                             <option value="jp">JP (日本語)</option>
+                            <option value="zh">ZH (中文)</option>
                         </select>
                     </div>
 
@@ -1315,11 +1579,15 @@ const { useState, useEffect, useRef } = React;
                                 </span>
                             </div>
                             <nav className="hidden md:flex items-center gap-6 text-xs text-slate-400 font-semibold pr-36">
-                                <a href="#profile" className="hover:text-cyan-400 transition-colors">Profile</a>
-                                <a href="#work" className="hover:text-cyan-400 transition-colors">Selected Work (3)</a>
-                                <a href="#development" className="hover:text-cyan-400 transition-colors">Development Map</a>
-                                <a href="#deliverables" className="hover:text-cyan-400 transition-colors">Deliverables (16)</a>
-                                <a href="#simulator" className="hover:text-cyan-400 transition-colors">BPO Simulator</a>
+                                <a href="#profile" className="hover:text-cyan-400 transition-colors">{curT.navProfile || 'Profile'}</a>
+                                <a href="#work" className="hover:text-cyan-400 transition-colors">{curT.navWork || 'Selected Work (3)'}</a>
+                                <a href="#development" className="hover:text-cyan-400 transition-colors">{curT.navDev || 'Development Map'}</a>
+                                <a href="#deliverables" className="hover:text-cyan-400 transition-colors">{curT.navDeliverables || 'Deliverables (16)'}</a>
+                                <a href="#simulator" className="hover:text-cyan-400 transition-colors">{curT.navSimulator || 'BPO Simulator'}</a>
+
+
+
+
                             </nav>
                         </div>
                     </header>
@@ -1355,7 +1623,7 @@ const { useState, useEffect, useRef } = React;
                                 </div>
                                 <div className="text-center md:text-left flex-1 space-y-2">
                                     <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5">
-                                        <h1 className="text-2xl md:text-3xl font-black text-white">박연우 (David Yeonwoo Park)</h1>
+                                        <h1 className="text-2xl md:text-3xl font-black text-white">{lang === 'zh' ? '朴演雨 (David Yeonwoo Park)' : '박연우 (David Yeonwoo Park)'}</h1>
                                         <span className="text-xs bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-bold px-2.5 py-0.5 rounded-full">
                                             8.5y Global Ops
                                         </span>
@@ -1506,7 +1774,7 @@ const { useState, useEffect, useRef } = React;
                                 <span className="text-[11px] text-slate-400 block font-semibold mt-0.5">{curT.m1}</span>
                             </div>
                             <div className="text-center md:border-r border-slate-800 py-2">
-                                <span className="text-2xl sm:text-3xl font-black text-white">3<span className="text-indigo-400 text-lg"> Lang</span></span>
+                                <span className="text-2xl sm:text-3xl font-black text-white">4<span className="text-indigo-400 text-lg"> Lang</span></span>
                                 <span className="text-[11px] text-slate-400 block font-semibold mt-0.5">{curT.m2}</span>
                             </div>
                             <div className="text-center md:border-r border-slate-800 py-2">
@@ -1727,7 +1995,7 @@ const { useState, useEffect, useRef } = React;
 
                                 {/* Language Filter Buttons */}
                                 <div className="flex gap-2">
-                                    {['all', 'kr', 'en', 'jp'].map(cat => (
+                                    {['all', 'kr', 'en', 'jp', 'zh'].map(cat => (
                                         <button
                                             key={cat}
                                             onClick={() => setFilterCategory(cat)}
@@ -1736,7 +2004,7 @@ const { useState, useEffect, useRef } = React;
                                                 : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
                                                 }`}
                                         >
-                                            {cat === 'all' ? (lang === 'jp' ? 'すべて (16)' : lang === 'en' ? 'All (16)' : '전체 (16)') : cat === 'kr' ? '🇰🇷 KR' : cat === 'en' ? '🇺🇸 EN' : '🇯🇵 JP'}
+                                            {cat === 'all' ? (curT.filterAll || 'All (16)') : cat === 'kr' ? '🇰🇷 KR' : cat === 'en' ? '🇺🇸 EN' : cat === 'jp' ? '🇯🇵 JP' : '🇨🇳 ZH'}
                                         </button>
                                     ))}
                                 </div>
@@ -1795,7 +2063,7 @@ const { useState, useEffect, useRef } = React;
                                 <div>
                                     <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider block mb-2">
                                         <i className="fa-solid fa-layer-group text-cyan-400 mr-1.5"></i>
-                                        {lang === 'jp' ? 'BPO現場・顧客対応ドメインを選択' : lang === 'en' ? 'Select BPO Operations / Customer Support Domain' : '고객 응대 및 BPO 부서 분야 선택'}
+                                        {curT.domainSelectLabel || (lang === 'zh' ? '选择 BPO 运营与客户支持业务领域' : lang === 'jp' ? 'BPO現場・顧客対応ドメインを選択' : lang === 'en' ? 'Select BPO Operations / Customer Support Domain' : '고객 응대 및 BPO 부서 분야 선택')}
                                     </span>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
                                         {Object.keys(bpoDomains).map((domainKey) => {
@@ -1851,7 +2119,7 @@ const { useState, useEffect, useRef } = React;
                                                 {curT.queryLabel}
                                             </span>
                                             <p className="text-xs text-slate-200 font-mono italic leading-relaxed bg-slate-950/80 p-3 rounded-lg border border-slate-800">
-                                                {bpoDomains[simDomain].query}
+                                                {(bpoDomains[simDomain].queryI18n && bpoDomains[simDomain].queryI18n[lang]) || bpoDomains[simDomain].query}
                                             </p>
                                         </div>
 
@@ -1873,12 +2141,12 @@ const { useState, useEffect, useRef } = React;
                                                 value={userAnswer}
                                                 onChange={(e) => setUserAnswer(e.target.value)}
                                                 rows="6"
-                                                placeholder={lang === 'jp' ? '該当分野のポリシーに則り、事実関係の確認、先行是正措置、タイムラインを明示したプロフェッショナルな実務対応文を作成してください...' : lang === 'en' ? 'Draft your business resolution referencing operational policies, timeline commitments, and corrective actions...' : '해당 분야의 규정과 절차에 맞추어 선제 조치, 시스템 대조 사실, 명확한 해결 타임라인을 비즈니스 톤으로 작성하세요...'}
+                                                placeholder={curT.simPlaceholder || (lang === 'zh' ? '请根据该领域的政策规范，使用专业商务语气撰写包含先发制人纠偏措施、系统核对事实及明确解决时间线的回复方案...' : lang === 'jp' ? '該当分野のポリシーに則り、事実関係の確認、先行是正措置、タイムラインを明示したプロフェッショナルな実務対応文を作成してください...' : lang === 'en' ? 'Draft your business resolution referencing operational policies, timeline commitments, and corrective actions...' : '해당 분야의 규정과 절차에 맞추어 선제 조치, 시스템 대조 사실, 명확한 해결 타임라인을 비즈니스 톤으로 작성하세요...')}
                                                 className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-xs text-slate-200 font-mono focus:outline-none focus:border-cyan-400 leading-relaxed"
                                             ></textarea>
                                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mt-3">
                                                 <span className="text-[11px] text-slate-400">
-                                                    {lang === 'jp' ? '推奨キーワード:' : lang === 'en' ? 'Recommended Keywords:' : '권장 키워드:'} <strong className="text-cyan-400 font-mono">{((bpoDomains[simDomain].keywords && (bpoDomains[simDomain].keywords[lang] || bpoDomains[simDomain].keywords.kr)) || []).slice(0, 5).join(', ')}</strong>
+                                                    {curT.recKeywordsLabel || (lang === 'zh' ? '推荐关键词:' : lang === 'jp' ? '推奨キーワード:' : lang === 'en' ? 'Recommended Keywords:' : '권장 키워드:')} <strong className="text-cyan-400 font-mono">{((bpoDomains[simDomain].keywords && (bpoDomains[simDomain].keywords[lang] || bpoDomains[simDomain].keywords.kr)) || []).slice(0, 5).join(', ')}</strong>
                                                 </span>
                                                 <button
                                                     onClick={evaluateAnswer}
@@ -1888,7 +2156,7 @@ const { useState, useEffect, useRef } = React;
                                                     {isEvaluating ? (
                                                         <>
                                                             <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                                            <span>{lang === 'jp' ? 'AI分析中...' : lang === 'en' ? 'Evaluating...' : 'AI 분석 중...'}</span>
+                                                            <span>{curT.evaluatingText || (lang === 'zh' ? 'AI 评估中...' : lang === 'jp' ? 'AI分析中...' : lang === 'en' ? 'Evaluating...' : 'AI 분석 중...')}</span>
                                                         </>
                                                     ) : (
                                                         <>
@@ -1921,7 +2189,7 @@ const { useState, useEffect, useRef } = React;
                                                         </div>
                                                         <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
                                                             <span className="text-[10px] text-slate-400 uppercase font-bold block">{curT.evalMatchedLabel}</span>
-                                                            <span className="text-2xl font-black text-emerald-400 mt-0.5 block">{simResult.matched.length} {lang === 'jp' ? '個' : lang === 'en' ? 'Hits' : '개'}</span>
+                                                            <span className="text-2xl font-black text-emerald-400 mt-0.5 block">{simResult.matched.length} {curT.hitsUnit || (lang === 'zh' ? '项' : lang === 'jp' ? '個' : lang === 'en' ? 'Hits' : '개')}</span>
                                                         </div>
                                                     </div>
 
@@ -1973,7 +2241,7 @@ const { useState, useEffect, useRef } = React;
                                                                         </span>
                                                                     ))
                                                                 ) : (
-                                                                    <span className="text-slate-500 text-[10px]">{lang === 'jp' ? 'なし' : lang === 'en' ? 'None' : '없음'}</span>
+                                                                    <span className="text-slate-500 text-[10px]">{curT.noneText || (lang === 'zh' ? '无' : lang === 'jp' ? 'なし' : lang === 'en' ? 'None' : '없음')}</span>
                                                                 )}
                                                             </div>
                                                         </div>
@@ -2066,11 +2334,11 @@ const { useState, useEffect, useRef } = React;
                                                 <div className="text-center py-12 text-slate-500 space-y-2">
                                                     <i className="fa-solid fa-clipboard-check text-3xl"></i>
                                                     <p className="text-xs">
-                                                        {lang === 'jp'
+                                                        {curT.emptyEvalGuide || (lang === 'zh' ? '请在左侧编辑器撰写实务应对方案，然后点击「运行 AI 实务合规性评估」按钮生成多维度评分分析报告。' : lang === 'jp'
                                                             ? '左側のエディタで実務文を作成後、「AI適合性評価を実行」ボタンを押すと、多角的なルーブリック分析レポートが生成されます。'
                                                             : lang === 'en'
                                                                 ? 'Draft your response on the left and click "Run AI Evaluation" to generate comprehensive rubric feedback.'
-                                                                : '좌측 폼에 실무 대응문을 작성 후 [실무 적합성 평가 실행] 버튼을 클릭하면 도메인별 다면 평가 결과가 생성됩니다.'}
+                                                                : '좌측 폼에 실무 대응문을 작성 후 [실무 적합성 평가 실행] 버튼을 클릭하면 도메인별 다면 평가 결과가 생성됩니다.')}
                                                     </p>
                                                 </div>
                                             )}
@@ -2102,14 +2370,14 @@ const { useState, useEffect, useRef } = React;
                                     &times;
                                 </button>
                                 <h3 className="text-xl font-black text-white text-center border-b border-slate-800 pb-3">
-                                    {lang === 'jp' ? '連絡先情報 (Contact Info)' : lang === 'en' ? 'Contact Information' : '연락처 정보 (Contact Info)'}
+                                    {curT.contactModalTitle || (lang === 'zh' ? '联系信息 (Contact Info)' : lang === 'jp' ? '連絡先情報 (Contact Info)' : lang === 'en' ? 'Contact Information' : '연락처 정보 (Contact Info)')}
                                 </h3>
                                 <div className="space-y-4 text-xs sm:text-sm">
                                     <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-1.5">
                                         <h4 className="font-bold text-cyan-400 flex items-center gap-2">
                                             <i className="fa-brands fa-line text-green-400"></i>
                                             <i className="fa-brands fa-whatsapp text-emerald-400"></i>
-                                            <span>{lang === 'jp' ? 'メッセンジャー (Kakao / LINE / WhatsApp)' : lang === 'en' ? 'Instant Messengers (Kakao / LINE / WhatsApp)' : '메신저 (Kakao / LINE / WhatsApp)'}</span>
+                                            <span>{curT.contactMessengerTitle || (lang === 'zh' ? '即时通讯 (Kakao / LINE / WhatsApp)' : lang === 'jp' ? 'メッセンジャー (Kakao / LINE / WhatsApp)' : lang === 'en' ? 'Instant Messengers (Kakao / LINE / WhatsApp)' : '메신저 (Kakao / LINE / WhatsApp)')}</span>
                                         </h4>
                                         <p className="text-slate-300 font-mono text-xs">+6010-968-1392 (Malaysia)</p>
                                         <p className="text-slate-300 font-mono text-xs">+8210-2153-1208 (Korea)</p>
@@ -2117,7 +2385,7 @@ const { useState, useEffect, useRef } = React;
                                     <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-1.5">
                                         <h4 className="font-bold text-rose-400 flex items-center gap-2">
                                             <i className="fa-solid fa-envelope"></i>
-                                            <span>{lang === 'jp' ? 'メールアドレス (Email)' : lang === 'en' ? 'Direct Email' : '이메일 (Email)'}</span>
+                                            <span>{curT.contactEmailTitle || (lang === 'zh' ? '电子邮箱 (Email)' : lang === 'jp' ? 'メールアドレス (Email)' : lang === 'en' ? 'Direct Email' : '이메일 (Email)')}</span>
                                         </h4>
                                         <p className="text-slate-300 font-mono text-xs">yeonwoopark40@gmail.com</p>
                                         <p className="text-slate-300 font-mono text-xs">yunwoopk@gmail.com</p>
@@ -2128,7 +2396,7 @@ const { useState, useEffect, useRef } = React;
                                     onClick={() => setContactModalOpen(false)}
                                     className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-2.5 rounded-xl transition-all text-xs"
                                 >
-                                    {lang === 'jp' ? '閉じる (Close)' : lang === 'en' ? 'Close' : '닫기 (Close)'}
+                                    {curT.closeBtnText || (lang === 'zh' ? '关闭 (Close)' : lang === 'jp' ? '閉じる (Close)' : lang === 'en' ? 'Close' : '닫기 (Close)')}
                                 </button>
                             </div>
                         </div>
@@ -2293,7 +2561,7 @@ const { useState, useEffect, useRef } = React;
                                                                     alt={msg.attachment.name}
                                                                     className="w-full max-h-36 object-cover cursor-pointer hover:opacity-95 transition-opacity"
                                                                     onClick={() => window.open(msg.attachment.previewUrl, '_blank')}
-                                                                    title={lang === "jp" ? "クリックして原本を表示" : lang === "en" ? "Click to view original" : "클릭하여 원본 보기"}
+                                                                    title={lang === "zh" ? "点击查看原图" : lang === "jp" ? "クリックして原本を表示" : lang === "en" ? "Click to view original" : "클릭하여 원본 보기"}
                                                                 />
                                                                 <div className="p-1.5 flex items-center justify-between text-[10px] font-mono text-slate-300 border-t border-slate-800/60">
                                                                     <span className="truncate max-w-[140px]">📎 {msg.attachment.name}</span>
@@ -2307,7 +2575,7 @@ const { useState, useEffect, useRef } = React;
                                                                 </div>
                                                                 <div className="truncate flex-1">
                                                                     <p className="text-xs text-white font-medium truncate">{msg.attachment.name}</p>
-                                                                    <p className="text-[10px] text-slate-400 font-mono">{(msg.attachment.size / 1024).toFixed(1)} KB • {msg.attachment.type.includes('pdf') ? (botI18n[lang]?.pdfDoc || 'PDF 문서') : (lang === 'jp' ? 'ファイル' : lang === 'en' ? 'File' : '파일')}</p>
+                                                                    <p className="text-[10px] text-slate-400 font-mono">{(msg.attachment.size / 1024).toFixed(1)} KB • {msg.attachment.type.includes('pdf') ? (botI18n[lang]?.pdfDoc || 'PDF 문서') : (lang === 'zh' ? '文件' : lang === 'jp' ? 'ファイル' : lang === 'en' ? 'File' : '파일')}</p>
                                                                 </div>
                                                                 <span className="text-xs text-emerald-400">
                                                                     <i className="fa-solid fa-circle-check"></i>
@@ -2346,7 +2614,7 @@ const { useState, useEffect, useRef } = React;
                                 <button
                                     type="button"
                                     onClick={() => handleSendMessage(
-                                        lang === 'jp' ? "ポリシーを確認せずに、すぐキャンセルできるのでしょうか？" : lang === 'en' ? "Can I cancel immediately without checking any policies?" : "바로 취소가 되는 건가요? 정책을 안 보고요?"
+                                        lang === 'zh' ? "不看政策规定可以立即免费取消吗？" : lang === 'jp' ? "ポリシーを確認せずに、すぐキャンセルできるのでしょうか？" : lang === 'en' ? "Can I cancel immediately without checking any policies?" : "바로 취소가 되는 건가요? 정책을 안 보고요?"
                                     )}
                                     disabled={isTyping}
                                     className="text-[11px] bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/40 rounded-full px-2.5 py-1 transition-all hover:border-amber-400 disabled:opacity-40 cursor-pointer flex items-center gap-1 font-medium"
@@ -2356,8 +2624,8 @@ const { useState, useEffect, useRef } = React;
                                 <button
                                     type="button"
                                     onClick={() => handleSendMessage(
-                                        lang === 'jp' ? "欠航証明書PDFを添付し、取消手数料免除（Waiver）を申請します。" : lang === 'en' ? "Submitting flight cancellation notice PDF for penalty waiver review." : "결항 확인서 PDF 첨부하여 취소 수수료 면제(Waiver) 요청합니다.",
-                                        { name: lang === 'jp' ? "フライト欠航証明書_証憑.pdf" : lang === 'en' ? "Flight_Cancellation_Notice.pdf" : "항공편_결항확인서_증빙.pdf", size: 245760, type: "application/pdf" }
+                                        lang === 'zh' ? "已附上航班取消证明 PDF，申请免除退票手续费 (Waiver)。" : lang === 'jp' ? "欠航証明書PDFを添付し、取消手数料免除（Waiver）を申請します。" : lang === 'en' ? "Submitting flight cancellation notice PDF for penalty waiver review." : "결항 확인서 PDF 첨부하여 취소 수수료 면제(Waiver) 요청합니다.",
+                                        { name: lang === 'zh' ? "航班取消证明_凭证.pdf" : lang === 'jp' ? "フライト欠航証明書_証憑.pdf" : lang === 'en' ? "Flight_Cancellation_Notice.pdf" : "항공편_결항확인서_증빙.pdf", size: 245760, type: "application/pdf" }
                                     )}
                                     disabled={isTyping}
                                     className="text-[11px] bg-slate-900 hover:bg-slate-800 text-rose-300 border border-rose-500/40 rounded-full px-2.5 py-1 transition-all hover:border-rose-400 disabled:opacity-40 cursor-pointer flex items-center gap-1 font-medium"
@@ -2367,8 +2635,8 @@ const { useState, useEffect, useRef } = React;
                                 <button
                                     type="button"
                                     onClick={() => handleSendMessage(
-                                        lang === 'jp' ? "SAP運賃インボイスのスクショ証憑を提出いたします。" : lang === 'en' ? "Submitting SAP freight invoice screenshot for ledger variance audit." : "SAP 운임 인보이스 스크린샷 증빙 제출합니다.",
-                                        { name: lang === 'jp' ? "SAP_運賃請求書_差額証憑.png" : lang === 'en' ? "SAP_Freight_Invoice_Variance.png" : "SAP_인보이스_운임차액_증빙.png", size: 412500, type: "image/png", previewUrl: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%230f172a'><rect width='100' height='100' rx='8'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%2338bdf8' font-size='11' font-family='monospace'>SAP_INV.PNG</text></svg>" }
+                                        lang === 'zh' ? "提交 SAP 运费发票截图凭证以供账目差额核对。" : lang === 'jp' ? "SAP運賃インボイスのスクショ証憑を提出いたします。" : lang === 'en' ? "Submitting SAP freight invoice screenshot for ledger variance audit." : "SAP 운임 인보이스 스크린샷 증빙 제출합니다.",
+                                        { name: lang === 'zh' ? "SAP_运费发票差额凭证.png" : lang === 'jp' ? "SAP_運賃請求書_差額証憑.png" : lang === 'en' ? "SAP_Freight_Invoice_Variance.png" : "SAP_인보이스_운임차액_증빙.png", size: 412500, type: "image/png", previewUrl: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%230f172a'><rect width='100' height='100' rx='8'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%2338bdf8' font-size='11' font-family='monospace'>SAP_INV.PNG</text></svg>" }
                                     )}
                                     disabled={isTyping}
                                     className="text-[11px] bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-emerald-500/40 rounded-full px-2.5 py-1 transition-all hover:border-emerald-400 disabled:opacity-40 cursor-pointer flex items-center gap-1 font-medium"
@@ -2378,7 +2646,7 @@ const { useState, useEffect, useRef } = React;
                                 <button
                                     type="button"
                                     onClick={() => handleSendMessage(
-                                        lang === 'jp' ? "返金不可特約プランのホテル宿泊ですが、取消可能でしょうか？" : lang === 'en' ? "Is cancellation possible for a non-refundable promotional hotel rate?" : "호텔 환불불가 특가 상품인데 취소 가능한가요?"
+                                        lang === 'zh' ? "预订的是不可退款特价酒店房型，请问可以取消吗？" : lang === 'jp' ? "返金不可特約プランのホテル宿泊ですが、取消可能でしょうか？" : lang === 'en' ? "Is cancellation possible for a non-refundable promotional hotel rate?" : "호텔 환불불가 특가 상품인데 취소 가능한가요?"
                                     )}
                                     disabled={isTyping}
                                     className="text-[11px] bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-500/30 rounded-full px-2.5 py-1 transition-all hover:border-cyan-400 disabled:opacity-40 cursor-pointer flex items-center gap-1"
@@ -2388,7 +2656,7 @@ const { useState, useEffect, useRef } = React;
                                 <button
                                     type="button"
                                     onClick={() => handleSendMessage(
-                                        lang === 'jp' ? "すでに出荷完了済みの商品について返品・返金を希望します。" : lang === 'en' ? "Requesting return and refund for an order that has already been dispatched." : "출고 완료된 상품 반품 및 환불 요청합니다."
+                                        lang === 'zh' ? "申请对已出库发货的商品办理退货及退款。" : lang === 'jp' ? "すでに出荷完了済みの商品について返品・返金を希望します。" : lang === 'en' ? "Requesting return and refund for an order that has already been dispatched." : "출고 완료된 상품 반품 및 환불 요청합니다."
                                     )}
                                     disabled={isTyping}
                                     className="text-[11px] bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-500/30 rounded-full px-2.5 py-1 transition-all hover:border-cyan-400 disabled:opacity-40 cursor-pointer flex items-center gap-1"
